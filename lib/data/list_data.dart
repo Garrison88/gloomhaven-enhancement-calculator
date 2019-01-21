@@ -325,8 +325,10 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/elements.png', width: iconWidth),
-          Text(' Specific Element (100g)',
-              style: TextStyle(fontFamily: secondaryFontFamily))
+          Text(
+            ' Specific Element (100g)',
+            style: TextStyle(fontFamily: secondaryFontFamily),
+          ),
         ],
       ),
       value: 26),
@@ -391,7 +393,70 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
-      value: 33)
+      value: 33),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 7 Current Targets (28g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 34),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 8 Current Targets (25g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 35),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 9 Current Targets (22g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 36),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 10 Current Targets (20g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 37),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 11 Current Targets (33g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 38),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 6 Current Targets (33g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 39),
+  DropdownMenuItem(
+      child: Row(
+        children: <Widget>[
+          Image.asset('images/hex_target.png', width: iconWidth),
+          Text(' 6 Current Targets (33g)',
+              style: TextStyle(fontFamily: secondaryFontFamily))
+        ],
+      ),
+      value: 40)
 ];
 
 List<DropdownMenuItem<int>> existingHexesList = [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EnhancementsPage extends StatefulWidget {
@@ -14,8 +13,6 @@ class EnhancementsPage extends StatefulWidget {
 }
 
 class EnhancementsPageState extends State<EnhancementsPage> {
-//  final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-
 //  List<Enhancement> enhancementList = []
 //    ..add(Enhancement('attack', 50, 'dggrwgw', false, false))
 //    ..add(Enhancement('attack', 50, 'dggrwgw', false, false));
@@ -31,71 +28,51 @@ class EnhancementsPageState extends State<EnhancementsPage> {
   @override
   void initState() {
     super.initState();
-    getProsperityLvl();
-    readFromBucket();
+    readFromSharedPrefs();
   }
 
-  getProsperityLvl() async {
+  Future readFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    cityProsperityLvl = prefs.getInt('prosperityLvl');
+    setState(() {
+      cityProsperityLvl = prefs.getInt('prosperityLvlKey') != null
+          ? prefs.getInt('prosperityLvlKey')
+          : 1;
+      targetCardLvl = prefs.getInt('targetCardLvlKey') != null
+          ? prefs.getInt('targetCardLvlKey')
+          : null;
+      enhancementsOnTargetAction =
+          prefs.getInt('enhancementsOnTargetActionKey') != null
+              ? prefs.getInt('enhancementsOnTargetActionKey')
+              : null;
+      enhancementType = prefs.getInt('enhancementTypeKey') != null
+          ? prefs.getInt('enhancementTypeKey')
+          : null;
+      eligibleForMultipleTargets =
+          prefs.getBool('eligibleForMultipleTargetsKey') != null
+              ? prefs.getBool('eligibleForMultipleTargetsKey')
+              : false;
+      multipleTargetsSwitch =
+          prefs.getBool('multipleTargetsSelectedKey') != null
+              ? prefs.getBool('multipleTargetsSelectedKey')
+              : false;
+      enhancementCost = prefs.getInt('enhancementCostKey') != null
+          ? prefs.getInt('enhancementCostKey')
+          : 0;
+    });
   }
 
-  setProsperityLvl(int value) async {
+  Future writeToSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('prosperityLvl', value);
-  }
-
-  readFromBucket() {
-    targetCardLvl = (bucket.readState(context,
-                identifier: ValueKey('targetCardLevelKey')) !=
-            null)
-        ? bucket.readState(context, identifier: ValueKey('targetCardLevelKey'))
-        : null;
-    enhancementsOnTargetAction = (bucket.readState(context,
-                identifier: ValueKey('enhancementsOnTargetActionKey')) !=
-            null)
-        ? bucket.readState(context,
-            identifier: ValueKey('enhancementsOnTargetActionKey'))
-        : null;
-    enhancementType = (bucket.readState(context,
-                identifier: ValueKey('enhancementTypeKey')) !=
-            null)
-        ? bucket.readState(context, identifier: ValueKey('enhancementTypeKey'))
-        : null;
-    eligibleForMultipleTargets = (bucket.readState(context,
-                identifier: ValueKey('eligibleForMultipleTargetsKey')) !=
-            null)
-        ? bucket.readState(context,
-            identifier: ValueKey('eligibleForMultipleTargetsKey'))
-        : false;
-    multipleTargetsSwitch = (bucket.readState(context,
-                identifier: ValueKey('multipleTargetsSelectedKey')) !=
-            null)
-        ? bucket.readState(context,
-            identifier: ValueKey('multipleTargetsSelectedKey'))
-        : false;
-    enhancementCost = (bucket.readState(context,
-                identifier: ValueKey('enhancementCostKey')) !=
-            null)
-        ? bucket.readState(context, identifier: ValueKey('enhancementCostKey'))
-        : 0;
-  }
-
-  void writeToBucket() {
-    bucket.writeState(context, cityProsperityLvl,
-        identifier: ValueKey('prosperityKey'));
-    bucket.writeState(context, targetCardLvl,
-        identifier: ValueKey('targetCardLevelKey'));
-    bucket.writeState(context, enhancementsOnTargetAction,
-        identifier: ValueKey('enhancementsOnTargetActionKey'));
-    bucket.writeState(context, enhancementType,
-        identifier: ValueKey('enhancementTypeKey'));
-    bucket.writeState(context, eligibleForMultipleTargets,
-        identifier: ValueKey('eligibleForMultipleTargetsKey'));
-    bucket.writeState(context, multipleTargetsSwitch,
-        identifier: ValueKey('multipleTargetsSelectedKey'));
-    bucket.writeState(context, enhancementCost,
-        identifier: ValueKey('enhancementCostKey'));
+    setState(() {
+      prefs.setInt('prosperityLvlKey', cityProsperityLvl);
+      prefs.setInt('targetCardLvlKey', targetCardLvl);
+      prefs.setInt('enhancementsOnTargetActionKey', enhancementsOnTargetAction);
+      prefs.setInt('enhancementTypeKey', enhancementType);
+      prefs.setBool(
+          'eligibleForMultipleTargetsKey', eligibleForMultipleTargets);
+      prefs.setBool('multipleTargetsSelectedKey', multipleTargetsSwitch);
+      prefs.setInt('enhancementCostKey', enhancementCost);
+    });
   }
 
   void updateEnhancementCost() {
@@ -145,7 +122,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                 : 0) +
             (multipleTargetsSwitch ? baseCost * 2 : baseCost);
 
-    writeToBucket();
+    writeToSharedPrefs();
   }
 
   void resetAllFields() {
@@ -156,15 +133,13 @@ class EnhancementsPageState extends State<EnhancementsPage> {
       enhancementCost = 0;
       multipleTargetsSwitch = false;
       eligibleForMultipleTargets = false;
-
-      writeToBucket();
+      writeToSharedPrefs();
     });
   }
 
   void handleCityProsperitySelection(int value) {
     setState(() {
       cityProsperityLvl = value;
-      setProsperityLvl(value);
       updateEnhancementCost();
     });
   }
@@ -236,159 +211,205 @@ class EnhancementsPageState extends State<EnhancementsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: LayoutBuilder(builder:
-            (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-              child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: IntrinsicHeight(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage('images/background_page.jpg'),
-                                  fit: BoxFit.fill)),
-                          padding:
-                              const EdgeInsets.fromLTRB(40.0, 30.0, 40.0, 30.0),
-                          child: Column(children: <Widget>[
-                            Column(children: <Widget>[
-                              Card(
-                                  color: Colors.white,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Text('Gloomhaven Prosperity Level:'),
-                                        Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                10.0, 0.0, 10.0, 0.0),
+        appBar: AppBar(
+            title:
+                Text('Gloomhaven Companion', style: TextStyle(fontSize: 25.0))),
+        body:
+//        LayoutBuilder(builder:
+//            (BuildContext context, BoxConstraints viewportConstraints) {
+//          return SingleChildScrollView(
+//            child: ConstrainedBox(
+//              constraints:
+//                  BoxConstraints(minHeight: viewportConstraints.maxHeight),
+//              child: IntrinsicHeight(
+//                child:
+            Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/background_page.jpg'),
+                  fit: BoxFit.fill)),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.fromLTRB(23.0, 35.0, 20.0, 15.0),
+                child: Column(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Card(
+                            color: Colors.white,
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: smallPadding),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      'Prosperity Level:',
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  Container(
+                                      padding:
+                                          EdgeInsets.only(left: smallPadding),
 //                                            child: Theme(
 //                                                data: Theme.of(context)
 //                                                    .copyWith(
 //                                                        canvasColor:
 //                                                            Theme.of(context)
 //                                                                .accentColor),
-                                            child: DropdownButtonHideUnderline(
-                                                child: DropdownButton<int>(
-                                              hint: Text('1',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily:
-                                                          secondaryFontFamily)),
-                                              value: cityProsperityLvl,
-                                              items: levelList,
-                                              onChanged:
-                                                  handleCityProsperitySelection,
-                                            )))
-                                      ])),
-                              Padding(padding: EdgeInsets.all(5.0)),
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Center(
-                                        child: Text(
-                                            'You may enhance ' +
-                                                (cityProsperityLvl != null &&
-                                                        cityProsperityLvl > 1
-                                                    ? '$cityProsperityLvl cards'
-                                                    : '1 card'),
+                                      child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<int>(
+                                        hint: Text('1',
                                             style: TextStyle(
-                                                fontSize: secondaryFontSize,
+                                                color: Colors.black,
                                                 fontFamily:
-                                                    secondaryFontFamily)))
-                                  ]),
-                              Padding(padding: EdgeInsets.all(5.0)),
-                              Card(
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                    Text('Level of target card:'),
-                                    Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            10.0, 0.0, 10.0, 0.0),
-                                        child: DropdownButtonHideUnderline(
-                                            child: DropdownButton<int>(
-                                          hint: Text('1 / x',
-                                              style: TextStyle(
-                                                  fontFamily:
-                                                      secondaryFontFamily)),
-                                          value: targetCardLvl,
-                                          items: levelOfTargetCardList,
-                                          onChanged:
-                                              handleLevelOfTargetCardSelection,
-                                        )))
-                                  ])),
-                              Card(
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                    Expanded(
-                                        child: Text(
-                                            'Existing enhancements on target action:')),
-                                    DropdownButtonHideUnderline(
-                                        child: DropdownButton<int>(
-                                      hint: Text('None',
-                                          style: TextStyle(
-                                              fontFamily: secondaryFontFamily)),
-                                      value: enhancementsOnTargetAction,
-                                      items: enhancementsOnTargetActionList,
-                                      onChanged:
-                                          handleEnhancementsOnTargetActionSelection,
-                                    ))
-                                  ])),
-                              Card(
-                                  child: Container(
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: <Widget>[
-                                    Center(child: Text('Type of enhancement')),
-                                    DropdownButtonHideUnderline(
-                                        child: DropdownButton<int>(
-                                            hint: Text('Type',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        secondaryFontFamily)),
-                                            value: enhancementType,
-                                            items: enhancementTypeList,
-                                            onChanged: handleTypeSelection)),
-                                  ]))),
-                              Visibility(
-                                  visible: eligibleForMultipleTargets,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Center(
-                                            child: Text(
-                                                'Multiple targets? (x2 base cost)')),
-                                        Switch(
-                                            value: multipleTargetsSwitch,
-                                            onChanged:
-                                                handleMultipleTargetsSelection)
-                                      ]))
-//                      Expanded(
-                            ]),
+                                                    secondaryFontFamily)),
+                                        value: cityProsperityLvl,
+                                        items: levelList,
+                                        onChanged:
+                                            handleCityProsperitySelection,
+                                      )))
+                                ])),
+                        Padding(padding: EdgeInsets.all(smallPadding)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
                             Expanded(
-                                // A flexible child that will grow to fit the viewport but
-                                // still be at least as big as necessary to fit its contents.
-                                child: Container(
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                  Text('Enhancement Cost:',
-                                      style: TextStyle(fontSize: 50.0)),
-                                  Text('$enhancementCost' + 'g',
-                                      style: TextStyle(fontSize: 75.0))
-                                ])))
-                          ])))));
-        }),
+                              child: Text(
+                                'You may enhance ' +
+                                    (cityProsperityLvl != null &&
+                                            cityProsperityLvl > 1
+                                        ? '$cityProsperityLvl cards'
+                                        : '1 card'),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: secondaryFontSize,
+                                    fontFamily: secondaryFontFamily),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.all(smallPadding)),
+                        Card(
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: smallPadding),
+                              ),
+                              Expanded(
+                                child: Text('Level of target card:'),
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: smallPadding),
+                                  child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<int>(
+                                    hint: Text('1 / x',
+                                        style: TextStyle(
+                                            fontFamily: secondaryFontFamily)),
+                                    value: targetCardLvl,
+                                    items: levelOfTargetCardList,
+                                    onChanged: handleLevelOfTargetCardSelection,
+                                  )))
+                            ])),
+                        Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: smallPadding),
+                              ),
+                              Expanded(
+                                  child: Text(
+                                      'Existing enhancements on target action:')),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  hint: Text('None',
+                                      style: TextStyle(
+                                          fontFamily: secondaryFontFamily)),
+                                  value: enhancementsOnTargetAction,
+                                  items: enhancementsOnTargetActionList,
+                                  onChanged:
+                                      handleEnhancementsOnTargetActionSelection,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Card(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Text(
+                                'Type of enhancement:',
+                                textAlign: TextAlign.center,
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                    hint: Text(
+                                      'Type',
+                                      style: TextStyle(
+                                          fontFamily: secondaryFontFamily),
+                                    ),
+                                    value: enhancementType,
+                                    items: enhancementTypeList,
+                                    onChanged: handleTypeSelection),
+                              ),
+                            ],
+                          ),
+//                            ],
+//                          ),
+                        ),
+                        Card(
+                          child: Visibility(
+                            visible: eligibleForMultipleTargets,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                    padding:
+                                        EdgeInsets.only(left: smallPadding)),
+                                Expanded(
+                                  child: Text('Multiple targets?'),
+                                ),
+                                Switch(
+                                    value: multipleTargetsSwitch,
+                                    onChanged: handleMultipleTargetsSelection)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('Enhancement Cost:',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 35.0)),
+                          Text('$enhancementCost' + 'g',
+                              style: TextStyle(fontSize: 75.0))
+                        ],
+                      ),
+                    ),
+//                ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+//              ),
+//            ),
+//          );
+//        }),
         floatingActionButton: FloatingActionButton(
             onPressed: resetAllFields,
             child: Image.asset('images/shuffle_white.png')));

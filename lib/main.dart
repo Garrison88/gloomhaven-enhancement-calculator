@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/ui/main_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/enhancements.dart';
 
 void main() => runApp(MaterialApp(
     title: 'Enhancement Calculator',
@@ -20,7 +20,6 @@ void main() => runApp(MaterialApp(
           // Text widgets
           body1: TextStyle(fontSize: 23.0),
         )),
-    home: PageStorage(child: MainPage(), bucket: bucket, key: enhancementKey)));
-
+    home: EnhancementsPage()));
 PageStorageKey enhancementKey = new PageStorageKey('enhancementKey');
 final PageStorageBucket bucket = new PageStorageBucket();
