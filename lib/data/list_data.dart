@@ -97,11 +97,24 @@ List<DropdownMenuItem<int>> enhancementsOnTargetActionList = [
 List<DropdownMenuItem<int>> enhancementTypeList = [
   DropdownMenuItem(
       child: Center(
-          child: Text('+1 For Characters',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/plus_one.png',
+              width: iconWidth - 10.0,
+              height: iconWidth - 10.0,
+            ),
+            Text(
+              ' For Character',
               style: TextStyle(
                   fontFamily: secondaryFontFamily,
                   decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.bold))),
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
       value: 0),
   DropdownMenuItem(
       child: Row(
@@ -190,12 +203,23 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       value: 10),
   DropdownMenuItem(
       child: Center(
-        child: Text('+1 For Summons',
-            style: TextStyle(
-                fontFamily: secondaryFontFamily,
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.bold)),
-//        key: Key('range'),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/plus_one.png',
+              width: iconWidth - 10.0,
+              height: iconWidth - 10.0,
+            ),
+            Text(
+              ' For Summon',
+              style: TextStyle(
+                  fontFamily: secondaryFontFamily,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
       value: 11),
   DropdownMenuItem(
@@ -235,7 +259,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       value: 15),
   DropdownMenuItem(
       child: Center(
-          child: Text('Effects',
+          child: Text('Effect',
               style: TextStyle(
                   fontFamily: secondaryFontFamily,
                   decoration: TextDecoration.underline,
@@ -353,7 +377,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 2 Current Targets (100g)',
+          Text(' 2 Current Hexes (100g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -362,7 +386,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 3 Current Targets (66g)',
+          Text(' 3 Current Hexes (66g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -371,7 +395,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 4 Current Targets (50g)',
+          Text(' 4 Current Hexes (50g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -380,7 +404,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 5 Current Targets (40g)',
+          Text(' 5 Current Hexes (40g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -389,7 +413,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 6 Current Targets (33g)',
+          Text(' 6 Current Hexes (33g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -398,7 +422,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 7 Current Targets (28g)',
+          Text(' 7 Current Hexes (28g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -407,7 +431,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 8 Current Targets (25g)',
+          Text(' 8 Current Hexes (25g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -416,7 +440,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 9 Current Targets (22g)',
+          Text(' 9 Current Hexes (22g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -425,7 +449,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 10 Current Targets (20g)',
+          Text(' 10 Current Hexes (20g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -434,7 +458,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 11 Current Targets (33g)',
+          Text(' 11 Current Hexes (18g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -443,7 +467,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 6 Current Targets (33g)',
+          Text(' 12 Current Hexes (16g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
@@ -452,52 +476,9 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
       child: Row(
         children: <Widget>[
           Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 6 Current Targets (33g)',
+          Text(' 13 Current Hexes (15g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],
       ),
       value: 40)
-];
-
-List<DropdownMenuItem<int>> existingHexesList = [
-  DropdownMenuItem(
-      child: Row(
-        children: <Widget>[
-          Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 2 (100g)', style: TextStyle(fontFamily: secondaryFontFamily))
-        ],
-      ),
-      value: 2),
-  DropdownMenuItem(
-      child: Row(
-        children: <Widget>[
-          Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 3 (66g)', style: TextStyle(fontFamily: secondaryFontFamily))
-        ],
-      ),
-      value: 3),
-  DropdownMenuItem(
-      child: Row(
-        children: <Widget>[
-          Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 4 (50g)', style: TextStyle(fontFamily: secondaryFontFamily))
-        ],
-      ),
-      value: 4),
-  DropdownMenuItem(
-      child: Row(
-        children: <Widget>[
-          Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 5 (40g)', style: TextStyle(fontFamily: secondaryFontFamily))
-        ],
-      ),
-      value: 5),
-  DropdownMenuItem(
-      child: Row(
-        children: <Widget>[
-          Image.asset('images/hex_target.png', width: iconWidth),
-          Text(' 6 (33g)', style: TextStyle(fontFamily: secondaryFontFamily))
-        ],
-      ),
-      value: 6)
 ];

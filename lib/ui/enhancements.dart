@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EnhancementsPage extends StatefulWidget {
@@ -24,6 +25,92 @@ class EnhancementsPageState extends State<EnhancementsPage> {
       enhancementCost = 0;
 
   bool multipleTargetsSwitch = false, eligibleForMultipleTargets = false;
+
+  createIconsListForDialog(List<String> list) {
+    List<Widget> icons = [];
+//    if (list != null) {
+    list.forEach((icon) => icons.add(Image.asset(
+          'images/$icon',
+          height: iconWidth,
+          width: iconWidth,
+        )));
+    return icons;
+//    }
+  }
+
+  void _showInfoAlert(String title, String message) {
+    String body;
+    List<String> icons;
+    if (enhancementType != null) {
+      // plus one enhancement selected
+      if (enhancementType > 0 && enhancementType < 16) {
+        body = Strings.plusOneInfoBody;
+        icons = Strings.plusOneIcons;
+        // negative enhancement selected
+      } else if (enhancementType > 16 && enhancementType < 23) {
+        body = Strings.negEffectInfoBody;
+        icons = Strings.negEffectIcons;
+        // positive enhancement selected
+      } else if (enhancementType == 23 || enhancementType == 24) {
+        body = Strings.posEffectInfoBody;
+        icons = Strings.posEffectIcons;
+        // move enhancement selected
+      } else if (enhancementType == 25) {
+        body = Strings.moveInfoBody;
+        icons = Strings.moveIcons;
+        // elemental enhancement selected
+      } else if (enhancementType == 26 || enhancementType == 27) {
+        body = Strings.elementsInfoBody;
+        icons = Strings.elementsIcons;
+        // hex target enhancement selected
+      } else if (enhancementType > 29 && enhancementType <= 40) {
+        body = Strings.hexInfoBody;
+        icons = Strings.hexIcons;
+      }
+    }
+//if (enhancementType != null) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: title == null
+                  ? Center(
+                      child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: createIconsListForDialog(icons),
+                      ),
+                    ))
+                  : Center(
+                      child: Text(
+                        title,
+                        style: TextStyle(fontSize: 23.0),
+                      ),
+                    ),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      message == null ? body : message,
+                      style: TextStyle(fontFamily: secondaryFontFamily),
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Got it!',
+                      style: TextStyle(
+                          fontSize: secondaryFontSize,
+                          fontFamily: secondaryFontFamily),
+                    )),
+              ],
+            ));
+  }
 
   @override
   void initState() {
@@ -110,6 +197,34 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         case 33:
           baseCost = 33;
           break;
+        // 7 current hexes targeted
+        case 34:
+          baseCost = 28;
+          break;
+        // 8 current hexes targeted
+        case 35:
+          baseCost = 25;
+          break;
+        // 9 current hexes targeted
+        case 36:
+          baseCost = 22;
+          break;
+        // 10 current hexes targeted
+        case 37:
+          baseCost = 20;
+          break;
+        // 11 current hexes targeted
+        case 38:
+          baseCost = 18;
+          break;
+        // 12 current hexes targeted
+        case 39:
+          baseCost = 16;
+          break;
+        // 13 current hexes targeted
+        case 40:
+          baseCost = 15;
+          break;
       }
     }
 
@@ -178,7 +293,10 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         // not eligible for 2x multiplier (hide multiplier switch)
 //        case 4:
 //        case 8:
-//        case 10:
+        case 10:
+          multipleTargetsSwitch = true;
+          enhancementType = value;
+          break;
 //        case 15:
 //        case 25:
 //          eligibleForMultipleTargets = false;
@@ -192,6 +310,13 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         case 31:
         case 32:
         case 33:
+        case 34:
+        case 35:
+        case 36:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
           eligibleForMultipleTargets = false;
           multipleTargetsSwitch = false;
           enhancementType = value;
@@ -214,124 +339,95 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         appBar: AppBar(
             title:
                 Text('Gloomhaven Companion', style: TextStyle(fontSize: 25.0))),
-        body:
-//        LayoutBuilder(builder:
-//            (BuildContext context, BoxConstraints viewportConstraints) {
-//          return SingleChildScrollView(
-//            child: ConstrainedBox(
-//              constraints:
-//                  BoxConstraints(minHeight: viewportConstraints.maxHeight),
-//              child: IntrinsicHeight(
-//                child:
-            Container(
+        body: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('images/background_page.jpg'),
-                  fit: BoxFit.fill)),
+            image: DecorationImage(
+                image: AssetImage('images/background_page.jpg'),
+                fit: BoxFit.fill),
+          ),
           child: ListView(
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.fromLTRB(23.0, 35.0, 20.0, 15.0),
+                padding: EdgeInsets.fromLTRB(23.0, 25.0, 20.0, 15.0),
                 child: Column(
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        Card(
-                            color: Colors.white,
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: smallPadding),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      'Prosperity Level:',
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                  Container(
-                                      padding:
-                                          EdgeInsets.only(left: smallPadding),
-//                                            child: Theme(
-//                                                data: Theme.of(context)
-//                                                    .copyWith(
-//                                                        canvasColor:
-//                                                            Theme.of(context)
-//                                                                .accentColor),
-                                      child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<int>(
-                                        hint: Text('1',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontFamily:
-                                                    secondaryFontFamily)),
-                                        value: cityProsperityLvl,
-                                        items: levelList,
-                                        onChanged:
-                                            handleCityProsperitySelection,
-                                      )))
-                                ])),
-                        Padding(padding: EdgeInsets.all(smallPadding)),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                'You may enhance ' +
-                                    (cityProsperityLvl != null &&
-                                            cityProsperityLvl > 1
-                                        ? '$cityProsperityLvl cards'
-                                        : '1 card'),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: secondaryFontSize,
-                                    fontFamily: secondaryFontFamily),
+                            RaisedButton.icon(
+                              color: Theme.of(context).accentColor,
+                              icon: Icon(
+                                Icons.info,
+                                color: Colors.white,
                               ),
+                              label: Text(
+                                'General Info',
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.white),
+                              ),
+                              onPressed: () {
+                                _showInfoAlert(Strings.generalInfoTitle,
+                                    Strings.generalInfoBody);
+                              },
                             ),
                           ],
                         ),
-                        Padding(padding: EdgeInsets.all(smallPadding)),
-                        Card(
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left: smallPadding),
-                              ),
-                              Expanded(
-                                child: Text('Level of target card:'),
-                              ),
-                              Container(
-                                  padding: EdgeInsets.only(left: smallPadding),
-                                  child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<int>(
-                                    hint: Text('1 / x',
-                                        style: TextStyle(
-                                            fontFamily: secondaryFontFamily)),
-                                    value: targetCardLvl,
-                                    items: levelOfTargetCardList,
-                                    onChanged: handleLevelOfTargetCardSelection,
-                                  )))
-                            ])),
                         Card(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left: smallPadding),
-                              ),
-                              Expanded(
-                                  child: Text(
-                                      'Existing enhancements on target action:')),
+                              IconButton(
+                                  icon: Icon(Icons.info_outline,
+                                      color: Theme.of(context).accentColor),
+                                  onPressed: () {
+                                    _showInfoAlert(Strings.cardLevelInfoTitle,
+                                        Strings.cardLevelInfoBody);
+                                  }),
+                              Text('Card level:'),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton<int>(
-                                  hint: Text('None',
-                                      style: TextStyle(
-                                          fontFamily: secondaryFontFamily)),
+                                  hint: Text(
+                                    '1/x',
+                                    style: TextStyle(
+                                        fontFamily: secondaryFontFamily),
+                                  ),
+                                  value: targetCardLvl,
+                                  items: levelOfTargetCardList,
+                                  onChanged: handleLevelOfTargetCardSelection,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+//                              Padding(
+//                                padding: EdgeInsets.only(left: smallPadding),
+//                              ),
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.info_outline,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  onPressed: () {
+                                    _showInfoAlert(
+                                        Strings.existingEnhancementsInfoTitle,
+                                        Strings.existingEnhancementsInfoBody);
+                                  }),
+                              Expanded(
+                                child: Text('Existing enhancements:'),
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  hint: Text(
+                                    'None',
+                                    style: TextStyle(
+                                        fontFamily: secondaryFontFamily),
+                                  ),
                                   value: enhancementsOnTargetAction,
                                   items: enhancementsOnTargetActionList,
                                   onChanged:
@@ -343,11 +439,33 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                         ),
                         Card(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              Text(
-                                'Type of enhancement:',
-                                textAlign: TextAlign.center,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  IconButton(
+                                      icon: Icon(Icons.info_outline,
+                                          color: enhancementType != null
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context)
+                                                  .accentColor
+                                                  .withOpacity(0.5)),
+                                      onPressed: enhancementType != null
+                                          ? () {
+                                              _showInfoAlert(null, null);
+                                            }
+                                          : null),
+                                  Text(
+                                    'Enhancement type:',
+                                  ),
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.info_outline,
+                                        color: Colors.transparent,
+                                      ),
+                                      onPressed: null),
+                                ],
                               ),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton<int>(
@@ -362,24 +480,31 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                               ),
                             ],
                           ),
-//                            ],
-//                          ),
                         ),
                         Card(
                           child: Visibility(
                             visible: eligibleForMultipleTargets,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Padding(
-                                    padding:
-                                        EdgeInsets.only(left: smallPadding)),
-                                Expanded(
-                                  child: Text('Multiple targets?'),
-                                ),
+                                IconButton(
+                                    icon: Icon(Icons.info_outline,
+                                        color: Theme.of(context).accentColor),
+                                    onPressed: () {
+                                      _showInfoAlert(
+                                          Strings.multipleTargetsInfoTitle,
+                                          Strings.multipleTargetsInfoBody);
+                                    }),
+                                Text('Multiple targets?'),
                                 Switch(
                                     value: multipleTargetsSwitch,
-                                    onChanged: handleMultipleTargetsSelection)
+                                    onChanged: handleMultipleTargetsSelection),
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.info_outline,
+                                      color: Colors.transparent,
+                                    ),
+                                    onPressed: null),
                               ],
                             ),
                           ),
