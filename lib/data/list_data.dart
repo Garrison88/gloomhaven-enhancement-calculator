@@ -92,7 +92,9 @@ List<DropdownMenuItem<int>> enhancementsOnTargetActionList = [
       value: 3)
 ];
 
-//List<EnhancementDropDownItem> enhancementTypeList = []..add(EnhancementDropDownItem(Enhancement('fgd', 5, 'gvef', false, false)));
+//Enhancement enhance = new Enhancement("fdd", 4, "attack.png", false, false);
+
+//var enhancementTypeList = []..add(EnhancementDropDownItem(Enhancement('fgd', 5, 'move.png', false, false)))..add(enhance);
 
 List<DropdownMenuItem<int>> enhancementTypeList = [
   DropdownMenuItem(
@@ -348,7 +350,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
   DropdownMenuItem(
       child: Row(
         children: <Widget>[
-          Image.asset('images/elements.png', width: iconWidth),
+          Image.asset('images/elem_fire.png', width: iconWidth),
           Text(
             ' Specific Element (100g)',
             style: TextStyle(fontFamily: secondaryFontFamily),
@@ -359,7 +361,7 @@ List<DropdownMenuItem<int>> enhancementTypeList = [
   DropdownMenuItem(
       child: Row(
         children: <Widget>[
-          Image.asset('images/elements.png', width: iconWidth),
+          Image.asset('images/any_element.png', width: iconWidth),
           Text(' Any Element (150g)',
               style: TextStyle(fontFamily: secondaryFontFamily))
         ],

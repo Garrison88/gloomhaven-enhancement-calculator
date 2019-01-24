@@ -18,7 +18,7 @@ void main() => runApp(MaterialApp(
           // DropDownButton text
           subhead: TextStyle(fontSize: 23.0),
           // Text widgets
-          body1: TextStyle(fontSize: 23.0),
+          body1: TextStyle(fontSize: 23.0, letterSpacing: 0.7),
         )),
     home: EnhancementsPage()));
 PageStorageKey enhancementKey = new PageStorageKey('enhancementKey');
