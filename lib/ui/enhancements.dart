@@ -3,6 +3,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EnhancementsPage extends StatefulWidget {
   EnhancementsPage({Key key}) : super(key: key);
@@ -20,58 +21,96 @@ class EnhancementsPageState extends State<EnhancementsPage> {
 
   int cityProsperityLvl,
       targetCardLvl = 0,
-      enhancementsOnTargetAction,
+      previousEnhancements,
       enhancementType,
       enhancementCost = 0;
 
   bool multipleTargetsSwitch = false, eligibleForMultipleTargets = false;
 
+  void menuItemSelected(String choice) {
+    if (choice == 'Developer Website') {
+      _launchUrl();
+    }
+  }
+
+  _launchUrl() async {
+    if (await canLaunch(Strings.devWebsiteUrl)) {
+      await launch(Strings.devWebsiteUrl);
+    } else {
+      throw 'Could not launch ${Strings.devWebsiteUrl}';
+    }
+  }
+
   createIconsListForDialog(List<String> list) {
     List<Widget> icons = [];
-//    if (list != null) {
-    list.forEach((icon) => icons.add(Image.asset(
-          'images/$icon',
-          height: iconWidth,
-          width: iconWidth,
-        )));
+    list.forEach(
+      (icon) => icons.add(
+            Padding(
+              child: Image.asset(
+                'images/$icon',
+                height: iconWidth,
+                width: iconWidth,
+              ),
+              padding: EdgeInsets.only(
+                right: (smallPadding / 2),
+              ),
+            ),
+          ),
+    );
     return icons;
-//    }
   }
 
   void _showInfoAlert(String title, String message) {
     String body;
     List<String> icons;
+    List<String> eligibleForIcons;
     if (enhancementType != null) {
-      // plus one enhancement selected
-      if (enhancementType > 0 && enhancementType < 16) {
-        body = Strings.plusOneInfoBody;
-        icons = Strings.plusOneIcons;
+      // plus one for character enhancement selected
+      if (enhancementType > 0 && enhancementType < 11) {
+        body = Strings.plusOneCharacterInfoBody;
+        icons = Strings.plusOneIcon;
+        eligibleForIcons = Strings.plusOneCharacterEligibleIcons;
+        // plus one for summon enhancement selected
+      } else if (enhancementType > 11 && enhancementType < 16) {
+        body = Strings.plusOneSummonInfoBody;
+        icons = Strings.plusOneIcon;
+        eligibleForIcons = Strings.plusOneSummonEligibleIcons;
         // negative enhancement selected
       } else if (enhancementType > 16 && enhancementType < 23) {
         body = Strings.negEffectInfoBody;
         icons = Strings.negEffectIcons;
+        eligibleForIcons = Strings.negEffectEligibleIcons;
         // positive enhancement selected
       } else if (enhancementType == 23 || enhancementType == 24) {
         body = Strings.posEffectInfoBody;
         icons = Strings.posEffectIcons;
+        eligibleForIcons = Strings.posEffectEligibleIcons;
         // move enhancement selected
       } else if (enhancementType == 25) {
-        body = Strings.moveInfoBody;
-        icons = Strings.moveIcons;
-        // elemental enhancement selected
-      } else if (enhancementType == 26 || enhancementType == 27) {
-        body = Strings.elementsInfoBody;
-        icons = Strings.elementsIcons;
+        body = Strings.jumpInfoBody;
+        icons = Strings.jumpIcon;
+        eligibleForIcons = Strings.jumpEligibleIcons;
+        // specific element enhancement selected
+      } else if (enhancementType == 26) {
+        body = Strings.specificElementInfoBody;
+        icons = Strings.specificElementIcons;
+        eligibleForIcons = Strings.elementEligibleIcons;
+        // any element enhancement selected
+      } else if (enhancementType == 27) {
+        body = Strings.anyElementInfoBody;
+        icons = Strings.anyElementIcon;
+        eligibleForIcons = Strings.elementEligibleIcons;
         // hex target enhancement selected
-      } else if (enhancementType > 29 && enhancementType <= 40) {
+      } else if (enhancementType > 28 && enhancementType <= 40) {
         body = Strings.hexInfoBody;
-        icons = Strings.hexIcons;
+        icons = Strings.hexIcon;
+        eligibleForIcons = Strings.hexEligibleIcons;
       }
     }
-//if (enhancementType != null) {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
+              // no title provided - this will be an enhancement dialog with icons
               title: title == null
                   ? Center(
                       child: SingleChildScrollView(
@@ -81,15 +120,41 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                         children: createIconsListForDialog(icons),
                       ),
                     ))
+                  // title provided - this will be an info dialog with a text title
                   : Center(
                       child: Text(
                         title,
-                        style: TextStyle(fontSize: 23.0),
+                        style: TextStyle(
+                            fontSize: 28.0,
+                            decoration: TextDecoration.underline),
                       ),
                     ),
               content: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
+                    // if title isn't provided, display eligible enhancements
+                    title == null
+                        ? Column(children: <Widget>[
+                            Text(
+                              'Eligible For:',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: smallPadding, bottom: smallPadding)),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  children: createIconsListForDialog(
+                                      eligibleForIcons)),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: smallPadding, bottom: smallPadding)),
+                          ])
+                        // if title isn't provided, display nothing
+                        : Container(),
                     Text(
                       message == null ? body : message,
                       style: TextStyle(fontFamily: secondaryFontFamily),
@@ -127,7 +192,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
       targetCardLvl = prefs.getInt('targetCardLvlKey') != null
           ? prefs.getInt('targetCardLvlKey')
           : null;
-      enhancementsOnTargetAction =
+      previousEnhancements =
           prefs.getInt('enhancementsOnTargetActionKey') != null
               ? prefs.getInt('enhancementsOnTargetActionKey')
               : null;
@@ -153,7 +218,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
     setState(() {
       prefs.setInt('prosperityLvlKey', cityProsperityLvl);
       prefs.setInt('targetCardLvlKey', targetCardLvl);
-      prefs.setInt('enhancementsOnTargetActionKey', enhancementsOnTargetAction);
+      prefs.setInt('enhancementsOnTargetActionKey', previousEnhancements);
       prefs.setInt('enhancementTypeKey', enhancementType);
       prefs.setBool(
           'eligibleForMultipleTargetsKey', eligibleForMultipleTargets);
@@ -231,10 +296,8 @@ class EnhancementsPageState extends State<EnhancementsPage> {
     enhancementCost =
         // add 25g for each card level beyond 1
         (targetCardLvl != null && targetCardLvl > 0 ? targetCardLvl * 25 : 0) +
-            // add 75g for each existing enhancement on target action
-            (enhancementsOnTargetAction != null
-                ? enhancementsOnTargetAction * 75
-                : 0) +
+            // add 75g for each previous enhancement on target action
+            (previousEnhancements != null ? previousEnhancements * 75 : 0) +
             (multipleTargetsSwitch ? baseCost * 2 : baseCost);
 
     writeToSharedPrefs();
@@ -243,7 +306,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
   void resetAllFields() {
     setState(() {
       targetCardLvl = null;
-      enhancementsOnTargetAction = null;
+      previousEnhancements = null;
       enhancementType = null;
       enhancementCost = 0;
       multipleTargetsSwitch = false;
@@ -268,7 +331,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
 
   void handleEnhancementsOnTargetActionSelection(int value) {
     setState(() {
-      enhancementsOnTargetAction = value;
+      previousEnhancements = value;
       updateEnhancementCost();
     });
   }
@@ -290,20 +353,13 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         case 16:
         case 28:
           break;
-        // not eligible for 2x multiplier (hide multiplier switch)
-//        case 4:
-//        case 8:
+        // target selected - switch on multiple target switch
         case 10:
+          eligibleForMultipleTargets = true;
           multipleTargetsSwitch = true;
           enhancementType = value;
+          updateEnhancementCost();
           break;
-//        case 15:
-//        case 25:
-//          eligibleForMultipleTargets = false;
-//          multipleTargetsSwitch = false;
-//          enhancementType = value;
-//          updateEnhancementCost();
-//          break;
         // hex selected
         case 29:
         case 30:
@@ -325,7 +381,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
         // normal enhancement selected, eligible for multiple target multiplier
         default:
           eligibleForMultipleTargets = true;
-          multipleTargetsSwitch = false;
+//          multipleTargetsSwitch = false;
           enhancementType = value;
           updateEnhancementCost();
           break;
@@ -337,8 +393,28 @@ class EnhancementsPageState extends State<EnhancementsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title:
-                Text('Gloomhaven Companion', style: TextStyle(fontSize: 25.0))),
+          title: Text(
+            'Gloomhaven Companion',
+            style: TextStyle(fontSize: 25.0),
+          ),
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: menuItemSelected,
+              itemBuilder: (BuildContext context) {
+                return Strings.choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(
+                      choice,
+                      style: TextStyle(
+                          fontFamily: secondaryFontFamily, fontSize: 20.0),
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+        ),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -354,8 +430,11 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                     Column(
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 4.0),
+                            ),
                             RaisedButton.icon(
                               color: Theme.of(context).accentColor,
                               icon: Icon(
@@ -363,9 +442,11 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                 color: Colors.white,
                               ),
                               label: Text(
-                                'General Info',
+                                'General Guidelines',
                                 style: TextStyle(
-                                    fontSize: 18.0, color: Colors.white),
+                                    fontSize: 20.0,
+                                    color: Colors.white,
+                                    fontFamily: secondaryFontFamily),
                               ),
                               onPressed: () {
                                 _showInfoAlert(Strings.generalInfoTitle,
@@ -385,7 +466,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                     _showInfoAlert(Strings.cardLevelInfoTitle,
                                         Strings.cardLevelInfoBody);
                                   }),
-                              Text('Card level:'),
+                              Text('Card Level:'),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton<int>(
                                   hint: Text(
@@ -415,12 +496,18 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                   ),
                                   onPressed: () {
                                     _showInfoAlert(
-                                        Strings.existingEnhancementsInfoTitle,
-                                        Strings.existingEnhancementsInfoBody);
+                                        Strings.previousEnhancementsInfoTitle,
+                                        Strings.previousEnhancementsInfoBody);
                                   }),
                               Expanded(
-                                child: Text('Existing enhancements:'),
+                                child: Text(
+                                  'Previous Enhancements:',
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
+                              Padding(
+                                  padding:
+                                      EdgeInsets.only(right: smallPadding)),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton<int>(
                                   hint: Text(
@@ -428,7 +515,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                     style: TextStyle(
                                         fontFamily: secondaryFontFamily),
                                   ),
-                                  value: enhancementsOnTargetAction,
+                                  value: previousEnhancements,
                                   items: enhancementsOnTargetActionList,
                                   onChanged:
                                       handleEnhancementsOnTargetActionSelection,
@@ -457,7 +544,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                             }
                                           : null),
                                   Text(
-                                    'Enhancement type:',
+                                    'Enhancement Type:',
                                   ),
                                   IconButton(
                                       icon: Icon(
@@ -495,7 +582,7 @@ class EnhancementsPageState extends State<EnhancementsPage> {
                                           Strings.multipleTargetsInfoTitle,
                                           Strings.multipleTargetsInfoBody);
                                     }),
-                                Text('Multiple targets?'),
+                                Text('Multiple Targets?'),
                                 Switch(
                                     value: multipleTargetsSwitch,
                                     onChanged: handleMultipleTargetsSelection),
