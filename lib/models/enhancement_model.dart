@@ -1,10 +1,10 @@
+import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
+
 class Enhancement {
-
-  final String name;
-  final int cost;
+  final EnhancementCategory category;
+  final int baseCost;
   final String icon;
-  final bool isHex;
-  final bool isSubtitle;
+  final String name;
 
-  Enhancement(this.name, this.cost, this.icon, this.isHex, this.isSubtitle);
+  Enhancement(this.category, this.baseCost, this.icon, this.name);
 }
