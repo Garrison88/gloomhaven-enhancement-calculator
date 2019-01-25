@@ -1,11 +1,14 @@
 class Strings {
   // menu items
   static List<String> choices = ['Developer Website'];
+
   // developer website url
   static String devWebsiteUrl = 'https://garrisonsiberry.com/';
+
   // general info
   static String generalInfoTitle = "Enhancements";
-  static String generalInfoBody = "Congratulations! Now that your company has earned 'The Power of "
+  static String generalInfoBody =
+      "Congratulations! Now that your company has earned 'The Power of "
       "Enhancement' global achievement, its members may purchase enhancements "
       "to permanently augment their class' cards. This is done by paying the associated "
       "cost (determined by card level, previous enhancements, type of enhancement, and number of targets) "
@@ -51,7 +54,8 @@ class Strings {
   ];
 
   // plus one for summon
-  static String plusOneSummonInfoBody = "This enhancement can be placed on any summon ability"
+  static String plusOneSummonInfoBody =
+      "This enhancement can be placed on any summon ability"
       " with a numerical value. That value is increased by 1.";
   static List<String> plusOneSummonEligibleIcons = [
     'move.png',
@@ -64,7 +68,7 @@ class Strings {
   static String negEffectInfoBody =
       "These enhancements can be placed on any MAIN ability line that targets enemies. The specified condition is "
       "applied to all targets of that ability unless they are immune. Curse can be added multiple times "
-      "to the same target. Summons cannot be enhanced with effects.";
+      "to the same ability line. Summons cannot be enhanced with effects.";
   static List<String> negEffectIcons = [
     'poison.png',
     'wound.png',
@@ -89,7 +93,7 @@ class Strings {
   static String posEffectInfoBody =
       "These enhancements can be placed on any MAIN ability line that targets allies or yourself. "
       "The specified condition is applied to all targets of that ability. "
-      "Bless may be added multiple times to the same target. Summons cannot be "
+      "Bless can be added multiple times to the same ability line. Summons cannot be "
       "enhanced with effects.";
   static List<String> posEffectIcons = ['strengthen.png', 'bless.png'];
   static List<String> posEffectEligibleIcons = [
@@ -102,14 +106,16 @@ class Strings {
   ];
 
   // move
-  static String jumpInfoBody = "This enhancement can be placed on any Move ability line. "
+  static String jumpInfoBody =
+      "This enhancement can be placed on any Move ability line. "
       "The movement is now considered a Jump. A summon's Move cannot be enhanced"
       " with Jump.";
   static List<String> jumpIcon = ['jump.png'];
   static List<String> jumpEligibleIcons = ['move.png'];
 
   // specific element
-  static String specificElementInfoBody = "These enhancements can be placed on any MAIN ability line. "
+  static String specificElementInfoBody =
+      "These enhancements can be placed on any MAIN ability line. "
       "The specific element is created when the ability is used.";
   static List<String> specificElementIcons = [
     'elem_fire.png',
@@ -142,20 +148,21 @@ class Strings {
   static String anyElementInfoBody =
       "This enhancement can be placed on any MAIN ability line. The player chooses the element "
       "that is created when the ability is used.";
-  static List<String> anyElementIcon = ['any_element.png'];
+  static List<String> anyElementIcon = ['elem_any.png'];
 
   // hex
-  static String hexInfoBody = "This enhancement can be placed to increase the graphical "
-      "depiction of an area attack. The new hex becomes an additional target of "
-      "the attack. Adding a hex is not subject to the multiple target fee.";
-  static List<String> hexIcon = ['hex_target.png'];
-  static List<String> hexEligibleIcons = ['hex_target.png'];
+  static String hexInfoBody =
+      "This enhancement can be placed to increase the graphical "
+      "depiction of an area attack. The new Hex becomes an additional target of "
+      "the attack. Adding a Hex is not subject to the multiple target fee.";
+  static List<String> hexIcon = ['hex.png'];
+  static List<String> hexEligibleIcons = ['hex.png'];
 
   // multiple targets
   static String multipleTargetsInfoTitle = "Multiple Targets Multiplier";
   static String multipleTargetsInfoBody =
       "If an ability targets multiple enemies or allies, the enhancement base cost "
       "is doubled. This includes abilities that target 'All adjacent enemies' or "
-      "'All allies within range 3', for example. +1 Target will always be double "
-      "base cost.";
+      "'All allies within range 3', for example. Adding +1 to Target will always be double "
+      "base cost, while adding a Hex will never be.";
 }
