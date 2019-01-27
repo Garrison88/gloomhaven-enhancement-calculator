@@ -57,7 +57,7 @@ List<DropdownMenuItem<int>> cardLevelList = _generateCardLevelList(9);
 List<DropdownMenuItem<int>> previousEnhancementsList =
     _generatePreviousEnhancementsList(3);
 List<DropdownMenuItem<Enhancement>> enhancementTypeList =
-    _generateEnhancementTypeList(enhancementList);
+    _generateEnhancementList(enhancementList);
 
 _generateCardLevelList(int _maxLevel) {
   List<DropdownMenuItem<int>> _list = [];
@@ -81,7 +81,7 @@ _generatePreviousEnhancementsList(int _maxNumber) {
   return _list;
 }
 
-_generateEnhancementTypeList(List<Enhancement> _enhancementsList) {
+_generateEnhancementList(List<Enhancement> _enhancementsList) {
   List<DropdownMenuItem<Enhancement>> _list = [];
   _enhancementsList.forEach((_enhancement) => _list.add(
         _enhancement.category == EnhancementCategory.title
@@ -127,8 +127,25 @@ _generateEnhancementTypeList(List<Enhancement> _enhancementsList) {
             : DropdownMenuItem(
                 child: Row(
                   children: <Widget>[
-                    Image.asset('images/${_enhancement.icon}',
-                        width: iconWidth),
+                    // add small +1 icon beside move if it's eligible
+                    _enhancement.category == EnhancementCategory.charPlusOne ||
+                            _enhancement.category ==
+                                EnhancementCategory.target ||
+                            _enhancement.category ==
+                                EnhancementCategory.summonPlusOne
+                        ? Stack(
+                            alignment: Alignment(1.0, -1.0),
+                            children: <Widget>[
+                              Image.asset('images/${_enhancement.icon}',
+                                  width: iconWidth),
+                              Image.asset('images/plus_one_border.png',
+                                  width: plusOneWidth / 2,
+                                  height: plusOneHeight / 2)
+                            ],
+                          )
+                        // otherwise, no +1 icon
+                        : Image.asset('images/${_enhancement.icon}',
+                            width: iconWidth),
                     Text(' ${_enhancement.name} (${_enhancement.baseCost}g)',
                         style: TextStyle(fontFamily: secondaryFontFamily))
                   ],

@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/alert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,156 +42,6 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
     } else {
       throw 'Could not launch ${Strings.devWebsiteUrl}';
     }
-  }
-
-  _createIconsListForDialog(List<String> _list) {
-    List<Widget> _icons = [];
-    _list.forEach(
-      (icon) => _icons.add(
-            Padding(
-              child: Image.asset(
-                'images/$icon',
-                height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
-                width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
-              ),
-              padding: EdgeInsets.only(
-                right: (smallPadding / 2),
-              ),
-            ),
-          ),
-    );
-    return _icons;
-  }
-
-  void _showInfoAlert(String _dialogTitle, String _dialogMessage) {
-    String _bodyText;
-    List<String> _titleIcons;
-    List<String> _eligibleForIcons;
-    if (_selectedEnhancement != null) {
-      switch (_selectedEnhancement.category) {
-        // plus one for character enhancement selected
-        case EnhancementCategory.charPlusOne:
-        case EnhancementCategory.target:
-          _bodyText = Strings.plusOneCharacterInfoBody;
-          _titleIcons = Strings.plusOneIcon;
-          _eligibleForIcons = Strings.plusOneCharacterEligibleIcons;
-          break;
-        // plus one for summon enhancement selected
-        case EnhancementCategory.summonPlusOne:
-          _bodyText = Strings.plusOneSummonInfoBody;
-          _titleIcons = Strings.plusOneIcon;
-          _eligibleForIcons = Strings.plusOneSummonEligibleIcons;
-          break;
-        // negative enhancement selected
-        case EnhancementCategory.negEffect:
-          _bodyText = Strings.negEffectInfoBody;
-          _titleIcons = Strings.negEffectIcons;
-          _eligibleForIcons = Strings.negEffectEligibleIcons;
-          break;
-        // positive enhancement selected
-        case EnhancementCategory.posEffect:
-          _bodyText = Strings.posEffectInfoBody;
-          _titleIcons = Strings.posEffectIcons;
-          _eligibleForIcons = Strings.posEffectEligibleIcons;
-          break;
-        // jump selected
-        case EnhancementCategory.jump:
-          _bodyText = Strings.jumpInfoBody;
-          _titleIcons = Strings.jumpIcon;
-          _eligibleForIcons = Strings.jumpEligibleIcons;
-          break;
-        // specific element selected
-        case EnhancementCategory.specElem:
-          _bodyText = Strings.specificElementInfoBody;
-          _titleIcons = Strings.specificElementIcons;
-          _eligibleForIcons = Strings.elementEligibleIcons;
-          break;
-        // any element selected
-        case EnhancementCategory.anyElem:
-          _bodyText = Strings.anyElementInfoBody;
-          _titleIcons = Strings.anyElementIcon;
-          _eligibleForIcons = Strings.elementEligibleIcons;
-          break;
-        // hex selected
-        case EnhancementCategory.hex:
-          _bodyText = Strings.hexInfoBody;
-          _titleIcons = Strings.hexIcon;
-          _eligibleForIcons = Strings.hexEligibleIcons;
-          break;
-        // title selected (do nothing)
-        case EnhancementCategory.title:
-          break;
-      }
-    }
-    showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              // no title provided - this will be an enhancement dialog with icons
-              title: _dialogTitle == null
-                  ? Center(
-                      child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _createIconsListForDialog(_titleIcons),
-                      ),
-                    ))
-                  // title provided - this will be an info dialog with a text title
-                  : Center(
-                      child: Text(
-                        _dialogTitle,
-                        style: TextStyle(
-                            fontSize: 28.0,
-                            decoration: TextDecoration.underline),
-                      ),
-                    ),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    // if title isn't provided, display eligible enhancements
-                    _dialogTitle == null
-                        ? Column(children: <Widget>[
-                            Text(
-                              'Eligible For:',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: smallPadding, bottom: smallPadding)),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  children: _createIconsListForDialog(
-                                      _eligibleForIcons)),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: smallPadding, bottom: smallPadding)),
-                          ])
-                        // if title isn't provided, display an empty container
-                        : Container(),
-                    Text(
-                      _dialogMessage == null ? _bodyText : _dialogMessage,
-                      style: TextStyle(fontFamily: secondaryFontFamily),
-                    ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Got it!',
-                    style: TextStyle(
-                        fontSize: secondaryFontSize,
-                        fontFamily: secondaryFontFamily),
-                  ),
-                ),
-              ],
-            ));
   }
 
   Future _readFromSharedPrefs() async {
@@ -258,14 +109,18 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
 
   void _handleTypeSelection(Enhancement _value) {
     setState(() {
-      if (_value.category == EnhancementCategory.target) {
-        _multipleTargetsSwitch = true;
-        _disableMultiTargetSwitch = true;
-      } else if (_value.category == EnhancementCategory.hex) {
-        _multipleTargetsSwitch = false;
-        _disableMultiTargetSwitch = true;
-      } else {
-        _disableMultiTargetSwitch = false;
+      switch (_value.category) {
+        case EnhancementCategory.target:
+          _multipleTargetsSwitch = true;
+          _disableMultiTargetSwitch = true;
+          break;
+        case EnhancementCategory.hex:
+          _multipleTargetsSwitch = false;
+          _disableMultiTargetSwitch = true;
+          break;
+        default:
+          _disableMultiTargetSwitch = false;
+          break;
       }
       _selectedEnhancement = _value;
       _updateEnhancementCost();
@@ -361,8 +216,8 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                     fontFamily: secondaryFontFamily),
                               ),
                               onPressed: () {
-                                _showInfoAlert(Strings.generalInfoTitle,
-                                    Strings.generalInfoBody);
+                                showInfoAlert(context, Strings.generalInfoTitle,
+                                    Strings.generalInfoBody, null);
                               },
                             ),
                           ],
@@ -375,8 +230,11 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                   icon: Icon(Icons.info_outline,
                                       color: Theme.of(context).accentColor),
                                   onPressed: () {
-                                    _showInfoAlert(Strings.cardLevelInfoTitle,
-                                        Strings.cardLevelInfoBody);
+                                    showInfoAlert(
+                                        context,
+                                        Strings.cardLevelInfoTitle,
+                                        Strings.cardLevelInfoBody,
+                                        null);
                                   }),
                               Text('Card Level:'),
                               DropdownButtonHideUnderline(
@@ -404,9 +262,11 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                     color: Theme.of(context).accentColor,
                                   ),
                                   onPressed: () {
-                                    _showInfoAlert(
+                                    showInfoAlert(
+                                        context,
                                         Strings.previousEnhancementsInfoTitle,
-                                        Strings.previousEnhancementsInfoBody);
+                                        Strings.previousEnhancementsInfoBody,
+                                        null);
                                   }),
                               Expanded(
                                 child: Text(
@@ -450,7 +310,12 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                                 Theme.of(context).accentColor),
                                         onPressed: _selectedEnhancement != null
                                             ? () {
-                                                _showInfoAlert(null, null);
+                                                showInfoAlert(
+                                                    context,
+                                                    null,
+                                                    null,
+                                                    _selectedEnhancement
+                                                        .category);
                                               }
                                             : null),
                                   ),
@@ -487,9 +352,11 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                   icon: Icon(Icons.info_outline,
                                       color: Theme.of(context).accentColor),
                                   onPressed: () {
-                                    _showInfoAlert(
+                                    showInfoAlert(
+                                        context,
                                         Strings.multipleTargetsInfoTitle,
-                                        Strings.multipleTargetsInfoBody);
+                                        Strings.multipleTargetsInfoBody,
+                                        null);
                                   }),
                               Text('Multiple Targets?'),
                               AbsorbPointer(

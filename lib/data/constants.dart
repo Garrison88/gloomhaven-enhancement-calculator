@@ -1,4 +1,7 @@
 final double secondaryFontSize = 25.0,
+dialogFontSize = 22.0,
+    inTextIconHeight = 20.0,
+    inTextIconWidth = 20.0,
     iconWidth = 35.0,
     iconHeight = 35.0,
     plusOneWidth = 25.0,
