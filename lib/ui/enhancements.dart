@@ -18,9 +18,9 @@ class EnhancementsPage extends StatefulWidget {
 }
 
 class _EnhancementsPageState extends State<EnhancementsPage> {
-  int _targetCardLvl = 0, _previousEnhancements, _enhancementCost = 0;
+  int _targetCardLvl, _previousEnhancements, _enhancementCost = 0;
 
-  bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = true;
+  bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = false;
 
   Enhancement _selectedEnhancement;
 
@@ -54,13 +54,14 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
           _prefs.getInt('enhancementsOnTargetActionKey') != null
               ? _prefs.getInt('enhancementsOnTargetActionKey')
               : null;
-      _selectedEnhancement = _prefs.getInt('enhancementTypeKey') != null
-          ? enhancementList[_prefs.getInt('enhancementTypeKey')]
-          : null;
+      _selectedEnhancement =
+          _prefs.getInt('enhancementTypeKey') != null && enhancementList != null
+              ? enhancementList[_prefs.getInt('enhancementTypeKey')]
+              : null;
       _disableMultiTargetSwitch =
           _prefs.getBool('eligibleForMultipleTargetsKey') != null
               ? _prefs.getBool('eligibleForMultipleTargetsKey')
-              : true;
+              : false;
       _multipleTargetsSwitch =
           _prefs.getBool('multipleTargetsSelectedKey') != null
               ? _prefs.getBool('multipleTargetsSelectedKey')
@@ -208,6 +209,9 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                 Icons.info,
                                 color: Colors.white,
                               ),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(30.0)),
                               label: Text(
                                 'General Guidelines',
                                 style: TextStyle(

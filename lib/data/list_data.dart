@@ -53,7 +53,7 @@ final List<Enhancement> enhancementList = [
   Enhancement(EnhancementCategory.hex, 15, 'hex.png', '13 Current Hexes')
 ];
 
-List<DropdownMenuItem<int>> cardLevelList = _generateCardLevelList(9);
+List<DropdownMenuItem<int>> cardLevelList = _generateCardLevelList(8);
 List<DropdownMenuItem<int>> previousEnhancementsList =
     _generatePreviousEnhancementsList(3);
 List<DropdownMenuItem<Enhancement>> enhancementTypeList =
@@ -63,7 +63,7 @@ _generateCardLevelList(int _maxLevel) {
   List<DropdownMenuItem<int>> _list = [];
   for (int x = 0; x <= _maxLevel; x++) {
     _list.add(DropdownMenuItem(
-        child: Text(x == 0 ? '1 / x' : '$x (${(x * 25)}g)',
+        child: Text(x == 0 ? '1 / x' : '${x + 1} (${(x * 25)}g)',
             style: TextStyle(fontFamily: secondaryFontFamily)),
         value: x));
   }
