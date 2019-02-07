@@ -27,6 +27,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
   RichText _bodyText;
   List<String> _titleIcons;
   List<String> _eligibleForIcons;
+  // info about enhancement category requested
   if (_category != null) {
     switch (_category) {
       // plus one for character enhancement selected

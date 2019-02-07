@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/alert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class EnhancementsPage extends StatefulWidget {
-  EnhancementsPage({Key key}) : super(key: key);
+class EnhancementCalculatorPage extends StatefulWidget {
+  EnhancementCalculatorPage({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _EnhancementsPageState();
+    return _EnhancementCalculatorPageState();
   }
 }
 
-class _EnhancementsPageState extends State<EnhancementsPage> {
+class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   int _targetCardLvl, _previousEnhancements, _enhancementCost = 0;
 
   bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = false;
@@ -28,20 +27,6 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
   void initState() {
     super.initState();
     _readFromSharedPrefs();
-  }
-
-  void _menuItemSelected(String _choice) {
-    if (_choice == 'Developer Website') {
-      _launchUrl();
-    }
-  }
-
-  void _launchUrl() async {
-    if (await canLaunch(Strings.devWebsiteUrl)) {
-      await launch(Strings.devWebsiteUrl);
-    } else {
-      throw 'Could not launch ${Strings.devWebsiteUrl}';
-    }
   }
 
   Future _readFromSharedPrefs() async {
@@ -160,29 +145,6 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Gloomhaven Companion',
-            style: TextStyle(fontSize: 25.0),
-          ),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: _menuItemSelected,
-              itemBuilder: (BuildContext context) {
-                return Strings.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(
-                      choice,
-                      style: TextStyle(
-                          fontFamily: secondaryFontFamily, fontSize: 20.0),
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-        ),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -209,9 +171,9 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                 Icons.info,
                                 color: Colors.white,
                               ),
-                              shape: new RoundedRectangleBorder(
+                              shape: RoundedRectangleBorder(
                                   borderRadius:
-                                      new BorderRadius.circular(30.0)),
+                                      BorderRadius.circular(30.0)),
                               label: Text(
                                 'General Guidelines',
                                 style: TextStyle(
