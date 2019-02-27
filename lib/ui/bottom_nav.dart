@@ -92,11 +92,11 @@ class BottomNavState extends State<BottomNav> {
             onPageChanged: onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.add), title: Text('ENHANCEMENT CALCULATOR')),
+              icon: Icon(Icons.attach_money), title: Text('ENHANCEMENT CALCULATOR')),
 //          BottomNavigationBarItem(
 //              icon: Icon(Icons.location_on), title: Text('CHARACTER SHEET')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.people), title: Text('CHARACTER SHEET'))
+              icon: Icon(Icons.person), title: Text('CHARACTER SHEET'))
         ], onTap: navigationTapped, currentIndex: page));
   }
 }

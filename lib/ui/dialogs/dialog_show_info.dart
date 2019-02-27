@@ -138,7 +138,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  Navigator.pop(_context);
+                  Navigator.of(_context).pop();
                 },
                 child: Text(
                   'Got it!',

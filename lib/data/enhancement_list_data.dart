@@ -4,7 +4,7 @@ import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
 
 final List<Enhancement> enhancementList = [
-  // enhancement category, base cost, icon, and name
+  // plus one
   Enhancement(
       EnhancementCategory.title, null, 'plus_one.png', ' For Character'),
   Enhancement(EnhancementCategory.charPlusOne, 30, 'move.png', 'Move'),
@@ -23,6 +23,7 @@ final List<Enhancement> enhancementList = [
   Enhancement(EnhancementCategory.summonPlusOne, 100, 'attack.png', 'Attack'),
   Enhancement(EnhancementCategory.summonPlusOne, 50, 'range.png', 'Range'),
   Enhancement(EnhancementCategory.summonPlusOne, 50, 'heal.png', 'HP'),
+  // negative effects
   Enhancement(EnhancementCategory.title, null, null, 'Effect'),
   Enhancement(EnhancementCategory.negEffect, 75, 'poison.png', 'Effect'),
   Enhancement(EnhancementCategory.negEffect, 75, 'wound.png', 'Wound'),
@@ -31,6 +32,7 @@ final List<Enhancement> enhancementList = [
       EnhancementCategory.negEffect, 100, 'immobilize.png', 'Immobilize'),
   Enhancement(EnhancementCategory.negEffect, 150, 'disarm.png', 'Disarm'),
   Enhancement(EnhancementCategory.negEffect, 75, 'curse.png', 'Curse'),
+  // positive effects
   Enhancement(
       EnhancementCategory.posEffect, 50, 'strengthen.png', 'Strengthen'),
   Enhancement(EnhancementCategory.posEffect, 50, 'bless.png', 'Bless'),

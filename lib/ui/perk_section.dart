@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/ui/perk.dart';
+
+class PerkSection extends StatefulWidget {
+  final List<Perk> perkList;
+
+  PerkSection(this.perkList);
+
+  @override
+  State<StatefulWidget> createState() => PerkSectionState();
+}
+
+class PerkSectionState extends State<PerkSection> {
+  List<Perk> _perkList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _perkList = widget.perkList;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return SliverGrid.count(
+      crossAxisCount: 1,
+      childAspectRatio: 4,
+      children: List.generate(_perkList.length, (index) {
+        return _perkList[index];
+      }),
+    );
+  }
+}
