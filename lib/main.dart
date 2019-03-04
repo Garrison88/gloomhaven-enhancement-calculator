@@ -14,12 +14,13 @@ void main() async {
   PlayerClass _selectedClass =
       sp.getInt('selectedClass') != null && classList != null
           ? classList[sp.getInt('selectedClass')]
-          : null;
+          : classList[0];
   runApp(DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
-            accentColor:
-                _selectedClass != null ? _selectedClass.color : Color(0xff4e7ec1),
+            accentColor: _selectedClass != null
+                ? _selectedClass.color
+                : Color(0xff4e7ec1),
             primarySwatch: Colors.brown,
             brightness: brightness,
             // Define the default Font Family
@@ -40,7 +41,6 @@ void main() async {
           routes: <String, WidgetBuilder>{
             '/enhancementCalculatorPage': (BuildContext context) =>
                 EnhancementCalculatorPage(),
-//            '/noCharacterPage': (BuildContext context) => NoCharacterPage(),
             '/characterSheetPage': (BuildContext context) =>
                 CharacterSheetPage()
           },

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
@@ -21,13 +22,13 @@ class BottomNavState extends State<BottomNav> {
   /// Called when the user presses on of the
   /// [BottomNavigationBarItem] with corresponding
   /// page index
-  void navigationTapped(int page) {
+  void _navigationTapped(int page) {
     // Animating to the page
     pageController.animateToPage(page,
-        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
-  void onPageChanged(int page) {
+  void _onPageChanged(int page) {
     setState(() {
       this.page = page;
     });
@@ -50,7 +51,7 @@ class BottomNavState extends State<BottomNav> {
   @override
   void initState() {
     super.initState();
-    pageController = new PageController();
+    pageController = PageController();
   }
 
   @override
@@ -62,7 +63,7 @@ class BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: true,
         appBar: AppBar(
           title: Text(
             'Gloomhaven Companion',
@@ -77,8 +78,7 @@ class BottomNavState extends State<BottomNav> {
                     value: choice,
                     child: Text(
                       choice,
-                      style: TextStyle(
-                          fontFamily: secondaryFontFamily, fontSize: 20.0),
+                      style: TextStyle(fontFamily: highTower, fontSize: 20.0),
                     ),
                   );
                 }).toList();
@@ -87,16 +87,28 @@ class BottomNavState extends State<BottomNav> {
           ],
         ),
         body: PageView(
-            children: [EnhancementCalculatorPage(), CharacterSheetPage()],
+            children: [CharacterSheetPage(), EnhancementCalculatorPage()],
             controller: pageController,
-            onPageChanged: onPageChanged),
+            onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money), title: Text('ENHANCEMENT CALCULATOR')),
-//          BottomNavigationBarItem(
-//              icon: Icon(Icons.location_on), title: Text('CHARACTER SHEET')),
+              icon: Icon(Icons.content_paste),
+              title: AutoSizeText(
+                'CHARACTER\nSHEET',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: highTower, fontWeight: FontWeight.bold),
+              )),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('CHARACTER SHEET'))
-        ], onTap: navigationTapped, currentIndex: page));
+              icon: Icon(Icons.star),
+              title: AutoSizeText(
+                'ENHANCEMENT\nCALCULATOR',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: highTower, fontWeight: FontWeight.bold),
+              )),
+        ], onTap: _navigationTapped, currentIndex: page));
   }
 }

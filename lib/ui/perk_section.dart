@@ -25,10 +25,8 @@ class PerkSectionState extends State<PerkSection> {
   Widget build(BuildContext context) {
     return SliverGrid.count(
       crossAxisCount: 1,
-      childAspectRatio: 4,
-      children: List.generate(_perkList.length, (index) {
-        return _perkList[index];
-      }),
+      childAspectRatio: 5,
+      children: List.generate(_perkList.length, (index) => _perkList[index]),
     );
   }
 }

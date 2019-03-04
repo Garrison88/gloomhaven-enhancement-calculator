@@ -41,7 +41,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
       TextEditingController();
   final TextEditingController _notesTextFieldController =
       TextEditingController();
-  int _radioValue = 0, _charLevel = 1, _nextLevelXp = 45, _xp = 0;
+  int _charLevel = 1, _nextLevelXp = 45;
   double rating = 0;
 
 //  Slot _selectedSlot;
@@ -56,7 +56,6 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 //        _gridList.add(GridItem(_itemList[x]));
 //      }
 //    });
-
     _handleExpChanged();
   }
 
@@ -122,7 +121,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 ////    _writeToSharedPrefs();
 //  }
 
-  void _saveChanges() {
+  void _toggleEditMode() {
     _isEditable = !_isEditable;
     print(_xpTextFieldController.text);
     _writeToSharedPrefs();
@@ -215,176 +214,202 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.925),
-              image: DecorationImage(
-                  image: AssetImage(_selectedClass != null
-                      ? 'images/class_icons/${_selectedClass.icon}'
-                      : ''),
-                  colorFilter: ColorFilter.mode(
-                      Colors.white.withOpacity(0.925), BlendMode.lighten),
-                  fit: BoxFit.fitWidth),
-            ),
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    Container(
-                        padding: EdgeInsets.all(20.0),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                  child: Column(
-                                children: <Widget>[
-                                  _isEditable
-                                      ? TextField(
-                                          controller:
-                                              _charNameTextFieldController,
-                                          style: TextStyle(
-                                              fontSize: titleFontSize,
-                                              fontFamily: secondaryFontFamily),
-                                          textAlign: TextAlign.center,
-                                          textCapitalization:
-                                              TextCapitalization.words,
-                                          decoration: InputDecoration(
-                                              hintText: 'Name',
-                                              hintStyle: TextStyle(
-                                                  fontSize: titleFontSize,
-                                                  fontFamily:
-                                                      secondaryFontFamily)),
-                                        )
-                                      : _xpTextFieldController.text != null
-                                          ? Text(
-                                              _charNameTextFieldController.text,
-                                              style: TextStyle(
-                                                  fontSize: titleFontSize,
-                                                  fontFamily:
-                                                      secondaryFontFamily),
-                                              textAlign: TextAlign.center,
-                                            )
-                                          : Container(),
-                                  _isEditable ? Container() : Divider(),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: _isEditable
-                                          ? <Widget>[
-                                              DropdownButtonHideUnderline(
-                                                child:
-                                                    DropdownButton<PlayerClass>(
-                                                  hint: Text(
-                                                    'Class',
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            titleFontSize),
-                                                  ),
-                                                  onChanged: _onClassSelected,
-                                                  value: _selectedClass,
-                                                  items: classListMenuItems,
-                                                ),
-                                              )
-                                            ]
-                                          : <Widget>[
-                                              Stack(
-                                                alignment: Alignment(0.0, 0.0),
-                                                children: <Widget>[
-                                                  Image.asset('images/xp.png',
-                                                      width: iconWidth * 1.5),
-                                                  Text(
-                                                    '$_charLevel',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize:
-                                                            titleFontSize),
-                                                  )
-                                                ],
-                                              ),
-                                              AutoSizeText(
-                                                '${_selectedClass.race} ${_selectedClass.className}',
-                                                style: TextStyle(
-                                                    fontSize: titleFontSize),
-                                              )
-                                            ]),
-                                ],
-                              )),
-                            ],
-                          ),
-                        )),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.95),
+          image: DecorationImage(
+              image: AssetImage(_selectedClass != null
+                  ? 'images/class_icons/${_selectedClass.icon}'
+                  : ''),
+              colorFilter: ColorFilter.mode(
+                  Colors.white.withOpacity(0.95), BlendMode.lighten),
+              fit: BoxFit.fitWidth),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomPadding: false,
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Container(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          flex: 1,
-                          child: Container(
-                              padding: EdgeInsets.all(smallPadding),
-                              child: _isEditable
-                                  ? TextField(
-                                      style: TextStyle(fontSize: titleFontSize),
-                                      textAlign: TextAlign.center,
-                                      controller: _xpTextFieldController,
-                                      decoration: InputDecoration(
-                                          labelText: 'XP',
-                                          labelStyle: TextStyle(
-                                              fontSize: dialogFontSize)),
-                                      inputFormatters: [
-                                        BlacklistingTextInputFormatter(
-                                            RegExp('[\\.|\\,|\\ |\\-]')),
-                                      ],
-                                      keyboardType:
-                                          TextInputType.number,
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Image.asset(
-                                          'images/xp.png',
-                                          width: iconWidth,
-                                        ),
-                                        Text(
-                                          ' ' + _xpTextFieldController.text,
-                                          style: TextStyle(
-                                              fontSize: titleFontSize),
-                                        ),
-                                        Column(
-                                          children: <Widget>[
-                                            Text(
-                                              ' / $_nextLevelXp',
-                                              style: TextStyle(
-                                                  fontSize: titleFontSize / 2),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    )),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: EdgeInsets.all(smallPadding),
-                            child: _isEditable
+                            child: Column(
+                          children: <Widget>[
+                            _isEditable
                                 ? TextField(
-                                    style: TextStyle(fontSize: titleFontSize),
+                                    controller: _charNameTextFieldController,
+                                    style: TextStyle(
+                                        fontSize: titleFontSize,
+                                        fontFamily: highTower),
                                     textAlign: TextAlign.center,
-                                    controller: _goldTextFieldController,
+                                    textCapitalization:
+                                        TextCapitalization.words,
                                     decoration: InputDecoration(
-                                        labelText: 'Gold',
-                                        labelStyle: TextStyle(
-                                            fontSize: dialogFontSize)),
-                                    inputFormatters: [
-                                      BlacklistingTextInputFormatter(
-                                          RegExp('[\\.|\\,|\\ |\\-]')),
-                                    ],
-                                    keyboardType:
-                                        TextInputType.number,
+                                        hintText: 'Name',
+                                        hintStyle: TextStyle(
+                                            fontSize: titleFontSize,
+                                            fontFamily: highTower)),
                                   )
-                                : Row(
+                                : Text(
+                                    _charNameTextFieldController.text,
+                                    style: TextStyle(
+                                        fontSize: titleFontSize,
+                                        fontFamily: highTower),
+                                    textAlign: TextAlign.center,
+                                  ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: _isEditable
+                                    ? <Widget>[
+                                        DropdownButtonHideUnderline(
+                                          child: DropdownButton<PlayerClass>(
+                                            hint: Text(
+                                              'Class',
+                                              style: TextStyle(
+                                                  fontSize: titleFontSize),
+                                            ),
+                                            onChanged: _onClassSelected,
+                                            value: _selectedClass,
+                                            items: classListMenuItems,
+                                          ),
+                                        )
+                                      ]
+                                    : <Widget>[
+                                        Stack(
+                                          alignment: Alignment(0.0, 0.0),
+                                          children: <Widget>[
+                                            Image.asset('images/xp.png',
+                                                width: iconWidth * 1.75),
+                                            Text(
+                                              '$_charLevel',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: titleFontSize),
+                                            )
+                                          ],
+                                        ),
+                                        AutoSizeText(
+                                            '${_selectedClass.race} ${_selectedClass.className}',
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                fontSize: titleFontSize)),
+                                      ]),
+                          ],
+                        )),
+                      ],
+                    ),
+                  ),
+                  _isEditable
+                      ? Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: TextField(
+                                style: TextStyle(fontSize: titleFontSize),
+                                textAlign: TextAlign.center,
+                                controller: _xpTextFieldController,
+                                decoration: InputDecoration(
+                                    labelText: 'XP',
+                                    labelStyle:
+                                        TextStyle(fontSize: dialogFontSize)),
+                                inputFormatters: [
+                                  BlacklistingTextInputFormatter(
+                                      RegExp('[\\.|\\,|\\ |\\-]'))
+                                ],
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: TextField(
+                                style: TextStyle(fontSize: titleFontSize),
+                                textAlign: TextAlign.center,
+                                controller: _goldTextFieldController,
+                                decoration: InputDecoration(
+                                    labelText: 'Gold',
+                                    labelStyle:
+                                        TextStyle(fontSize: dialogFontSize)),
+                                inputFormatters: [
+                                  BlacklistingTextInputFormatter(
+                                      RegExp('[\\.|\\,|\\ |\\-]')),
+                                ],
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Checkbox(
+                                      value: _firstCheck,
+                                      onChanged: (bool value) => setState(() {
+                                            _firstCheck = value;
+                                            _secondCheck = false;
+                                            _thirdCheck = false;
+                                          }),
+                                    ),
+                                    Checkbox(
+                                      value: _secondCheck,
+                                      onChanged: (bool value) => setState(() {
+                                            _firstCheck = true;
+                                            _secondCheck = value;
+                                            _thirdCheck = false;
+                                          }),
+                                    ),
+                                    Checkbox(
+                                      value: _thirdCheck,
+                                      onChanged: (bool value) => setState(() {
+                                            _firstCheck = true;
+                                            _secondCheck = true;
+                                            _thirdCheck = value;
+                                          }),
+                                    )
+                                  ],
+                                )),
+                          ],
+                        )
+                      : Center(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(smallPadding),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Image.asset(
+                                        'images/xp.png',
+                                        width: iconWidth,
+                                      ),
+                                      Text(
+                                        ' ' + _xpTextFieldController.text,
+                                        style:
+                                            TextStyle(fontSize: titleFontSize),
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Text(
+                                            ' / $_nextLevelXp',
+                                            style: TextStyle(
+                                                fontSize: titleFontSize / 2),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(smallPadding),
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Image.asset(
@@ -398,42 +423,10 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       )
                                     ],
                                   ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: _isEditable ? 2 : 1,
-                          child: Container(
-                            padding: EdgeInsets.all(smallPadding),
-                            child: _isEditable
-                                ? Row(
-                                    children: <Widget>[
-                                      Checkbox(
-                                        value: _firstCheck,
-                                        onChanged: (bool value) => setState(() {
-                                              _firstCheck = value;
-                                              _secondCheck = false;
-                                              _thirdCheck = false;
-                                            }),
-                                      ),
-                                      Checkbox(
-                                        value: _secondCheck,
-                                        onChanged: (bool value) => setState(() {
-                                              _firstCheck = true;
-                                              _secondCheck = value;
-                                              _thirdCheck = false;
-                                            }),
-                                      ),
-                                      Checkbox(
-                                        value: _thirdCheck,
-                                        onChanged: (bool value) => setState(() {
-                                              _firstCheck = true;
-                                              _secondCheck = true;
-                                              _thirdCheck = value;
-                                            }),
-                                      )
-                                    ],
-                                  )
-                                : Row(
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(smallPadding),
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Image.asset(
@@ -447,42 +440,75 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       )
                                     ],
                                   ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(smallPadding),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Image.asset(
+                                        'images/equipment_slots/pocket.png',
+                                        width: iconWidth,
+                                      ),
+                                      Text(
+                                        ' ${(_charLevel / 2).round()}',
+                                        style:
+                                            TextStyle(fontSize: titleFontSize),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ],
+                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  Text(
+                    'Notes',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: titleFontSize),
+                  ),
+//                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  Card(
+                    color: Colors.white,
+                    child: Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: _isEditable
+                          ? TextField(
+                              style: TextStyle(fontFamily: highTower),
+                              maxLines: 8,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: InputDecoration(
+                                  hintText: 'Notes',
+                                  hintStyle: TextStyle(fontFamily: highTower)),
+                              controller: _notesTextFieldController,
+                            )
+                          : Text(
+                              _notesTextFieldController.text,
+                              style: TextStyle(fontFamily: highTower),
+                            ),
                     ),
-                    Card(
-                      color: Colors.white.withOpacity(0.50),
-                      child: Container(
-                        padding: EdgeInsets.all(smallPadding),
-                        child: _isEditable
-                            ? TextField(
-                                style:
-                                    TextStyle(fontFamily: secondaryFontFamily),
-                                maxLines: 5,
-                                decoration: InputDecoration(
-                                    hintText: 'Notes',
-                                    hintStyle: TextStyle(
-                                        fontFamily: secondaryFontFamily)),
-                                controller: _notesTextFieldController,
-                              )
-                            : Text(
-                                _notesTextFieldController.text,
-                                style:
-                                    TextStyle(fontFamily: secondaryFontFamily),
-                              ),
-                      ),
-                    ),
-                  ]),
-                ),
-                _isEditable
-                    ? SliverAppBar(backgroundColor: Colors.transparent)
-                    : PerkSection(_selectedClass.perks),
-              ],
-            )),
-        floatingActionButton: FloatingActionButton(
-            foregroundColor: Colors.white,
-            onPressed: _saveChanges,
-            child: _isEditable ? Icon(Icons.check) : Icon(Icons.mode_edit)));
-  }
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  !_isEditable
+                      ? Text(
+                          'Perks',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: titleFontSize),
+                        )
+                      : Container(),
+//                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                ]),
+              ),
+              _isEditable
+                  ? SliverAppBar(backgroundColor: Colors.transparent)
+                  : PerkSection(_selectedClass.perks),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+              foregroundColor: Colors.white,
+              onPressed: _toggleEditMode,
+              child: _isEditable ? Icon(Icons.check) : Icon(Icons.mode_edit)),
+        ),
+      );
 }
