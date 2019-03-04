@@ -118,6 +118,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -139,6 +140,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               padding: EdgeInsets.only(left: smallPadding / 2),
                             ),
                             RaisedButton.icon(
+                              elevation: 5.0,
                               color: Theme.of(context).accentColor,
                               icon: Icon(
                                 Icons.info,
@@ -151,7 +153,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 style: TextStyle(
                                     fontSize: 20.0,
                                     color: Colors.white,
-                                    fontFamily: secondaryFontFamily),
+                                    fontFamily: highTower),
                               ),
                               onPressed: () {
                                 showInfoAlert(context, Strings.generalInfoTitle,
@@ -161,6 +163,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ],
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -180,7 +183,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   hint: Text(
                                     '1 / x',
                                     style: TextStyle(
-                                        fontFamily: secondaryFontFamily),
+                                        fontFamily: highTower),
                                   ),
                                   value: _targetCardLvl,
                                   items: cardLevelList,
@@ -191,6 +194,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -221,7 +225,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   hint: Text(
                                     'None',
                                     style: TextStyle(
-                                        fontFamily: secondaryFontFamily),
+                                        fontFamily: highTower),
                                   ),
                                   value: _previousEnhancements,
                                   items: previousEnhancementsList,
@@ -233,6 +237,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Column(
                             children: <Widget>[
                               Row(
@@ -274,7 +279,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                     hint: Text(
                                       'Type',
                                       style: TextStyle(
-                                          fontFamily: secondaryFontFamily),
+                                          fontFamily: highTower),
                                     ),
                                     value: _selectedEnhancement,
                                     items: enhancementTypeList,
@@ -284,6 +289,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[

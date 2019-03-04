@@ -1,5 +1,5 @@
 name: gloomhaven_enhancement_calc
-description: Calculate the price of a card enhancement
+description: Character sheet and enhancement calculator
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -76,6 +76,9 @@ flutter:
     - asset: fonts/high_tower.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  - family: Nyala
+    fonts:
+    - asset: fonts/nyala.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages

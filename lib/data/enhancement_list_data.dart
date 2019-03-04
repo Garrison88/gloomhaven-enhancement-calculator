@@ -66,7 +66,7 @@ _generateCardLevelList(int _maxLevel) {
   for (int x = 0; x <= _maxLevel; x++) {
     _list.add(DropdownMenuItem(
         child: Text(x == 0 ? '1 / x' : '${x + 1} (${(x * 25)}g)',
-            style: TextStyle(fontFamily: secondaryFontFamily)),
+            style: TextStyle(fontFamily: highTower)),
         value: x));
   }
   return _list;
@@ -77,7 +77,7 @@ _generatePreviousEnhancementsList(int _maxNumber) {
   for (int x = 0; x <= _maxNumber; x++) {
     _list.add(DropdownMenuItem(
         child: Text(x == 0 ? 'None' : '$x (${(x * 75)}g)',
-            style: TextStyle(fontFamily: secondaryFontFamily)),
+            style: TextStyle(fontFamily: highTower)),
         value: x));
   }
   return _list;
@@ -104,7 +104,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: secondaryFontFamily,
+                                  fontFamily: highTower,
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -118,7 +118,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: secondaryFontFamily,
+                                  fontFamily: highTower,
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -149,7 +149,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                         : Image.asset('images/${_enhancement.icon}',
                             width: iconWidth),
                     Text(' ${_enhancement.name} (${_enhancement.baseCost}g)',
-                        style: TextStyle(fontFamily: secondaryFontFamily))
+                        style: TextStyle(fontFamily: highTower))
                   ],
                 ),
                 value: _enhancement),

@@ -35,7 +35,8 @@ class PerkState extends State<Perk> {
 
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white.withOpacity(0.50),
+//        color: Colors.white.withOpacity(0.5),
+        padding: EdgeInsets.only(left: smallPadding, right: smallPadding),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -59,13 +60,13 @@ class PerkState extends State<Perk> {
               height: 30.0,
               width: 1.0,
               color: Theme.of(context).accentColor,
-              margin: EdgeInsets.only(left: 10.0, right: 10.0),
+              margin: EdgeInsets.only(right: 10.0),
             ),
             Expanded(
               child: AutoSizeText(
                 _details,
                 maxLines: 2,
-                style: TextStyle(fontFamily: secondaryFontFamily),
+                style: TextStyle(fontFamily: nyala),
               ),
             ),
           ],

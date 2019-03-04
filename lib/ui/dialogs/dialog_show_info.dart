@@ -102,7 +102,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
                     child: Text(
                       _dialogTitle,
                       style: TextStyle(
-                          fontSize: 28.0, decoration: TextDecoration.underline),
+                          fontSize: 28.0),
                     ),
                   ),
             content: SingleChildScrollView(
@@ -143,8 +143,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                      fontSize: secondaryFontSize,
-                      fontFamily: secondaryFontFamily),
+                      fontSize: secondaryFontSize, fontFamily: highTower),
                 ),
               ),
             ],
