@@ -27,6 +27,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
   RichText _bodyText;
   List<String> _titleIcons;
   List<String> _eligibleForIcons;
+  // info about enhancement category requested
   if (_category != null) {
     switch (_category) {
       // plus one for character enhancement selected
@@ -101,7 +102,7 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
                     child: Text(
                       _dialogTitle,
                       style: TextStyle(
-                          fontSize: 28.0, decoration: TextDecoration.underline),
+                          fontSize: 28.0),
                     ),
                   ),
             content: SingleChildScrollView(
@@ -137,13 +138,12 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  Navigator.pop(_context);
+                  Navigator.of(_context).pop();
                 },
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                      fontSize: secondaryFontSize,
-                      fontFamily: secondaryFontFamily),
+                      fontSize: secondaryFontSize, fontFamily: highTower),
                 ),
               ),
             ],

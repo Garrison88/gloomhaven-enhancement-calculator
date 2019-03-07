@@ -4,7 +4,7 @@ import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
 
 final List<Enhancement> enhancementList = [
-  // enhancement category, base cost, icon, and name
+  // plus one
   Enhancement(
       EnhancementCategory.title, null, 'plus_one.png', ' For Character'),
   Enhancement(EnhancementCategory.charPlusOne, 30, 'move.png', 'Move'),
@@ -23,6 +23,7 @@ final List<Enhancement> enhancementList = [
   Enhancement(EnhancementCategory.summonPlusOne, 100, 'attack.png', 'Attack'),
   Enhancement(EnhancementCategory.summonPlusOne, 50, 'range.png', 'Range'),
   Enhancement(EnhancementCategory.summonPlusOne, 50, 'heal.png', 'HP'),
+  // negative effects
   Enhancement(EnhancementCategory.title, null, null, 'Effect'),
   Enhancement(EnhancementCategory.negEffect, 75, 'poison.png', 'Effect'),
   Enhancement(EnhancementCategory.negEffect, 75, 'wound.png', 'Wound'),
@@ -31,6 +32,7 @@ final List<Enhancement> enhancementList = [
       EnhancementCategory.negEffect, 100, 'immobilize.png', 'Immobilize'),
   Enhancement(EnhancementCategory.negEffect, 150, 'disarm.png', 'Disarm'),
   Enhancement(EnhancementCategory.negEffect, 75, 'curse.png', 'Curse'),
+  // positive effects
   Enhancement(
       EnhancementCategory.posEffect, 50, 'strengthen.png', 'Strengthen'),
   Enhancement(EnhancementCategory.posEffect, 50, 'bless.png', 'Bless'),
@@ -64,7 +66,7 @@ _generateCardLevelList(int _maxLevel) {
   for (int x = 0; x <= _maxLevel; x++) {
     _list.add(DropdownMenuItem(
         child: Text(x == 0 ? '1 / x' : '${x + 1} (${(x * 25)}g)',
-            style: TextStyle(fontFamily: secondaryFontFamily)),
+            style: TextStyle(fontFamily: highTower)),
         value: x));
   }
   return _list;
@@ -75,7 +77,7 @@ _generatePreviousEnhancementsList(int _maxNumber) {
   for (int x = 0; x <= _maxNumber; x++) {
     _list.add(DropdownMenuItem(
         child: Text(x == 0 ? 'None' : '$x (${(x * 75)}g)',
-            style: TextStyle(fontFamily: secondaryFontFamily)),
+            style: TextStyle(fontFamily: highTower)),
         value: x));
   }
   return _list;
@@ -102,7 +104,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: secondaryFontFamily,
+                                  fontFamily: highTower,
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -116,7 +118,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: secondaryFontFamily,
+                                  fontFamily: highTower,
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -147,7 +149,7 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                         : Image.asset('images/${_enhancement.icon}',
                             width: iconWidth),
                     Text(' ${_enhancement.name} (${_enhancement.baseCost}g)',
-                        style: TextStyle(fontFamily: secondaryFontFamily))
+                        style: TextStyle(fontFamily: highTower))
                   ],
                 ),
                 value: _enhancement),

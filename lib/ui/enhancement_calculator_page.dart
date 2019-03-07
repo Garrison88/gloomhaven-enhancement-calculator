@@ -1,24 +1,24 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/alert_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/dialog_show_info.dart';
 
-class EnhancementsPage extends StatefulWidget {
-  EnhancementsPage({Key key}) : super(key: key);
+class EnhancementCalculatorPage extends StatefulWidget {
+  EnhancementCalculatorPage({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _EnhancementsPageState();
+    return _EnhancementCalculatorPageState();
   }
 }
 
-class _EnhancementsPageState extends State<EnhancementsPage> {
-  int _targetCardLvl, _previousEnhancements, _enhancementCost = 0;
+class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
+  int _targetCardLvl, _previousEnhancements, _enhancementCost;
 
   bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = false;
 
@@ -28,110 +28,81 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
   void initState() {
     super.initState();
     _readFromSharedPrefs();
-  }
-
-  void _menuItemSelected(String _choice) {
-    if (_choice == 'Developer Website') {
-      _launchUrl();
-    }
-  }
-
-  void _launchUrl() async {
-    if (await canLaunch(Strings.devWebsiteUrl)) {
-      await launch(Strings.devWebsiteUrl);
-    } else {
-      throw 'Could not launch ${Strings.devWebsiteUrl}';
-    }
-  }
-
-  Future _readFromSharedPrefs() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _targetCardLvl = _prefs.getInt('targetCardLvlKey') != null
-          ? _prefs.getInt('targetCardLvlKey')
-          : null;
-      _previousEnhancements =
-          _prefs.getInt('enhancementsOnTargetActionKey') != null
-              ? _prefs.getInt('enhancementsOnTargetActionKey')
-              : null;
-      _selectedEnhancement =
-          _prefs.getInt('enhancementTypeKey') != null && enhancementList != null
-              ? enhancementList[_prefs.getInt('enhancementTypeKey')]
-              : null;
-      _disableMultiTargetSwitch =
-          _prefs.getBool('eligibleForMultipleTargetsKey') != null
-              ? _prefs.getBool('eligibleForMultipleTargetsKey')
-              : false;
-      _multipleTargetsSwitch =
-          _prefs.getBool('multipleTargetsSelectedKey') != null
-              ? _prefs.getBool('multipleTargetsSelectedKey')
-              : false;
-      _enhancementCost = _prefs.getInt('enhancementCostKey') != null
-          ? _prefs.getInt('enhancementCostKey')
-          : 0;
-    });
+    _updateEnhancementCost();
   }
 
   Future _writeToSharedPrefs() async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _prefs.setInt('targetCardLvlKey', _targetCardLvl);
-      _prefs.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
-      _prefs.setInt(
-          'enhancementTypeKey', enhancementList.indexOf(_selectedEnhancement));
-      _prefs.setBool(
-          'eligibleForMultipleTargetsKey', _disableMultiTargetSwitch);
-      _prefs.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
-      _prefs.setInt('enhancementCostKey', _enhancementCost);
-    });
+    sp.setInt('targetCardLvlKey', _targetCardLvl);
+    sp.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
+    sp.setInt('enhancementTypeKey',
+        enhancementList.indexOf(_selectedEnhancement ?? null));
+    sp.setBool('disableMultiTargetsSwitchKey', _disableMultiTargetSwitch);
+    sp.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
+//    sp.setInt('enhancementCostKey', _enhancementCost);
+    print('shared prefs to ' '$_enhancementCost');
+    setState(() {});
+  }
+
+  Future _readFromSharedPrefs() async {
+    _targetCardLvl = sp.getInt('targetCardLvlKey') ?? null;
+    _previousEnhancements = sp.getInt('enhancementsOnTargetActionKey') ?? null;
+    _selectedEnhancement = sp.getInt('enhancementTypeKey') != null
+        ? enhancementList[sp.getInt('enhancementTypeKey')]
+        : null;
+    _disableMultiTargetSwitch =
+        sp.getBool('disableMultiTargetsSwitchKey') ?? false;
+    _multipleTargetsSwitch = sp.getBool('multipleTargetsSelectedKey') ?? false;
+    print('shared prefs from ' + '$_enhancementCost');
+    _updateEnhancementCost();
+    setState(() {});
+  }
+
+  Future _resetAllFields() async {
+    sp.remove('targetCardLvlKey');
+    sp.remove('enhancementsOnTargetActionKey');
+    sp.remove('enhancementTypeKey');
+    sp.remove('disableMultiTargetsSwitchKey');
+    sp.remove('multipleTargetsSelectedKey');
+//    sp.remove('enhancementCostKey');
+    _readFromSharedPrefs();
   }
 
   void _handleLevelOfTargetCardSelection(int _value) {
-    setState(() {
-      _targetCardLvl = _value;
-      _updateEnhancementCost();
-    });
+    _targetCardLvl = _value;
+    _updateEnhancementCost();
   }
 
   void _handlePreviousEnhancementsSelection(int _value) {
-    setState(() {
-      _previousEnhancements = _value;
-      _updateEnhancementCost();
-    });
+    _previousEnhancements = _value;
+    _updateEnhancementCost();
   }
 
   void _handleMultipleTargetsSelection(bool _value) {
-    setState(() {
-      _multipleTargetsSwitch = _value;
-      _value = _value;
-      _updateEnhancementCost();
-    });
+    _multipleTargetsSwitch = _value;
+    _updateEnhancementCost();
   }
 
   void _handleTypeSelection(Enhancement _value) {
-    setState(() {
-      switch (_value.category) {
-        case EnhancementCategory.target:
-          _multipleTargetsSwitch = true;
-          _disableMultiTargetSwitch = true;
-          break;
-        case EnhancementCategory.hex:
-          _multipleTargetsSwitch = false;
-          _disableMultiTargetSwitch = true;
-          break;
-        default:
-          _disableMultiTargetSwitch = false;
-          break;
-      }
-      _selectedEnhancement = _value;
-      _updateEnhancementCost();
-    });
+    switch (_value.category) {
+      case EnhancementCategory.target:
+        _multipleTargetsSwitch = true;
+        _disableMultiTargetSwitch = true;
+        break;
+      case EnhancementCategory.hex:
+        _multipleTargetsSwitch = false;
+        _disableMultiTargetSwitch = true;
+        break;
+      default:
+        _disableMultiTargetSwitch = false;
+        break;
+    }
+    _selectedEnhancement = _value;
+    _updateEnhancementCost();
   }
 
   void _updateEnhancementCost() {
     int _baseCost =
         _selectedEnhancement != null ? _selectedEnhancement.baseCost : 0;
-
     _enhancementCost =
         // add 25g for each card level beyond 1
         (_targetCardLvl != null && _targetCardLvl > 0
@@ -141,48 +112,13 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
             (_previousEnhancements != null ? _previousEnhancements * 75 : 0) +
             // multiply base cost x2 if multiple targets switch is true
             (_multipleTargetsSwitch ? _baseCost * 2 : _baseCost);
-
     _writeToSharedPrefs();
-  }
-
-  void _resetAllFields() {
-    setState(() {
-      _targetCardLvl = null;
-      _previousEnhancements = null;
-      _selectedEnhancement = null;
-      _enhancementCost = 0;
-      _multipleTargetsSwitch = false;
-      _disableMultiTargetSwitch = false;
-      _writeToSharedPrefs();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Gloomhaven Companion',
-            style: TextStyle(fontSize: 25.0),
-          ),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: _menuItemSelected,
-              itemBuilder: (BuildContext context) {
-                return Strings.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(
-                      choice,
-                      style: TextStyle(
-                          fontFamily: secondaryFontFamily, fontSize: 20.0),
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-        ),
+      resizeToAvoidBottomPadding: false,
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -201,23 +137,23 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.only(left: 4.0),
+                              padding: EdgeInsets.only(left: smallPadding / 2),
                             ),
                             RaisedButton.icon(
+                              elevation: 5.0,
                               color: Theme.of(context).accentColor,
                               icon: Icon(
                                 Icons.info,
                                 color: Colors.white,
                               ),
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
                               label: Text(
                                 'General Guidelines',
                                 style: TextStyle(
                                     fontSize: 20.0,
                                     color: Colors.white,
-                                    fontFamily: secondaryFontFamily),
+                                    fontFamily: highTower),
                               ),
                               onPressed: () {
                                 showInfoAlert(context, Strings.generalInfoTitle,
@@ -227,6 +163,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                           ],
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -246,7 +183,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                   hint: Text(
                                     '1 / x',
                                     style: TextStyle(
-                                        fontFamily: secondaryFontFamily),
+                                        fontFamily: highTower),
                                   ),
                                   value: _targetCardLvl,
                                   items: cardLevelList,
@@ -257,6 +194,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -273,8 +211,9 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                         null);
                                   }),
                               Expanded(
-                                child: Text(
+                                child: AutoSizeText(
                                   'Previous Enhancements:',
+                                  maxLines: 2,
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -286,7 +225,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                   hint: Text(
                                     'None',
                                     style: TextStyle(
-                                        fontFamily: secondaryFontFamily),
+                                        fontFamily: highTower),
                                   ),
                                   value: _previousEnhancements,
                                   items: previousEnhancementsList,
@@ -298,6 +237,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Column(
                             children: <Widget>[
                               Row(
@@ -339,7 +279,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                     hint: Text(
                                       'Type',
                                       style: TextStyle(
-                                          fontFamily: secondaryFontFamily),
+                                          fontFamily: highTower),
                                     ),
                                     value: _selectedEnhancement,
                                     items: enhancementTypeList,
@@ -349,6 +289,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                           ),
                         ),
                         Card(
+                          elevation: 5.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -362,7 +303,7 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                                         Strings.multipleTargetsInfoBody,
                                         null);
                                   }),
-                              Text('Multiple Targets?'),
+                              AutoSizeText('Multiple Targets?'),
                               AbsorbPointer(
                                 absorbing: _disableMultiTargetSwitch,
                                 child: Opacity(
@@ -389,10 +330,11 @@ class _EnhancementsPageState extends State<EnhancementsPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text('Enhancement Cost:',
+                          AutoSizeText('Enhancement Cost:',
+                              maxLines: 1,
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 35.0)),
-                          Text('$_enhancementCost' + 'g',
+                              style: TextStyle(fontSize: 75.0)),
+                          Text('${_enhancementCost ?? 0}' + 'g',
                               style: TextStyle(fontSize: 75.0))
                         ],
                       ),
