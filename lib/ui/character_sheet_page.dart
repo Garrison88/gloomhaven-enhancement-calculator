@@ -293,11 +293,12 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                             )
                                           ],
                                         ),
-                                        AutoSizeText(
-                                            '${_selectedClass.race} ${_selectedClass.className}',
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontSize: titleFontSize)),
+                                        Flexible(
+                                            child: AutoSizeText(
+                                                '${_selectedClass.race} ${_selectedClass.className}',
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: titleFontSize))),
                                       ]),
                           ],
                         )),
@@ -309,24 +310,30 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                           children: <Widget>[
                             Expanded(
                               flex: 1,
-                              child: TextField(
-                                style: TextStyle(fontSize: titleFontSize),
-                                textAlign: TextAlign.center,
-                                controller: _xpTextFieldController,
-                                decoration: InputDecoration(
-                                    labelText: 'XP',
-                                    labelStyle:
-                                        TextStyle(fontSize: dialogFontSize)),
-                                inputFormatters: [
-                                  BlacklistingTextInputFormatter(
-                                      RegExp('[\\.|\\,|\\ |\\-]'))
-                                ],
-                                keyboardType: TextInputType.number,
-                              ),
+                              child: Container(
+                                  padding: EdgeInsets.only(
+                                      left: smallPadding, right: smallPadding),
+                                  child: TextField(
+                                    style: TextStyle(fontSize: titleFontSize),
+                                    textAlign: TextAlign.center,
+                                    controller: _xpTextFieldController,
+                                    decoration: InputDecoration(
+                                        labelText: 'XP',
+                                        labelStyle: TextStyle(
+                                            fontSize: dialogFontSize)),
+                                    inputFormatters: [
+                                      BlacklistingTextInputFormatter(
+                                          RegExp('[\\.|\\,|\\ |\\-]'))
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                  )),
                             ),
                             Expanded(
                               flex: 1,
-                              child: TextField(
+                              child: Container(
+                                  padding: EdgeInsets.only(
+                                      left: smallPadding),
+                                  child: TextField(
                                 style: TextStyle(fontSize: titleFontSize),
                                 textAlign: TextAlign.center,
                                 controller: _goldTextFieldController,
@@ -339,7 +346,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       RegExp('[\\.|\\,|\\ |\\-]')),
                                 ],
                                 keyboardType: TextInputType.number,
-                              ),
+                              )),
                             ),
                             Expanded(
                                 flex: 2,
@@ -468,7 +475,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: titleFontSize),
                   ),
-//                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
                   Card(
                     color: Colors.white,
                     child: Container(
