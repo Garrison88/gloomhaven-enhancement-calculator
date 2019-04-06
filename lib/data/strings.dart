@@ -301,4 +301,20 @@ class Strings {
     ]),
   );
   static String multipleTargetsInfoTitle = "Multiple Targets Multiplier";
+
+  static String previousRetirementsInfoTitle = "Previous Retirements";
+  static RichText previousRetirementsInfoBody = RichText(
+    text: TextSpan(style: CustomTextStyle.dialogText(), children: <TextSpan>[
+      TextSpan(
+          text:
+              "When starting a new character, you are alloted an amount of gold"
+              " equal to"),
+      TextSpan(text: " 15x(L+1)", style: CustomTextStyle.dialogTextBold()),
+      TextSpan(
+          text: ", where L is your character's level. For instance, "
+              "a level 3 character would start with 60 gold.\nYou are "
+              "also awarded 1 bonus perk for each previously retired character"
+              " in addition to the standard perk for each level beyond 1."),
+    ]),
+  );
 }

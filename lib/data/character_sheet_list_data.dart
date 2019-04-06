@@ -4,40 +4,42 @@ import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/ui/perk.dart';
 
 List<PlayerClass> classList = [
-  PlayerClass(
-      'Inox', 'Brute', 'brute.png', false, Color(0xff4e7ec1), _brPerkList),
-  PlayerClass('Quatryl', 'Tinkerer', 'tinkerer.png', false, Color(0xffc5b58d),
-      _tiPerkList),
-  PlayerClass('Orchid', 'Spellweaver', 'spellweaver.png', false,
+  PlayerClass('Inox', 'Brute', 'BR', 'brute.png', false, Color(0xff4e7ec1),
+      _brPerkList),
+  PlayerClass('Quatryl', 'Tinkerer', 'TI', 'tinkerer.png', false,
+      Color(0xffc5b58d), _tiPerkList),
+  PlayerClass('Orchid', 'Spellweaver', 'SW', 'spellweaver.png', false,
       Color(0xffb578b3), _swPerkList),
-  PlayerClass('Human', 'Scoundrel', 'scoundrel.png', false, Color(0xffa5d166),
-      _scPerkList),
-  PlayerClass('Savvas', 'Cragheart', 'cragheart.png', false, Color(0xff899538),
-      _chPerkList),
-  PlayerClass('Vermling', 'Mindthief', 'mindthief.png', false,
+  PlayerClass('Human', 'Scoundrel', 'SC', 'scoundrel.png', false,
+      Color(0xffa5d166), _scPerkList),
+  PlayerClass('Savvas', 'Cragheart', 'CH', 'cragheart.png', false,
+      Color(0xff899538), _chPerkList),
+  PlayerClass('Vermling', 'Mindthief', 'MT', 'mindthief.png', false,
       Color(0xff647c9d), _mtPerkList),
-  PlayerClass('Valrath', 'Sunkeeper', 'sunkeeper.png', true, Color(0xfff3c338),
-      _skPerkList),
-  PlayerClass('Valrath', 'Quartermaster', 'quartermaster.png', true,
+  PlayerClass('Valrath', 'Sunkeeper', 'SK', 'sunkeeper.png', true,
+      Color(0xfff3c338), _skPerkList),
+  PlayerClass('Valrath', 'Quartermaster', 'QM', 'quartermaster.png', true,
       Color(0xffd98926), _qmPerkList),
-  PlayerClass('Aesther', 'Summoner', 'summoner.png', true, Color(0xffeb6ea3),
-      _suPerkList),
-  PlayerClass('Aesther', 'Nightshroud', 'nightshroud.png', true,
+  PlayerClass('Aesther', 'Summoner', 'SU', 'summoner.png', true,
+      Color(0xffeb6ea3), _suPerkList),
+  PlayerClass('Aesther', 'Nightshroud', 'NS', 'nightshroud.png', true,
       Color(0xff9f9fcf), _nsPerkList),
-  PlayerClass('Harrower', 'Plagueherald', 'plagueherald.png', true,
+  PlayerClass('Harrower', 'Plagueherald', 'PH', 'plagueherald.png', true,
       Color(0xff74c7bb), _phPerkList),
-  PlayerClass('Inox', 'Berserker', 'berserker.png', true, Color(0xffd14e4e),
-      _bePerkList),
-  PlayerClass('Quatryl', 'Soothsinger', 'soothsinger.png', true,
+  PlayerClass('Inox', 'Berserker', 'BE', 'berserker.png', true,
+      Color(0xffd14e4e), _bePerkList),
+  PlayerClass('Quatryl', 'Soothsinger', 'SS', 'soothsinger.png', true,
       Color(0xffdf7e7a), _ssPerkList),
-  PlayerClass('Orchid', 'Doomstalker', 'doomstalker.png', true,
+  PlayerClass('Orchid', 'Doomstalker', 'DS', 'doomstalker.png', true,
       Color(0xff38c3f1), _dsPerkList),
-  PlayerClass('Human', 'Sawbones', 'sawbones.png', true, Color(0xffdfddcb),
-      _sbPerkList),
-  PlayerClass('Savvas', 'Elementalist', 'elementalist.png', true,
+  PlayerClass('Human', 'Sawbones', 'SB', 'sawbones.png', true,
+      Color(0xffdfddcb), _sbPerkList),
+  PlayerClass('Savvas', 'Elementalist', 'EL', 'elementalist.png', true,
       Color(0xff9e9d9d), _elPerkList),
-  PlayerClass('Vermling', 'Beast Tyrant', 'beast_tyrant.png', true,
-      Color(0xffad745c), _btPerkList)
+  PlayerClass('Vermling', 'Beast Tyrant', 'BT', 'beast_tyrant.png', true,
+      Color(0xffad745c), _btPerkList),
+  PlayerClass('Aesther', 'Diviner', 'DI', 'diviner.png', false,
+      Color(0xff8bc5d3), _diPerkList)
 ];
 
 //List<Slot> slotList = [
@@ -286,6 +288,22 @@ List<Perk> _btPerkList = [
   Perk('BT', 3, 'Add two Rolling HEAL 1 cards'),
   Perk('BT', 1, 'Add two Rolling EARTH cards'),
   Perk('BT', 1, 'Ignore negative SCENARIO effects')
+];
+
+List<Perk> _diPerkList = [
+  Perk('DV', 2, 'Remove two -1 cards'),
+  Perk('DV', 1, 'Remove one -2 card'),
+  Perk('DV', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
+  Perk('DV', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 DARK card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 LIGHT card'),
+  Perk('DV', 1, 'Replace one +0 card with one +3 MUDDLE card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 CURSE card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 REGENERATE, Self card'),
+  Perk('DV', 1, 'Replace one -1 card with one +1 HEAL 2, Affect any ally card'),
+  Perk('DV', 1, 'Add two Rolling HEAL 1, Self cards'),
+  Perk('DV', 1, 'Add two Rolling CURSE cards'),
+  Perk('DV', 1, 'Ignore negative SCENARIO effects and add two +1 cards')
 ];
 
 _generatePlayerClassList(List<PlayerClass> _classList) {

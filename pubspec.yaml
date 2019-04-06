@@ -15,10 +15,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.0
+  shared_preferences: ^0.5.1+1
   url_launcher: ^4.1.0+1
   dynamic_theme: ^1.0.1
-  flutter_rating: ^0.0.2
+#  flutter_rating: ^0.0.2
   auto_size_text: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.

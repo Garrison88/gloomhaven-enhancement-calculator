@@ -25,7 +25,7 @@ final List<Enhancement> enhancementList = [
   Enhancement(EnhancementCategory.summonPlusOne, 50, 'heal.png', 'HP'),
   // negative effects
   Enhancement(EnhancementCategory.title, null, null, 'Effect'),
-  Enhancement(EnhancementCategory.negEffect, 75, 'poison.png', 'Effect'),
+  Enhancement(EnhancementCategory.negEffect, 75, 'poison.png', 'Poison'),
   Enhancement(EnhancementCategory.negEffect, 75, 'wound.png', 'Wound'),
   Enhancement(EnhancementCategory.negEffect, 50, 'muddle.png', 'Muddle'),
   Enhancement(

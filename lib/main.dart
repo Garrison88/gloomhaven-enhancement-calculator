@@ -37,7 +37,7 @@ void main() async {
           ),
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
-          title: 'Enhancement Calculator',
+          title: 'Gloomhaven Companion',
           routes: <String, WidgetBuilder>{
             '/enhancementCalculatorPage': (BuildContext context) =>
                 EnhancementCalculatorPage(),
