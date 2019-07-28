@@ -1,8 +1,8 @@
 import 'dart:ui';
-import 'package:gloomhaven_enhancement_calc/ui/perk.dart';
+
+import 'package:gloomhaven_companion/ui/perk.dart';
 
 class PlayerClass {
-
   final String race;
   final String className;
   final String classCode;
@@ -11,5 +11,6 @@ class PlayerClass {
   final Color color;
   final List<Perk> perks;
 
-  PlayerClass(this.race, this.className, this.classCode, this.icon, this.locked, this.color, this.perks);
+  PlayerClass(this.race, this.className, this.classCode, this.icon, this.locked,
+      this.color, this.perks);
 }

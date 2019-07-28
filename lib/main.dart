@@ -1,10 +1,10 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/ui/bottom_nav.dart';
-import 'package:gloomhaven_enhancement_calc/ui/character_sheet_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/enhancement_calculator_page.dart';
+import 'package:gloomhaven_companion/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_companion/models/player_class.dart';
+import 'package:gloomhaven_companion/ui/bottom_nav.dart';
+import 'package:gloomhaven_companion/ui/character_sheet_page.dart';
+import 'package:gloomhaven_companion/ui/enhancement_calculator_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences sp;

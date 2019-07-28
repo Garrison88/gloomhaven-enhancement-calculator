@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_companion/data/constants.dart';
 
 class CustomTextStyle {
   static TextStyle dialogText() {

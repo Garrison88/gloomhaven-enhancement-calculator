@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
-import 'package:gloomhaven_enhancement_calc/models/enhancement_model.dart';
+import 'package:gloomhaven_companion/data/constants.dart';
+import 'package:gloomhaven_companion/enums/enhancement_category.dart';
+import 'package:gloomhaven_companion/models/enhancement_model.dart';
 
 final List<Enhancement> enhancementList = [
   // plus one

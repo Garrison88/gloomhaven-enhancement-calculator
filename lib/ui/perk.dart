@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
+import 'package:gloomhaven_companion/data/constants.dart';
+import 'package:gloomhaven_companion/main.dart';
 
 class Perk extends StatefulWidget {
   final String classCode;

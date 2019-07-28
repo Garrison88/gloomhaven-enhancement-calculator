@@ -3,13 +3,13 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/dialog_show_info.dart';
-import 'package:gloomhaven_enhancement_calc/ui/perk_section.dart';
+import 'package:gloomhaven_companion/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_companion/data/constants.dart';
+import 'package:gloomhaven_companion/data/strings.dart';
+import 'package:gloomhaven_companion/main.dart';
+import 'package:gloomhaven_companion/models/player_class.dart';
+import 'package:gloomhaven_companion/ui/dialogs/dialog_show_info.dart';
+import 'package:gloomhaven_companion/ui/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
   @override
@@ -591,28 +591,28 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                           value: _firstCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _firstCheck = value;
-                                                _secondCheck = false;
-                                                _thirdCheck = false;
-                                              }),
+                                            _firstCheck = value;
+                                            _secondCheck = false;
+                                            _thirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _secondCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _firstCheck = true;
-                                                _secondCheck = value;
-                                                _thirdCheck = false;
-                                              }),
+                                            _firstCheck = true;
+                                            _secondCheck = value;
+                                            _thirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _thirdCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _firstCheck = true;
-                                                _secondCheck = true;
-                                                _thirdCheck = value;
-                                              }),
+                                            _firstCheck = true;
+                                            _secondCheck = true;
+                                            _thirdCheck = value;
+                                          }),
                                         )
                                       ],
                                     ),
@@ -626,28 +626,28 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                           value: _2FirstCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _2FirstCheck = value;
-                                                _2SecondCheck = false;
-                                                _2ThirdCheck = false;
-                                              }),
+                                            _2FirstCheck = value;
+                                            _2SecondCheck = false;
+                                            _2ThirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _2SecondCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _2FirstCheck = true;
-                                                _2SecondCheck = value;
-                                                _2ThirdCheck = false;
-                                              }),
+                                            _2FirstCheck = true;
+                                            _2SecondCheck = value;
+                                            _2ThirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _2ThirdCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _2FirstCheck = true;
-                                                _2SecondCheck = true;
-                                                _2ThirdCheck = value;
-                                              }),
+                                            _2FirstCheck = true;
+                                            _2SecondCheck = true;
+                                            _2ThirdCheck = value;
+                                          }),
                                         )
                                       ],
                                     ),
@@ -661,28 +661,28 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                           value: _3FirstCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _3FirstCheck = value;
-                                                _3SecondCheck = false;
-                                                _3ThirdCheck = false;
-                                              }),
+                                            _3FirstCheck = value;
+                                            _3SecondCheck = false;
+                                            _3ThirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _3SecondCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _3FirstCheck = true;
-                                                _3SecondCheck = value;
-                                                _3ThirdCheck = false;
-                                              }),
+                                            _3FirstCheck = true;
+                                            _3SecondCheck = value;
+                                            _3ThirdCheck = false;
+                                          }),
                                         ),
                                         Checkbox(
                                           value: _3ThirdCheck,
                                           onChanged: (bool value) =>
                                               setState(() {
-                                                _3FirstCheck = true;
-                                                _3SecondCheck = true;
-                                                _3ThirdCheck = value;
-                                              }),
+                                            _3FirstCheck = true;
+                                            _3SecondCheck = true;
+                                            _3ThirdCheck = value;
+                                          }),
                                         )
                                       ],
                                     ),
@@ -701,26 +701,26 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       Checkbox(
                                         value: _4FirstCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _4FirstCheck = value;
-                                              _4SecondCheck = false;
-                                              _4ThirdCheck = false;
-                                            }),
+                                          _4FirstCheck = value;
+                                          _4SecondCheck = false;
+                                          _4ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _4SecondCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _4FirstCheck = true;
-                                              _4SecondCheck = value;
-                                              _4ThirdCheck = false;
-                                            }),
+                                          _4FirstCheck = true;
+                                          _4SecondCheck = value;
+                                          _4ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _4ThirdCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _4FirstCheck = true;
-                                              _4SecondCheck = true;
-                                              _4ThirdCheck = value;
-                                            }),
+                                          _4FirstCheck = true;
+                                          _4SecondCheck = true;
+                                          _4ThirdCheck = value;
+                                        }),
                                       )
                                     ],
                                   ),
@@ -733,26 +733,26 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       Checkbox(
                                         value: _5FirstCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _5FirstCheck = value;
-                                              _5SecondCheck = false;
-                                              _5ThirdCheck = false;
-                                            }),
+                                          _5FirstCheck = value;
+                                          _5SecondCheck = false;
+                                          _5ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _5SecondCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _5FirstCheck = true;
-                                              _5SecondCheck = value;
-                                              _5ThirdCheck = false;
-                                            }),
+                                          _5FirstCheck = true;
+                                          _5SecondCheck = value;
+                                          _5ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _5ThirdCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _5FirstCheck = true;
-                                              _5SecondCheck = true;
-                                              _5ThirdCheck = value;
-                                            }),
+                                          _5FirstCheck = true;
+                                          _5SecondCheck = true;
+                                          _5ThirdCheck = value;
+                                        }),
                                       )
                                     ],
                                   ),
@@ -765,26 +765,26 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                       Checkbox(
                                         value: _6FirstCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _6FirstCheck = value;
-                                              _6SecondCheck = false;
-                                              _6ThirdCheck = false;
-                                            }),
+                                          _6FirstCheck = value;
+                                          _6SecondCheck = false;
+                                          _6ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _6SecondCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _6FirstCheck = true;
-                                              _6SecondCheck = value;
-                                              _6ThirdCheck = false;
-                                            }),
+                                          _6FirstCheck = true;
+                                          _6SecondCheck = value;
+                                          _6ThirdCheck = false;
+                                        }),
                                       ),
                                       Checkbox(
                                         value: _6ThirdCheck,
                                         onChanged: (bool value) => setState(() {
-                                              _6FirstCheck = true;
-                                              _6SecondCheck = true;
-                                              _6ThirdCheck = value;
-                                            }),
+                                          _6FirstCheck = true;
+                                          _6SecondCheck = true;
+                                          _6ThirdCheck = value;
+                                        }),
                                       )
                                     ],
                                   ),

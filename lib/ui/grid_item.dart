@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/item.dart';
+import 'package:gloomhaven_companion/data/constants.dart';
+import 'package:gloomhaven_companion/models/item.dart';
 
 class GridItem extends StatefulWidget {
   final Item item;

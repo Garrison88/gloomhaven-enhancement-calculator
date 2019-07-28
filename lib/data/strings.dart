@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/custom_text_styles.dart';
+import 'package:gloomhaven_companion/data/custom_text_styles.dart';
 
 class Strings {
   // menu items
