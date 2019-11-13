@@ -1,15 +1,16 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_companion/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_companion/models/player_class.dart';
-import 'package:gloomhaven_companion/ui/bottom_nav.dart';
-import 'package:gloomhaven_companion/ui/character_sheet_page.dart';
-import 'package:gloomhaven_companion/ui/enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences sp;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   sp = await SharedPreferences.getInstance();
   PlayerClass _selectedClass =
       sp.getInt('selectedClass') != null && classList != null
@@ -38,14 +39,14 @@ void main() async {
       themedWidgetBuilder: (context, theme) {
         return MaterialApp(
           title: 'Gloomhaven Companion',
-          routes: <String, WidgetBuilder>{
-            '/enhancementCalculatorPage': (BuildContext context) =>
-                EnhancementCalculatorPage(),
-            '/characterSheetPage': (BuildContext context) =>
-                CharacterSheetPage()
+          initialRoute: '/',
+          routes: {
+            '/': (context) => BottomNav(),
+            '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
+            '/'
+            '/characterSheetPage': (context) => CharacterSheetPage()
           },
           theme: theme,
-          home: BottomNav(),
         );
       }));
 }

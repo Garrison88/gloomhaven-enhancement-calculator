@@ -1,11 +1,12 @@
 import 'dart:ui';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
 import 'package:gloomhaven_companion/ui/perk.dart';
 
 class PlayerClass {
   final String race;
   final String className;
-  final String classCode;
+  String classCode;
   final String icon;
   final bool locked;
   final Color color;
