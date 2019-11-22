@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
+
+import '../../data/database_helpers.dart';
+import '../../models/character.dart';
+import '../dialogs/new_character.dart';
 
 class CharacterListView extends StatefulWidget {
   @override

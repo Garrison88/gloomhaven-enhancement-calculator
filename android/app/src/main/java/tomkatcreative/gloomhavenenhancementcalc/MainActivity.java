@@ -1,4 +1,4 @@
-package com.tomkatcreative.gloomhavencompanion;
+package tomkatcreative.gloomhavenenhancementcalc;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

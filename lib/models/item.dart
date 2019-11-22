@@ -1,4 +1,4 @@
-import 'package:gloomhaven_companion/models/slot.dart';
+import 'package:gloomhaven_enhancement_calc/models/slot.dart';
 
 class Item {
   String _name;

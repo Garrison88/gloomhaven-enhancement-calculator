@@ -3,13 +3,15 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_section.dart';
+
+import '../../data/character_sheet_list_data.dart';
+import '../../data/character_sheet_list_data.dart';
+import '../../data/constants.dart';
+import '../../data/strings.dart';
+import '../../main.dart';
+import '../../models/player_class.dart';
+import '../dialogs/show_info.dart';
+import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
   @override

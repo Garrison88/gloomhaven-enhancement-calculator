@@ -1,7 +1,6 @@
 import 'dart:ui';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
-import 'package:gloomhaven_companion/ui/perk.dart';
+import '../ui/widgets/perk.dart';
 
 class PlayerClass {
   final String race;

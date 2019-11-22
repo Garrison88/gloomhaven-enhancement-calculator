@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_view.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../data/constants.dart';
+import '../../data/strings.dart';
+import 'character_list_view.dart';
+import 'enhancement_calculator_page.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
+
+import 'perk.dart';
 
 class PerkSection extends StatefulWidget {
   final List<Perk> perkList;

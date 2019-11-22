@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
+
+import '../models/player_class.dart';
+import '../ui/widgets/perk.dart';
+import 'constants.dart';
 
 List<PlayerClass> classList = [
   PlayerClass('Inox', 'Brute', 'BR', 'brute.png', false, Color(0xff4e7ec1),
