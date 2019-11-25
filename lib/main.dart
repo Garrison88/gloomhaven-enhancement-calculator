@@ -1,5 +1,7 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/providers/characters_state.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/character_sheet_list_data.dart';
@@ -21,7 +23,7 @@ void main() async {
       defaultBrightness: Brightness.light,
       data: (brightness) => ThemeData(
             accentColor: _selectedClass != null
-                ? _selectedClass.color
+                ? Color(int.parse(_selectedClass.classColor))
                 : Color(0xff4e7ec1),
             primarySwatch: Colors.brown,
             brightness: brightness,
@@ -42,7 +44,8 @@ void main() async {
           title: 'Gloomhaven Companion',
           initialRoute: '/',
           routes: {
-            '/': (context) => BottomNav(),
+            '/': (context) => ChangeNotifierProvider<CharactersState>(
+              builder: (_) => CharactersState(), child: BottomNav()),
             '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
             '/'
             '/characterSheetPage': (context) => CharacterSheetPage()

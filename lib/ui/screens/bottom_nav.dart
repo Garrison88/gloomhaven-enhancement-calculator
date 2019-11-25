@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/providers/characters_state.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../data/constants.dart';
-import '../../data/strings.dart';
-import 'character_list_view.dart';
-import 'enhancement_calculator_page.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);
@@ -16,6 +19,8 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
+  List<Character> charactersList = List();
+  DatabaseHelper db = DatabaseHelper.instance;
   PageController pageController;
   int page = 0;
 
@@ -52,6 +57,14 @@ class BottomNavState extends State<BottomNav> {
   void initState() {
     super.initState();
     pageController = PageController();
+    db.queryAllRows().then((characters) {
+      setState(() {
+        characters.forEach((character) {
+          charactersList.add(Character.fromMap(character));
+          print(character.toString());
+        });
+      });
+    });
   }
 
   @override
@@ -86,10 +99,15 @@ class BottomNavState extends State<BottomNav> {
             ),
           ],
         ),
-        body: PageView(
-            children: [CharacterListView(), EnhancementCalculatorPage()],
-            controller: pageController,
-            onPageChanged: _onPageChanged),
+        body: PageView(children: [
+          ChangeNotifierProvider<CharactersState>(
+            builder: (_) => CharactersState(
+              charactersList: charactersList,
+            ),
+            child: CharacterListPage(),
+          ),
+          EnhancementCalculatorPage()
+        ], controller: pageController, onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.content_paste),

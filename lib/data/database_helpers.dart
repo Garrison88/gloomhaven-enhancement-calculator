@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk_list.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -8,7 +9,9 @@ import 'package:sqflite/sqflite.dart';
 import '../models/character.dart';
 
 // singleton class to manage the database
-class DatabaseHelper with ChangeNotifier {
+class DatabaseHelper
+// with ChangeNotifier
+{
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "GloomhavenCompanion.db";
 
@@ -42,14 +45,25 @@ class DatabaseHelper with ChangeNotifier {
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-              CREATE TABLE $tableCharacters (
-                $columnId INTEGER PRIMARY KEY,
-                $columnName TEXT NOT NULL,
-                $columnClassCode TEXT NOT NULL,
-                $columnXp INTEGER NOT NULL,
-                $columnGold INTEGER NOT NULL,
-                $columnNotes TEXT NOT NULL,
-                $columnCheckMarks INTEGER NOT NULL
+              CREATE TABLE $characters (
+                $characterId INTEGER PRIMARY KEY,
+                $characterName TEXT NOT NULL,
+                $characterClassCode TEXT NOT NULL,
+                $characterClassColor TEXT NOT NULL,
+                $characterClassIcon TEXT NOT NULL,
+                $characterXp INTEGER NOT NULL,
+                $characterGold INTEGER NOT NULL,
+                $characterNotes TEXT NOT NULL,
+                $characterCheckMarks INTEGER NOT NULL,
+                $perksID int FOREIGN KEY REFERENCES Perks(PerksID)
+                
+              )
+              CREATE TABLE $tableCharacterPerks (
+                $characterId INTEGER PRIMARY KEY,
+                $$perkDetails TEXT NOT NULL,
+                FOREIGN KEY(character_ID) REFERENCES $characters(_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
               )
               ''');
   }
@@ -58,24 +72,26 @@ class DatabaseHelper with ChangeNotifier {
 
   Future<int> insert(Character character) async {
     Database db = await database;
-    int id = await db.insert(tableCharacters, character.toMap());
-    notifyListeners();
+    int id = await db.insert(characters, character.toMap());
+    // notifyListeners();
     return id;
   }
 
   Future<Character> queryRow(int id) async {
     Database db = await database;
-    List<Map> maps = await db.query(tableCharacters,
+    List<Map> maps = await db.query(characters,
         columns: [
-          columnId,
-          columnName,
-          columnClassCode,
-          columnXp,
-          columnGold,
-          columnNotes,
-          columnCheckMarks
+          characterId,
+          characterName,
+          characterClassCode,
+          characterClassColor,
+          characterClassIcon,
+          characterXp,
+          characterGold,
+          characterNotes,
+          characterCheckMarks
         ],
-        where: '$columnId = ?',
+        where: '$characterId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
       return Character.fromMap(maps.first);
@@ -85,7 +101,7 @@ class DatabaseHelper with ChangeNotifier {
 
   Future<List> queryAllRows() async {
     Database db = await database;
-    var result = await db.query(tableCharacters);
+    var result = await db.query(characters);
     return result.toList();
   }
 

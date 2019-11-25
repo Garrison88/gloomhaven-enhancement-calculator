@@ -3,8 +3,8 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 
-import '../../data/character_sheet_list_data.dart';
 import '../../data/character_sheet_list_data.dart';
 import '../../data/constants.dart';
 import '../../data/strings.dart';
@@ -14,6 +14,10 @@ import '../dialogs/show_info.dart';
 import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
+    CharacterSheetPage({Key key, this.character}) : super(key: key);
+
+  final Character character;
+
   @override
   State<StatefulWidget> createState() {
     return CharacterSheetPageState();
@@ -21,6 +25,7 @@ class CharacterSheetPage extends StatefulWidget {
 }
 
 class CharacterSheetPageState extends State<CharacterSheetPage> {
+
 //  List<Item> _itemList = [
 //    Item('sgg', 56, Slot('sgf', 'sgfd')),
 //    Item('allf', 56, Slot('sgf', 'sgfd')),
@@ -79,6 +84,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 //      }
 //    });
     _handleExpChanged();
+    print(widget.character.name);
   }
 
   Future _readFromSharedPrefs() async {
@@ -154,7 +160,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 
       DynamicTheme.of(context).setThemeData(ThemeData(
         accentColor:
-            _selectedClass != null ? _selectedClass.color : Color(0xff4e7ec1),
+            _selectedClass != null ? _selectedClass.classColor : Color(0xff4e7ec1),
         primarySwatch: Colors.brown,
         // Define the default Font Family
         fontFamily: 'PirataOne',
@@ -280,7 +286,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
           color: Colors.white.withOpacity(0.95),
           image: DecorationImage(
               image: AssetImage(_selectedClass != null
-                  ? 'images/class_icons/${_selectedClass.icon}'
+                  ? 'images/class_icons/${_selectedClass.classIconUrl}'
                   : ''),
               colorFilter: ColorFilter.mode(
                   Colors.white.withOpacity(0.95), BlendMode.lighten),

@@ -30,6 +30,7 @@ class PerkState extends State<Perk> {
     _details = widget.details;
     _checkList = List.generate(widget.numOfChecks, (i) {
       // get state of checkbox from unique SP
+      print('$_classCode$_details${i.toString()}' + '${sp.getBool('$_classCode$_details${i.toString()}')}');
       return sp.getBool('$_classCode$_details${i.toString()}') ?? false;
     });
   }
