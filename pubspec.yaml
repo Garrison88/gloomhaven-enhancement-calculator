@@ -20,7 +20,7 @@ dependencies:
   dynamic_theme: ^1.0.1
 #  flutter_rating: ^0.0.2
   auto_size_text: ^1.0.0
-  sqflite: 1.1.7+2
+  sqflite: 1.1.7+3
   path_provider: 1.4.0
   provider: 3.1.0+1
   flutter_speed_dial: ^1.2.4

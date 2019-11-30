@@ -3,7 +3,7 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
 import 'player_class.dart';
 
-final String characters = 'Characters';
+final String tableCharacters = 'CharactersTable';
 final String characterId = '_id';
 final String characterName = 'CharacterName';
 final String characterClassCode = 'CharacterClassCode';
@@ -16,7 +16,7 @@ final String characterCheckMarks = 'CharacterCheckMarks';
 final String perksID = 'PerksForeignKey';
 // data model class
 class Character {
-  int id;
+  int charcterId;
   String name;
   PlayerClass playerClass;
   String classCode;
@@ -65,8 +65,8 @@ class Character {
       characterNotes: notes,
       characterCheckMarks: checkMarks
     };
-    if (id != null) {
-      map[characterId] = id;
+    if (charcterId != null) {
+      map[characterId] = characterId;
     }
     return map;
   }

@@ -3,6 +3,7 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk_row.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
@@ -39,6 +40,10 @@ class CharactersState with ChangeNotifier {
     print(character.name);
     print(character.classCode);
     charactersList.add(character);
+    PerkRow perk = PerkRow(_playerClass.classCode, "TeStiNG PeRkK AddD");
+    // perk.perkClass = _playerClass.classCode;
+    // perk.perkDetails = ;
+    await db.insertPerk(perk);
     notifyListeners();
   }
 

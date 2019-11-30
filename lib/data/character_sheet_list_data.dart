@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk_row.dart';
 
 import '../models/player_class.dart';
 import '../ui/widgets/perk.dart';
@@ -58,6 +59,42 @@ List<DropdownMenuItem<PlayerClass>> classListMenuItems =
     _generatePlayerClassList(classList);
 
 //List<DropdownMenuItem<Slot>> slotListMenuItems = _generateSlotList(slotList);
+
+List<PerkRow> perkRowList = [
+  PerkRow('BR', 'Remove two -1 cards'),
+  PerkRow('BR', 'Remove one -1 card and add one +1 card'),
+  PerkRow('BR', 'Add two +1 cards'),
+  PerkRow('BR', 'Add one +3 cards'),
+  PerkRow('BR', 'Add three Rolling PUSH 1 cards'),
+  PerkRow('BR', 'Add two Rolling PIERCE 3 cards'),
+  PerkRow('BR', 'Add one Rolling STUN card'),
+  PerkRow('BR', 'Add one Rolling DISARM card and one Rolling MUDDLE card'),
+  PerkRow('BR', 'Add one Rolling ADD TARGET card'),
+  PerkRow('BR', 'Add one +1 SHIELD 1, Self card'),
+  PerkRow('BR', 'Ignore negative ITEM effects and add one +1 card'),
+  PerkRow('TI', 'Remove two -1 cards'),
+  PerkRow('TI', 'Replace one -2 card with one +0 card'),
+  PerkRow('TI', 'Add two +1 cards'),
+  PerkRow('TI', 'Add one +3 cards'),
+  PerkRow('TI', 'Add two Rolling FIRE cards'),
+  PerkRow('TI', 'Add three Rolling MUDDLE cards'),
+  PerkRow('TI', 'Add one +1 WOUND card'),
+  PerkRow('TI', 'Add one +1 IMMOBILIZE card'),
+  PerkRow('TI', 'Add one +1 HEAL 2 card'),
+  PerkRow('TI', 'Add one +0 ADD TARGET card'),
+  PerkRow('TI', 'Ignore negative SCENARIO effects'),
+  PerkRow('SW', 'Remove four +0 cards'),
+  PerkRow('SW', 'replace one -1 with one +1 card'),
+  PerkRow('SW', 'Add two +1 cards'),
+  PerkRow('SW', 'Add one +0 STUN card'),
+  PerkRow('SW', 'Add one +1 WOUND card'),
+  PerkRow('SW', 'Add one +1 IMMOBILIZE card'),
+  PerkRow('SW', 'Add one +1 CURSE card'),
+  PerkRow('SW', 'Add one +2 FIRE card'),
+  PerkRow('SW', 'Add one +2 FROST card'),
+  PerkRow('SW', 'Add one Rolling EARTH and one Rolling AIR card'),
+  PerkRow('SW', 'Add one Rolling LIGHT and one Rolling DARK card')
+];
 
 List<Perk> _brPerkList = [
   Perk('BR', 1, 'Remove two -1 cards'),
