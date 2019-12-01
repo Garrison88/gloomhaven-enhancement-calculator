@@ -3,7 +3,6 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk_row.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
@@ -11,6 +10,8 @@ class CharactersState with ChangeNotifier {
   List<Character> charactersList = [];
   CharactersState({this.charactersList});
   DatabaseHelper db = DatabaseHelper.instance;
+
+  getCharactersList() => charactersList;
 
   void setCharactersList() async {
     List<Character> _charactersList = [];
@@ -36,14 +37,14 @@ class CharactersState with ChangeNotifier {
     character.notes = 'Add notes here';
     character.checkMarks = 0;
     int id = await db.insert(character);
+    character.characterId = id;
     print('inserted row: $id');
     print(character.name);
     print(character.classCode);
     charactersList.add(character);
-    PerkRow perk = PerkRow(_playerClass.classCode, "TeStiNG PeRkK AddD");
+    // PerkRow perk = PerkRow(_playerClass.classCode, "TeStiNG PeRkK AddD");
     // perk.perkClass = _playerClass.classCode;
     // perk.perkDetails = ;
-    await db.insertPerk(perk);
     notifyListeners();
   }
 
@@ -93,6 +94,4 @@ class CharactersState with ChangeNotifier {
     charactersList.add(legacyCharacter);
     notifyListeners();
   }
-
-  getCharactersList() => charactersList;
 }

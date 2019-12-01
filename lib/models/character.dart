@@ -4,19 +4,20 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 import 'player_class.dart';
 
 final String tableCharacters = 'CharactersTable';
-final String characterId = '_id';
-final String characterName = 'CharacterName';
-final String characterClassCode = 'CharacterClassCode';
-final String characterClassColor = 'CharacterClassColor';
-final String characterClassIcon = 'CharacterClassIcon';
-final String characterXp = 'CharacterXp';
-final String characterGold = 'CharacterGold';
-final String characterNotes = 'CharacterNotes';
-final String characterCheckMarks = 'CharacterCheckMarks';
+final String columnCharacterId = '_id';
+final String columnCharacterName = 'CharacterName';
+final String columnCharacterClassCode = 'CharacterClassCode';
+final String columnCharacterClassColor = 'CharacterClassColor';
+final String columnCharacterClassIcon = 'CharacterClassIcon';
+final String columnCharacterXp = 'CharacterXp';
+final String columnCharacterGold = 'CharacterGold';
+final String columnCharacterNotes = 'CharacterNotes';
+final String columnCharacterCheckMarks = 'CharacterCheckMarks';
 final String perksID = 'PerksForeignKey';
+
 // data model class
 class Character {
-  int charcterId;
+  int characterId;
   String name;
   PlayerClass playerClass;
   String classCode;
@@ -43,30 +44,32 @@ class Character {
 
   // convenience constructor to create a Character object
   Character.fromMap(Map<String, dynamic> map) {
-    name = map[characterName];
-    classCode = map[characterClassCode];
-    classColor = map[characterClassColor];
-    classIcon = map[characterClassIcon];
-    xp = map[characterXp];
-    gold = map[characterGold];
-    notes = map[characterNotes];
-    checkMarks = map[characterCheckMarks];
+    characterId = map[columnCharacterId];
+    name = map[columnCharacterName];
+    classCode = map[columnCharacterClassCode];
+    classColor = map[columnCharacterClassColor];
+    classIcon = map[columnCharacterClassIcon];
+    xp = map[columnCharacterXp];
+    gold = map[columnCharacterGold];
+    notes = map[columnCharacterNotes];
+    checkMarks = map[columnCharacterCheckMarks];
   }
 
   // convenience method to create a Map from this Character object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      characterName: name,
-      characterClassCode: playerClass.classCode,
-      characterClassColor: playerClass.classColor,
-      characterClassIcon: playerClass.classIconUrl,
-      characterXp: xp,
-      characterGold: gold,
-      characterNotes: notes,
-      characterCheckMarks: checkMarks
+      columnCharacterId: characterId,
+      columnCharacterName: name,
+      columnCharacterClassCode: playerClass.classCode,
+      columnCharacterClassColor: playerClass.classColor,
+      columnCharacterClassIcon: playerClass.classIconUrl,
+      columnCharacterXp: xp,
+      columnCharacterGold: gold,
+      columnCharacterNotes: notes,
+      columnCharacterCheckMarks: checkMarks
     };
-    if (charcterId != null) {
-      map[characterId] = characterId;
+    if (characterId != null) {
+      map[columnCharacterId] = characterId;
     }
     return map;
   }

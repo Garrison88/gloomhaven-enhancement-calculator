@@ -52,6 +52,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
   Widget build(BuildContext context) {
     final CharactersState charactersState =
         Provider.of<CharactersState>(context);
+    DatabaseHelper db = DatabaseHelper.instance;
     // charactersState.setCharactersList();
     // print("********BUILD METHOD " + charactersList.toString());
     return Container(
@@ -60,15 +61,22 @@ class _CharacterListPageState extends State<CharacterListPage> {
             itemCount: charactersState.getCharactersList().length,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CharacterSheetPage(
-                        character: charactersState.getCharactersList()[index],
-                      ),
-                    ),
-                  );
+                onTap: () async {
+                  print(await db
+                      .queryCharacterRow(charactersState
+                          .getCharactersList()[index]
+                          .characterId)
+                      .then((char) {
+                    return char.name;
+                  }));
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => CharacterSheetPage(
+                  //       character: charactersState.getCharactersList()[index],
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: Card(
                   child: Container(
@@ -116,8 +124,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 backgroundColor: Theme.of(context).accentColor,
                 label: 'Import Legacy Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () async =>
-                    await charactersState.addLegacyCharacter()),
+                onTap: () async => await charactersState.addLegacyCharacter()),
             SpeedDialChild(
               child: Icon(Icons.add),
               backgroundColor: Colors.green,
@@ -130,6 +137,17 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 },
               ),
             ),
+            SpeedDialChild(
+                child: Icon(Icons.add),
+                backgroundColor: Colors.green,
+                label: 'OPEN OLD CHAR SHEET',
+                labelStyle: TextStyle(fontSize: 18.0),
+                onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => CharacterSheetPage()),
+  );
+})
           ],
         ),
       ),

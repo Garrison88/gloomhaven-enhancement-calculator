@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk_row.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,34 +45,43 @@ class DatabaseHelper
 
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
+    await db.transaction((txn) async {
+      await db.execute('''
               CREATE TABLE $tableCharacters (
-                $characterId INTEGER PRIMARY KEY,
-                $characterName TEXT NOT NULL,
-                $characterClassCode TEXT NOT NULL,
-                $characterClassColor TEXT NOT NULL,
-                $characterClassIcon TEXT NOT NULL,
-                $characterXp INTEGER NOT NULL,
-                $characterGold INTEGER NOT NULL,
-                $characterNotes TEXT NOT NULL,
-                $characterCheckMarks INTEGER NOT NULL
+                $columnCharacterId INTEGER PRIMARY KEY,
+                $columnCharacterName TEXT NOT NULL,
+                $columnCharacterClassCode TEXT NOT NULL,
+                $columnCharacterClassColor TEXT NOT NULL,
+                $columnCharacterClassIcon TEXT NOT NULL,
+                $columnCharacterXp INTEGER NOT NULL,
+                $columnCharacterGold INTEGER NOT NULL,
+                $columnCharacterNotes TEXT NOT NULL,
+                $columnCharacterCheckMarks INTEGER NOT NULL
               )''');
-    await db.execute('''
+      await db.execute('''
               CREATE TABLE $tablePerks (
                 $columnPerkId INTEGER PRIMARY KEY,
                 $columnPerkClass TEXT NOT NULL,
                 $columnPerkDetails TEXT NOT NULL
+              )''').then((_) {
+        for (PerkRow perkRow in perkRowList) {
+          txn.rawInsert(
+              'INSERT INTO $tablePerks($columnPerkClass, $columnPerkDetails) VALUES("${perkRow.perkClass}", "${perkRow.perkDetails}")');
+        }
+      }).then((_) {
+        txn.execute('''
+              CREATE TABLE $tableCharacterPerks (
+                $columnAssociatedCharacterId INTEGER NOT NULL,
+                $columnAssociatedPerkId INTEGER NOT NULL,
+                $columnCharacterPerkIsSelected BOOLEAN
               )''');
-    await db.transaction((txn) async {
-      for (PerkRow perkRow in perkRowList) {
-        await txn.rawInsert(
-            'INSERT INTO $tablePerks($columnPerkClass, $columnPerkDetails) VALUES("${perkRow.perkClass}", "${perkRow.perkDetails}")');
-      }
+      });
     });
     // PerkRow perk = PerkRow();
     // perk.perkClass = "BR";
     // perk.perkDetails = "TESTing Details";
     // insertPerk(perk);
+    print("************ DATABASE INITIALIZED");
   }
 
   // Database helper methods:
@@ -79,15 +89,15 @@ class DatabaseHelper
   Future<int> insert(Character character) async {
     Database db = await database;
     int id = await db.insert(tableCharacters, character.toMap());
+    await db.transaction((txn) async {
+      for (PerkRow perk in perkRowList) {
+        if (perk.perkClass == character.classCode) {
+          txn.rawInsert(
+              'INSERT INTO $tableCharacterPerks($columnAssociatedCharacterId, $columnAssociatedPerkId) VALUES(${character.characterId}, ${perk.perkId})');
+        }
+      }
+    });
     print("****************** CHARACTER: " + character.toMap().toString());
-    // notifyListeners();
-    return id;
-  }
-
-  Future<int> insertPerk(PerkRow perkRow) async {
-    Database db = await database;
-    int id = await db.insert(tablePerks, perkRow.toMap());
-    print("****************** PERK: " + perkRow.toMap().toString());
     // notifyListeners();
     return id;
   }
@@ -109,17 +119,17 @@ class DatabaseHelper
     Database db = await database;
     List<Map> maps = await db.query(tableCharacters,
         columns: [
-          characterId,
-          characterName,
-          characterClassCode,
-          characterClassColor,
-          characterClassIcon,
-          characterXp,
-          characterGold,
-          characterNotes,
-          characterCheckMarks
+          columnCharacterId,
+          columnCharacterName,
+          columnCharacterClassCode,
+          columnCharacterClassColor,
+          columnCharacterClassIcon,
+          columnCharacterXp,
+          columnCharacterGold,
+          columnCharacterNotes,
+          columnCharacterCheckMarks
         ],
-        where: '$characterId = ?',
+        where: '$columnCharacterId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
       return Character.fromMap(maps.first);

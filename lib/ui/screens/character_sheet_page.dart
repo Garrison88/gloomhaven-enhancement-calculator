@@ -14,9 +14,9 @@ import '../dialogs/show_info.dart';
 import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
-    CharacterSheetPage({Key key, this.character}) : super(key: key);
+    // CharacterSheetPage({Key key, this.character}) : super(key: key);
 
-  final Character character;
+  // final Character character;
 
   @override
   State<StatefulWidget> createState() {
@@ -84,7 +84,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 //      }
 //    });
     _handleExpChanged();
-    print(widget.character.name);
+    // print(widget.character.name);
   }
 
   Future _readFromSharedPrefs() async {
