@@ -1,14 +1,14 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/providers/characters_state.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_details.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'data/character_sheet_list_data.dart';
-import 'models/player_class.dart';
-import 'ui/screens/bottom_nav.dart';
-import 'ui/screens/character_sheet_page.dart';
-import 'ui/screens/enhancement_calculator_page.dart';
 
 SharedPreferences sp;
 
@@ -40,18 +40,33 @@ void main() async {
             ),
           ),
       themedWidgetBuilder: (context, theme) {
-        return MaterialApp(
-          title: 'Gloomhaven Companion',
-          initialRoute: '/',
-          routes: {
-            '/': (context) => ChangeNotifierProvider<CharactersState>(
-              builder: (_) => CharactersState(), child: BottomNav()),
-            '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
-            '/'
-            '/characterSheetPage': (context) => CharacterSheetPage()
-          },
-          theme: theme,
-        );
+        return ChangeNotifierProvider<CharactersListState>(
+            builder: (context) {
+              return CharactersListState();
+            },
+            child: MaterialApp(
+              title: 'Gloomhaven Companion',
+              // initialRoute: '/',
+              routes: {
+                '/': (context) =>
+                    // ChangeNotifierProvider<CharactersState>(
+                    //       builder: (context) {
+                    //         return CharactersState();
+                    //       },
+                    //       child:
+                    BottomNav(),
+                // ),
+                // '/': (context) => BottomNav(),
+
+                '/enhancementCalculatorPage': (context) =>
+                    EnhancementCalculatorPage(),
+                '/characterSheetPage': (context) => CharacterSheetPage(),
+                '/characterDetailsPage': (context) => CharacterDetails()
+              },
+              theme: theme,
+
+              // charactersList: charactersList,
+            ));
       }));
 }
 

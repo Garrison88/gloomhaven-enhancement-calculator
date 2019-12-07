@@ -51,11 +51,9 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                   'Class',
                   style: TextStyle(fontSize: titleFontSize),
                 ),
-                onChanged: (PlayerClass value) {
-                  setState(() {
-                    _selectedClass = value;
-                  });
-                },
+                onChanged: (PlayerClass value) => setState(() {
+                  _selectedClass = value;
+                }),
                 items: classListMenuItems,
               ),
             )

@@ -10,28 +10,26 @@ class CharacterPerk {
   int associatedPerkId;
   bool characterPerkIsSelected;
 
-  CharacterPerk(
-    this.associatedCharacterId,
-      this.associatedPerkId,
+  CharacterPerk(this.associatedCharacterId, this.associatedPerkId,
       this.characterPerkIsSelected);
 
-  // // convenience constructor to create a CharacterPerk object
-  // CharacterPerk.fromMap(Map<String, dynamic> map) {
-  //   perkId = map[columnPerkId];
-  //   perkClass = map[columnPerkClass];
-  //   perkDetails = map[columnPerkDetails];
-  // }
+  // convenience constructor to create a CharacterPerk object
+  CharacterPerk.fromMap(Map<String, dynamic> map) {
+    associatedCharacterId = map[columnAssociatedCharacterId];
+    associatedPerkId = map[columnAssociatedPerkId];
+    characterPerkIsSelected = map[characterPerkIsSelected ? 1 : 0];
+  }
 
-  // // convenience method to create a Map from this CharacterPerk object
-  // Map<String, dynamic> toMap() {
-  //   var map = <String, dynamic>{
-  //     columnPerkId: perkId,
-  //     columnPerkClass: perkClass,
-  //     columnPerkDetails: perkDetails
-  //   };
-  //   if (perkId != null) {
-  //     map[columnPerkId] = perkId;
-  //   }
-  //   return map;
-  // }
+  // convenience method to create a Map from this CharacterPerk object
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      columnAssociatedCharacterId: associatedCharacterId,
+      columnAssociatedPerkId: associatedPerkId,
+      columnCharacterPerkIsSelected: characterPerkIsSelected ? 1 : 0
+    };
+    // if (associatedCharacterId != null) {
+    //   map[columnAssociatedPerkId] = associatedPerkId;
+    // }
+    return map;
+  }
 }

@@ -3,7 +3,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/characters_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
-  List<Character> charactersList = List();
+  List<Character> charactersList = [];
   DatabaseHelper db = DatabaseHelper.instance;
   PageController pageController;
   int page = 0;
@@ -61,7 +61,7 @@ class BottomNavState extends State<BottomNav> {
       setState(() {
         characters.forEach((character) {
           charactersList.add(Character.fromMap(character));
-          print(character.toString());
+          print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
         });
       });
     });
@@ -100,11 +100,12 @@ class BottomNavState extends State<BottomNav> {
           ],
         ),
         body: PageView(children: [
-          ChangeNotifierProvider<CharactersState>(
-            builder: (_) => CharactersState(
+          ChangeNotifierProvider<CharactersListState>(
+            builder: (context) => CharactersListState(
               charactersList: charactersList,
             ),
-            child: CharacterListPage(),
+            child: 
+            CharacterListPage(),
           ),
           EnhancementCalculatorPage()
         ], controller: pageController, onPageChanged: _onPageChanged),
@@ -112,7 +113,7 @@ class BottomNavState extends State<BottomNav> {
           BottomNavigationBarItem(
               icon: Icon(Icons.content_paste),
               title: Text(
-                'CHARACTER\nSHEET',
+                'CHARACTER\nSHEETS',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(

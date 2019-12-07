@@ -4,24 +4,28 @@ import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
-class CharactersState with ChangeNotifier {
+class CharactersListState with ChangeNotifier {
   List<Character> charactersList = [];
-  CharactersState({this.charactersList});
+  List<bool> _legacyPerks = [];
+  CharactersListState({this.charactersList});
   DatabaseHelper db = DatabaseHelper.instance;
 
-  getCharactersList() => charactersList;
+  Future<List> getCharactersList() async => charactersList;
+
+  // Future<Character> getCharacter(int id) => db.queryCharacterRow(id);
+
+  Future<List> getAllPerks(String _classCode) => db.queryPerks(_classCode);
 
   void setCharactersList() async {
-    List<Character> _charactersList = [];
+    // List<Character> _charactersList = [];
     await db.queryAllRows().then((characters) {
       characters.forEach((character) {
-        _charactersList.add(Character.fromMap(character));
+        charactersList.add(Character.fromMap(character));
         print(character.toString());
       });
     });
-    charactersList = _charactersList;
+    // charactersList = _charactersList;
     notifyListeners();
   }
 
@@ -36,34 +40,38 @@ class CharactersState with ChangeNotifier {
     character.gold = 0;
     character.notes = 'Add notes here';
     character.checkMarks = 0;
-    int id = await db.insert(character);
-    character.characterId = id;
+    character.isRetired = false;
+    int id = await db.insertCharacter(character);
+    character.id = id;
     print('inserted row: $id');
     print(character.name);
     print(character.classCode);
     charactersList.add(character);
-    // PerkRow perk = PerkRow(_playerClass.classCode, "TeStiNG PeRkK AddD");
-    // perk.perkClass = _playerClass.classCode;
-    // perk.perkDetails = ;
     notifyListeners();
   }
 
-  Future<void> addLegacyCharacter() async {
-    List<Perk> _perkList;
+  // void deleteCharacter(Character _character) async {
+  //   await db.deleteCharacter(_character);
+  //   // charactersList.indexOf(_character);
+  //   notifyListeners();
+  // }
+
+  Future<Character> compileLegacyCharacterDetails() async {
+    Character _legacyCharacter = Character();
+    _legacyPerks.clear();
     int _checkMarks = 0;
-    Character legacyCharacter = Character();
     PlayerClass _playerClass =
         sp.getInt('selectedClass') != null && classList != null
             ? classList[sp.getInt('selectedClass')]
             : classList[0];
-    legacyCharacter.name = sp.getString('characterName') ?? 'CHOOSE NAME';
-    legacyCharacter.playerClass = _playerClass;
-    legacyCharacter.classCode = _playerClass.classCode;
-    legacyCharacter.classColor = _playerClass.classColor;
-    legacyCharacter.classIcon = _playerClass.classIconUrl;
-    legacyCharacter.xp = int.parse(sp.getString('characterXP') ?? '0');
-    legacyCharacter.gold = int.parse(sp.getString('characterGold') ?? '0');
-    legacyCharacter.notes = sp.getString('notes') ?? 'Add notes here';
+    _legacyCharacter.name = sp.getString('characterName') ?? '[UNKNOWN]';
+    _legacyCharacter.playerClass = _playerClass;
+    _legacyCharacter.classCode = _playerClass.classCode;
+    _legacyCharacter.classColor = _playerClass.classColor;
+    _legacyCharacter.classIcon = _playerClass.classIconUrl;
+    _legacyCharacter.xp = int.parse(sp.getString('characterXP') ?? '0');
+    _legacyCharacter.gold = int.parse(sp.getString('characterGold') ?? '0');
+    _legacyCharacter.notes = sp.getString('notes') ?? 'Add notes here';
     if (sp.getBool('firstCheck')) _checkMarks++;
     if (sp.getBool('secondCheck')) _checkMarks++;
     if (sp.getBool('thirdCheck')) _checkMarks++;
@@ -82,16 +90,25 @@ class CharactersState with ChangeNotifier {
     if (sp.getBool('6FirstCheck')) _checkMarks++;
     if (sp.getBool('6SecondCheck')) _checkMarks++;
     if (sp.getBool('6ThirdCheck')) _checkMarks++;
-    legacyCharacter.checkMarks = _checkMarks;
-    int id = await db.insert(legacyCharacter);
-    _playerClass.perks.forEach((f) =>
-        sp.getBool('${_playerClass.classCode}${f.details}}${f.numOfChecks}'));
-    print('inserted row: $id');
-    print('legacy character name: ${legacyCharacter.name}');
-    print('legacy character class code: ${legacyCharacter.classCode}');
-    print('check marks: $_checkMarks');
-    print('perks: ${_playerClass.perks}');
-    charactersList.add(legacyCharacter);
-    notifyListeners();
+    _legacyCharacter.checkMarks = _checkMarks;
+    _legacyCharacter.isRetired = false;
+    _playerClass.perks.forEach((perk) {
+      for (var i = 0; i < perk.numOfChecks; i++) {
+        _legacyPerks.add(sp.getBool(
+                '${_playerClass.classCode}${perk.details}${i.toString()}') ??
+            false);
+      }
+    });
+    // print(_legacyPerks.toString());
+    return _legacyCharacter;
+  }
+
+  Future<void> addLegacyCharacter() async {
+    await compileLegacyCharacterDetails().then((_legacyCharacter) =>
+        db.insertLegacyCharacter(_legacyCharacter, _legacyPerks).then((_id) {
+          _legacyCharacter.id = _id;
+          charactersList.add(_legacyCharacter);
+          // notifyListeners();
+        }).then((_) => notifyListeners()));
   }
 }

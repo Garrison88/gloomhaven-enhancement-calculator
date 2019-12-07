@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/characters_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_details.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
 import 'package:provider/provider.dart';
 
@@ -13,99 +14,76 @@ class CharacterListPage extends StatefulWidget {
 }
 
 class _CharacterListPageState extends State<CharacterListPage> {
-  // List<Character> charactersList = List();
 
   DatabaseHelper db = DatabaseHelper.instance;
-  // List<Character> charactersState = List();
-
-  @override
-  void initState() {
-    super.initState();
-    // db.queryAllRows().then((characters) {
-    //   setState(() {
-    //     characters.forEach((character) {
-    //       charactersList.add(Character.fromMap(character));
-    //       print(character.toString());
-    //     });
-    //   });
-    // });
-  }
-
-  // @override
-  // void didChangeDependencies() {
-  //   // final CharactersState charactersState = Provider.of<CharactersState>(context);
-  //   // charactersState.setCharactersList();
-  //   print("*********DID CHANGE DEPENDENCIES " + charactersList.toString());
-  //   super.didChangeDependencies();
-  // }
-
-  // List<Character> updateCharactersList() {
-  //   db.queryAllRows().then((characters) {
-  //       characters.forEach((character) {
-  //         charactersList.add(Character.fromMap(character));
-  //         print(character.toString());
-  //     });
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
-    final CharactersState charactersState =
-        Provider.of<CharactersState>(context);
-    DatabaseHelper db = DatabaseHelper.instance;
-    // charactersState.setCharactersList();
-    // print("********BUILD METHOD " + charactersList.toString());
+    final CharactersListState charactersListState =
+        Provider.of<CharactersListState>(context);
     return Container(
       child: Scaffold(
-        body: ListView.builder(
-            itemCount: charactersState.getCharactersList().length,
-            itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () async {
-                  print(await db
-                      .queryCharacterRow(charactersState
-                          .getCharactersList()[index]
-                          .characterId)
-                      .then((char) {
-                    return char.name;
-                  }));
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => CharacterSheetPage(
-                  //       character: charactersState.getCharactersList()[index],
-                  //     ),
-                  //   ),
-                  // );
-                },
-                child: Card(
-                  child: Container(
-                    height: 58,
-                    // color: Color(int.parse(charactersList[index].classColor)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Image.asset(
-                            'images/class_icons/${charactersState.getCharactersList()[index].classIcon}',
-                            color: Color(int.parse(charactersState
-                                .getCharactersList()[index]
-                                .classColor)),
-                          ),
-                        ),
-                        Expanded(
-                            child: Text(
-                          charactersState.getCharactersList()[index].name,
-                          style: TextStyle(
-                              color: Color(int.parse(charactersState
-                                  .getCharactersList()[index]
-                                  .classColor))),
-                        ))
-                      ],
-                    ),
-                  ),
-                ),
-              );
+        body: FutureBuilder<List>(
+            future: charactersListState.getCharactersList(),
+            builder: (context, AsyncSnapshot<List> _snapshot) {
+              switch (_snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                  break;
+                default:
+                  return _snapshot.hasError
+                      ? Container(child: Text(_snapshot.error.toString()))
+                      : ListView.builder(
+                          itemCount: _snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                              onTap: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChangeNotifierProvider<CharacterState>(
+                                            builder: (context) =>
+                                                CharacterState(
+                                              characterId: _snapshot
+                                                  .data[index].id,
+                                            ),
+                                            child: CharacterDetails(
+                                              characterId: _snapshot
+                                                  .data[index].id,
+                                            ),
+                                          )),
+                                );
+                              },
+                              child: Card(
+                                child: Container(
+                                  height: 58,
+                                  // color: Color(int.parse(charactersList[index].classColor)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Image.asset(
+                                          'images/class_icons/${_snapshot.data[index].classIcon}',
+                                          color: Color(int.parse(_snapshot
+                                              .data[index].classColor)),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                        _snapshot.data[index].name,
+                                        style: TextStyle(
+                                            color: Color(int.parse(_snapshot
+                                                .data[index].classColor))),
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+              }
             }),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
@@ -124,7 +102,8 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 backgroundColor: Theme.of(context).accentColor,
                 label: 'Import Legacy Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () async => await charactersState.addLegacyCharacter()),
+                onTap: () async =>
+                    await charactersListState.addLegacyCharacter()),
             SpeedDialChild(
               child: Icon(Icons.add),
               backgroundColor: Colors.green,
@@ -133,7 +112,8 @@ class _CharacterListPageState extends State<CharacterListPage> {
               onTap: () => showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return NewCharacterDialog(charactersState: charactersState);
+                  return NewCharacterDialog(
+                      charactersState: charactersListState);
                 },
               ),
             ),
@@ -143,11 +123,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 label: 'OPEN OLD CHAR SHEET',
                 labelStyle: TextStyle(fontSize: 18.0),
                 onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => CharacterSheetPage()),
-  );
-})
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CharacterSheetPage()),
+                  );
+                })
           ],
         ),
       ),

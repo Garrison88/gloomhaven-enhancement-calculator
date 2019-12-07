@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk_row.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../models/character.dart';
 
 // singleton class to manage the database
 class DatabaseHelper
@@ -46,7 +45,7 @@ class DatabaseHelper
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.transaction((txn) async {
-      await db.execute('''
+      await txn.execute('''
               CREATE TABLE $tableCharacters (
                 $columnCharacterId INTEGER PRIMARY KEY,
                 $columnCharacterName TEXT NOT NULL,
@@ -56,28 +55,37 @@ class DatabaseHelper
                 $columnCharacterXp INTEGER NOT NULL,
                 $columnCharacterGold INTEGER NOT NULL,
                 $columnCharacterNotes TEXT NOT NULL,
-                $columnCharacterCheckMarks INTEGER NOT NULL
+                $columnCharacterCheckMarks INTEGER NOT NULL,
+                $columnIsRetired BOOL NOT NULL
               )''');
-      await db.execute('''
+      await txn.execute('''
               CREATE TABLE $tablePerks (
                 $columnPerkId INTEGER PRIMARY KEY,
                 $columnPerkClass TEXT NOT NULL,
                 $columnPerkDetails TEXT NOT NULL
-              )''').then((_) {
-        for (PerkRow perkRow in perkRowList) {
-          txn.rawInsert(
-              'INSERT INTO $tablePerks($columnPerkClass, $columnPerkDetails) VALUES("${perkRow.perkClass}", "${perkRow.perkDetails}")');
+              )''').then((_) async {
+        for (Perk perkRow in perkRowList) {
+          for (int i = 0; i < perkRow.numOfPerks; i++) {
+            int id = await txn.insert(tablePerks, perkRow.toMap());
+            print("ID: " +
+                id.toString() +
+                " : " +
+                perkRow.perkClassCode +
+                " : " +
+                perkRow.perkDetails);
+            // 'INSERT INTO $tablePerks($columnPerkClass, $columnPerkDetails) VALUES("${perkRow.perkClassCode}", "${perkRow.perkDetails}")');
+          }
         }
       }).then((_) {
         txn.execute('''
               CREATE TABLE $tableCharacterPerks (
-                $columnAssociatedCharacterId INTEGER NOT NULL,
-                $columnAssociatedPerkId INTEGER NOT NULL,
+                $columnAssociatedCharacterId INTEGER,
+                $columnAssociatedPerkId INTEGER,
                 $columnCharacterPerkIsSelected BOOLEAN
               )''');
       });
     });
-    // PerkRow perk = PerkRow();
+    // Perk perk = Perk();
     // perk.perkClass = "BR";
     // perk.perkDetails = "TESTing Details";
     // insertPerk(perk);
@@ -86,33 +94,96 @@ class DatabaseHelper
 
   // Database helper methods:
 
-  Future<int> insert(Character character) async {
+  Future<int> insertCharacter(Character _character) async {
     Database db = await database;
-    int id = await db.insert(tableCharacters, character.toMap());
+    int id = await db.insert(tableCharacters, _character.toMap());
     await db.transaction((txn) async {
-      for (PerkRow perk in perkRowList) {
-        if (perk.perkClass == character.classCode) {
-          txn.rawInsert(
-              'INSERT INTO $tableCharacterPerks($columnAssociatedCharacterId, $columnAssociatedPerkId) VALUES(${character.characterId}, ${perk.perkId})');
+      for (Perk perk in perkRowList) {
+        if (perk.perkClassCode == _character.classCode) {
+          for (int i = 0; i <= perk.numOfPerks; i++) {
+            txn.rawInsert(
+                'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${_character.id}, ${perk.perkId}, 0)');
+            print(perk.perkDetails.toString());
+          }
         }
       }
     });
-    print("****************** CHARACTER: " + character.toMap().toString());
+    print("****************** CHARACTER: " + _character.toMap().toString());
     // notifyListeners();
     return id;
   }
 
-  Future<PerkRow> queryPerkRow(int id) async {
+  Future<int> insertLegacyCharacter(
+      Character _legacyCharacter, List<bool> _selectedPerks) async {
+    Database db = await database;
+    int id = await db.insert(tableCharacters, _legacyCharacter.toMap());
+    _legacyCharacter.id = id;
+    await queryPerks(_legacyCharacter.classCode).then((_perkList) {
+      db.transaction((txn) async {
+        // var _counter = 0;
+        _perkList.asMap().forEach((index, perk) async {
+          if (perk[columnPerkClass] == _legacyCharacter.classCode) {
+            print("######*******%%%%%%%%: " + _selectedPerks[index].toString());
+            await txn.rawInsert(
+                'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${_legacyCharacter.id}, ${perk[columnPerkId]}, ${_selectedPerks[index] ? 1 : 0})');
+
+            print(
+                "PERK ${perk[columnPerkDetails]} WITH ID ${perk[columnPerkId]} FOR CHARACTER ${_legacyCharacter.id} IS ${_selectedPerks[index] ? 'SELECTED' : '** NOT ** SELECTED'}");
+            // _counter++;
+          }
+        });
+      });
+    });
+    print(
+        "****************** CHARACTER: " + _legacyCharacter.toMap().toString());
+    return id;
+  }
+
+  Future<Perk> queryPerk(int id) async {
     Database db = await database;
     List<Map> maps = await db.query(tablePerks,
         columns: [columnPerkId, columnPerkClass, columnPerkDetails],
         where: '$columnPerkId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      print(PerkRow.fromMap(maps.first).perkDetails);
-      return PerkRow.fromMap(maps.first);
+      return Perk.fromMap(maps.first);
     }
     return null;
+  }
+
+  Future<CharacterPerk> queryCharacterPerk(int id) async {
+    Database db = await database;
+    List<Map> maps = await db.query(tableCharacterPerks,
+        columns: [
+          columnAssociatedCharacterId,
+          columnAssociatedPerkId,
+          columnCharacterPerkIsSelected
+        ],
+        where: '$columnAssociatedCharacterId = ?',
+        whereArgs: [id]);
+    if (maps.length > 0) {
+      print(CharacterPerk.fromMap(maps.first).associatedCharacterId);
+      return CharacterPerk.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<List> queryCharacterPerks(int _characterId) async {
+    Database db = await database;
+    var result = await db.query(tableCharacterPerks,
+        where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
+    print("QUERY ALL CHARACTER PERKS RESULTS: " + result.toList().toString());
+    return result.toList();
+  }
+
+  Future<List> queryPerks(String _classCode) async {
+    Database db = await database;
+    // List<PerkRow> _perks;
+    var result = await db.query(tablePerks,
+        where: '$columnPerkClass = ?', whereArgs: [_classCode]);
+    // print("QUERY ALL PERKS RESULTS: " + result.toList().toString());
+    // maps.forEach((row)  {print("QERIED PERK ROW AND GOT: %%%%%%%%%%% " + row.toString()); _perks.add(row);});
+    return result.toList();
   }
 
   Future<Character> queryCharacterRow(int id) async {
@@ -127,7 +198,8 @@ class DatabaseHelper
           columnCharacterXp,
           columnCharacterGold,
           columnCharacterNotes,
-          columnCharacterCheckMarks
+          columnCharacterCheckMarks,
+          columnIsRetired
         ],
         where: '$columnCharacterId = ?',
         whereArgs: [id]);
@@ -143,6 +215,10 @@ class DatabaseHelper
     return result.toList();
   }
 
-// TODO: delete(int id)
+  Future<int> deleteCharacter(int _characterId) async {
+    Database db = await database;
+    return await db.delete(tableCharacters,
+        where: '$columnCharacterId = ?', whereArgs: [_characterId]);
+  }
 // TODO: update(Word word)
 }

@@ -5,19 +5,20 @@ import 'player_class.dart';
 
 final String tableCharacters = 'CharactersTable';
 final String columnCharacterId = '_id';
-final String columnCharacterName = 'CharacterName';
-final String columnCharacterClassCode = 'CharacterClassCode';
-final String columnCharacterClassColor = 'CharacterClassColor';
-final String columnCharacterClassIcon = 'CharacterClassIcon';
-final String columnCharacterXp = 'CharacterXp';
-final String columnCharacterGold = 'CharacterGold';
-final String columnCharacterNotes = 'CharacterNotes';
-final String columnCharacterCheckMarks = 'CharacterCheckMarks';
-final String perksID = 'PerksForeignKey';
+final String columnCharacterName = 'Name';
+final String columnCharacterClassCode = 'ClassCode';
+final String columnCharacterClassColor = 'ClassColor';
+final String columnCharacterClassIcon = 'ClassIcon';
+final String columnCharacterXp = 'XP';
+final String columnCharacterGold = 'Gold';
+final String columnCharacterNotes = 'Notes';
+final String columnCharacterCheckMarks = 'CheckMarks';
+final String columnIsRetired = 'IsRetired';
+// final String perksID = 'PerksForeignKey';
 
 // data model class
 class Character {
-  int characterId;
+  int id;
   String name;
   PlayerClass playerClass;
   String classCode;
@@ -28,6 +29,7 @@ class Character {
   String notes;
   int checkMarks;
   List<Perk> perksList;
+  bool isRetired;
 
   Character(
       // this.id,
@@ -44,7 +46,7 @@ class Character {
 
   // convenience constructor to create a Character object
   Character.fromMap(Map<String, dynamic> map) {
-    characterId = map[columnCharacterId];
+    id = map[columnCharacterId];
     name = map[columnCharacterName];
     classCode = map[columnCharacterClassCode];
     classColor = map[columnCharacterClassColor];
@@ -53,12 +55,13 @@ class Character {
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
     checkMarks = map[columnCharacterCheckMarks];
+    isRetired = map[columnIsRetired] == 1 ? true : false;
   }
 
   // convenience method to create a Map from this Character object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      columnCharacterId: characterId,
+      columnCharacterId: id,
       columnCharacterName: name,
       columnCharacterClassCode: playerClass.classCode,
       columnCharacterClassColor: playerClass.classColor,
@@ -66,11 +69,13 @@ class Character {
       columnCharacterXp: xp,
       columnCharacterGold: gold,
       columnCharacterNotes: notes,
-      columnCharacterCheckMarks: checkMarks
+      columnCharacterCheckMarks: checkMarks,
+      columnIsRetired: isRetired ? 1 : 0
     };
-    if (characterId != null) {
-      map[columnCharacterId] = characterId;
-    }
+    //TODO: why was this here?
+    // if (characterId != null) {
+    //   map[columnCharacterId] = characterId;
+    // }
     return map;
   }
 }

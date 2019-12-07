@@ -48,7 +48,6 @@ class PerkState extends State<Perk> {
                 (i) => Checkbox(
                       value: _checkList[i],
                       onChanged: (bool value) => setState(() {
-                            print(i.toString());
                             sp.setBool(
                                 // save state of checkbox to unique SP
                                 '$_classCode$_details${i.toString()}',

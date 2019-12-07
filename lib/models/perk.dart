@@ -5,33 +5,35 @@ final String columnPerkClass = 'PerkClass';
 final String columnPerkDetails = 'Details';
 
 // data model class
-class PerkRow {
+class Perk {
   int perkId;
-  String perkClass;
+  String perkClassCode;
   String perkDetails;
+  int numOfPerks;
 
-  PerkRow(
+  Perk(
       // this.id,
-      this.perkClass,
-      this.perkDetails);
+      this.perkClassCode,
+      this.perkDetails,
+      this.numOfPerks);
 
-  // convenience constructor to create a PerkRow object
-  PerkRow.fromMap(Map<String, dynamic> map) {
+  // convenience constructor to create a Perk object
+  Perk.fromMap(Map<String, dynamic> map) {
     perkId = map[columnPerkId];
-    perkClass = map[columnPerkClass];
+    perkClassCode = map[columnPerkClass];
     perkDetails = map[columnPerkDetails];
   }
 
-  // convenience method to create a Map from this PerkRow object
+  // convenience method to create a Map from this Perk object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnPerkId: perkId,
-      columnPerkClass: perkClass,
+      columnPerkClass: perkClassCode,
       columnPerkDetails: perkDetails
     };
-    if (perkId != null) {
-      map[columnPerkId] = perkId;
-    }
+    // if (perkId != null) {
+    //   map[columnPerkId] = perkId;
+    // }
     return map;
   }
 }
