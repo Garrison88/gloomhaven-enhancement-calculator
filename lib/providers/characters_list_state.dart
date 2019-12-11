@@ -6,27 +6,19 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class CharactersListState with ChangeNotifier {
-  List<Character> charactersList = [];
+  List<Character> _charactersList = [];
   List<bool> _legacyPerks = [];
-  CharactersListState({this.charactersList});
+  // CharactersListState(this._charactersList);
   DatabaseHelper db = DatabaseHelper.instance;
 
-  Future<List> getCharactersList() async => charactersList;
+  List<Character> getCharactersList() => _charactersList;
 
-  // Future<Character> getCharacter(int id) => db.queryCharacterRow(id);
-
-  Future<List> getAllPerks(String _classCode) => db.queryPerks(_classCode);
-
-  void setCharactersList() async {
-    // List<Character> _charactersList = [];
-    await db.queryAllRows().then((characters) {
-      characters.forEach((character) {
-        charactersList.add(Character.fromMap(character));
-        print(character.toString());
-      });
+  Future<bool> setCharactersList() async {
+    await db.queryAllCharacterRows().then((_list) {
+      _charactersList = _list;
     });
-    // charactersList = _charactersList;
     notifyListeners();
+    return true;
   }
 
   void addCharacter(String _name, PlayerClass _playerClass) async {
@@ -46,7 +38,7 @@ class CharactersListState with ChangeNotifier {
     print('inserted row: $id');
     print(character.name);
     print(character.classCode);
-    charactersList.add(character);
+    _charactersList.add(character);
     notifyListeners();
   }
 
@@ -107,7 +99,7 @@ class CharactersListState with ChangeNotifier {
     await compileLegacyCharacterDetails().then((_legacyCharacter) =>
         db.insertLegacyCharacter(_legacyCharacter, _legacyPerks).then((_id) {
           _legacyCharacter.id = _id;
-          charactersList.add(_legacyCharacter);
+          _charactersList.add(_legacyCharacter);
           // notifyListeners();
         }).then((_) => notifyListeners()));
   }

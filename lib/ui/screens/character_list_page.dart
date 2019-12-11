@@ -14,8 +14,7 @@ class CharacterListPage extends StatefulWidget {
 }
 
 class _CharacterListPageState extends State<CharacterListPage> {
-
-  DatabaseHelper db = DatabaseHelper.instance;
+  // DatabaseHelper db = DatabaseHelper.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -23,67 +22,77 @@ class _CharacterListPageState extends State<CharacterListPage> {
         Provider.of<CharactersListState>(context);
     return Container(
       child: Scaffold(
-        body: FutureBuilder<List>(
-            future: charactersListState.getCharactersList(),
-            builder: (context, AsyncSnapshot<List> _snapshot) {
-              switch (_snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
-                  break;
-                default:
-                  return _snapshot.hasError
-                      ? Container(child: Text(_snapshot.error.toString()))
-                      : ListView.builder(
-                          itemCount: _snapshot.data.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return InkWell(
-                              onTap: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider<CharacterState>(
-                                            builder: (context) =>
-                                                CharacterState(
-                                              characterId: _snapshot
-                                                  .data[index].id,
-                                            ),
-                                            child: CharacterDetails(
-                                              characterId: _snapshot
-                                                  .data[index].id,
-                                            ),
-                                          )),
-                                );
-                              },
-                              child: Card(
-                                child: Container(
-                                  height: 58,
-                                  // color: Color(int.parse(charactersList[index].classColor)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Image.asset(
-                                          'images/class_icons/${_snapshot.data[index].classIcon}',
-                                          color: Color(int.parse(_snapshot
-                                              .data[index].classColor)),
-                                        ),
+        body: FutureBuilder<bool>(
+            future: charactersListState.setCharactersList(),
+            builder: (context, AsyncSnapshot<bool> _snapshot) {
+              // switch (_snapshot.data) {
+              // case false:
+              if (!_snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return _snapshot.hasError
+                    ? Container(child: Text(_snapshot.error.toString()))
+                    : ListView.builder(
+                        itemCount:
+                            charactersListState.getCharactersList().length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ChangeNotifierProvider<CharacterState>(
+                                          builder: (context) => CharacterState(
+                                            charactersListState
+                                                .getCharactersList()[index].id,
+                                          ),
+                                          child: CharacterDetails(
+                                              // characterId:
+                                              //     _snapshot.data[index].id,
+                                              ),
+                                        )),
+                              );
+                            },
+                            child: Card(
+                              child: Container(
+                                height: 58,
+                                // color: Color(int.parse(charactersList[index].classColor)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Image.asset(
+                                        'images/class_icons/${charactersListState.getCharactersList()[index].classIcon}',
+                                        color: Color(int.parse(
+                                            charactersListState
+                                                .getCharactersList()[index]
+                                                .classColor)),
                                       ),
-                                      Expanded(
-                                          child: Text(
-                                        _snapshot.data[index].name,
-                                        style: TextStyle(
-                                            color: Color(int.parse(_snapshot
-                                                .data[index].classColor))),
-                                      ))
-                                    ],
-                                  ),
+                                    ),
+                                    Expanded(
+                                        child: Text(
+                                      charactersListState
+                                          .getCharactersList()[index]
+                                          .name,
+                                      style: TextStyle(
+                                          color: Color(int.parse(
+                                              charactersListState
+                                                  .getCharactersList()[index]
+                                                  .classColor))),
+                                    ))
+                                  ],
                                 ),
                               ),
-                            );
-                          });
+                            ),
+                          );
+                        });
               }
+
+              // break;
+              // default:
+              // ;
+              // }
             }),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,

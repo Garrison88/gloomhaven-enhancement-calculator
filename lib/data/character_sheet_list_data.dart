@@ -60,7 +60,7 @@ List<DropdownMenuItem<PlayerClass>> classListMenuItems =
 
 //List<DropdownMenuItem<Slot>> slotListMenuItems = _generateSlotList(slotList);
 
-List<PerkRow.Perk> perkRowList = [
+List<PerkRow.Perk> perkList = [
   PerkRow.Perk('BR', 'Remove two -1 cards', 1),
   PerkRow.Perk('BR', 'Remove one -1 card and add one +1 card', 1),
   PerkRow.Perk('BR', 'Add two +1 cards', 2),

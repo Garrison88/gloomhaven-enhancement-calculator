@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 class CharacterState with ChangeNotifier {
-  final int characterId;
-  Character character;
-  List<CharacterPerk> characterPerks;
-  CharacterState({this.characterId, this.characterPerks});
+  bool _characterIsLoading = false;
+  bool _perksAreLoading = false;
+  final int _characterId;
+  Character _character;
+  List<CharacterPerk> _characterPerks = [];
+  CharacterState(this._characterId);
   DatabaseHelper db = DatabaseHelper.instance;
 
-  Future<Character> getCharacter(int _characterId) async => db
-      .queryCharacterRow(_characterId)
-      .then((_character) => character = _character);
+  Character getCharacter() => _character;
 
-  Future<List> getCharacterPerks(int _characterId) async =>
-      characterPerks = await db.queryCharacterPerks(_characterId);
-
-  void setCharacterPerks(_characterId) async {
-    characterPerks = await db.queryCharacterPerks(_characterId);
-    notifyListeners();
+  Future<bool> setCharacter() async {
+    _character = await db.queryCharacterRow(_characterId);
+    return true;
   }
 
-  void setCharacter(_characterId) async {
-    character = await db.queryCharacterRow(_characterId);
-    notifyListeners();
-  }
+  bool get characterIsLoading => _characterIsLoading;
 
-  void deleteCharacter(int _characterId) async {
-    await db.deleteCharacter(_characterId);
-    character = null;
-    notifyListeners();
-  }
+  bool get perksAreLoading => _perksAreLoading;
+
+  // List<CharacterPerk> getCharacterPerks() => _characterPerks;
+
+  int getPerk(CharacterPerk _perk) => _characterPerks.indexOf(_perk);
+
+//   void deleteCharacter(int _characterId) async {
+//     await db.deleteCharacter(_characterId);
+//     character = null;
+//     notifyListeners();
+//   }
+
+//   bool togglePerk(CharacterPerk _perk) {
+// db.selectPerk(_perk);
+// characterPerks.indexOf(_perk);
+// return !_perk.characterPerkIsSelected;
+//   }
 
   // UPDATE CHARACTER
 

@@ -64,15 +64,15 @@ class DatabaseHelper
                 $columnPerkClass TEXT NOT NULL,
                 $columnPerkDetails TEXT NOT NULL
               )''').then((_) async {
-        for (Perk perkRow in perkRowList) {
-          for (int i = 0; i < perkRow.numOfPerks; i++) {
-            int id = await txn.insert(tablePerks, perkRow.toMap());
+        for (Perk perk in perkList) {
+          for (int i = 0; i < perk.numOfPerks; i++) {
+            int id = await txn.insert(tablePerks, perk.toMap());
             print("ID: " +
                 id.toString() +
                 " : " +
-                perkRow.perkClassCode +
+                perk.perkClassCode +
                 " : " +
-                perkRow.perkDetails);
+                perk.perkDetails);
             // 'INSERT INTO $tablePerks($columnPerkClass, $columnPerkDetails) VALUES("${perkRow.perkClassCode}", "${perkRow.perkDetails}")');
           }
         }
@@ -98,7 +98,7 @@ class DatabaseHelper
     Database db = await database;
     int id = await db.insert(tableCharacters, _character.toMap());
     await db.transaction((txn) async {
-      for (Perk perk in perkRowList) {
+      for (Perk perk in perkList) {
         if (perk.perkClassCode == _character.classCode) {
           for (int i = 0; i <= perk.numOfPerks; i++) {
             txn.rawInsert(
@@ -120,16 +120,14 @@ class DatabaseHelper
     _legacyCharacter.id = id;
     await queryPerks(_legacyCharacter.classCode).then((_perkList) {
       db.transaction((txn) async {
-        // var _counter = 0;
         _perkList.asMap().forEach((index, perk) async {
           if (perk[columnPerkClass] == _legacyCharacter.classCode) {
             print("######*******%%%%%%%%: " + _selectedPerks[index].toString());
             await txn.rawInsert(
                 'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${_legacyCharacter.id}, ${perk[columnPerkId]}, ${_selectedPerks[index] ? 1 : 0})');
 
-            print(
-                "PERK ${perk[columnPerkDetails]} WITH ID ${perk[columnPerkId]} FOR CHARACTER ${_legacyCharacter.id} IS ${_selectedPerks[index] ? 'SELECTED' : '** NOT ** SELECTED'}");
-            // _counter++;
+            // print(
+            //     "PERK ${perk[columnPerkDetails]} WITH ID ${perk[columnPerkId]} FOR CHARACTER ${_legacyCharacter.id} IS ${_selectedPerks[index] ? 'SELECTED' : '** NOT ** SELECTED'}");
           }
         });
       });
@@ -151,16 +149,18 @@ class DatabaseHelper
     return null;
   }
 
-  Future<CharacterPerk> queryCharacterPerk(int id) async {
+  Future<CharacterPerk> queryCharacterPerk(
+      int _characterId, int _perkId) async {
     Database db = await database;
-    List<Map> maps = await db.query(tableCharacterPerks,
-        columns: [
-          columnAssociatedCharacterId,
-          columnAssociatedPerkId,
-          columnCharacterPerkIsSelected
-        ],
-        where: '$columnAssociatedCharacterId = ?',
-        whereArgs: [id]);
+    List<Map> maps =
+        await db.transaction((txn) => txn.query(tableCharacterPerks,
+            columns: [
+              columnAssociatedCharacterId,
+              columnAssociatedPerkId,
+              columnCharacterPerkIsSelected
+            ],
+            where: '$columnAssociatedCharacterId = ?',
+            whereArgs: [_characterId]));
     if (maps.length > 0) {
       print(CharacterPerk.fromMap(maps.first).associatedCharacterId);
       return CharacterPerk.fromMap(maps.first);
@@ -168,12 +168,26 @@ class DatabaseHelper
     return null;
   }
 
-  Future<List> queryCharacterPerks(int _characterId) async {
+  Future<void> updateCharacterPerk(CharacterPerk _perk) async {
     Database db = await database;
-    var result = await db.query(tableCharacterPerks,
+    Map<String, dynamic> row = {
+      columnAssociatedCharacterId: _perk.associatedCharacterId,
+      columnAssociatedPerkId: _perk.associatedPerkId,
+      columnCharacterPerkIsSelected: _perk.characterPerkIsSelected ? 0 : 1
+    };
+    await db.update(tableCharacterPerks, row,
+        where: '$columnAssociatedPerkId = ?',
+        whereArgs: [_perk.associatedPerkId]);
+  }
+
+  Future<List<CharacterPerk>> queryCharacterPerks(int _characterId) async {
+    Database db = await database;
+    List<CharacterPerk> _list = [];
+    List result = await db.query(tableCharacterPerks,
         where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
-    print("QUERY ALL CHARACTER PERKS RESULTS: " + result.toList().toString());
-    return result.toList();
+    result.forEach((perk) => _list.add(CharacterPerk.fromMap(perk)));
+    print("DB QUERIED (QUERYCHARACTERPERKS): " + _list.toString());
+    return _list;
   }
 
   Future<List> queryPerks(String _classCode) async {
@@ -182,6 +196,16 @@ class DatabaseHelper
     var result = await db.query(tablePerks,
         where: '$columnPerkClass = ?', whereArgs: [_classCode]);
     // print("QUERY ALL PERKS RESULTS: " + result.toList().toString());
+    // maps.forEach((row)  {print("QERIED PERK ROW AND GOT: %%%%%%%%%%% " + row.toString()); _perks.add(row);});
+    return result.toList();
+  }
+
+  Future<List> queryPerksByCharacter(int _characterId) async {
+    Database db = await database;
+    // List<PerkRow> _perks;
+    var result = await db.query(tablePerks,
+        where: '$columnCharacterId = ?', whereArgs: [_characterId]);
+    print("QUERY ALL PERKS RESULTS: " + result.toList().toString());
     // maps.forEach((row)  {print("QERIED PERK ROW AND GOT: %%%%%%%%%%% " + row.toString()); _perks.add(row);});
     return result.toList();
   }
@@ -209,16 +233,25 @@ class DatabaseHelper
     return null;
   }
 
-  Future<List> queryAllRows() async {
+  Future<List> queryAllCharacterRows() async {
     Database db = await database;
+    List<Character> _list = [];
     var result = await db.query(tableCharacters);
-    return result.toList();
+    result.forEach((_character) => _list.add(Character.fromMap(_character)));
+    return _list;
   }
 
   Future<int> deleteCharacter(int _characterId) async {
     Database db = await database;
     return await db.delete(tableCharacters,
         where: '$columnCharacterId = ?', whereArgs: [_characterId]);
+  }
+
+  Future<void> selectPerk(CharacterPerk _perk) async {
+    Database db = await database;
+    await db.update(tableCharacterPerks, _perk.toMap(),
+        where: '$columnCharacterPerkIsSelected = ?',
+        whereArgs: [_perk.characterPerkIsSelected ? 0 : 1]);
   }
 // TODO: update(Word word)
 }

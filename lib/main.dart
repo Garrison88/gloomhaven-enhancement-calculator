@@ -1,5 +1,6 @@
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences sp;
 
 void main() async {
+  Stetho.initialize();
   WidgetsFlutterBinding.ensureInitialized();
   sp = await SharedPreferences.getInstance();
   PlayerClass _selectedClass =

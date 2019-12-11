@@ -53,19 +53,19 @@ class BottomNavState extends State<BottomNav> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController();
-    db.queryAllRows().then((characters) {
-      setState(() {
-        characters.forEach((character) {
-          charactersList.add(Character.fromMap(character));
-          print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
-        });
-      });
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   pageController = PageController();
+  //   db.queryAllRows().then((characters) {
+  //     setState(() {
+  //       characters.forEach((character) {
+  //         charactersList.add(Character.fromMap(character));
+  //         print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
+  //       });
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -102,7 +102,7 @@ class BottomNavState extends State<BottomNav> {
         body: PageView(children: [
           ChangeNotifierProvider<CharactersListState>(
             builder: (context) => CharactersListState(
-              charactersList: charactersList,
+              // charactersList: charactersList,
             ),
             child: 
             CharacterListPage(),
