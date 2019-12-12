@@ -109,7 +109,6 @@ class DatabaseHelper
       }
     });
     print("****************** CHARACTER: " + _character.toMap().toString());
-    // notifyListeners();
     return id;
   }
 
@@ -176,8 +175,8 @@ class DatabaseHelper
       columnCharacterPerkIsSelected: _perk.characterPerkIsSelected ? 0 : 1
     };
     await db.update(tableCharacterPerks, row,
-        where: '$columnAssociatedPerkId = ?',
-        whereArgs: [_perk.associatedPerkId]);
+        where: '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterId = ?',
+        whereArgs: [_perk.associatedPerkId, _perk.associatedCharacterId]);
   }
 
   Future<List<CharacterPerk>> queryCharacterPerks(int _characterId) async {
@@ -186,7 +185,7 @@ class DatabaseHelper
     List result = await db.query(tableCharacterPerks,
         where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
     result.forEach((perk) => _list.add(CharacterPerk.fromMap(perk)));
-    print("DB QUERIED (QUERYCHARACTERPERKS): " + _list.toString());
+    // print("DB QUERIED (QUERYCHARACTERPERKS): " + _list.toString());
     return _list;
   }
 
@@ -200,15 +199,15 @@ class DatabaseHelper
     return result.toList();
   }
 
-  Future<List> queryPerksByCharacter(int _characterId) async {
-    Database db = await database;
-    // List<PerkRow> _perks;
-    var result = await db.query(tablePerks,
-        where: '$columnCharacterId = ?', whereArgs: [_characterId]);
-    print("QUERY ALL PERKS RESULTS: " + result.toList().toString());
-    // maps.forEach((row)  {print("QERIED PERK ROW AND GOT: %%%%%%%%%%% " + row.toString()); _perks.add(row);});
-    return result.toList();
-  }
+  // Future<List> queryPerksByCharacter(int _characterId) async {
+  //   Database db = await database;
+  //   // List<PerkRow> _perks;
+  //   var result = await db.query(tablePerks,
+  //       where: '$columnCharacterId = ?', whereArgs: [_characterId]);
+  //   // print("QUERY ALL PERKS RESULTS: " + result.toList().toString());
+  //   // maps.forEach((row)  {print("QERIED PERK ROW AND GOT: %%%%%%%%%%% " + row.toString()); _perks.add(row);});
+  //   return result.toList();
+  // }
 
   Future<Character> queryCharacterRow(int id) async {
     Database db = await database;

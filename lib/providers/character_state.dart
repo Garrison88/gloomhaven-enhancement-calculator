@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 class CharacterState with ChangeNotifier {
-  bool _characterIsLoading = false;
-  bool _perksAreLoading = false;
+  // bool _characterIsLoading;
+  // bool _perksAreLoading;
   final int _characterId;
   Character _character;
   List<CharacterPerk> _characterPerks = [];
@@ -20,19 +19,18 @@ class CharacterState with ChangeNotifier {
     return true;
   }
 
-  bool get characterIsLoading => _characterIsLoading;
+  // bool get characterIsLoading => _characterIsLoading;
 
-  bool get perksAreLoading => _perksAreLoading;
+  // bool get perksAreLoading => _perksAreLoading;
 
   // List<CharacterPerk> getCharacterPerks() => _characterPerks;
 
   int getPerk(CharacterPerk _perk) => _characterPerks.indexOf(_perk);
 
-//   void deleteCharacter(int _characterId) async {
-//     await db.deleteCharacter(_characterId);
-//     character = null;
-//     notifyListeners();
-//   }
+  void deleteCharacter(int _characterId) async {
+    await db.deleteCharacter(_characterId);
+    notifyListeners();
+  }
 
 //   bool togglePerk(CharacterPerk _perk) {
 // db.selectPerk(_perk);

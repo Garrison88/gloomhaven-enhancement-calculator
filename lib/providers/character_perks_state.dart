@@ -5,7 +5,7 @@ import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 class CharacterPerksState with ChangeNotifier {
   int _characterId;
-  List<CharacterPerk> _characterPerks = [];
+  List<CharacterPerk> _characterPerks;
   CharacterPerksState(this._characterId);
   DatabaseHelper db = DatabaseHelper.instance;
 

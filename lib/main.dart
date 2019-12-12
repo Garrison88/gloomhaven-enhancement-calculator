@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences sp;
 
 void main() async {
-  Stetho.initialize();
+  // Stetho.initialize();
   WidgetsFlutterBinding.ensureInitialized();
   sp = await SharedPreferences.getInstance();
   PlayerClass _selectedClass =

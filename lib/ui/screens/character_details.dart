@@ -19,8 +19,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final CharacterState characterState =
-        Provider.of<CharacterState>(context);
+    final CharacterState characterState = Provider.of<CharacterState>(context);
     return Scaffold(
         body: Container(
       child: FutureBuilder<bool>(
@@ -48,14 +47,14 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             Text("Gold: " +
                                 characterState.getCharacter().gold.toString()),
                             Text(characterState.getCharacter().notes),
-                            // FlatButton(
-                            //   child: Text('DELETE'),
-                            //   onPressed: () {
-                            //     characterState.deleteCharacter(
-                            //         _characterSnapshot.data.id);
-                            //     Navigator.of(context).pop();
-                            //   },
-                            // )
+                            FlatButton(
+                              child: Text('DELETE'),
+                              onPressed: () {
+                                characterState.deleteCharacter(
+                                    characterState.getCharacter().id);
+                                Navigator.of(context).pop();
+                              },
+                            )
                           ]),
                         ),
                         ChangeNotifierProvider<CharacterPerksState>(
