@@ -21,7 +21,7 @@ class BottomNav extends StatefulWidget {
 class BottomNavState extends State<BottomNav> {
   List<Character> charactersList = [];
   DatabaseHelper db = DatabaseHelper.instance;
-  PageController pageController;
+  PageController pageController = PageController();
   int page = 0;
 
   /// Called when the user presses on of the
