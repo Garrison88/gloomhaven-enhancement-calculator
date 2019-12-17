@@ -73,6 +73,7 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:provider/provider.dart';
 
 class PerkRow extends StatefulWidget {
@@ -89,17 +90,20 @@ class _PerkRowState extends State<PerkRow> {
   Widget build(BuildContext context) {
     final CharacterPerksState characterPerksState =
         Provider.of<CharacterPerksState>(context);
+    final CharacterState characterState = Provider.of<CharacterState>(context);
     return Row(
       children: <Widget>[
         Text('ID: ${widget.perk.associatedPerkId}'),
         Checkbox(
+            activeColor:
+                Color(int.parse(characterState.character.classColor)),
             value: widget.perk.characterPerkIsSelected,
             onChanged: (value) => characterPerksState.togglePerk(widget.perk)),
         Container(
           height: 30.0,
           width: 1.0,
           color: widget.perk.characterPerkIsSelected
-              ? Theme.of(context).accentColor
+              ? Color(int.parse(characterState.character.classColor))
               : Colors.grey,
           margin: EdgeInsets.only(right: 10.0),
         ),

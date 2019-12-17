@@ -5,24 +5,24 @@ import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
-class CharactersListState with ChangeNotifier {
-  List<Character> _charactersList = [];
+class CharacterListState with ChangeNotifier {
+  List<Character> _characterList = [];
   List<bool> _legacyPerks = [];
-  // CharactersListState(this._charactersList);
   DatabaseHelper db = DatabaseHelper.instance;
 
-  List<Character> getCharactersList() => _charactersList;
+  List<Character> get characterList => _characterList;
 
-  Future<bool> setCharactersList() async {
-    await db.queryAllCharacterRows().then((_list) {
-      _charactersList = _list;
+  Future<bool> setCharacterList() async {
+    await db.queryAllCharacters().then((_list) {
+      _characterList = _list;
     });
-    notifyListeners();
     return true;
   }
 
   void addCharacter(String _name, PlayerClass _playerClass) async {
     Character character = Character();
+    List<bool> _perks = [];
+    _playerClass.perks.forEach((_) => _perks.add(false));
     character.name = _name;
     character.playerClass = _playerClass;
     character.classCode = _playerClass.classCode;
@@ -33,12 +33,12 @@ class CharactersListState with ChangeNotifier {
     character.notes = 'Add notes here';
     character.checkMarks = 0;
     character.isRetired = false;
-    int id = await db.insertCharacter(character);
+    int id = await db.insertCharacter(character, _perks);
     character.id = id;
     print('inserted row: $id');
     print(character.name);
     print(character.classCode);
-    _charactersList.add(character);
+    _characterList.add(character);
     notifyListeners();
   }
 
@@ -50,7 +50,7 @@ class CharactersListState with ChangeNotifier {
 
   Future<Character> compileLegacyCharacterDetails() async {
     Character _legacyCharacter = Character();
-    _legacyPerks.clear();
+    // _legacyPerks.clear();
     int _checkMarks = 0;
     PlayerClass _playerClass =
         sp.getInt('selectedClass') != null && classList != null
@@ -91,16 +91,14 @@ class CharactersListState with ChangeNotifier {
             false);
       }
     });
-    // print(_legacyPerks.toString());
     return _legacyCharacter;
   }
 
   Future<void> addLegacyCharacter() async {
     await compileLegacyCharacterDetails().then((_legacyCharacter) =>
-        db.insertLegacyCharacter(_legacyCharacter, _legacyPerks).then((_id) {
+        db.insertCharacter(_legacyCharacter, _legacyPerks).then((_id) {
           _legacyCharacter.id = _id;
-          _charactersList.add(_legacyCharacter);
-          // notifyListeners();
+          _characterList.add(_legacyCharacter);
         }).then((_) => notifyListeners()));
   }
 }

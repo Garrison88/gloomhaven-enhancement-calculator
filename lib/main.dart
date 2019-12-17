@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_details.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
@@ -42,32 +42,20 @@ void main() async {
             ),
           ),
       themedWidgetBuilder: (context, theme) {
-        return ChangeNotifierProvider<CharactersListState>(
+        return ChangeNotifierProvider<CharacterListState>(
             builder: (context) {
-              return CharactersListState();
+              return CharacterListState();
             },
             child: MaterialApp(
               title: 'Gloomhaven Companion',
-              // initialRoute: '/',
               routes: {
-                '/': (context) =>
-                    // ChangeNotifierProvider<CharactersState>(
-                    //       builder: (context) {
-                    //         return CharactersState();
-                    //       },
-                    //       child:
-                    BottomNav(),
-                // ),
-                // '/': (context) => BottomNav(),
-
+                '/': (context) => BottomNav(),
                 '/enhancementCalculatorPage': (context) =>
                     EnhancementCalculatorPage(),
                 '/characterSheetPage': (context) => CharacterSheetPage(),
                 '/characterDetailsPage': (context) => CharacterDetails()
               },
               theme: theme,
-
-              // charactersList: charactersList,
             ));
       }));
 }

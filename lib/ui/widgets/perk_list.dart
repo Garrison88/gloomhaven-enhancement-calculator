@@ -14,7 +14,7 @@ class PerkListState extends State<PerkList> {
         Provider.of<CharacterPerksState>(context);
     return FutureBuilder<bool>(
         future: characterPerksState
-            .setCharacterPerks(characterPerksState.getCharacterId()),
+            .setCharacterPerks(characterPerksState.characterId),
         builder: (context, AsyncSnapshot<bool> _perksSnapshot) {
           return _perksSnapshot.data == true
               ? _perksSnapshot.hasError
@@ -26,10 +26,10 @@ class PerkListState extends State<PerkList> {
                       crossAxisCount: 1,
                       childAspectRatio: 5,
                       children: List.generate(
-                          characterPerksState.getCharacterPerks().length,
+                          characterPerksState.characterPerks.length,
                           (index) => PerkRow(
                               perk: characterPerksState
-                                  .getCharacterPerks()[index])),
+                                  .characterPerks[index])),
                     )
               : SliverList(
                   delegate:

@@ -3,7 +3,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/characters_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
-  List<Character> charactersList = [];
+  List<Character> characterList = [];
   DatabaseHelper db = DatabaseHelper.instance;
   PageController pageController = PageController();
   int page = 0;
@@ -60,7 +60,7 @@ class BottomNavState extends State<BottomNav> {
   //   db.queryAllRows().then((characters) {
   //     setState(() {
   //       characters.forEach((character) {
-  //         charactersList.add(Character.fromMap(character));
+  //         characterList.add(Character.fromMap(character));
   //         print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
   //       });
   //     });
@@ -76,7 +76,7 @@ class BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: true,
+        // resizeToAvoidBottomPadding: true,
         appBar: AppBar(
           title: Text(
             'Gloomhaven Companion',
@@ -100,10 +100,8 @@ class BottomNavState extends State<BottomNav> {
           ],
         ),
         body: PageView(children: [
-          ChangeNotifierProvider<CharactersListState>(
-            builder: (context) => CharactersListState(
-              // charactersList: charactersList,
-            ),
+          ChangeNotifierProvider<CharacterListState>(
+            builder: (context) => CharacterListState(),
             child: 
             CharacterListPage(),
           ),

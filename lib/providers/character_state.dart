@@ -4,18 +4,19 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 class CharacterState with ChangeNotifier {
-  // bool _characterIsLoading;
-  // bool _perksAreLoading;
   final int _characterId;
+  bool _isEditable = false;
   Character _character;
   List<CharacterPerk> _characterPerks = [];
   CharacterState(this._characterId);
   DatabaseHelper db = DatabaseHelper.instance;
 
-  Character getCharacter() => _character;
+  Character get character => _character;
+
+  bool get isEditable => _isEditable;
 
   Future<bool> setCharacter() async {
-    _character = await db.queryCharacterRow(_characterId);
+    _character = await db.queryCharacter(_characterId);
     return true;
   }
 
