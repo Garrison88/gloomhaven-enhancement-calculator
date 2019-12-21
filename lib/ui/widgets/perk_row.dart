@@ -95,10 +95,14 @@ class _PerkRowState extends State<PerkRow> {
       children: <Widget>[
         Text('ID: ${widget.perk.associatedPerkId}'),
         Checkbox(
-            activeColor:
-                Color(int.parse(characterState.character.classColor)),
+            activeColor: characterState.isEditable
+                ? Color(int.parse(characterState.character.classColor))
+                : Color(int.parse(characterState.character.classColor))
+                    .withOpacity(0.75),
             value: widget.perk.characterPerkIsSelected,
-            onChanged: (value) => characterPerksState.togglePerk(widget.perk)),
+            onChanged: characterState.isEditable
+                ? (value) => characterPerksState.togglePerk(widget.perk)
+                : (_) => null),
         Container(
           height: 30.0,
           width: 1.0,

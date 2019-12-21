@@ -11,34 +11,40 @@ class CharacterState with ChangeNotifier {
   CharacterState(this._characterId);
   DatabaseHelper db = DatabaseHelper.instance;
 
+  List<int> _levelXpList = [45, 95, 150, 210, 275, 345, 420, 500];
+
   Character get character => _character;
 
   bool get isEditable => _isEditable;
+
+  set isEditable(bool _value) {
+    _isEditable = _value;
+    notifyListeners();
+  }
+
+  int get level => _character.xp < _levelXpList.last
+      ? _levelXpList.indexWhere((_xp) => _xp > _character.xp) + 1
+      : 9;
+
+  int get nextLevelXp => _character.xp < _levelXpList.last
+      ? _levelXpList.firstWhere((_threshold) => _threshold > _character.xp)
+      : _levelXpList.last;
 
   Future<bool> setCharacter() async {
     _character = await db.queryCharacter(_characterId);
     return true;
   }
 
-  // bool get characterIsLoading => _characterIsLoading;
-
-  // bool get perksAreLoading => _perksAreLoading;
-
-  // List<CharacterPerk> getCharacterPerks() => _characterPerks;
-
   int getPerk(CharacterPerk _perk) => _characterPerks.indexOf(_perk);
 
-  void deleteCharacter(int _characterId) async {
+  Future updateCharacter(Character _updatedCharacter) async {
+    _character = _updatedCharacter;
+    await db.updateCharacter(_updatedCharacter);
+  }
+
+  deleteCharacter(int _characterId) async {
     await db.deleteCharacter(_characterId);
     notifyListeners();
   }
-
-//   bool togglePerk(CharacterPerk _perk) {
-// db.selectPerk(_perk);
-// characterPerks.indexOf(_perk);
-// return !_perk.characterPerkIsSelected;
-//   }
-
-  // UPDATE CHARACTER
 
 }

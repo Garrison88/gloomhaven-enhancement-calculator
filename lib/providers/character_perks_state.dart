@@ -9,9 +9,7 @@ class CharacterPerksState with ChangeNotifier {
   CharacterPerksState(this._characterId);
   DatabaseHelper db = DatabaseHelper.instance;
 
-  // setCharacterId(_charId) => _characterId = _charId;
-
-  get characterId => _characterId;
+  int get characterId => _characterId;
 
   Future<bool> setCharacterPerks(_characterId) async {
     _characterPerks = await db.queryCharacterPerks(_characterId);
@@ -20,7 +18,7 @@ class CharacterPerksState with ChangeNotifier {
 
   List<CharacterPerk> get characterPerks => _characterPerks;
 
-  Future<void> togglePerk(CharacterPerk _perk) async {
+  Future togglePerk(CharacterPerk _perk) async {
     await db.updateCharacterPerk(_perk);
     notifyListeners();
   }

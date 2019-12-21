@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
@@ -5,7 +6,7 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_details.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
     final CharacterListState characterListState =
         Provider.of<CharacterListState>(context);
     return Scaffold(
+      resizeToAvoidBottomPadding: true,
       body: FutureBuilder<bool>(
           future: characterListState.setCharacterList(),
           builder: (context, AsyncSnapshot<bool> _snapshot) {
@@ -30,61 +32,56 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     : Container(
                         child: PageView.builder(
                           // store this controller in a State to save the carousel scroll position
-                          controller: PageController(viewportFraction: 0.95),
-                          itemCount:
-                              characterListState.characterList.length,
+                          controller: PageController(viewportFraction: .95),
+                          itemCount: characterListState.characterList.length,
                           itemBuilder: (BuildContext context, int index) {
+                            // Character _character =
+                            //     ;
                             return SingleChildScrollView(
                               child: Column(
                                 children: <Widget>[
-                                  Card(
-                                    child: Container(
-                                      height: 58,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.95,
-                                      // color: Color(int.parse(charactersList[index].classColor)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Image.asset(
-                                              'images/class_icons/${characterListState.characterList[index].classIcon}',
-                                              color: Color(int.parse(
-                                                  characterListState
-                                                      .characterList[index]
-                                                      .classColor)),
-                                            ),
-                                          ),
-                                          Expanded(
-                                              child: Text(
-                                            characterListState
-                                                .characterList[index]
-                                                .name,
-                                            style: TextStyle(
-                                                color: Color(int.parse(
-                                                    characterListState
-                                                        .characterList[
-                                                            index]
-                                                        .classColor))),
-                                          ))
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  // Card(
+                                  //   child: Container(
+                                  //     height: 58,
+                                  //     width: MediaQuery.of(context).size.width,
+                                  //     color: Color(int.parse(_character.classColor)),
+                                  //     child: Row(
+                                  //       mainAxisAlignment:
+                                  //           MainAxisAlignment.start,
+                                  //       children: <Widget>[
+                                  //         Expanded(
+                                  //           child: Image.asset(
+                                  //             'images/class_icons/${_character.classIcon}',
+                                  //             color: Color(int.parse(
+                                  //                 _character.classColor)),
+                                  //           ),
+                                  //         ),
+                                  //         Expanded(
+                                  //             child: AutoSizeText(
+                                  //           _character.name,
+                                  //           minFontSize: titleFontSize,
+                                  //           maxLines: 1,
+                                  //           overflow: TextOverflow.ellipsis,
+                                  //           style: TextStyle(
+                                  //               fontFamily: nyala,
+                                  //               color: Colors.white),
+                                  //         ))
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Card(
                                     child:
                                         ChangeNotifierProvider<CharacterState>(
                                       builder: (context) => CharacterState(
                                         characterListState
-                                            .characterList[index]
-                                            .id,
+                                            .characterList[index].id,
                                       ),
                                       child: Container(
                                         padding: EdgeInsets.all(smallPadding),
                                         height:
                                             MediaQuery.of(context).size.height,
-                                        child: CharacterDetails(),
+                                        child: CharacterPage(),
                                       ),
                                     ),
                                   ),

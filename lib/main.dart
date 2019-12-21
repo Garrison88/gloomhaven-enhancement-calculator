@@ -5,7 +5,7 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_details.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +53,7 @@ void main() async {
                 '/enhancementCalculatorPage': (context) =>
                     EnhancementCalculatorPage(),
                 '/characterSheetPage': (context) => CharacterSheetPage(),
-                '/characterDetailsPage': (context) => CharacterDetails()
+                '/characterDetailsPage': (context) => CharacterPage()
               },
               theme: theme,
             ));

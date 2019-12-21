@@ -8,14 +8,14 @@ final String columnPerkDetails = 'Details';
 class Perk {
   int perkId;
   String perkClassCode;
-  String perkDetails;
   int numOfPerks;
+  String perkDetails;
 
   Perk(
       // this.id,
       this.perkClassCode,
-      this.perkDetails,
-      this.numOfPerks);
+      this.numOfPerks,
+      this.perkDetails);
 
   // convenience constructor to create a Perk object
   Perk.fromMap(Map<String, dynamic> map) {

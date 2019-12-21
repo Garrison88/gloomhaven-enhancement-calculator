@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../enums/enhancement_category.dart';
 import '../models/enhancement.dart';
 import 'constants.dart';

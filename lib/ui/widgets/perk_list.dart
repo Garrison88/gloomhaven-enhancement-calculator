@@ -15,25 +15,24 @@ class PerkListState extends State<PerkList> {
     return FutureBuilder<bool>(
         future: characterPerksState
             .setCharacterPerks(characterPerksState.characterId),
-        builder: (context, AsyncSnapshot<bool> _perksSnapshot) {
-          return _perksSnapshot.data == true
-              ? _perksSnapshot.hasError
-                  ? SliverList(
-                      delegate: SliverChildListDelegate([
-                      Container(child: Text(_perksSnapshot.error.toString()))
-                    ]))
-                  : SliverGrid.count(
-                      crossAxisCount: 1,
-                      childAspectRatio: 5,
-                      children: List.generate(
-                          characterPerksState.characterPerks.length,
-                          (index) => PerkRow(
-                              perk: characterPerksState
-                                  .characterPerks[index])),
-                    )
-              : SliverList(
-                  delegate:
-                      SliverChildListDelegate([CircularProgressIndicator()]));
-        });
+        builder: (context, AsyncSnapshot<bool> _perksSnapshot) => _perksSnapshot
+                    .data ==
+                true
+            ? _perksSnapshot.hasError
+                ? SliverList(
+                    delegate: SliverChildListDelegate([
+                    Container(child: Text(_perksSnapshot.error.toString()))
+                  ]))
+                : SliverGrid.count(
+                    crossAxisCount: 1,
+                    childAspectRatio: 5,
+                    children: List.generate(
+                        characterPerksState.characterPerks.length,
+                        (index) => PerkRow(
+                            perk: characterPerksState.characterPerks[index])),
+                  )
+            : SliverList(
+                delegate:
+                    SliverChildListDelegate([CircularProgressIndicator()])));
   }
 }
