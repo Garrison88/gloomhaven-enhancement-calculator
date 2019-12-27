@@ -9,27 +9,31 @@ final String columnCharacterName = 'Name';
 final String columnCharacterClassCode = 'ClassCode';
 final String columnCharacterClassColor = 'ClassColor';
 final String columnCharacterClassIcon = 'ClassIcon';
+final String columnCharacterClassRace = 'ClassRace';
+final String columnCharacterClassName = 'CLassName';
 final String columnCharacterXp = 'XP';
 final String columnCharacterGold = 'Gold';
 final String columnCharacterNotes = 'Notes';
 final String columnCharacterCheckMarks = 'CheckMarks';
 final String columnIsRetired = 'IsRetired';
-// final String perksID = 'PerksForeignKey';
 
 // data model class
 class Character {
   int id;
   String name;
-  PlayerClass playerClass;
+  // PlayerClass playerClass;
   String classCode;
   String classColor;
   String classIcon;
+  String classRace;
+  String className;
   int xp;
   int gold;
   String notes;
   int checkMarks;
   List<Perk> perksList;
   bool isRetired;
+  // PlayerClass playerClass;
 
   Character(
       // this.id,
@@ -51,11 +55,14 @@ class Character {
     classCode = map[columnCharacterClassCode];
     classColor = map[columnCharacterClassColor];
     classIcon = map[columnCharacterClassIcon];
+    classRace = map[columnCharacterClassRace];
+    className = map[columnCharacterClassName];
     xp = map[columnCharacterXp];
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
     checkMarks = map[columnCharacterCheckMarks];
     isRetired = map[columnIsRetired] == 1 ? true : false;
+    // playerClass = map[PlayerClass.fromMap(map)];
   }
 
   // convenience method to create a Map from this Character object
@@ -63,19 +70,17 @@ class Character {
     var map = <String, dynamic>{
       columnCharacterId: id,
       columnCharacterName: name,
-      columnCharacterClassCode: playerClass.classCode,
-      columnCharacterClassColor: playerClass.classColor,
-      columnCharacterClassIcon: playerClass.classIconUrl,
+      columnCharacterClassCode: classCode,
+      columnCharacterClassColor: classColor,
+      columnCharacterClassIcon: classIcon,
+      columnCharacterClassRace: classRace,
+      columnCharacterClassName: className,
       columnCharacterXp: xp,
       columnCharacterGold: gold,
       columnCharacterNotes: notes,
       columnCharacterCheckMarks: checkMarks,
       columnIsRetired: isRetired ? 1 : 0
     };
-    //TODO: why was this here?
-    // if (characterId != null) {
-    //   map[columnCharacterId] = characterId;
-    // }
     return map;
   }
 }

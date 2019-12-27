@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 
 class NewCharacterDialog extends StatefulWidget {
   final PlayerClass initialValue;
-  final charactersState;
+  final CharacterListState characterListState;
   final void Function(String) onValueChange;
 
   NewCharacterDialog(
-      {Key key, this.onValueChange, this.initialValue, this.charactersState})
+      {Key key, this.onValueChange, this.initialValue, this.characterListState})
       : super(key: key);
 
   @override
@@ -35,7 +36,8 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // final CharactersState charactersState = Provider.of<CharactersState>(context);
+    // final CharacterListState characterListState =
+    //     Provider.of<CharacterListState>(context);
     return AlertDialog(
       title: Text("New Character"),
       content: SingleChildScrollView(
@@ -63,7 +65,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
       actions: <Widget>[
         RaisedButton(
           onPressed: () {
-            widget.charactersState
+            widget.characterListState
                 .addCharacter(_nameTextFieldController.text, _selectedClass);
             Navigator.of(context).pop();
           },

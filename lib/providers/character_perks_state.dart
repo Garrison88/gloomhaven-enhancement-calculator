@@ -18,8 +18,8 @@ class CharacterPerksState with ChangeNotifier {
 
   List<CharacterPerk> get characterPerks => _characterPerks;
 
-  Future togglePerk(CharacterPerk _perk) async {
-    await db.updateCharacterPerk(_perk);
+  Future togglePerk(_perk, _value) async {
+    await db.updateCharacterPerk(_perk, _value);
     notifyListeners();
   }
 

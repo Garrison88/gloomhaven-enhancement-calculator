@@ -13,9 +13,10 @@ class CharacterListState with ChangeNotifier {
   List<Character> get characterList => _characterList;
 
   Future<bool> setCharacterList() async {
-    await db.queryAllCharacters().then((_list) {
-      _characterList = _list;
-    });
+    // List _list = [];
+    _characterList = await db.queryAllCharacters();
+    // _list.forEach((_result) => _result.))
+    // await db.queryPlayerClass(_classCode)
     return true;
   }
 
@@ -28,10 +29,12 @@ class CharacterListState with ChangeNotifier {
       }
     });
     _character.name = _name;
-    _character.playerClass = _playerClass;
+    // _character.playerClass = _playerClass;
     _character.classCode = _playerClass.classCode;
     _character.classColor = _playerClass.classColor;
     _character.classIcon = _playerClass.classIconUrl;
+    _character.classRace = _playerClass.race;
+    _character.className = _playerClass.className;
     _character.xp = 0;
     _character.gold = 0;
     _character.notes = 'Add notes here';
@@ -45,21 +48,29 @@ class CharacterListState with ChangeNotifier {
     notifyListeners();
   }
 
+  Future deleteCharacter(int _characterId) async {
+    await db.deleteCharacter(_characterId);
+    // _characterList.removeWhere((value) => value.id == _characterId);
+    notifyListeners();
+  }
+
   Future<Character> compileLegacyCharacterDetails() async {
-    Character _legacyCharacter = Character();
+    Character _character = Character();
     int _checkMarks = 0;
     PlayerClass _playerClass =
         sp.getInt('selectedClass') != null && classList != null
             ? classList[sp.getInt('selectedClass')]
             : classList[0];
-    _legacyCharacter.name = sp.getString('characterName') ?? '[UNKNOWN]';
-    _legacyCharacter.playerClass = _playerClass;
-    _legacyCharacter.classCode = _playerClass.classCode;
-    _legacyCharacter.classColor = _playerClass.classColor;
-    _legacyCharacter.classIcon = _playerClass.classIconUrl;
-    _legacyCharacter.xp = int.parse(sp.getString('characterXP') ?? 0);
-    _legacyCharacter.gold = int.parse(sp.getString('characterGold') ?? 0);
-    _legacyCharacter.notes = sp.getString('notes') ?? 'Add notes here';
+    _character.name = sp.getString('characterName') ?? '[UNKNOWN]';
+    // _character.playerClass = _playerClass;
+    _character.classCode = _playerClass.classCode;
+    _character.classColor = _playerClass.classColor;
+    _character.classIcon = _playerClass.classIconUrl;
+    _character.classRace = _playerClass.race;
+    _character.className = _playerClass.className;
+    _character.xp = int.parse(sp.getString('characterXP') ?? 0);
+    _character.gold = int.parse(sp.getString('characterGold') ?? 0);
+    _character.notes = sp.getString('notes') ?? 'Add notes here';
     if (sp.getBool('firstCheck')) _checkMarks++;
     if (sp.getBool('secondCheck')) _checkMarks++;
     if (sp.getBool('thirdCheck')) _checkMarks++;
@@ -78,8 +89,8 @@ class CharacterListState with ChangeNotifier {
     if (sp.getBool('6FirstCheck')) _checkMarks++;
     if (sp.getBool('6SecondCheck')) _checkMarks++;
     if (sp.getBool('6ThirdCheck')) _checkMarks++;
-    _legacyCharacter.checkMarks = _checkMarks;
-    _legacyCharacter.isRetired = false;
+    _character.checkMarks = _checkMarks;
+    _character.isRetired = false;
     _playerClass.perks.forEach((perk) {
       for (var i = 0; i < perk.numOfChecks; i++) {
         _legacyPerks.add(sp.getBool(
@@ -87,13 +98,13 @@ class CharacterListState with ChangeNotifier {
             false);
       }
     });
-    return _legacyCharacter;
+    return _character;
   }
 
   Future addLegacyCharacter() async {
-    await compileLegacyCharacterDetails().then((_legacyCharacter) => db
-        .insertCharacter(_legacyCharacter, _legacyPerks)
-        .then((_id) => _legacyCharacter.id = _id)
+    await compileLegacyCharacterDetails().then((_character) => db
+        .insertCharacter(_character, _legacyPerks)
+        .then((_id) => _character.id = _id)
         .then((_) => notifyListeners()));
   }
 }

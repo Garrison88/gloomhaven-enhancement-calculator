@@ -1,14 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
+import 'package:page_indicator/page_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterListPage extends StatefulWidget {
   @override
@@ -16,10 +17,14 @@ class CharacterListPage extends StatefulWidget {
 }
 
 class _CharacterListPageState extends State<CharacterListPage> {
+  PageController _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
+    final AppState appState = Provider.of<AppState>(context);
     final CharacterListState characterListState =
         Provider.of<CharacterListState>(context);
+    // _pageController.jumpToPage(appState.position);
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: FutureBuilder<bool>(
@@ -28,69 +33,79 @@ class _CharacterListPageState extends State<CharacterListPage> {
             return _snapshot.hasError
                 ? Container(child: Text(_snapshot.error.toString()))
                 : !_snapshot.hasData
-                    ? Center(child: CircularProgressIndicator())
-                    : Container(
+                    ? Container(
+                        child: Center(child: CircularProgressIndicator()),
+                        height: MediaQuery.of(context).size.height,
+                      )
+                    : PageIndicatorContainer(
                         child: PageView.builder(
-                          // store this controller in a State to save the carousel scroll position
-                          controller: PageController(viewportFraction: .95),
+                          controller: _pageController =
+                              PageController(initialPage: appState.position),
+                          onPageChanged: (_index) async {
+                            var prefs = await SharedPreferences.getInstance();
+                            appState.position = _index;
+                            prefs.setInt('position', _index);
+                            appState.setTheme(characterListState
+                                .characterList[_index].classColor);
+                            prefs.setString(
+                                'themeColor',
+                                characterListState
+                                    .characterList[_index].classColor);
+                          },
                           itemCount: characterListState.characterList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            // Character _character =
-                            //     ;
-                            return SingleChildScrollView(
-                              child: Column(
-                                children: <Widget>[
-                                  // Card(
-                                  //   child: Container(
-                                  //     height: 58,
-                                  //     width: MediaQuery.of(context).size.width,
-                                  //     color: Color(int.parse(_character.classColor)),
-                                  //     child: Row(
-                                  //       mainAxisAlignment:
-                                  //           MainAxisAlignment.start,
-                                  //       children: <Widget>[
-                                  //         Expanded(
-                                  //           child: Image.asset(
-                                  //             'images/class_icons/${_character.classIcon}',
-                                  //             color: Color(int.parse(
-                                  //                 _character.classColor)),
-                                  //           ),
-                                  //         ),
-                                  //         Expanded(
-                                  //             child: AutoSizeText(
-                                  //           _character.name,
-                                  //           minFontSize: titleFontSize,
-                                  //           maxLines: 1,
-                                  //           overflow: TextOverflow.ellipsis,
-                                  //           style: TextStyle(
-                                  //               fontFamily: nyala,
-                                  //               color: Colors.white),
-                                  //         ))
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  Card(
-                                    child:
-                                        ChangeNotifierProvider<CharacterState>(
-                                      builder: (context) => CharacterState(
-                                        characterListState
-                                            .characterList[index].id,
-                                      ),
-                                      child: Container(
-                                        padding: EdgeInsets.all(smallPadding),
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        child: CharacterPage(),
+                            return Container(
+                              padding: EdgeInsets.all(smallPadding),
+                              child: Card(
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.9),
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              'images/class_icons/${characterListState.characterList[index].classIcon}'),
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.white.withOpacity(0.9),
+                                              BlendMode.lighten),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                        color: Color(int.parse(
+                                                characterListState
+                                                    .characterList[index]
+                                                    .classColor))
+                                            .withOpacity(0.2)),
+                                    SingleChildScrollView(
+                                      child: ChangeNotifierProvider<
+                                          CharacterState>(
+                                        builder: (context) => CharacterState(
+                                          characterListState
+                                              .characterList[index].id,
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(smallPadding),
+                                          child: CharacterPage(),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           },
                         ),
+                        align: IndicatorAlign.top,
+                        length: characterListState.characterList.length,
+                        indicatorSpace: smallPadding,
+                        padding: const EdgeInsets.only(top: 20),
+                        indicatorColor: Colors.white,
+                        indicatorSelectorColor: appState.accentColor,
+                        shape: IndicatorShape.circle(size: 12),
                       );
+            // shape: IndicatorShape.roundRectangleShape(size: Size.square(12),cornerSize: Size.square(3)),
+            // shape: IndicatorShape.oval(size: Size(12, 8)),
           }),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
@@ -99,8 +114,6 @@ class _CharacterListPageState extends State<CharacterListPage> {
         curve: Curves.bounceIn,
         overlayColor: Colors.black,
         overlayOpacity: 0.5,
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
         elevation: 8.0,
         shape: CircleBorder(),
         children: [
@@ -115,12 +128,16 @@ class _CharacterListPageState extends State<CharacterListPage> {
             backgroundColor: Colors.green,
             label: 'Add New Character',
             labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return NewCharacterDialog(charactersState: characterListState);
-              },
-            ),
+            onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return NewCharacterDialog(characterListState: characterListState);
+                },
+              );
+              _pageController
+                  .jumpToPage(characterListState.characterList.length + 1);
+            },
           ),
           SpeedDialChild(
               child: Icon(Icons.add),

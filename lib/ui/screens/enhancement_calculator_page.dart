@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
 import '../../data/enhancement_list_data.dart';
@@ -118,14 +120,16 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final AppState appState = Provider.of<AppState>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('images/background_page.jpg'),
-                fit: BoxFit.fill),
-          ),
+          color: appState.accentColor.withOpacity(0.2),
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(
+          //       image: AssetImage('images/background_page.jpg'),
+          //       fit: BoxFit.fill),
+          // ),
           child: ListView(
             children: <Widget>[
               Container(
@@ -152,14 +156,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               label: Text(
                                 'General Guidelines',
                                 style: TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.white,
-                                    fontFamily: highTower),
+                                    fontSize: 20.0, fontFamily: highTower),
                               ),
-                              onPressed: () {
-                                showInfoAlert(context, Strings.generalInfoTitle,
-                                    Strings.generalInfoBody, null);
-                              },
+                              onPressed: () => showInfoAlert(
+                                  context,
+                                  Strings.generalInfoTitle,
+                                  Strings.generalInfoBody,
+                                  null),
                             ),
                           ],
                         ),
@@ -183,8 +186,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<int>(
                                   hint: Text(
                                     '1 / x',
-                                    style: TextStyle(
-                                        fontFamily: highTower),
+                                    style: TextStyle(fontFamily: highTower),
                                   ),
                                   value: _targetCardLvl,
                                   items: cardLevelList,
@@ -225,8 +227,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<int>(
                                   hint: Text(
                                     'None',
-                                    style: TextStyle(
-                                        fontFamily: highTower),
+                                    style: TextStyle(fontFamily: highTower),
                                   ),
                                   value: _previousEnhancements,
                                   items: previousEnhancementsList,
@@ -279,8 +280,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<Enhancement>(
                                     hint: Text(
                                       'Type',
-                                      style: TextStyle(
-                                          fontFamily: highTower),
+                                      style: TextStyle(fontFamily: highTower),
                                     ),
                                     value: _selectedEnhancement,
                                     items: enhancementTypeList,

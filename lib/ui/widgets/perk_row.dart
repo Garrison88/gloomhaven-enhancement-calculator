@@ -91,41 +91,46 @@ class _PerkRowState extends State<PerkRow> {
     final CharacterPerksState characterPerksState =
         Provider.of<CharacterPerksState>(context);
     final CharacterState characterState = Provider.of<CharacterState>(context);
-    return Row(
-      children: <Widget>[
-        Text('ID: ${widget.perk.associatedPerkId}'),
-        Checkbox(
-            activeColor: characterState.isEditable
-                ? Color(int.parse(characterState.character.classColor))
-                : Color(int.parse(characterState.character.classColor))
-                    .withOpacity(0.75),
-            value: widget.perk.characterPerkIsSelected,
-            onChanged: characterState.isEditable
-                ? (value) => characterPerksState.togglePerk(widget.perk)
-                : (_) => null),
-        Container(
-          height: 30.0,
-          width: 1.0,
-          color: widget.perk.characterPerkIsSelected
-              ? Color(int.parse(characterState.character.classColor))
-              : Colors.grey,
-          margin: EdgeInsets.only(right: 10.0),
-        ),
-        Expanded(
-          child: FutureBuilder<String>(
-              future: characterPerksState
-                  .getPerkDetails(widget.perk.associatedPerkId),
-              builder: (context, AsyncSnapshot<String> _detailsSnapshot) {
-                return _detailsSnapshot.hasData
-                    ? AutoSizeText(
-                        _detailsSnapshot.data,
-                        maxLines: 2,
-                        style: TextStyle(fontFamily: nyala),
-                      )
-                    : Center(child: CircularProgressIndicator());
-              }),
-        )
-      ],
+    return Container(
+      height: 58,
+      child: Row(
+        children: <Widget>[
+          Checkbox(
+              // activeColor: characterState.isEditable
+              //     ? Color(int.parse(characterState.character.classColor))
+              //     : Colors.white,
+              // checkColor: characterState.isEditable
+              //     ? Colors.white
+              //     : Color(int.parse(characterState.character.classColor)),
+              value: widget.perk.characterPerkIsSelected,
+              onChanged: characterState.isEditable
+                  ? (value) =>
+                      characterPerksState.togglePerk(widget.perk, value)
+                  : (_) => null),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            // color: widget.perk.characterPerkIsSelected
+            //     ? Color(int.parse(characterState.character.classColor))
+                // : Colors.grey,
+            margin: EdgeInsets.only(right: 10.0),
+          ),
+          Expanded(
+            child: FutureBuilder<String>(
+                future: characterPerksState
+                    .getPerkDetails(widget.perk.associatedPerkId),
+                builder: (context, AsyncSnapshot<String> _detailsSnapshot) {
+                  return _detailsSnapshot.hasData
+                      ? AutoSizeText(
+                          _detailsSnapshot.data,
+                          maxLines: 2,
+                          style: TextStyle(fontFamily: nyala),
+                        )
+                      : Center(child: CircularProgressIndicator());
+                }),
+          )
+        ],
+      ),
     );
   }
 }

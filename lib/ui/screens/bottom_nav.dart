@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,6 @@ class BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // resizeToAvoidBottomPadding: true,
         appBar: AppBar(
           title: Text(
             'Gloomhaven Companion',
@@ -100,10 +100,16 @@ class BottomNavState extends State<BottomNav> {
           ],
         ),
         body: PageView(children: [
-          ChangeNotifierProvider<CharacterListState>(
-            builder: (context) => CharacterListState(),
-            child: 
-            CharacterListPage(),
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<CharacterListState>(
+                builder: (context) => CharacterListState(),
+              ),
+              // ChangeNotifierProvider<CharacterState>(
+              //   builder: (context) => CharacterState(),
+              // ),
+            ],
+            child: CharacterListPage(),
           ),
           EnhancementCalculatorPage()
         ], controller: pageController, onPageChanged: _onPageChanged),

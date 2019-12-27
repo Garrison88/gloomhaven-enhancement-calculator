@@ -158,22 +158,22 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
     setState(() {
       _selectedClass = _value;
 
-      DynamicTheme.of(context).setThemeData(ThemeData(
-        accentColor:
-            _selectedClass != null ? _selectedClass.classColor : Color(0xff4e7ec1),
-        primarySwatch: Colors.brown,
-        // Define the default Font Family
-        fontFamily: 'PirataOne',
+      // DynamicTheme.of(context).setThemeData(ThemeData(
+      //   accentColor:
+      //       _selectedClass != null ? _selectedClass.classColor : Color(0xff4e7ec1),
+      //   primarySwatch: Colors.brown,
+      //   // Define the default Font Family
+      //   fontFamily: 'PirataOne',
 
-        // Define the default TextTheme. Use this to specify the default
-        // text styling for headlines, titles, bodies of text, and more.
-        textTheme: TextTheme(
-          // DropDownButton text
-          subhead: TextStyle(fontSize: 23.0),
-          // Text widgets
-          body1: TextStyle(fontSize: 23.0, letterSpacing: 0.7),
-        ),
-      ));
+      //   // Define the default TextTheme. Use this to specify the default
+      //   // text styling for headlines, titles, bodies of text, and more.
+      //   textTheme: TextTheme(
+      //     // DropDownButton text
+      //     subhead: TextStyle(fontSize: 23.0),
+      //     // Text widgets
+      //     body1: TextStyle(fontSize: 23.0, letterSpacing: 0.7),
+      //   ),
+      // ));
       _writeToSharedPrefs();
 //      _readFromSharedPrefs();
     });
