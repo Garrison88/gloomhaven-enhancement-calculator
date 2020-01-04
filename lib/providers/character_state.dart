@@ -5,13 +5,13 @@ import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class CharacterState with ChangeNotifier {
-  final int _characterId;
+  // final int _characterId;
   bool _isEditable = false;
-  Character _character;
+  Character character;
   // PlayerClass _playerClass;
   List<CharacterPerk> _characterPerks = [];
   List<bool> _checkMarkList = [];
-  CharacterState(this._characterId);
+  CharacterState(this.character);
   DatabaseHelper db = DatabaseHelper.instance;
 
   List<int> _levelXpList = [45, 95, 150, 210, 275, 345, 420, 500];
@@ -19,17 +19,20 @@ class CharacterState with ChangeNotifier {
   // PlayerClass get playerClass => _playerClass;
 
   // Future<bool> setPlayerClass() async {
-  //   _playerClass = await db.queryPlayerClass(_character.classCode);
+  //   _playerClass = await db.queryPlayerClass(character.classCode);
   //   return true;
   // }
 
-  Future<bool> setCharacter() async {
-    _character = await db.queryCharacter(_characterId);
-    // _playerClass = await db.queryPlayerClass(_character.classCode);
-    return true;
-  }
+  // Future<bool> setCharacter() async {
+  //   character = await db.queryCharacter(_characterId);
+  //   // _playerClass = await db.queryPlayerClass(character.classCode);
+  //   return true;
+  // }
 
-  Character get character => _character;
+  // Character get character {
+  //   print(character.name);
+  //   return character;
+  // }
 
   bool get isEditable => _isEditable;
 
@@ -38,18 +41,18 @@ class CharacterState with ChangeNotifier {
     notifyListeners();
   }
 
-  int get currentLevel => _character.xp < _levelXpList.last
-      ? _levelXpList.indexWhere((_xp) => _xp > _character.xp) + 1
+  int get currentLevel => character.xp < _levelXpList.last
+      ? _levelXpList.indexWhere((_xp) => _xp > character.xp) + 1
       : 9;
 
-  int get nextLevelXp => _character.xp < _levelXpList.last
-      ? _levelXpList.firstWhere((_threshold) => _threshold > _character.xp)
+  int get nextLevelXp => character.xp < _levelXpList.last
+      ? _levelXpList.firstWhere((_threshold) => _threshold > character.xp)
       : _levelXpList.last;
 
   int getPerk(CharacterPerk _perk) => _characterPerks.indexOf(_perk);
 
   Future updateCharacter(Character _updatedCharacter) async {
-    _character = _updatedCharacter;
+    character = _updatedCharacter;
     await db.updateCharacter(_updatedCharacter);
   }
 

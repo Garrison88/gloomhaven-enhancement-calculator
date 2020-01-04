@@ -90,11 +90,12 @@ class _PerkRowState extends State<PerkRow> {
   Widget build(BuildContext context) {
     final CharacterPerksState characterPerksState =
         Provider.of<CharacterPerksState>(context);
-    final CharacterState characterState = Provider.of<CharacterState>(context);
+    // final CharacterState characterState = Provider.of<CharacterState>(context);
     return Container(
       height: 58,
       child: Row(
         children: <Widget>[
+          Text(Provider.of<CharacterState>(context).character.classCode),
           Checkbox(
               // activeColor: characterState.isEditable
               //     ? Color(int.parse(characterState.character.classColor))
@@ -103,7 +104,7 @@ class _PerkRowState extends State<PerkRow> {
               //     ? Colors.white
               //     : Color(int.parse(characterState.character.classColor)),
               value: widget.perk.characterPerkIsSelected,
-              onChanged: characterState.isEditable
+              onChanged: Provider.of<CharacterState>(context).isEditable
                   ? (value) =>
                       characterPerksState.togglePerk(widget.perk, value)
                   : (_) => null),

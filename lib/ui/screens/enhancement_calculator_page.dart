@@ -120,11 +120,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AppState appState = Provider.of<AppState>(context);
+    // final AppState appState = Provider.of<AppState>(context);
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Container(
-          color: appState.accentColor.withOpacity(0.2),
+          color: Theme.of(context).accentColor.withOpacity(0.2),
           // decoration: BoxDecoration(
           //   image: DecorationImage(
           //       image: AssetImage('images/background_page.jpg'),

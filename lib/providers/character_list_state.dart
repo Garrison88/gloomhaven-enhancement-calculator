@@ -13,8 +13,8 @@ class CharacterListState with ChangeNotifier {
   List<Character> get characterList => _characterList;
 
   Future<bool> setCharacterList() async {
-    // List _list = [];
     _characterList = await db.queryAllCharacters();
+    // notifyListeners();
     // _list.forEach((_result) => _result.))
     // await db.queryPlayerClass(_classCode)
     return true;
@@ -29,7 +29,6 @@ class CharacterListState with ChangeNotifier {
       }
     });
     _character.name = _name;
-    // _character.playerClass = _playerClass;
     _character.classCode = _playerClass.classCode;
     _character.classColor = _playerClass.classColor;
     _character.classIcon = _playerClass.classIconUrl;
@@ -49,9 +48,10 @@ class CharacterListState with ChangeNotifier {
   }
 
   Future deleteCharacter(int _characterId) async {
-    await db.deleteCharacter(_characterId);
+    await db.deleteCharacter(_characterId).then((_) {
+      notifyListeners();
+    });
     // _characterList.removeWhere((value) => value.id == _characterId);
-    notifyListeners();
   }
 
   Future<Character> compileLegacyCharacterDetails() async {

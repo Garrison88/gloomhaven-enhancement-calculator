@@ -130,7 +130,7 @@ class DatabaseHelper {
     Database db = await database;
     await db.update(tableCharacters, _updatedCharacter.toMap(),
         where: '$columnCharacterId = ?', whereArgs: [_updatedCharacter.id]);
-    print("DB HELPER - UPDATE CHARACTER: " + _updatedCharacter.toString());
+    // print("DB HELPER - UPDATE CHARACTER: " + _updatedCharacter.toString());
   }
 
   Future<Perk> queryPerk(int id) async {
@@ -140,7 +140,7 @@ class DatabaseHelper {
         where: '$columnPerkId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      print("DB HELPER - QUERY PERK: " + maps.toString());
+      // print("DB HELPER - QUERY PERK: " + maps.toString());
       return Perk.fromMap(maps.first);
     }
     return null;
@@ -157,7 +157,7 @@ class DatabaseHelper {
         where:
             '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterId = ?',
         whereArgs: [_perk.associatedPerkId, _perk.associatedCharacterId]);
-    print("DB HELPER - UPDATE CHARACTER PERK: " + map.toString());
+    // print("DB HELPER - UPDATE CHARACTER PERK: " + map.toString());
   }
 
   Future<List<CharacterPerk>> queryCharacterPerks(int _characterId) async {
@@ -166,7 +166,7 @@ class DatabaseHelper {
     List result = await db.query(tableCharacterPerks,
         where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
     result.forEach((perk) => _list.add(CharacterPerk.fromMap(perk)));
-    print("DB HELPER - QUERY CHARACTER PERKS: " + _list.toString());
+    // print("DB HELPER - QUERY CHARACTER PERKS: " + _list.toString());
     return _list;
   }
 
@@ -174,7 +174,7 @@ class DatabaseHelper {
     Database db = await database;
     var result = await db.query(tablePerks,
         where: '$columnPerkClass = ?', whereArgs: [_classCode]);
-    print("DB HELPER - QUERY PERKS: " + result.toList().toString());
+    // print("DB HELPER - QUERY PERKS: " + result.toList().toString());
     return result.toList();
   }
 
@@ -198,8 +198,8 @@ class DatabaseHelper {
         where: '$columnCharacterId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      print("DB HELPER - QUERY CHARACTER: " +
-          Character.fromMap(maps.first).toString());
+      // print("DB HELPER - QUERY CHARACTER: " +
+      //     Character.fromMap(maps.first).toString());
       return Character.fromMap(maps.first);
     }
     return null;
@@ -245,7 +245,7 @@ class DatabaseHelper {
     // });
     await db.query(tableCharacters).then((result) => result
         .forEach((_character) => _list.add(Character.fromMap(_character))));
-    print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
+    // print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
     return _list;
   }
 

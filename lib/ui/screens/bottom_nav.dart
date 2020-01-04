@@ -103,10 +103,10 @@ class BottomNavState extends State<BottomNav> {
           MultiProvider(
             providers: [
               ChangeNotifierProvider<CharacterListState>(
-                builder: (context) => CharacterListState(),
+                create: (context) => CharacterListState(),
               ),
               // ChangeNotifierProvider<CharacterState>(
-              //   builder: (context) => CharacterState(),
+              //   create: (context) => CharacterState(),
               // ),
             ],
             child: CharacterListPage(),

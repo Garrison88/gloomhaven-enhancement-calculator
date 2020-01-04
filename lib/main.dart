@@ -16,12 +16,17 @@ main() async {
         Color(int.parse(prefs.getString('themeColor') ?? '0xff4e7ec1'));
     runApp(
       ChangeNotifierProvider<AppState>(
-        builder: (_) => AppState(_position, _accentColor),
+        create: (_) => AppState(_position, _accentColor),
         child: App(),
       ),
     );
   });
 }
+
+// retrieveAppState() async {
+//   var _prefs = await SharedPreferences.getInstance();
+
+// }
 
 PageStorageKey enhancementKey = new PageStorageKey('enhancementKey');
 final PageStorageBucket bucket = new PageStorageBucket();
