@@ -72,8 +72,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterPerks_model.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/character_model.dart';
 import 'package:provider/provider.dart';
 
 class PerkRow extends StatefulWidget {
@@ -88,14 +88,14 @@ class PerkRow extends StatefulWidget {
 class _PerkRowState extends State<PerkRow> {
   @override
   Widget build(BuildContext context) {
-    final CharacterPerksState characterPerksState =
-        Provider.of<CharacterPerksState>(context);
+    final CharacterPerksModel characterPerksState =
+        Provider.of<CharacterPerksModel>(context);
     // final CharacterState characterState = Provider.of<CharacterState>(context);
     return Container(
       height: 58,
       child: Row(
         children: <Widget>[
-          Text(Provider.of<CharacterState>(context).character.classCode),
+          Text(Provider.of<CharacterModel>(context).character.classCode),
           Checkbox(
               // activeColor: characterState.isEditable
               //     ? Color(int.parse(characterState.character.classColor))
@@ -104,7 +104,7 @@ class _PerkRowState extends State<PerkRow> {
               //     ? Colors.white
               //     : Color(int.parse(characterState.character.classColor)),
               value: widget.perk.characterPerkIsSelected,
-              onChanged: Provider.of<CharacterState>(context).isEditable
+              onChanged: Provider.of<CharacterModel>(context).isEditable
                   ? (value) =>
                       characterPerksState.togglePerk(widget.perk, value)
                   : (_) => null),

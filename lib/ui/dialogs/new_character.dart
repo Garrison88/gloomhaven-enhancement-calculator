@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterList_model.dart';
 import 'package:provider/provider.dart';
 
 class NewCharacterDialog extends StatefulWidget {
   // final PlayerClass initialValue;
-  final CharacterListState characterListState;
+  final CharacterListModel characterListState;
   // final void Function(String) onValueChange;
 
   NewCharacterDialog({Key key, this.characterListState}) : super(key: key);

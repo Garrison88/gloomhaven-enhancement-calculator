@@ -5,12 +5,11 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/character_model.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterDetails extends StatefulWidget {
   @override
@@ -39,27 +38,31 @@ class _CharacterDetailsState extends State<CharacterDetails> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AppState>(context, listen: false).setAccentColor(
-          Provider.of<CharacterState>(context, listen: false)
-              .character
-              .classColor);
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     Provider.of<AppModel>(context, listen: false).setAccentColor(
+  //         Provider.of<CharacterModel>(context, listen: false)
+  //             .character
+  //             .classColor);
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     print("CHARACTER DETAILS PAGE REBUILT");
-    // final CharacterState characterState = Provider.of<CharacterState>(context);
+    final CharacterModel characterState = Provider.of<CharacterModel>(context);
     // final CharacterListState characterListState =
     //     Provider.of<CharacterListState>(context);
-    final AppState appState = Provider.of<AppState>(context);
+    final AppModel appState = Provider.of<AppModel>(context);
+        //  Provider.of<AppState>(context, listen: false).setAccentColor(
+        //   Provider.of<CharacterState>(context, listen: false)
+        //       .character
+        //       .classColor);
 
-    return Consumer<CharacterState>(
-        builder: (BuildContext context, CharacterState characterState, _) {
+    // return Consumer<CharacterModel>(
+    //     builder: (BuildContext context, CharacterModel characterState, _) {
       Character _character = characterState.character;
       return Container(
         padding: EdgeInsets.only(top: smallPadding),
@@ -122,7 +125,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                     tooltip: 'Delete',
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
-                                      Provider.of<CharacterListState>(context,
+                                      Provider.of<CharacterListModel>(context,
                                               listen: false)
                                           .deleteCharacter(_character.id);
                                       // Provider.of<CharacterListState>(context,
@@ -377,7 +380,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
           ),
         ]),
       );
-    });
+    // });
   }
 
   _clearTextFields() {

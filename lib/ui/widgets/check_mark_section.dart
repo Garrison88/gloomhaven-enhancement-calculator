@@ -1,8 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/check_mark_row.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/character_model.dart';
 import 'package:provider/provider.dart';
 
 class CheckMarkSection extends StatefulWidget {
@@ -13,7 +12,7 @@ class CheckMarkSection extends StatefulWidget {
 class _CheckMarkSectionState extends State<CheckMarkSection> {
   @override
   Widget build(BuildContext context) {
-    final CharacterState characterState = Provider.of<CharacterState>(context);
+    final CharacterModel characterState = Provider.of<CharacterModel>(context);
     return characterState.isEditable
         ? Column(
             children: <Widget>[

@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/character_details.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/check_mark_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_list.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterPerks_model.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/character_model.dart';
 import 'package:provider/provider.dart';
 
 class CharacterPage extends StatefulWidget {
+  final Character character;
+
+  CharacterPage({this.character});
   @override
   _CharacterPageState createState() => _CharacterPageState();
 }
 
 class _CharacterPageState extends State<CharacterPage> {
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     Provider.of<CharacterModel>(context, listen: false).character =
+  //         widget.character;
+  //   });
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     // final CharacterState characterState = Provider.of<CharacterState>(context);
@@ -30,13 +43,14 @@ class _CharacterPageState extends State<CharacterPage> {
         children: <Widget>[
           CharacterDetails(),
           CheckMarkSection(),
-          ChangeNotifierProvider<CharacterPerksState>(
-            create: (context) => CharacterPerksState(
-                Provider.of<CharacterState>(context, listen: false)
-                    .character
-                    .id),
-            child: PerkList(),
-          ),
+          // ChangeNotifierProvider<CharacterPerksModel>(
+          //   create: (context) => CharacterPerksModel(
+          //       Provider.of<CharacterModel>(context, listen: false)
+          //           .character
+          //           .id),
+          // child:
+          PerkList(),
+          // ),
         ],
       ),
     );

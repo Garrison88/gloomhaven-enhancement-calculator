@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/core/constants/app_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characterList_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancementCalculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/router.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterList_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,17 +101,19 @@ class BottomNavState extends State<BottomNav> {
           ],
         ),
         body: PageView(children: [
-          MultiProvider(
-            providers: [
-              ChangeNotifierProvider<CharacterListState>(
-                create: (context) => CharacterListState(),
-              ),
-              // ChangeNotifierProvider<CharacterState>(
-              //   create: (context) => CharacterState(),
-              // ),
-            ],
-            child: CharacterListPage(),
-          ),
+          CharacterListPage(),
+          // Navigator.of(context).pushNamed(RoutePaths.EnhancementCalculator);
+          // MultiProvider(
+          //   providers: [
+          //     ChangeNotifierProvider<CharacterListModel>(
+          //       create: (context) => CharacterListModel(),
+          //     ),
+          //     // ChangeNotifierProvider<CharacterState>(
+          //     //   create: (context) => CharacterState(),
+          //     // ),
+          //   ],
+          //   child: CharacterListPage(),
+          // ),
           EnhancementCalculatorPage()
         ], controller: pageController, onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [

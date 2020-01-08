@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/base_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppState with ChangeNotifier {
+class AppModel extends BaseModel {
   Color _accentColor;
   int _retirements = 0;
   int _position;
 
-  AppState(this._position, this._accentColor);
+  AppModel(this._position, this._accentColor);
 
   get accentColor => _accentColor;
 
@@ -16,14 +17,14 @@ class AppState with ChangeNotifier {
       _accentColor = Color(int.parse(_color));
     });
 
-    notifyListeners();
+    notifyChange();
   }
 
   get retirements => _retirements;
 
   set retirements(int _numOfRetirements) {
     _retirements = _numOfRetirements;
-    notifyListeners();
+    notifyChange();
   }
 
   get position => this._position;
@@ -33,6 +34,6 @@ class AppState with ChangeNotifier {
       _prefs.setInt('position', _position);
       this._position = _position;
     });
-    notifyListeners();
+    notifyChange();
   }
 }

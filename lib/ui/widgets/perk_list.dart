@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import 'package:gloomhaven_enhancement_calc/view_model/characterPerks_model.dart';
 import 'package:provider/provider.dart';
 
 class PerkList extends StatefulWidget {
@@ -11,8 +11,8 @@ class PerkList extends StatefulWidget {
 
 class PerkListState extends State<PerkList> {
   Widget build(BuildContext context) {
-    final CharacterPerksState characterPerksState =
-        Provider.of<CharacterPerksState>(context);
+    final CharacterPerksModel characterPerksState =
+        Provider.of<CharacterPerksModel>(context);
     return FutureBuilder<bool>(
         future: characterPerksState
             .setCharacterPerks(characterPerksState.characterId),
@@ -44,7 +44,9 @@ class PerkListState extends State<PerkList> {
                                 perk:
                                     characterPerksState.characterPerks[index])),
                       ),
-                      Container(height: 58,)
+                      Container(
+                        height: 58,
+                      )
                     ],
                   )
             : CircularProgressIndicator());
