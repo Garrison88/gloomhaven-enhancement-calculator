@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterListState with ChangeNotifier {
   List<Character> _characterList = [];
@@ -55,45 +56,46 @@ class CharacterListState with ChangeNotifier {
   }
 
   Future<Character> compileLegacyCharacterDetails() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
     Character _character = Character();
     int _checkMarks = 0;
     PlayerClass _playerClass =
-        sp.getInt('selectedClass') != null && classList != null
-            ? classList[sp.getInt('selectedClass')]
+        _prefs.getInt('selectedClass') != null && classList != null
+            ? classList[_prefs.getInt('selectedClass')]
             : classList[0];
-    _character.name = sp.getString('characterName') ?? '[UNKNOWN]';
+    _character.name = _prefs.getString('characterName') ?? '[UNKNOWN]';
     // _character.playerClass = _playerClass;
     _character.classCode = _playerClass.classCode;
     _character.classColor = _playerClass.classColor;
     _character.classIcon = _playerClass.classIconUrl;
     _character.classRace = _playerClass.race;
     _character.className = _playerClass.className;
-    _character.xp = int.parse(sp.getString('characterXP') ?? 0);
-    _character.gold = int.parse(sp.getString('characterGold') ?? 0);
-    _character.notes = sp.getString('notes') ?? 'Add notes here';
-    if (sp.getBool('firstCheck')) _checkMarks++;
-    if (sp.getBool('secondCheck')) _checkMarks++;
-    if (sp.getBool('thirdCheck')) _checkMarks++;
-    if (sp.getBool('2FirstCheck')) _checkMarks++;
-    if (sp.getBool('2SecondCheck')) _checkMarks++;
-    if (sp.getBool('2ThirdCheck')) _checkMarks++;
-    if (sp.getBool('3FirstCheck')) _checkMarks++;
-    if (sp.getBool('3SecondCheck')) _checkMarks++;
-    if (sp.getBool('3ThirdCheck')) _checkMarks++;
-    if (sp.getBool('4FirstCheck')) _checkMarks++;
-    if (sp.getBool('4SecondCheck')) _checkMarks++;
-    if (sp.getBool('4ThirdCheck')) _checkMarks++;
-    if (sp.getBool('5FirstCheck')) _checkMarks++;
-    if (sp.getBool('5SecondCheck')) _checkMarks++;
-    if (sp.getBool('5ThirdCheck')) _checkMarks++;
-    if (sp.getBool('6FirstCheck')) _checkMarks++;
-    if (sp.getBool('6SecondCheck')) _checkMarks++;
-    if (sp.getBool('6ThirdCheck')) _checkMarks++;
+    _character.xp = int.parse(_prefs.getString('characterXP') ?? 0);
+    _character.gold = int.parse(_prefs.getString('characterGold') ?? 0);
+    _character.notes = _prefs.getString('notes') ?? 'Add notes here';
+    if (_prefs.getBool('firstCheck')) _checkMarks++;
+    if (_prefs.getBool('secondCheck')) _checkMarks++;
+    if (_prefs.getBool('thirdCheck')) _checkMarks++;
+    if (_prefs.getBool('2FirstCheck')) _checkMarks++;
+    if (_prefs.getBool('2SecondCheck')) _checkMarks++;
+    if (_prefs.getBool('2ThirdCheck')) _checkMarks++;
+    if (_prefs.getBool('3FirstCheck')) _checkMarks++;
+    if (_prefs.getBool('3SecondCheck')) _checkMarks++;
+    if (_prefs.getBool('3ThirdCheck')) _checkMarks++;
+    if (_prefs.getBool('4FirstCheck')) _checkMarks++;
+    if (_prefs.getBool('4SecondCheck')) _checkMarks++;
+    if (_prefs.getBool('4ThirdCheck')) _checkMarks++;
+    if (_prefs.getBool('5FirstCheck')) _checkMarks++;
+    if (_prefs.getBool('5SecondCheck')) _checkMarks++;
+    if (_prefs.getBool('5ThirdCheck')) _checkMarks++;
+    if (_prefs.getBool('6FirstCheck')) _checkMarks++;
+    if (_prefs.getBool('6SecondCheck')) _checkMarks++;
+    if (_prefs.getBool('6ThirdCheck')) _checkMarks++;
     _character.checkMarks = _checkMarks;
     _character.isRetired = false;
     _playerClass.perks.forEach((perk) {
       for (var i = 0; i < perk.numOfChecks; i++) {
-        _legacyPerks.add(sp.getBool(
+        _legacyPerks.add(_prefs.getBool(
                 '${_playerClass.classCode}${perk.details}${i.toString()}') ??
             false);
       }

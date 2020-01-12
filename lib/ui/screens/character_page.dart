@@ -6,17 +6,13 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_list.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:provider/provider.dart';
 
-class CharacterPage extends StatefulWidget {
+class CharacterPage extends StatelessWidget {
   @override
-  _CharacterPageState createState() => _CharacterPageState();
-}
-
-class _CharacterPageState extends State<CharacterPage> {
   @override
   Widget build(BuildContext context) {
     // final CharacterState characterState = Provider.of<CharacterState>(context);
-    // return Consumer<CharacterState>(
-    //     builder: (BuildContext context, CharacterState characterState, _) {
+    return Consumer<CharacterState>(
+        builder: (BuildContext context, CharacterState characterState, _) {
     // FutureBuilder<bool>(
     //     future: characterState.setCharacter(),
     //     builder: (context, AsyncSnapshot<bool> _characterSnapshot) =>
@@ -30,10 +26,9 @@ class _CharacterPageState extends State<CharacterPage> {
         children: <Widget>[
           CharacterDetails(),
           CheckMarkSection(),
-          ChangeNotifierProvider<CharacterPerksState>(
-            create: (context) => CharacterPerksState(
-                Provider.of<CharacterState>(context, listen: false)
-                    .character
+          ChangeNotifierProvider<CharacterPerksState>.value(
+            value: CharacterPerksState(
+                characterState.character
                     .id),
             child: PerkList(),
           ),
@@ -41,6 +36,6 @@ class _CharacterPageState extends State<CharacterPage> {
       ),
     );
     // : Center(child: CircularProgressIndicator()));
-    // });
+    });
   }
 }

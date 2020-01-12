@@ -76,13 +76,9 @@ class _CharacterListPageState extends State<CharacterListPage> {
                                     ),
                                     SingleChildScrollView(
                                       child: ChangeNotifierProvider<
-                                          CharacterState>(
-                                        create: (context) => CharacterState(
-                                          Provider.of<CharacterListState>(
-                                                  context,
-                                                  listen: false)
-                                              .characterList[_index],
-                                        ),
+                                          CharacterState>.value(
+                                        value: CharacterState(characterListState
+                                            .characterList[_index]),
                                         child: Container(
                                           padding: EdgeInsets.all(smallPadding),
                                           child: CharacterPage(),
@@ -120,8 +116,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 backgroundColor: Colors.blue,
                 label: 'Import Legacy Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () async =>
-                    await characterListState.addLegacyCharacter()),
+                onTap: () async => await characterListState
+                    .addLegacyCharacter()
+                    .whenComplete(() => _pageController.animateToPage(
+                        characterListState.characterList.length,
+                        duration: Duration(milliseconds: 600),
+                        curve: Curves.decelerate))),
             SpeedDialChild(
               child: Icon(Icons.add),
               backgroundColor: Colors.green,
@@ -134,7 +134,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     return NewCharacterDialog(
                         characterListState: characterListState);
                   },
-                ).then((_) => _pageController.animateToPage(
+                ).whenComplete(() => _pageController.animateToPage(
                     characterListState.characterList.length,
                     duration: Duration(milliseconds: 600),
                     curve: Curves.decelerate));
