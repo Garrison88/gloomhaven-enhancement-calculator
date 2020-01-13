@@ -10,7 +10,6 @@ import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart'
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterDetails extends StatefulWidget {
   @override
@@ -27,7 +26,6 @@ class _CharacterDetailsState extends State<CharacterDetails> {
       TextEditingController();
   final TextEditingController _notesTextFieldController =
       TextEditingController();
-  // int _charLevel = 1;
 
   @override
   void dispose() {
@@ -40,24 +38,9 @@ class _CharacterDetailsState extends State<CharacterDetails> {
   }
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AppState>(context, listen: false).setAccentColor(
-          Provider.of<CharacterState>(context, listen: false)
-              .character
-              .classColor);
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     print("CHARACTER DETAILS PAGE REBUILT");
-    // final CharacterState characterState = Provider.of<CharacterState>(context);
-    // final CharacterListState characterListState =
-    //     Provider.of<CharacterListState>(context);
     final AppState appState = Provider.of<AppState>(context);
-
     return Consumer<CharacterState>(
         builder: (BuildContext context, CharacterState characterState, _) {
       Character _character = characterState.character;
@@ -121,21 +104,55 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                     color: Colors.red,
                                     tooltip: 'Delete',
                                     icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      Provider.of<CharacterListState>(context,
-                                              listen: false)
-                                          .deleteCharacter(_character.id);
-                                      // Provider.of<CharacterListState>(context,
-                                      //         listen: false)
-                                      //     .deleteCharacter(_character.id)
-                                      //     .then((_) {
-                                      // Provider.of<CharacterListState>(context,
-                                      //         listen: false)
-                                      //     .characterList;
-                                      // });
-                                      // await characterListState.setCharacterList();
-                                      // characterListState.setCharacterList();
-                                    })
+                                    onPressed: () => showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: Row(
+                                                children: <Widget>[
+                                                  Icon(Icons.delete),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: smallPadding,
+                                                          right: smallPadding)),
+                                                  Text('Are you sure?'),
+                                                ],
+                                              ),
+                                              content: Text(
+                                                  'There\s no going back!'),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize:
+                                                            secondaryFontSize,
+                                                        fontFamily: highTower),
+                                                  ),
+                                                ),
+                                                FlatButton(
+                                                  onPressed: () => Provider.of<
+                                                              CharacterListState>(
+                                                          context,
+                                                          listen: false)
+                                                      .deleteCharacter(
+                                                          _character.id)
+                                                      .whenComplete(() =>
+                                                          Navigator.pop(
+                                                              context)),
+                                                  child: Text(
+                                                    'Delete',
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize:
+                                                            secondaryFontSize,
+                                                        fontFamily: highTower),
+                                                  ),
+                                                ),
+                                              ],
+                                            )))
                                 : Container(),
                             IconButton(
                               icon: Icon(characterState.isEditable
@@ -323,28 +340,30 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           width: iconWidth,
                         ),
                         Text(
-                          '1 / 3',
+                          '${characterState.checkMarkProgress} / 3',
                           style: TextStyle(fontSize: titleFontSize),
                         )
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'images/equipment_slots/pocket.png',
-                          width: iconWidth,
-                        ),
-                        Text(
-                          ' ${(characterState.currentLevel / 2).round()}',
-                          style: TextStyle(fontSize: titleFontSize),
+                  characterState.isEditable
+                      ? Container()
+                      : Container(
+                          padding: EdgeInsets.all(smallPadding),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Image.asset(
+                                'images/equipment_slots/pocket.png',
+                                width: iconWidth,
+                              ),
+                              Text(
+                                ' ${(characterState.currentLevel / 2).round()}',
+                                style: TextStyle(fontSize: titleFontSize),
+                              )
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
@@ -375,6 +394,67 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                     style: TextStyle(fontFamily: highTower),
                   ),
           ),
+          Column(
+            children: <Widget>[
+              characterState.isEditable
+                  ? Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: AutoSizeText(
+                        'Battle Goal Checkmarks',
+                        textAlign: TextAlign.center,
+                        minFontSize: titleFontSize,
+                      ),
+                    )
+                  : Container(),
+              characterState.isEditable
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
+                          elevation: 5.0,
+                          color: Theme.of(context).accentColor,
+                          onPressed: () => characterState.decreaseCheckmark(),
+                          child: Icon(Icons.remove),
+                        ),
+                        Text(
+                          '${characterState.character.checkMarks} / 18',
+                          style: TextStyle(fontSize: titleFontSize),
+                        ),
+                        RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                            elevation: 5.0,
+                            color: Theme.of(context).accentColor,
+                            onPressed: () => characterState.increaseCheckmark(),
+                            child: Icon(Icons.add))
+                      ],
+                    )
+                  : Container(),
+              // Container(
+              //   padding: EdgeInsets.only(
+              //       left: MediaQuery.of(context).size.width / 4,
+              //       right: MediaQuery.of(context).size.width / 4),
+              //   child: GridView.builder(
+              //     physics: NeverScrollableScrollPhysics(),
+
+              //     shrinkWrap: true,
+              //     itemCount: 18,
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //         crossAxisCount: 3, childAspectRatio: 1),
+              //     itemBuilder: (context, index) {
+              //       // return CheckMarkRow(index);
+              //       // for(var x = 0; x < characterState.character.checkMarks; x++)
+              //       return Checkbox(
+              //         value: false,
+              //         onChanged: (_) => null,
+              //       );
+              //     },
+              //   ),
+              // )
+            ],
+          )
         ]),
       );
     });
@@ -405,3 +485,9 @@ class _CharacterDetailsState extends State<CharacterDetails> {
     return _updatedCharacter;
   }
 }
+
+// _showConfirmDeleteDialog(BuildContext _context) {
+//   Provider.of<CharacterListState>(_context,
+//                                         listen: false)
+//                                     .deleteCharacter(_character.id))
+// }

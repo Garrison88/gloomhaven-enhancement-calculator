@@ -7,17 +7,17 @@ _createIconsListForDialog(List<String> _list) {
   List<Widget> _icons = [];
   _list.forEach(
     (icon) => _icons.add(
-          Padding(
-            child: Image.asset(
-              'images/$icon',
-              height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
-              width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
-            ),
-            padding: EdgeInsets.only(
-              right: (smallPadding / 2),
-            ),
-          ),
+      Padding(
+        child: Image.asset(
+          'images/$icon',
+          height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
+          width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
         ),
+        padding: EdgeInsets.only(
+          right: (smallPadding / 2),
+        ),
+      ),
+    ),
   );
   return _icons;
 }
@@ -136,13 +136,13 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () {
-                  Navigator.of(_context).pop();
-                },
+                onPressed: () => Navigator.of(_context).pop(),
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                      fontSize: secondaryFontSize, fontFamily: highTower),
+                      color: Theme.of(_context).accentColor,
+                      fontSize: secondaryFontSize,
+                      fontFamily: highTower),
                 ),
               ),
             ],

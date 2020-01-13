@@ -6,13 +6,9 @@ import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   @override
-  _AppState createState() => _AppState();
-}
 
-class _AppState extends State<App> {
-  @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
     return MaterialApp(

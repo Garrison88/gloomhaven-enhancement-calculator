@@ -140,18 +140,18 @@ class _CharacterListPageState extends State<CharacterListPage> {
                     curve: Curves.decelerate));
               },
             ),
-            SpeedDialChild(
-                child: Icon(Icons.add),
-                backgroundColor: Colors.green,
-                label: 'OPEN OLD CHAR SHEET',
-                labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CharacterSheetPage()),
-                  );
-                })
+            // SpeedDialChild(
+            //     child: Icon(Icons.add),
+            //     backgroundColor: Colors.green,
+            //     label: 'OPEN OLD CHAR SHEET',
+            //     labelStyle: TextStyle(fontSize: 18.0),
+            //     onTap: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => CharacterSheetPage()),
+            //       );
+            //     })
           ],
         ),
       );

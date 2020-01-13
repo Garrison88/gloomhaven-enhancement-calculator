@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class CharacterState with ChangeNotifier {
   // final int _characterId;
@@ -10,7 +9,8 @@ class CharacterState with ChangeNotifier {
   Character character;
   // PlayerClass _playerClass;
   List<CharacterPerk> _characterPerks = [];
-  List<bool> _checkMarkList = [];
+  // int checkMarkProgress = 0;
+  // List<bool> _checkMarkList = [];
   CharacterState(this.character);
   DatabaseHelper db = DatabaseHelper.instance;
 
@@ -56,8 +56,21 @@ class CharacterState with ChangeNotifier {
     await db.updateCharacter(_updatedCharacter);
   }
 
-  // deleteCharacter(int _characterId) async {
-  //   await db.deleteCharacter(_characterId);
-  //   notifyListeners();
-  // }
+  int get checkMarkProgress => character.checkMarks != 0
+      ? character.checkMarks % 3 == 0 ? 3 : character.checkMarks % 3
+      : 0;
+
+  increaseCheckmark() {
+    if (character.checkMarks < 18) {
+      character.checkMarks++;
+      notifyListeners();
+    }
+  }
+
+  decreaseCheckmark() {
+    if (character.checkMarks > 0) {
+      character.checkMarks--;
+      notifyListeners();
+    }
+  }
 }

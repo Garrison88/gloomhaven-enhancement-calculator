@@ -21,12 +21,6 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _selectedClass = widget.initialValue;
-  // }
-
   void dispose() {
     _nameTextFieldController.dispose();
     super.dispose();
@@ -34,25 +28,30 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
 
   PlayerClass _selectedClass = classList[0];
 
+  final _newCharacterFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    // final CharacterListState characterListState =
-    //     Provider.of<CharacterListState>(context);
     return AlertDialog(
       title: Text("New Character"),
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            TextField(
-              controller: _nameTextFieldController,
-              // decoration: InputDecoration(
-              //   enabledBorder: UnderlineInputBorder(
-              //     borderSide: BorderSide(
-              //         color: Color(int.parse(_selectedClass.classColor)),
-              //         width: 1.0,
-              //         style: BorderStyle.solid),
-              //   ),
-              // ),
+            Form(
+              key: _newCharacterFormKey,
+              child: TextFormField(
+                validator: (value) =>
+                    value.isNotEmpty ? null : 'Please enter a name',
+                controller: _nameTextFieldController,
+                // decoration: InputDecoration(
+                //   enabledBorder: UnderlineInputBorder(
+                //     borderSide: BorderSide(
+                //         color: Color(int.parse(_selectedClass.classColor)),
+                //         width: 1.0,
+                //         style: BorderStyle.solid),
+                //   ),
+                // ),
+              ),
             ),
             DropdownButtonHideUnderline(
               child: DropdownButton<PlayerClass>(
@@ -72,13 +71,11 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            widget.characterListState
-                .addCharacter(_nameTextFieldController.text, _selectedClass)
-                .then((_) {
-              // Provider.of<AppState>(context, listen: false)
-              //     .setTheme(_selectedClass.classColor);
-              Navigator.of(context).pop();
-            });
+            if (_newCharacterFormKey.currentState.validate()) {
+              widget.characterListState
+                  .addCharacter(_nameTextFieldController.text, _selectedClass)
+                  .whenComplete(() => Navigator.of(context).pop());
+            }
           },
           child: Text(
             'Save',

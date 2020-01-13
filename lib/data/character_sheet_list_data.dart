@@ -40,7 +40,7 @@ List<PlayerClass> classList = [
       "0xff9e9d9d", _elPerkList),
   PlayerClass('Vermling', 'Beast Tyrant', 'BT', 'beast_tyrant.png', true,
       "0xffad745c", _btPerkList),
-  PlayerClass('Aesther', 'Diviner', 'DI', 'diviner.png', false, "0xff8bc5d3",
+  PlayerClass('Aesther', 'Diviner', 'DV', 'diviner.png', false, "0xff8bc5d3",
       _diPerkList)
 ];
 
@@ -265,22 +265,22 @@ List<PerkRow.Perk> perkList = [
   PerkRow.Perk('BT', 1, 'Add two Rolling EARTH cards'),
   PerkRow.Perk('BT', 1, 'Ignore negative SCENARIO effects'),
   // DIVINER
-  PerkRow.Perk('DI', 2, 'Remove two -1 cards'),
-  PerkRow.Perk('DI', 1, 'Remove one -2 card'),
-  PerkRow.Perk('DI', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
+  PerkRow.Perk('DV', 2, 'Remove two -1 cards'),
+  PerkRow.Perk('DV', 1, 'Remove one -2 card'),
+  PerkRow.Perk('DV', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
   PerkRow.Perk(
-      'DI', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
-  PerkRow.Perk('DI', 1, 'Replace one +0 card with one +2 DARK card'),
-  PerkRow.Perk('DI', 1, 'Replace one +0 card with one +2 LIGHT card'),
-  PerkRow.Perk('DI', 1, 'Replace one +0 card with one +3 MUDDLE card'),
-  PerkRow.Perk('DI', 1, 'Replace one +0 card with one +2 CURSE card'),
+      'DV', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
+  PerkRow.Perk('DV', 1, 'Replace one +0 card with one +2 DARK card'),
+  PerkRow.Perk('DV', 1, 'Replace one +0 card with one +2 LIGHT card'),
+  PerkRow.Perk('DV', 1, 'Replace one +0 card with one +3 MUDDLE card'),
+  PerkRow.Perk('DV', 1, 'Replace one +0 card with one +2 CURSE card'),
   PerkRow.Perk(
-      'DI', 1, 'Replace one +0 card with one +2 REGENERATE, Self card'),
+      'DV', 1, 'Replace one +0 card with one +2 REGENERATE, Self card'),
   PerkRow.Perk(
-      'DI', 1, 'Replace one -1 card with one +1 HEAL 2, Affect any ally card'),
-  PerkRow.Perk('DI', 1, 'Add two Rolling HEAL 1, Self cards'),
-  PerkRow.Perk('DI', 1, 'Add two Rolling CURSE cards'),
-  PerkRow.Perk('DI', 1, 'Ignore negative SCENARIO effects and add two +1 cards')
+      'DV', 1, 'Replace one -1 card with one +1 HEAL 2, Affect any ally card'),
+  PerkRow.Perk('DV', 1, 'Add two Rolling HEAL 1, Self cards'),
+  PerkRow.Perk('DV', 1, 'Add two Rolling CURSE cards'),
+  PerkRow.Perk('DV', 1, 'Ignore negative SCENARIO effects and add two +1 cards')
 ];
 
 List<Perk> _brPerkList = [
@@ -516,19 +516,19 @@ List<Perk> _btPerkList = [
 ];
 
 List<Perk> _diPerkList = [
-  Perk('DI', 2, 'Remove two -1 cards'),
-  Perk('DI', 1, 'Remove one -2 card'),
-  Perk('DI', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
-  Perk('DI', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
-  Perk('DI', 1, 'Replace one +0 card with one +2 DARK card'),
-  Perk('DI', 1, 'Replace one +0 card with one +2 LIGHT card'),
-  Perk('DI', 1, 'Replace one +0 card with one +3 MUDDLE card'),
-  Perk('DI', 1, 'Replace one +0 card with one +2 CURSE card'),
-  Perk('DI', 1, 'Replace one +0 card with one +2 REGENERATE, Self card'),
-  Perk('DI', 1, 'Replace one -1 card with one +1 HEAL 2, Affect any ally card'),
-  Perk('DI', 1, 'Add two Rolling HEAL 1, Self cards'),
-  Perk('DI', 1, 'Add two Rolling CURSE cards'),
-  Perk('DI', 1, 'Ignore negative SCENARIO effects and add two +1 cards')
+  Perk('DV', 2, 'Remove two -1 cards'),
+  Perk('DV', 1, 'Remove one -2 card'),
+  Perk('DV', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
+  Perk('DV', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 DARK card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 LIGHT card'),
+  Perk('DV', 1, 'Replace one +0 card with one +3 MUDDLE card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 CURSE card'),
+  Perk('DV', 1, 'Replace one +0 card with one +2 REGENERATE, Self card'),
+  Perk('DV', 1, 'Replace one -1 card with one +1 HEAL 2, Affect any ally card'),
+  Perk('DV', 1, 'Add two Rolling HEAL 1, Self cards'),
+  Perk('DV', 1, 'Add two Rolling CURSE cards'),
+  Perk('DV', 1, 'Ignore negative SCENARIO effects and add two +1 cards')
 ];
 
 _generatePlayerClassList(List<PlayerClass> _classList) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
@@ -115,7 +116,7 @@ class BottomNavState extends State<BottomNav> {
         ], controller: pageController, onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.content_paste),
+              icon: Icon(FontAwesomeIcons.scroll),
               title: Text(
                 'CHARACTER\nSHEETS',
                 maxLines: 2,
@@ -124,7 +125,7 @@ class BottomNavState extends State<BottomNav> {
                     fontFamily: highTower, fontWeight: FontWeight.bold),
               )),
           BottomNavigationBarItem(
-              icon: Icon(Icons.star),
+              icon: Icon(FontAwesomeIcons.calculator),
               title: Text(
                 'ENHANCEMENT\nCALCULATOR',
                 maxLines: 2,
