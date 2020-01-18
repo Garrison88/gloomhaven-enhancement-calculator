@@ -20,7 +20,7 @@ class PlayerClass {
   PlayerClass(this.race, this.className, this.classCode, this.classIconUrl,
       this.locked, this.classColor, this.perks);
 
-  // convenience constructor to create a Character object
+  // convenience constructor to create a PlayerClass object
   PlayerClass.fromMap(Map<String, dynamic> map) {
     classCode = map[columnClassCode];
     race = map[columnClassRace];
@@ -30,7 +30,7 @@ class PlayerClass {
     classColor = map[columnClassColor];
   }
 
-  // convenience method to create a Map from this Character object
+  // convenience method to create a Map from this PlayerClass object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnClassCode: classCode,

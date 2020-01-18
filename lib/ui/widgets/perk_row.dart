@@ -88,14 +88,13 @@ class PerkRow extends StatefulWidget {
 class _PerkRowState extends State<PerkRow> {
   @override
   Widget build(BuildContext context) {
-    final CharacterPerksState characterPerksState =
-        Provider.of<CharacterPerksState>(context);
+    // final CharacterPerksState characterPerksState =
+    //     Provider.of<CharacterPerksState>(context);
     final CharacterState characterState = Provider.of<CharacterState>(context);
     return Container(
       height: 58,
       child: Row(
         children: <Widget>[
-          // Text(Provider.of<CharacterState>(context).character.classCode),
           Checkbox(
               // activeColor: characterState.isEditable
               //     ? Color(int.parse(characterState.character.classColor))
@@ -106,7 +105,7 @@ class _PerkRowState extends State<PerkRow> {
               value: widget.perk.characterPerkIsSelected,
               onChanged: Provider.of<CharacterState>(context).isEditable
                   ? (value) =>
-                      characterPerksState.togglePerk(widget.perk, value)
+                      characterState.togglePerk(widget.perk, value)
                   : (_) => Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text('Must be in Edit mode'),
                         duration: Duration(seconds: 2),
@@ -124,7 +123,7 @@ class _PerkRowState extends State<PerkRow> {
           ),
           Expanded(
             child: FutureBuilder<String>(
-                future: characterPerksState
+                future: characterState
                     .getPerkDetails(widget.perk.associatedPerkId),
                 builder: (context, AsyncSnapshot<String> _detailsSnapshot) {
                   return _detailsSnapshot.hasData

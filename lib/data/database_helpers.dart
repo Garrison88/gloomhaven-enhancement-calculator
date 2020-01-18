@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -14,7 +15,7 @@ class DatabaseHelper {
   static final _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 1;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -37,7 +38,9 @@ class DatabaseHelper {
     String path = join(documentsDirectory.path, _databaseName);
     // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+        version: _databaseVersion, onCreate: _onCreate
+        // , onUpgrade: _onUpgrade
+        );
   }
 
   // SQL string to create the database
@@ -106,6 +109,30 @@ class DatabaseHelper {
     });
     print("DB HELPER - DATABASE INITIALIZED");
   }
+
+  //   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  //   await db.transaction((txn) async {
+  //     await txn.execute('''
+  //             ALTER TABLE $tablePerks (
+  //               MODIFY $columnPerkId INTEGER PRIMARY KEY,
+  //               MODIFY $columnPerkClass TEXT NOT NULL,
+  //               MODIFY $columnPerkDetails TEXT NOT NULL
+  //             )''').then((_) async {
+  //       for (Perk perk in perkList) {
+  //         for (int i = 0; i < perk.numOfPerks; i++) {
+  //           int id = await txn.insert(tablePerks, perk.toMap());
+  //           print("ID: " +
+  //               id.toString() +
+  //               " : " +
+  //               perk.perkClassCode +
+  //               " : " +
+  //               perk.perkDetails);
+  //         }
+  //       }
+  //     });
+  //   });
+  //   print("DB HELPER - DATABASE INITIALIZED");
+  // }
 
   Future<int> insertCharacter(
       Character _character, List<bool> _selectedPerks) async {
@@ -205,26 +232,26 @@ class DatabaseHelper {
     return null;
   }
 
-  // Future<PlayerClass> queryPlayerClass(String _classCode) async {
-  //   Database db = await database;
-  //   List<Map> maps = await db.query(tablePlayerClass,
-  //       columns: [
-  //         columnClassCode,
-  //         columnClassRace,
-  //         columnClassName,
-  //         columnClassIconUrl,
-  //         columnClassIsLocked,
-  //         columnClassColor
-  //       ],
-  //       where: '$columnClassCode = ?',
-  //       whereArgs: [_classCode]);
-  //   if (maps.length > 0) {
-  //     print("DB HELPER - QUERY PLAYER CLASS: " +
-  //         PlayerClass.fromMap(maps.first).toString());
-  //     return PlayerClass.fromMap(maps.first);
-  //   }
-  //   return null;
-  // }
+  Future<PlayerClass> queryPlayerClass(String _classCode) async {
+    Database db = await database;
+    List<Map> maps = await db.query(tablePlayerClass,
+        columns: [
+          columnClassCode,
+          columnClassRace,
+          columnClassName,
+          columnClassIconUrl,
+          columnClassIsLocked,
+          columnClassColor
+        ],
+        where: '$columnClassCode = ?',
+        whereArgs: [_classCode]);
+    if (maps.length > 0) {
+      print("DB HELPER - QUERY PLAYER CLASS: " +
+          PlayerClass.fromMap(maps.first).toString());
+      return PlayerClass.fromMap(maps.first);
+    }
+    return null;
+  }
 
   Future<List> queryAllCharacters() async {
     Database db = await database;

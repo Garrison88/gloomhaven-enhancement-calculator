@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
@@ -42,422 +44,450 @@ class _CharacterDetailsState extends State<CharacterDetails> {
     print("CHARACTER DETAILS PAGE REBUILT");
     final AppState appState = Provider.of<AppState>(context);
     return Consumer<CharacterState>(
-        builder: (BuildContext context, CharacterState characterState, _) {
-      Character _character = characterState.character;
-      return Container(
-        padding: EdgeInsets.only(top: smallPadding),
-        child: Column(children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  child: Column(
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                                padding: EdgeInsets.only(left: smallPadding)),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 4,
-                              child: characterState.isEditable
-                                  ? TextField(
-                                      style: TextStyle(
-                                          fontSize: titleFontSize / 2),
-                                      textAlign: TextAlign.center,
-                                      controller:
-                                          _previousRetirementsTextFieldController,
-                                      inputFormatters: [
-                                        BlacklistingTextInputFormatter(
-                                            RegExp('[\\.|\\,|\\ |\\-]'))
-                                      ],
-                                      keyboardType: TextInputType.number,
-                                    )
-                                  : Text(
-                                      'Retirements: ${appState.retirements}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: titleFontSize / 2),
-                                    ),
-                            ),
-                            IconButton(
-                                icon: Icon(
-                                  Icons.info_outline,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                                onPressed: () {
-                                  showInfoAlert(
-                                      context,
-                                      Strings.previousRetirementsInfoTitle,
-                                      Strings.previousRetirementsInfoBody,
-                                      null);
-                                }),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            characterState.isEditable
-                                ? IconButton(
-                                    color: Colors.red,
-                                    tooltip: 'Delete',
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title: Row(
-                                                children: <Widget>[
-                                                  Icon(Icons.delete),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: smallPadding,
-                                                          right: smallPadding)),
-                                                  Text('Are you sure?'),
+      builder: (BuildContext context, CharacterState characterState, _) {
+        Character _character = characterState.character;
+        return Container(
+          padding: EdgeInsets.only(top: smallPadding),
+          child: Column(children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                    child: Column(
+                  children: <Widget>[
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.only(left: smallPadding)),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 4,
+                                child: characterState.isEditable
+                                    ? TextField(
+                                        style: TextStyle(
+                                            fontSize: titleFontSize / 2),
+                                        textAlign: TextAlign.center,
+                                        controller:
+                                            _previousRetirementsTextFieldController,
+                                        inputFormatters: [
+                                          BlacklistingTextInputFormatter(
+                                              RegExp('[\\.|\\,|\\ |\\-]'))
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                      )
+                                    : Text(
+                                        'Retirements: ${appState.getRetirements()}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: titleFontSize / 2),
+                                      ),
+                              ),
+                              IconButton(
+                                  icon: Icon(
+                                    Icons.info_outline,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  onPressed: () {
+                                    showInfoAlert(
+                                        context,
+                                        Strings.previousRetirementsInfoTitle,
+                                        Strings.previousRetirementsInfoBody,
+                                        null);
+                                  }),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              characterState.isEditable
+                                  ? IconButton(
+                                      color: Colors.red,
+                                      tooltip: 'Delete',
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () => showDialog(
+                                          context: context,
+                                          builder: (_) => AlertDialog(
+                                                title: Row(
+                                                  children: <Widget>[
+                                                    Icon(Icons.delete),
+                                                    Padding(
+                                                        padding: EdgeInsets.only(
+                                                            left: smallPadding,
+                                                            right:
+                                                                smallPadding)),
+                                                    Text('Are you sure?'),
+                                                  ],
+                                                ),
+                                                content: Text(
+                                                    'There\s no going back!'),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize:
+                                                              secondaryFontSize,
+                                                          fontFamily:
+                                                              highTower),
+                                                    ),
+                                                  ),
+                                                  RaisedButton(
+                                                    color: Colors.red,
+                                                    onPressed: () => Provider
+                                                            .of<CharacterListState>(
+                                                                context,
+                                                                listen: false)
+                                                        .deleteCharacter(
+                                                            _character.id)
+                                                        .whenComplete(() =>
+                                                            Navigator.pop(
+                                                                context)),
+                                                    child: Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize:
+                                                              secondaryFontSize,
+                                                          fontFamily:
+                                                              highTower),
+                                                    ),
+                                                  ),
                                                 ],
-                                              ),
-                                              content: Text(
-                                                  'There\s no going back!'),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            secondaryFontSize,
-                                                        fontFamily: highTower),
-                                                  ),
-                                                ),
-                                                FlatButton(
-                                                  onPressed: () => Provider.of<
-                                                              CharacterListState>(
-                                                          context,
-                                                          listen: false)
-                                                      .deleteCharacter(
-                                                          _character.id)
-                                                      .whenComplete(() =>
-                                                          Navigator.pop(
-                                                              context)),
-                                                  child: Text(
-                                                    'Delete',
-                                                    style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize:
-                                                            secondaryFontSize,
-                                                        fontFamily: highTower),
-                                                  ),
-                                                ),
-                                              ],
-                                            )))
-                                : Container(),
-                            IconButton(
-                              icon: Icon(characterState.isEditable
-                                  ? Icons.save
-                                  : Icons.edit),
-                              tooltip:
-                                  characterState.isEditable ? 'Save' : 'Edit',
-                              onPressed: characterState.isEditable
-                                  ? () async => await characterState
-                                          .updateCharacter(
-                                              _saveEdits(_character))
-                                          .then((_) async {
-                                        sp.setInt(
-                                            'retirements',
-                                            int.parse(
-                                                _previousRetirementsTextFieldController
-                                                    .text));
-                                        appState.retirements = int.parse(
-                                            _previousRetirementsTextFieldController
-                                                .text);
-                                        await _clearTextFields();
+                                              )))
+                                  : Container(),
+                              IconButton(
+                                icon: Icon(characterState.isEditable
+                                    ? Icons.save
+                                    : FontAwesomeIcons.solidEdit),
+                                tooltip:
+                                    characterState.isEditable ? 'Save' : 'Edit',
+                                onPressed: characterState.isEditable
+                                    ? () => characterState
+                                            .updateCharacter(
+                                                _saveEdits(_character))
+                                            .then((_) {
+                                          appState.retirements = int.parse(
+                                              _previousRetirementsTextFieldController
+                                                  .text);
+                                        }).then((_) {
+                                          _clearTextFields();
+                                          characterState.isEditable = false;
+                                        })
+                                    : () {
+                                        characterState.isEditable = true;
+                                        _previousRetirementsTextFieldController
+                                                .text =
+                                            appState
+                                                .getRetirements()
+                                                .toString();
+                                        _xpTextFieldController.text =
+                                            _character.xp == 0
+                                                ? ''
+                                                : _character.xp.toString();
+                                        _goldTextFieldController.text =
+                                            _character.gold == 0
+                                                ? ''
+                                                : _character.gold.toString();
+                                        _notesTextFieldController.text =
+                                            _character.notes;
+                                        _charNameTextFieldController.text =
+                                            _character.name;
+                                      },
+                              ),
+                              characterState.isEditable
+                                  ? IconButton(
+                                      tooltip: 'Cancel',
+                                      icon: Icon(Icons.cancel),
+                                      onPressed: () {
+                                        _clearTextFields();
                                         characterState.isEditable = false;
                                       })
-                                  : () {
-                                      characterState.isEditable = true;
-                                      _previousRetirementsTextFieldController
-                                              .text =
-                                          appState.retirements.toString();
-                                      _xpTextFieldController.text =
-                                          _character.xp == 0
-                                              ? ''
-                                              : _character.xp.toString();
-                                      _goldTextFieldController.text =
-                                          _character.gold == 0
-                                              ? ''
-                                              : _character.gold.toString();
-                                      _notesTextFieldController.text =
-                                          _character.notes;
-                                      _charNameTextFieldController.text =
-                                          _character.name;
-                                    },
-                            ),
-                            characterState.isEditable
-                                ? IconButton(
-                                    tooltip: 'Cancel',
-                                    icon: Icon(Icons.cancel),
-                                    onPressed: () {
-                                      _clearTextFields();
-                                      characterState.isEditable = false;
-                                    })
-                                : Container(),
-                          ],
-                        )
-                      ]),
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: smallPadding, right: smallPadding),
-                    child: characterState.isEditable
-                        ? TextField(
-                            minLines: 1,
-                            maxLines: 2,
-                            controller: _charNameTextFieldController,
-                            style: TextStyle(
-                                fontSize: titleFontSize * 1.5,
-                                fontFamily: highTower),
-                            textAlign: TextAlign.center,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                                hintStyle: TextStyle(
-                                    fontSize: titleFontSize * 1.5,
-                                    fontFamily: highTower)),
+                                  : Container(),
+                            ],
                           )
-                        : AutoSizeText(
-                            _character.name,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: titleFontSize * 1.5,
-                                fontFamily: highTower),
-                            textAlign: TextAlign.center,
-                          ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Stack(
-                          alignment: Alignment(0.0, 0.0),
-                          children: <Widget>[
-                            Image.asset('images/xp.png',
-                                width: iconWidth * 1.75),
-                            Text(
-                              '${characterState.currentLevel}',
+                        ]),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: smallPadding, right: smallPadding),
+                      child: characterState.isEditable
+                          ? TextField(
+                              minLines: 1,
+                              maxLines: 2,
+                              controller: _charNameTextFieldController,
                               style: TextStyle(
-                                  color: Colors.white, fontSize: titleFontSize),
+                                  fontSize: titleFontSize * 1.5,
+                                  fontFamily: highTower),
+                              textAlign: TextAlign.center,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: InputDecoration(
+                                  hintStyle: TextStyle(
+                                      fontSize: titleFontSize * 1.5,
+                                      fontFamily: highTower)),
                             )
-                          ],
-                        ),
-                        Flexible(
-                            child: AutoSizeText(
-                                '${_character.classRace} ${_character.className}',
-                                maxLines: 1,
-                                style: TextStyle(fontSize: titleFontSize))),
-                      ]),
-                ],
-              )),
-            ],
-          ),
-          Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'images/xp.png',
-                          width: iconWidth,
-                        ),
-                        characterState.isEditable
-                            ? Container(
-                                width: MediaQuery.of(context).size.width / 6,
-                                child: TextField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  style: TextStyle(fontSize: titleFontSize),
-                                  textAlign: TextAlign.center,
-                                  controller: _xpTextFieldController,
-                                  inputFormatters: [
-                                    BlacklistingTextInputFormatter(
-                                        RegExp('[\\.|\\,|\\ |\\-]'))
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                ),
-                              )
-                            : Text(
-                                ' ${_character.xp}',
-                                style: TextStyle(fontSize: titleFontSize),
-                              ),
-                        Text(
-                          ' / ${characterState.nextLevelXp}',
-                          style: TextStyle(fontSize: titleFontSize / 2),
-                        ),
-                      ],
+                          : AutoSizeText(
+                              _character.name,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontSize: titleFontSize * 1.5,
+                                  fontFamily: highTower),
+                              textAlign: TextAlign.center,
+                            ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'images/loot.png',
-                          width: iconWidth,
-                        ),
-                        characterState.isEditable
-                            ? Container(
-                                width: MediaQuery.of(context).size.width / 6,
-                                child: TextField(
-                                  style: TextStyle(fontSize: titleFontSize),
-                                  textAlign: TextAlign.center,
-                                  controller: _goldTextFieldController,
-                                  inputFormatters: [
-                                    BlacklistingTextInputFormatter(
-                                        RegExp('[\\.|\\,|\\ |\\-]'))
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                ),
-                              )
-                            : Text(
-                                ' ${_character.gold}',
-                                style: TextStyle(fontSize: titleFontSize),
-                              )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'images/goal.png',
-                          width: iconWidth,
-                        ),
-                        Text(
-                          '${characterState.checkMarkProgress} / 3',
-                          style: TextStyle(fontSize: titleFontSize),
-                        )
-                      ],
-                    ),
-                  ),
-                  characterState.isEditable
-                      ? Container()
-                      : Container(
-                          padding: EdgeInsets.all(smallPadding),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Stack(
+                            alignment: Alignment(0.0, 0.0),
                             children: <Widget>[
-                              Image.asset(
-                                'images/equipment_slots/pocket.png',
-                                width: iconWidth,
-                              ),
+                              Image.asset('images/xp.png',
+                                  width: iconWidth * 1.75),
                               Text(
-                                ' ${(characterState.currentLevel / 2).round()}',
-                                style: TextStyle(fontSize: titleFontSize),
+                                '${characterState.currentLevel}',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: titleFontSize),
                               )
                             ],
                           ),
-                        )
-                ],
+                          Flexible(
+                              child: AutoSizeText(
+                                  '${_character.classRace} ${_character.className}',
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: titleFontSize))),
+                        ]),
+                  ],
+                )),
+              ],
+            ),
+            Center(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/xp.png',
+                            width: iconWidth,
+                          ),
+                          characterState.isEditable
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  child: TextField(
+                                    textAlignVertical: TextAlignVertical.center,
+                                    style: TextStyle(fontSize: titleFontSize),
+                                    textAlign: TextAlign.center,
+                                    controller: _xpTextFieldController,
+                                    inputFormatters: [
+                                      BlacklistingTextInputFormatter(
+                                          RegExp('[\\.|\\,|\\ |\\-]'))
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                )
+                              : Text(
+                                  ' ${_character.xp}',
+                                  style: TextStyle(fontSize: titleFontSize),
+                                ),
+                          Text(
+                            ' / ${characterState.nextLevelXp}',
+                            style: TextStyle(fontSize: titleFontSize / 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/loot.png',
+                            width: iconWidth,
+                          ),
+                          characterState.isEditable
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width / 6,
+                                  child: TextField(
+                                    style: TextStyle(fontSize: titleFontSize),
+                                    textAlign: TextAlign.center,
+                                    controller: _goldTextFieldController,
+                                    inputFormatters: [
+                                      BlacklistingTextInputFormatter(
+                                          RegExp('[\\.|\\,|\\ |\\-]'))
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                )
+                              : Text(
+                                  ' ${_character.gold}',
+                                  style: TextStyle(fontSize: titleFontSize),
+                                )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/goal.png',
+                            width: iconWidth,
+                          ),
+                          Text(
+                            '${characterState.checkMarkProgress} / 3',
+                            style: TextStyle(fontSize: titleFontSize),
+                          )
+                        ],
+                      ),
+                    ),
+                    characterState.isEditable
+                        ? Container()
+                        : Container(
+                            padding: EdgeInsets.all(smallPadding),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset(
+                                  'images/equipment_slots/pocket.png',
+                                  width: iconWidth,
+                                ),
+                                Text(
+                                  ' ${(characterState.currentLevel / 2).round()}',
+                                  style: TextStyle(fontSize: titleFontSize),
+                                )
+                              ],
+                            ),
+                          )
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(padding: EdgeInsets.only(bottom: smallPadding)),
-          Text(
-            'Notes',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: titleFontSize),
-          ),
-          Padding(padding: EdgeInsets.only(bottom: smallPadding)),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(smallPadding),
-            child: characterState.isEditable
-                ? TextField(
-                    style: TextStyle(fontFamily: highTower),
-                    minLines: 1,
-                    maxLines: 5,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                        hintText: 'Notes',
-                        hintStyle: TextStyle(fontFamily: highTower)),
-                    controller: _notesTextFieldController,
-                  )
-                : Text(
-                    _character.notes,
-                    style: TextStyle(fontFamily: highTower),
-                  ),
-          ),
-          Column(
-            children: <Widget>[
-              characterState.isEditable
-                  ? Container(
-                      padding: EdgeInsets.all(smallPadding),
-                      child: AutoSizeText(
-                        'Battle Goal Checkmarks',
+            // NOTES
+            characterState.isEditable
+                ? Column(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                      Text(
+                        'Notes',
                         textAlign: TextAlign.center,
-                        minFontSize: titleFontSize,
+                        style: TextStyle(fontSize: titleFontSize),
                       ),
-                    )
-                  : Container(),
-              characterState.isEditable
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
-                          elevation: 5.0,
-                          color: Theme.of(context).accentColor,
-                          onPressed: () => characterState.decreaseCheckmark(),
-                          child: Icon(Icons.remove),
+                      // Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                      Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(smallPadding),
+                          child: TextField(
+                            style: TextStyle(fontFamily: highTower),
+                            minLines: 1,
+                            maxLines: 5,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                                hintText: 'Notes',
+                                hintStyle: TextStyle(fontFamily: highTower)),
+                            controller: _notesTextFieldController,
+                          )),
+                    ],
+                  )
+                : characterState.character.notes != ''
+                    ? Column(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.only(bottom: smallPadding)),
+                          Text(
+                            'Notes',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: titleFontSize),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(bottom: smallPadding)),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(smallPadding),
+                            child: Text(
+                              _character.notes,
+                              style: TextStyle(fontFamily: highTower),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+            // BATTLE GOAL CHECKMARKS
+            characterState.isEditable
+                ? Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(smallPadding),
+                        child: AutoSizeText(
+                          'Battle Goal Checkmarks',
+                          textAlign: TextAlign.center,
+                          minFontSize: titleFontSize,
                         ),
-                        Text(
-                          '${characterState.character.checkMarks} / 18',
-                          style: TextStyle(fontSize: titleFontSize),
-                        ),
-                        RaisedButton(
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          RaisedButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0)),
                             elevation: 5.0,
                             color: Theme.of(context).accentColor,
-                            onPressed: () => characterState.increaseCheckmark(),
-                            child: Icon(Icons.add))
-                      ],
-                    )
-                  : Container(),
-              // Container(
-              //   padding: EdgeInsets.only(
-              //       left: MediaQuery.of(context).size.width / 4,
-              //       right: MediaQuery.of(context).size.width / 4),
-              //   child: GridView.builder(
-              //     physics: NeverScrollableScrollPhysics(),
+                            onPressed: () => characterState.decreaseCheckmark(),
+                            child: Icon(Icons.exposure_neg_1),
+                          ),
+                          Text(
+                            '${characterState.character.checkMarks} / 18',
+                            style: TextStyle(fontSize: titleFontSize),
+                          ),
+                          RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0)),
+                              elevation: 5.0,
+                              color: Theme.of(context).accentColor,
+                              onPressed: () =>
+                                  characterState.increaseCheckmark(),
+                              child: Icon(Icons.exposure_plus_1))
+                        ],
+                      ),
+                      // Container(
+                      //   padding: EdgeInsets.only(
+                      //       left: MediaQuery.of(context).size.width / 4,
+                      //       right: MediaQuery.of(context).size.width / 4),
+                      //   child: GridView.builder(
+                      //     physics: NeverScrollableScrollPhysics(),
 
-              //     shrinkWrap: true,
-              //     itemCount: 18,
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //         crossAxisCount: 3, childAspectRatio: 1),
-              //     itemBuilder: (context, index) {
-              //       // return CheckMarkRow(index);
-              //       // for(var x = 0; x < characterState.character.checkMarks; x++)
-              //       return Checkbox(
-              //         value: false,
-              //         onChanged: (_) => null,
-              //       );
-              //     },
-              //   ),
-              // )
-            ],
-          )
-        ]),
-      );
-    });
+                      //     shrinkWrap: true,
+                      //     itemCount: 18,
+                      //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      //         crossAxisCount: 3, childAspectRatio: 1),
+                      //     itemBuilder: (context, index) {
+                      //       // return CheckMarkRow(index);
+                      //       // for(var x = 0; x < characterState.character.checkMarks; x++)
+                      //       return Checkbox(
+                      //         value: false,
+                      //         onChanged: (_) => null,
+                      //       );
+                      //     },
+                      //   ),
+                      // )
+                    ],
+                  )
+                : Container()
+          ]),
+        );
+      },
+    );
+    // });
   }
 
   _clearTextFields() {

@@ -21,7 +21,8 @@ class CharacterListState with ChangeNotifier {
     return true;
   }
 
-  Future addCharacter(String _name, PlayerClass _playerClass) async {
+  Future addCharacter(
+      String _name, PlayerClass _playerClass, int _initialLevel) async {
     Character _character = Character();
     List<bool> _perks = [];
     perkList.forEach((_perk) {
@@ -35,7 +36,7 @@ class CharacterListState with ChangeNotifier {
     _character.classIcon = _playerClass.classIconUrl;
     _character.classRace = _playerClass.race;
     _character.className = _playerClass.className;
-    _character.xp = 0;
+    _character.xp = _initialLevel > 1 ? levelXpList[_initialLevel - 2] : 0;
     _character.gold = 0;
     _character.notes = 'Add notes here';
     _character.checkMarks = 0;
@@ -52,7 +53,6 @@ class CharacterListState with ChangeNotifier {
     await db.deleteCharacter(_characterId).then((_) {
       notifyListeners();
     });
-    // _characterList.removeWhere((value) => value.id == _characterId);
   }
 
   Future<Character> compileLegacyCharacterDetails() async {

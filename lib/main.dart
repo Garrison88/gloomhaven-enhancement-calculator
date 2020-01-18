@@ -3,10 +3,12 @@ import 'package:gloomhaven_enhancement_calc/app.dart';
 import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 SharedPreferences sp;
 
 main() async {
+  // Sqflite.devSetDebugModeOn(true);
   // Stetho.initialize();
   WidgetsFlutterBinding.ensureInitialized();
   sp = await SharedPreferences.getInstance();

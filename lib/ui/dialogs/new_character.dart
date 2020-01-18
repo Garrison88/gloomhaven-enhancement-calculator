@@ -27,30 +27,26 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
   }
 
   PlayerClass _selectedClass = classList[0];
+  int _initialXp = 1;
 
   final _newCharacterFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("New Character"),
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Form(
               key: _newCharacterFormKey,
               child: TextFormField(
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(hintText: 'Name'),
+                style:
+                    TextStyle(fontFamily: highTower, fontSize: titleFontSize),
                 validator: (value) =>
                     value.isNotEmpty ? null : 'Please enter a name',
                 controller: _nameTextFieldController,
-                // decoration: InputDecoration(
-                //   enabledBorder: UnderlineInputBorder(
-                //     borderSide: BorderSide(
-                //         color: Color(int.parse(_selectedClass.classColor)),
-                //         width: 1.0,
-                //         style: BorderStyle.solid),
-                //   ),
-                // ),
               ),
             ),
             DropdownButtonHideUnderline(
@@ -60,35 +56,61 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                   'Class',
                   style: TextStyle(fontSize: titleFontSize),
                 ),
-                onChanged: (PlayerClass value) =>
-                    setState(() => _selectedClass = value),
+                onChanged: (PlayerClass _value) =>
+                    setState(() => _selectedClass = _value),
                 items: classListMenuItems,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: _initialXp,
+                      onChanged: (int value) =>
+                          setState(() => _initialXp = value),
+                      items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9].map((int _value) {
+                        return DropdownMenuItem<int>(
+                            value: _value,
+                            child: Center(
+                              child: Text('Level: ${_value.toString()}',
+                                  style: TextStyle(fontSize: titleFontSize)),
+                            ));
+                      }).toList(),
+                    ),
+                  ),
+                )
+              ],
             )
           ],
         ),
       ),
       actions: <Widget>[
         MaterialButton(
-          onPressed: () {
-            if (_newCharacterFormKey.currentState.validate()) {
-              widget.characterListState
-                  .addCharacter(_nameTextFieldController.text, _selectedClass)
-                  .whenComplete(() => Navigator.of(context).pop());
-            }
-          },
-          child: Text(
-            'Save',
-            style:
-                TextStyle(fontSize: secondaryFontSize, fontFamily: highTower),
-          ),
-        ),
-        MaterialButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             'Cancel',
             style:
                 TextStyle(fontSize: secondaryFontSize, fontFamily: highTower),
+          ),
+        ),
+        RaisedButton(
+          color: Colors.green,
+          onPressed: () {
+            if (_newCharacterFormKey.currentState.validate()) {
+              widget.characterListState
+                  .addCharacter(
+                      _nameTextFieldController.text, _selectedClass, _initialXp)
+                  .whenComplete(() => Navigator.of(context).pop());
+            }
+          },
+          child: Text(
+            'Create',
+            style: TextStyle(
+                fontSize: secondaryFontSize,
+                fontFamily: highTower,
+                color: Colors.white),
           ),
         ),
       ],

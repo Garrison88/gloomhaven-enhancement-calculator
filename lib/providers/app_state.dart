@@ -5,8 +5,16 @@ class AppState with ChangeNotifier {
   Color _accentColor;
   int _retirements = 0;
   int _position;
+  // bool _isEditable = false;
 
   AppState(this._position, this._accentColor);
+
+  // set isEditable(bool _value) {
+  //   _isEditable = _value;
+  //   // notifyListeners();
+  // }
+
+  // get isEditable => _isEditable;
 
   get accentColor => _accentColor;
 
@@ -19,9 +27,16 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  get retirements => _retirements;
+  getRetirements() {
+    SharedPreferences.getInstance().then((_prefs) {
+      _retirements = int.parse(_prefs.getString('previousRetirements') ?? '0');
+    });
+    return _retirements;
+  }
 
   set retirements(int _numOfRetirements) {
+    SharedPreferences.getInstance().then((_prefs) =>
+        _prefs.setString('previousRetirements', _numOfRetirements.toString()));
     _retirements = _numOfRetirements;
     notifyListeners();
   }

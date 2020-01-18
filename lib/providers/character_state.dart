@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterState with ChangeNotifier {
-  // final int _characterId;
   bool _isEditable = false;
   Character character;
-  // PlayerClass _playerClass;
   List<CharacterPerk> _characterPerks = [];
-  // int checkMarkProgress = 0;
-  // List<bool> _checkMarkList = [];
-  CharacterState(this.character);
+  int numOfSelectedPerks = 0;
+  CharacterState({this.character});
   DatabaseHelper db = DatabaseHelper.instance;
+  // PlayerClass playerClass;
 
-  List<int> _levelXpList = [45, 95, 150, 210, 275, 345, 420, 500];
+  // PlayerClass get playerClass => playerClass;
 
-  // PlayerClass get playerClass => _playerClass;
-
-  // Future<bool> setPlayerClass() async {
-  //   _playerClass = await db.queryPlayerClass(character.classCode);
-  //   return true;
+  // Future<bool> setPlayerClass() {
+  //   return db
+  //       .queryPlayerClass(character.classCode)
+  //       .then((_class) => playerClass = _class)
+  //       .then((_) => true);
+  //   // return true;
   // }
 
   // Future<bool> setCharacter() async {
@@ -29,10 +32,12 @@ class CharacterState with ChangeNotifier {
   //   return true;
   // }
 
-  // Character get character {
-  //   print(character.name);
-  //   return character;
-  // }
+  int getMaximumPerks() {
+    int _perks = 0;
+    _perks += currentLevel - 1;
+    _perks += ((character.checkMarks - 1) / 3).round();
+    return _perks;
+  }
 
   bool get isEditable => _isEditable;
 
@@ -41,15 +46,13 @@ class CharacterState with ChangeNotifier {
     notifyListeners();
   }
 
-  int get currentLevel => character.xp < _levelXpList.last
-      ? _levelXpList.indexWhere((_xp) => _xp > character.xp) + 1
+  int get currentLevel => character.xp < levelXpList.last
+      ? levelXpList.indexWhere((_xp) => _xp > character.xp) + 1
       : 9;
 
-  int get nextLevelXp => character.xp < _levelXpList.last
-      ? _levelXpList.firstWhere((_threshold) => _threshold > character.xp)
-      : _levelXpList.last;
-
-  int getPerk(CharacterPerk _perk) => _characterPerks.indexOf(_perk);
+  int get nextLevelXp => character.xp < levelXpList.last
+      ? levelXpList.firstWhere((_threshold) => _threshold > character.xp)
+      : levelXpList.last;
 
   Future updateCharacter(Character _updatedCharacter) async {
     character = _updatedCharacter;
@@ -72,5 +75,28 @@ class CharacterState with ChangeNotifier {
       character.checkMarks--;
       notifyListeners();
     }
+  }
+
+  Future<bool> setCharacterPerks() async {
+    _characterPerks = await db.queryCharacterPerks(character.id);
+    numOfSelectedPerks = 0;
+    _characterPerks.forEach((_perk) {
+      if (_perk.characterPerkIsSelected) {
+        numOfSelectedPerks++;
+      }
+    });
+    return true;
+  }
+
+  List<CharacterPerk> get characterPerks => _characterPerks;
+
+  Future togglePerk(_perk, _value) async {
+    await db.updateCharacterPerk(_perk, _value);
+    notifyListeners();
+  }
+
+  Future<String> getPerkDetails(int _perkId) async {
+    Perk _perk = await db.queryPerk(_perkId);
+    return _perk.perkDetails;
   }
 }

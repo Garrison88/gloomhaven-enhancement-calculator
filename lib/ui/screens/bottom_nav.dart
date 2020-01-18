@@ -106,9 +106,9 @@ class BottomNavState extends State<BottomNav> {
               ChangeNotifierProvider<CharacterListState>(
                 create: (context) => CharacterListState(),
               ),
-              // ChangeNotifierProvider<CharacterState>(
-              //   create: (context) => CharacterState(),
-              // ),
+              ChangeNotifierProvider<CharacterState>.value(
+                value: CharacterState(),
+              ),
             ],
             child: CharacterListPage(),
           ),

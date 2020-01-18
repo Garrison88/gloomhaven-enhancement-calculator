@@ -22,8 +22,6 @@ class _CharacterListPageState extends State<CharacterListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final AppState appState = Provider.of<AppState>(context, listen: false);
-    // _pageController.jumpToPage(appState.position);
     return Consumer<CharacterListState>(builder:
         (BuildContext context, CharacterListState characterListState, _) {
       print("CHARACTER LIST PAGE REBUILT");
@@ -77,8 +75,9 @@ class _CharacterListPageState extends State<CharacterListPage> {
                                     SingleChildScrollView(
                                       child: ChangeNotifierProvider<
                                           CharacterState>.value(
-                                        value: CharacterState(characterListState
-                                            .characterList[_index]),
+                                        value: CharacterState(
+                                            character: characterListState
+                                                .characterList[_index]),
                                         child: Container(
                                           padding: EdgeInsets.all(smallPadding),
                                           child: CharacterPage(),
@@ -94,8 +93,20 @@ class _CharacterListPageState extends State<CharacterListPage> {
                           length: characterListState.characterList.length,
                           indicatorSpace: smallPadding,
                           padding: const EdgeInsets.only(top: 20),
-                          indicatorColor: Colors.white,
-                          indicatorSelectorColor: Theme.of(context).accentColor,
+                          indicatorColor:
+                              characterListState.characterList.length < 2 
+                              // ||
+                              //         Provider.of<AppState>(context)
+                              //             .isEditable
+                                  ? Colors.transparent
+                                  : Colors.white,
+                          indicatorSelectorColor:
+                              characterListState.characterList.length < 2 
+                              // ||
+                              //         Provider.of<AppState>(context)
+                              //             .isEditable
+                                  ? Colors.transparent
+                                  : Theme.of(context).accentColor,
                           shape: IndicatorShape.circle(size: 12),
                         );
               // shape: IndicatorShape.roundRectangleShape(size: Size.square(12),cornerSize: Size.square(3)),
@@ -116,7 +127,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 backgroundColor: Colors.blue,
                 label: 'Import Legacy Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () async => await characterListState
+                onTap: () => characterListState
                     .addLegacyCharacter()
                     .whenComplete(() => _pageController.animateToPage(
                         characterListState.characterList.length,

@@ -1,30 +1,45 @@
-import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+// import 'package:flutter/material.dart';
+// import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+// import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+// import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
-class CharacterPerksState with ChangeNotifier {
-  int _characterId;
-  List<CharacterPerk> _characterPerks = [];
-  CharacterPerksState(this._characterId);
-  DatabaseHelper db = DatabaseHelper.instance;
+// class CharacterPerksState with ChangeNotifier {
+//   int _characterId;
+//   List<CharacterPerk> _characterPerks = [];
+//   CharacterPerksState(this._characterId);
+//   DatabaseHelper db = DatabaseHelper.instance;
+//   int numOfSelectedPerks = 0;
 
-  int get characterId => _characterId;
+//   int get characterId => _characterId;
 
-  Future<bool> setCharacterPerks(_characterId) async {
-    _characterPerks = await db.queryCharacterPerks(_characterId);
-    return true;
-  }
+//   // getNumOfSelectedPerks() {
+//   //   _characterPerks.forEach((_perk) {
+//   //     if (_perk.characterPerkIsSelected) {
+//   //       _numOfSelectedPerks++;
+//   //     }
+//   //   });
+//   // }
 
-  List<CharacterPerk> get characterPerks => _characterPerks;
+//   Future<bool> setCharacterPerks(_characterId) async {
+//     _characterPerks = await db.queryCharacterPerks(_characterId);
+//     numOfSelectedPerks = 0;
+//         _characterPerks.forEach((_perk) {
+//       if (_perk.characterPerkIsSelected) {
+//         numOfSelectedPerks++;
+//       }
+//     });
+//     return true;
+//   }
 
-  Future togglePerk(_perk, _value) async {
-    await db.updateCharacterPerk(_perk, _value);
-    notifyListeners();
-  }
+//   List<CharacterPerk> get characterPerks => _characterPerks;
 
-  Future<String> getPerkDetails(int _perkId) async {
-    Perk _perk = await db.queryPerk(_perkId);
-    return _perk.perkDetails;
-  }
-}
+//   Future togglePerk(_perk, _value) async {
+//     await db.updateCharacterPerk(_perk, _value);
+//     notifyListeners();
+//   }
+
+//   Future<String> getPerkDetails(int _perkId) async {
+//     Perk _perk = await db.queryPerk(_perkId);
+//     return _perk.perkDetails;
+//   }
+// }

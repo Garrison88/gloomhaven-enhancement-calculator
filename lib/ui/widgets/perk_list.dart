@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
+import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +13,10 @@ class PerkList extends StatefulWidget {
 
 class PerkListState extends State<PerkList> {
   Widget build(BuildContext context) {
-    final CharacterPerksState characterPerksState =
-        Provider.of<CharacterPerksState>(context);
+    final CharacterState characterState =
+        Provider.of<CharacterState>(context, listen: false);
     return FutureBuilder<bool>(
-        future: characterPerksState
-            .setCharacterPerks(characterPerksState.characterId),
+        future: Provider.of<CharacterState>(context).setCharacterPerks(),
         builder: (context, AsyncSnapshot<bool> _perksSnapshot) => _perksSnapshot
                     .data ==
                 true
@@ -25,13 +26,32 @@ class PerkListState extends State<PerkList> {
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(bottom: smallPadding)),
                       Container(
-                        padding: EdgeInsets.all(smallPadding),
-                        child: Text(
-                          'Perks',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: titleFontSize),
-                        ),
-                      ),
+                          padding: EdgeInsets.all(smallPadding),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Perks (',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: titleFontSize),
+                              ),
+                              Text('${characterState.numOfSelectedPerks}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: titleFontSize,
+                                      color: (characterState.getMaximumPerks() +
+                                                  Provider.of<AppState>(context,
+                                                          listen: false)
+                                                      .getRetirements()) >=
+                                              characterState.numOfSelectedPerks
+                                          ? Colors.black
+                                          : Colors.red)),
+                              Text(
+                                  ' / ${characterState.getMaximumPerks() + Provider.of<AppState>(context, listen: false).getRetirements()})',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: titleFontSize))
+                            ],
+                          )),
                       ListView(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -39,12 +59,13 @@ class PerkListState extends State<PerkList> {
                         // crossAxisCount: 1,
                         // childAspectRatio: 5,
                         children: List.generate(
-                            characterPerksState.characterPerks.length,
+                            characterState.characterPerks.length,
                             (index) => PerkRow(
-                                perk:
-                                    characterPerksState.characterPerks[index])),
+                                perk: characterState.characterPerks[index])),
                       ),
-                      Container(height: 58,)
+                      Container(
+                        height: 58,
+                      )
                     ],
                   )
             : CircularProgressIndicator());
