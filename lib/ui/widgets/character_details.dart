@@ -42,7 +42,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
   @override
   Widget build(BuildContext context) {
     print("CHARACTER DETAILS PAGE REBUILT");
-    final AppState appState = Provider.of<AppState>(context);
+    // final AppState appState = Provider.of<AppState>(context, listen: false);
     return Consumer<CharacterState>(
       builder: (BuildContext context, CharacterState characterState, _) {
         Character _character = characterState.character;
@@ -67,6 +67,10 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                 width: MediaQuery.of(context).size.width / 4,
                                 child: characterState.isEditable
                                     ? TextField(
+                                        onChanged: (String value) =>
+                                            Provider.of<AppState>(context,
+                                                    listen: false)
+                                                .retirements = int.parse(value),
                                         style: TextStyle(
                                             fontSize: titleFontSize / 2),
                                         textAlign: TextAlign.center,
@@ -79,7 +83,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                         keyboardType: TextInputType.number,
                                       )
                                     : Text(
-                                        'Retirements: ${appState.getRetirements()}',
+                                        'Retirements: ${Provider.of<AppState>(context, listen: false).retirements}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: titleFontSize / 2),
@@ -105,7 +109,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   ? IconButton(
                                       color: Colors.red,
                                       tooltip: 'Delete',
-                                      icon: Icon(Icons.delete),
+                                      icon: Icon(FontAwesomeIcons.trash),
                                       onPressed: () => showDialog(
                                           context: context,
                                           builder: (_) => AlertDialog(
@@ -161,53 +165,45 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                               )))
                                   : Container(),
                               IconButton(
-                                icon: Icon(characterState.isEditable
-                                    ? Icons.save
-                                    : FontAwesomeIcons.solidEdit),
-                                tooltip:
-                                    characterState.isEditable ? 'Save' : 'Edit',
-                                onPressed: characterState.isEditable
-                                    ? () => characterState
-                                            .updateCharacter(
-                                                _saveEdits(_character))
-                                            .then((_) {
-                                          appState.retirements = int.parse(
-                                              _previousRetirementsTextFieldController
-                                                  .text);
-                                        }).then((_) {
-                                          _clearTextFields();
-                                          characterState.isEditable = false;
-                                        })
-                                    : () {
-                                        characterState.isEditable = true;
-                                        _previousRetirementsTextFieldController
-                                                .text =
-                                            appState
-                                                .getRetirements()
+                                  icon: Icon(characterState.isEditable
+                                      ? FontAwesomeIcons.lockOpen
+                                      : FontAwesomeIcons.lock),
+                                  tooltip: characterState.isEditable
+                                      ? 'Lock'
+                                      : 'Unlock',
+                                  onPressed: characterState.isEditable
+                                      ? () => characterState.isEditable = false
+                                      : () {
+                                          if (Provider.of<AppState>(context,
+                                                      listen: false)
+                                                  .retirements !=
+                                              0)
+                                            _previousRetirementsTextFieldController
+                                                .text = Provider.of<AppState>(
+                                                    context,
+                                                    listen: false)
+                                                .retirements
                                                 .toString();
-                                        _xpTextFieldController.text =
-                                            _character.xp == 0
-                                                ? ''
-                                                : _character.xp.toString();
-                                        _goldTextFieldController.text =
-                                            _character.gold == 0
-                                                ? ''
-                                                : _character.gold.toString();
-                                        _notesTextFieldController.text =
-                                            _character.notes;
-                                        _charNameTextFieldController.text =
-                                            _character.name;
-                                      },
-                              ),
-                              characterState.isEditable
-                                  ? IconButton(
-                                      tooltip: 'Cancel',
-                                      icon: Icon(Icons.cancel),
-                                      onPressed: () {
-                                        _clearTextFields();
-                                        characterState.isEditable = false;
-                                      })
-                                  : Container(),
+                                          _charNameTextFieldController.text =
+                                              _character.name;
+                                          if (_character.xp != 0)
+                                            _xpTextFieldController.text =
+                                                _character.xp.toString();
+                                          if (_character.gold != 0)
+                                            _goldTextFieldController.text =
+                                                _character.gold.toString();
+                                          _notesTextFieldController.text =
+                                              _character.notes;
+
+                                          characterState.isEditable = true;
+                                        }),
+                              // characterState.isEditable
+                              //     ? IconButton(
+                              //         tooltip: 'Cancel',
+                              //         icon: Icon(FontAwesomeIcons.lockOpen),
+                              //         onPressed: () =>
+                              //             characterState.isEditable = false)
+                              //     : Container(),
                             ],
                           )
                         ]),
@@ -216,6 +212,8 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           left: smallPadding, right: smallPadding),
                       child: characterState.isEditable
                           ? TextField(
+                              onChanged: (String value) => characterState
+                                  .updateCharacter(_character..name = value),
                               minLines: 1,
                               maxLines: 2,
                               controller: _charNameTextFieldController,
@@ -283,6 +281,11 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                               ? Container(
                                   width: MediaQuery.of(context).size.width / 6,
                                   child: TextField(
+                                    onChanged: (String value) => characterState
+                                        .updateCharacter(_character
+                                          ..xp = value == ''
+                                              ? 0
+                                              : int.parse(value)),
                                     textAlignVertical: TextAlignVertical.center,
                                     style: TextStyle(fontSize: titleFontSize),
                                     textAlign: TextAlign.center,
@@ -318,6 +321,11 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                               ? Container(
                                   width: MediaQuery.of(context).size.width / 6,
                                   child: TextField(
+                                    onChanged: (String value) => characterState
+                                        .updateCharacter(_character
+                                          ..gold = value == ''
+                                              ? 0
+                                              : int.parse(value)),
                                     style: TextStyle(fontSize: titleFontSize),
                                     textAlign: TextAlign.center,
                                     controller: _goldTextFieldController,
@@ -363,7 +371,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   width: iconWidth,
                                 ),
                                 Text(
-                                  ' ${(characterState.currentLevel / 2).round()}',
+                                  ' ${characterState.numOfPocketItems}',
                                   style: TextStyle(fontSize: titleFontSize),
                                 )
                               ],
@@ -383,11 +391,12 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: titleFontSize),
                       ),
-                      // Padding(padding: EdgeInsets.only(bottom: smallPadding)),
                       Container(
                           width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.all(smallPadding),
                           child: TextField(
+                            onChanged: (String value) => characterState
+                                .updateCharacter(_character..notes = value),
                             style: TextStyle(fontFamily: highTower),
                             minLines: 1,
                             maxLines: 5,
@@ -435,28 +444,26 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
-                            elevation: 5.0,
+                          IconButton(
                             color: Theme.of(context).accentColor,
+                            iconSize:
+                                Theme.of(context).textTheme.body1.fontSize,
+                            icon: Icon(FontAwesomeIcons.minus),
                             onPressed: () => characterState.decreaseCheckmark(),
-                            child: Icon(Icons.exposure_neg_1),
                           ),
                           Text(
                             '${characterState.character.checkMarks} / 18',
                             style: TextStyle(fontSize: titleFontSize),
                           ),
-                          RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              elevation: 5.0,
-                              color: Theme.of(context).accentColor,
-                              onPressed: () =>
-                                  characterState.increaseCheckmark(),
-                              child: Icon(Icons.exposure_plus_1))
+                          IconButton(
+                            color: Theme.of(context).accentColor,
+                            iconSize:
+                                Theme.of(context).textTheme.body1.fontSize,
+                            icon: Icon(FontAwesomeIcons.plus),
+                            onPressed: () => characterState.increaseCheckmark(),
+                          )
                         ],
                       ),
                       // Container(
@@ -490,30 +497,30 @@ class _CharacterDetailsState extends State<CharacterDetails> {
     // });
   }
 
-  _clearTextFields() {
-    _previousRetirementsTextFieldController.clear();
-    _xpTextFieldController.clear();
-    _goldTextFieldController.clear();
-    _charNameTextFieldController.clear();
-    _notesTextFieldController.clear();
-  }
+  // _clearTextFields() {
+  //   _previousRetirementsTextFieldController.clear();
+  //   _xpTextFieldController.clear();
+  //   _goldTextFieldController.clear();
+  //   _charNameTextFieldController.clear();
+  //   _notesTextFieldController.clear();
+  // }
 
-  Character _saveEdits(Character _character) {
-    Character _updatedCharacter = _character;
-    _updatedCharacter.name = _charNameTextFieldController.text.isNotEmpty
-        ? _charNameTextFieldController.text
-        : _character.name;
-    _updatedCharacter.xp = _xpTextFieldController.text.isNotEmpty
-        ? int.parse(_xpTextFieldController.text)
-        : _character.xp;
-    _updatedCharacter.gold = _goldTextFieldController.text.isNotEmpty
-        ? int.parse(_goldTextFieldController.text)
-        : _character.gold;
-    _updatedCharacter.notes = _notesTextFieldController.text.isNotEmpty
-        ? _notesTextFieldController.text
-        : '';
-    return _updatedCharacter;
-  }
+  // Character _saveEdits(Character _character) {
+  //   Character _updatedCharacter = _character;
+  //   _updatedCharacter.name = _charNameTextFieldController.text.isNotEmpty
+  //       ? _charNameTextFieldController.text
+  //       : _character.name;
+  //   _updatedCharacter.xp = _xpTextFieldController.text.isNotEmpty
+  //       ? int.parse(_xpTextFieldController.text)
+  //       : _character.xp;
+  //   _updatedCharacter.gold = _goldTextFieldController.text.isNotEmpty
+  //       ? int.parse(_goldTextFieldController.text)
+  //       : _character.gold;
+  //   _updatedCharacter.notes = _notesTextFieldController.text.isNotEmpty
+  //       ? _notesTextFieldController.text
+  //       : '';
+  //   return _updatedCharacter;
+  // }
 }
 
 // _showConfirmDeleteDialog(BuildContext _context) {

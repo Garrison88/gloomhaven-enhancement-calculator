@@ -46,6 +46,8 @@ class CharacterState with ChangeNotifier {
     notifyListeners();
   }
 
+  int get numOfPocketItems => (currentLevel / 2).round();
+
   int get currentLevel => character.xp < levelXpList.last
       ? levelXpList.indexWhere((_xp) => _xp > character.xp) + 1
       : 9;
@@ -57,6 +59,7 @@ class CharacterState with ChangeNotifier {
   Future updateCharacter(Character _updatedCharacter) async {
     character = _updatedCharacter;
     await db.updateCharacter(_updatedCharacter);
+    notifyListeners();
   }
 
   int get checkMarkProgress => character.checkMarks != 0
@@ -65,14 +68,16 @@ class CharacterState with ChangeNotifier {
 
   increaseCheckmark() {
     if (character.checkMarks < 18) {
-      character.checkMarks++;
+      // character.checkMarks++;
+      updateCharacter(character..checkMarks = character.checkMarks + 1);
       notifyListeners();
     }
   }
 
   decreaseCheckmark() {
     if (character.checkMarks > 0) {
-      character.checkMarks--;
+      // character.checkMarks++;
+      updateCharacter(character..checkMarks = character.checkMarks - 1);
       notifyListeners();
     }
   }

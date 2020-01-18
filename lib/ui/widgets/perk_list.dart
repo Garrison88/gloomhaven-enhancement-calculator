@@ -42,12 +42,12 @@ class PerkListState extends State<PerkList> {
                                       color: (characterState.getMaximumPerks() +
                                                   Provider.of<AppState>(context,
                                                           listen: false)
-                                                      .getRetirements()) >=
+                                                      .retirements) >=
                                               characterState.numOfSelectedPerks
                                           ? Colors.black
                                           : Colors.red)),
                               Text(
-                                  ' / ${characterState.getMaximumPerks() + Provider.of<AppState>(context, listen: false).getRetirements()})',
+                                  ' / ${characterState.getMaximumPerks() + Provider.of<AppState>(context, listen: false).retirements})',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: titleFontSize))
                             ],

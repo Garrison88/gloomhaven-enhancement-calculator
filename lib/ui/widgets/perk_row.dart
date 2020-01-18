@@ -103,16 +103,15 @@ class _PerkRowState extends State<PerkRow> {
               //     ? Colors.white
               //     : Color(int.parse(characterState.character.classColor)),
               value: widget.perk.characterPerkIsSelected,
-              onChanged: Provider.of<CharacterState>(context).isEditable
-                  ? (value) =>
-                      characterState.togglePerk(widget.perk, value)
-                  : (_) => Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Must be in Edit mode'),
-                        duration: Duration(seconds: 2),
-                        // action: SnackBarAction(
-                        //     label: 'EDIT',
-                        //     onPressed: () => characterState.isEditable = true),
-                      ))),
+              onChanged: (value) =>
+                  characterState.togglePerk(widget.perk, value)),
+          // : (_) => Scaffold.of(context).showSnackBar(SnackBar(
+          //       content: Text('Must be in Edit mode'),
+          //       duration: Duration(seconds: 2),
+          //       action: SnackBarAction(
+          //           label: 'EDIT',
+          //           onPressed: () => characterState.isEditable = true),
+          //     ))),
           Container(
             height: 30.0,
             width: 1.0,
@@ -123,8 +122,8 @@ class _PerkRowState extends State<PerkRow> {
           ),
           Expanded(
             child: FutureBuilder<String>(
-                future: characterState
-                    .getPerkDetails(widget.perk.associatedPerkId),
+                future:
+                    characterState.getPerkDetails(widget.perk.associatedPerkId),
                 builder: (context, AsyncSnapshot<String> _detailsSnapshot) {
                   return _detailsSnapshot.hasData
                       ? AutoSizeText(

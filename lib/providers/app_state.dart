@@ -27,10 +27,11 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  getRetirements() {
+  int get retirements {
     SharedPreferences.getInstance().then((_prefs) {
       _retirements = int.parse(_prefs.getString('previousRetirements') ?? '0');
     });
+    // notifyListeners();
     return _retirements;
   }
 
@@ -38,7 +39,7 @@ class AppState with ChangeNotifier {
     SharedPreferences.getInstance().then((_prefs) =>
         _prefs.setString('previousRetirements', _numOfRetirements.toString()));
     _retirements = _numOfRetirements;
-    notifyListeners();
+    // notifyListeners();
   }
 
   get position => this._position;
