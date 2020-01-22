@@ -55,6 +55,7 @@ class DatabaseHelper {
                 $columnCharacterClassIcon TEXT NOT NULL,
                 $columnCharacterClassRace TEXT NOT NULL,
                 $columnCharacterClassName TEXT NOT NULL,
+                $columnPreviousRetirements INTEGER NOT NULL,
                 $columnCharacterXp INTEGER NOT NULL,
                 $columnCharacterGold INTEGER NOT NULL,
                 $columnCharacterNotes TEXT NOT NULL,
@@ -107,7 +108,6 @@ class DatabaseHelper {
       //   }
       // });
     });
-    print("DB HELPER - DATABASE INITIALIZED");
   }
 
   //   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {

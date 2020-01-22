@@ -79,6 +79,7 @@ class BottomNavState extends State<BottomNav> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'Gloomhaven Companion',
             style: TextStyle(fontSize: 25.0),

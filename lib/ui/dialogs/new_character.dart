@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:provider/provider.dart';
 
 class NewCharacterDialog extends StatefulWidget {
   // final PlayerClass initialValue;
@@ -28,6 +27,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
 
   PlayerClass _selectedClass = classList[0];
   int _initialXp = 1;
+  int _previousRetirements = 0;
 
   final _newCharacterFormKey = GlobalKey<FormState>();
 
@@ -49,23 +49,28 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                 controller: _nameTextFieldController,
               ),
             ),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<PlayerClass>(
-                value: _selectedClass,
-                hint: Text(
-                  'Class',
-                  style: TextStyle(fontSize: titleFontSize),
-                ),
-                onChanged: (PlayerClass _value) =>
-                    setState(() => _selectedClass = _value),
-                items: classListMenuItems,
-              ),
-            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                                  child: DropdownButtonHideUnderline(
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<PlayerClass>(
+                      value: _selectedClass,
+                      hint: Text(
+                        'Class',
+                        style: TextStyle(fontSize: titleFontSize),
+                      ),
+                      onChanged: (PlayerClass _value) =>
+                          setState(() => _selectedClass = _value),
+                      items: classListMenuItems,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: DropdownButtonHideUnderline(
                     child: DropdownButton<int>(
                       value: _initialXp,
                       onChanged: (int value) =>
@@ -74,13 +79,39 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                         return DropdownMenuItem<int>(
                             value: _value,
                             child: Center(
-                              child: Text('Level: ${_value.toString()}',
+                              child: Text('Level:  ${_value.toString()}',
                                   style: TextStyle(fontSize: titleFontSize)),
                             ));
                       }).toList(),
                     ),
                   ),
-                )
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Previous\nRetirements:',
+                  // style: TextStyle(fontSize: titleFontSize),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: smallPadding),
+                ),
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: titleFontSize),
+                    textAlign: TextAlign.center,
+                    inputFormatters: [
+                      BlacklistingTextInputFormatter(
+                          RegExp('[\\.|\\,|\\ |\\-]'))
+                    ],
+                    // decoration: InputDecoration(hintText: 'Previous Retirements'),
+                    keyboardType: TextInputType.number,
+                    onChanged: (String value) => setState(() {
+                      _previousRetirements = int.parse(value);
+                    }),
+                  ),
+                ),
               ],
             )
           ],
@@ -100,8 +131,8 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
           onPressed: () {
             if (_newCharacterFormKey.currentState.validate()) {
               widget.characterListState
-                  .addCharacter(
-                      _nameTextFieldController.text, _selectedClass, _initialXp)
+                  .addCharacter(_nameTextFieldController.text, _selectedClass,
+                      _initialXp, _previousRetirements)
                   .whenComplete(() => Navigator.of(context).pop());
             }
           },

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/character_details.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/check_mark_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_list.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:provider/provider.dart';

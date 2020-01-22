@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppState with ChangeNotifier {
   Color _accentColor;
-  int _retirements = 0;
+  // int _retirements = 0;
   int _position;
   // bool _isEditable = false;
 
@@ -27,28 +27,24 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  int get retirements {
-    SharedPreferences.getInstance().then((_prefs) {
-      _retirements = int.parse(_prefs.getString('previousRetirements') ?? '0');
-    });
-    // notifyListeners();
-    return _retirements;
-  }
+  // int get retirements {
+  //   SharedPreferences.getInstance().then((_prefs) {
+  //     _retirements = int.parse(_prefs.getString('previousRetirements') ?? '0');
+  //   });
+  //   return _retirements;
+  // }
 
-  set retirements(int _numOfRetirements) {
-    SharedPreferences.getInstance().then((_prefs) =>
-        _prefs.setString('previousRetirements', _numOfRetirements.toString()));
-    _retirements = _numOfRetirements;
-    // notifyListeners();
-  }
+  // set retirements(int _numOfRetirements) {
+  //   SharedPreferences.getInstance().then((_prefs) =>
+  //       _prefs.setString('previousRetirements', _numOfRetirements.toString()));
+  //   _retirements = _numOfRetirements;
+  // }
 
   get position => this._position;
 
-  set position(int _position) {
-    SharedPreferences.getInstance().then((_prefs) {
-      _prefs.setInt('position', _position);
-      this._position = _position;
-    });
-    notifyListeners();
-  }
+  set position(int _position) => SharedPreferences.getInstance().then((_prefs) {
+        _prefs.setInt('position', _position);
+        this._position = _position;
+        notifyListeners();
+      });
 }

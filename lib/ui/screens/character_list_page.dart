@@ -1,17 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterListPage extends StatefulWidget {
   @override
@@ -35,7 +34,15 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   ? Container(child: Text(_snapshot.error.toString()))
                   : !_snapshot.hasData
                       ? Container(
-                          child: Center(child: CircularProgressIndicator()),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Building database. Please wait..."),
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                          width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
                         )
                       : characterListState.characterList.length > 0
@@ -60,19 +67,39 @@ class _CharacterListPageState extends State<CharacterListPage> {
                                     child: Stack(
                                       children: <Widget>[
                                         Container(
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.95),
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  'images/class_icons/${characterListState.characterList[_index].classIcon}'),
-                                              colorFilter: ColorFilter.mode(
-                                                  Colors.white
-                                                      .withOpacity(0.95),
-                                                  BlendMode.lighten),
-                                            ),
-                                          ),
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Image.asset(
+                                              'images/class_icons/${characterListState.characterList[_index].classIcon}',
+                                              width: iconWidth,
+                                              color: Provider.of<AppState>(
+                                                      context,
+                                                      listen: false)
+                                                  .accentColor
+                                                  .withOpacity(0.1)
+
+                                              // Theme.of(context)
+                                              //     .accentColor
+                                              //     .withOpacity(.1),
+                                              ),
                                         ),
+                                        // Container(
+                                        //   decoration: BoxDecoration(
+                                        //     color:
+                                        //         Colors.white.withOpacity(0.95),
+                                        //     image: DecorationImage(
+                                        //       image: AssetImage(
+                                        //           'images/class_icons/${characterListState.characterList[_index].classIcon}'),
+                                        //       colorFilter: ColorFilter.mode(
+                                        //           Theme.of(context).accentColor
+                                        //               .withOpacity(0.95),
+                                        //           BlendMode.lighten),
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         // Container(
                                         //   color: Theme.of(context)
                                         //       .accentColor
@@ -102,27 +129,55 @@ class _CharacterListPageState extends State<CharacterListPage> {
                               padding: const EdgeInsets.only(top: 20),
                               indicatorColor:
                                   characterListState.characterList.length < 2
-                                      // ||
-                                      //         Provider.of<AppState>(context)
-                                      //             .isEditable
                                       ? Colors.transparent
                                       : Colors.grey.withOpacity(0.25),
                               indicatorSelectorColor:
                                   characterListState.characterList.length < 2
-                                      // ||
-                                      //         Provider.of<AppState>(context)
-                                      //             .isEditable
                                       ? Colors.transparent
                                       : Theme.of(context).accentColor,
                               shape: IndicatorShape.circle(size: 12),
                             )
                           : Center(
-                              child: IconButton(
-                                icon: Icon(FontAwesomeIcons.plusCircle,
-                                    size: MediaQuery.of(context).size.width / 2,
-                                    color: Colors.grey.withOpacity(0.5)),
-                                onPressed: () => print("PRESSED"),
-                              ),
+                              child: Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              left: smallPadding * 2,
+                                              right: smallPadding * 2),
+                                          child: Text(
+                                            'Import your existing character or create a new one using the menu below',
+                                            style: TextStyle(
+                                                fontFamily: nyala,
+                                                fontSize: 24),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.all(smallPadding),
+                                        ),
+                                        Transform.rotate(
+                                          angle: 45 * pi / 180,
+                                          child: Icon(
+                                              FontAwesomeIcons.arrowCircleRight,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2,
+                                              color:
+                                                  Colors.grey.withOpacity(0.5)),
+                                        ),
+                                      ])
+                                  // onPressed: () => print("PRESSED"),
+                                  // ],
+                                  // ),
+                                  ),
                             );
               // shape: IndicatorShape.roundRectangleShape(size: Size.square(12),cornerSize: Size.square(3)),
               // shape: IndicatorShape.oval(size: Size(12, 8)),
@@ -138,20 +193,9 @@ class _CharacterListPageState extends State<CharacterListPage> {
           shape: CircleBorder(),
           children: [
             SpeedDialChild(
-                child: Icon(Icons.save_alt),
-                backgroundColor: Colors.blue,
-                label: 'Import Legacy Character',
-                labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () => characterListState
-                    .addLegacyCharacter()
-                    .whenComplete(() => _pageController.animateToPage(
-                        characterListState.characterList.length,
-                        duration: Duration(milliseconds: 600),
-                        curve: Curves.decelerate))),
-            SpeedDialChild(
               child: Icon(Icons.add),
               backgroundColor: Colors.green,
-              label: 'Add New Character',
+              label: 'New Character',
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () async {
                 await showDialog(
@@ -167,17 +211,28 @@ class _CharacterListPageState extends State<CharacterListPage> {
               },
             ),
             SpeedDialChild(
-                child: Icon(Icons.add),
-                backgroundColor: Colors.green,
-                label: 'OPEN OLD CHAR SHEET',
+                child: Icon(Icons.save_alt),
+                backgroundColor: Colors.blue,
+                label: 'Import Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CharacterSheetPage()),
-                  );
-                })
+                onTap: () => characterListState
+                    .addLegacyCharacter()
+                    .whenComplete(() => _pageController.animateToPage(
+                        characterListState.characterList.length,
+                        duration: Duration(milliseconds: 600),
+                        curve: Curves.decelerate))),
+            // SpeedDialChild(
+            //     child: Icon(Icons.add),
+            //     backgroundColor: Colors.green,
+            //     label: 'OPEN OLD CHAR SHEET',
+            //     labelStyle: TextStyle(fontSize: 18.0),
+            //     onTap: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => CharacterSheetPage()),
+            //       );
+            //     })
           ],
         ),
       );

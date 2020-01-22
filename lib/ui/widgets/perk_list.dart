@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
@@ -39,15 +37,11 @@ class PerkListState extends State<PerkList> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: titleFontSize,
-                                      color: (characterState.getMaximumPerks() +
-                                                  Provider.of<AppState>(context,
-                                                          listen: false)
-                                                      .retirements) >=
+                                      color: characterState.getMaximumPerks() >=
                                               characterState.numOfSelectedPerks
                                           ? Colors.black
                                           : Colors.red)),
-                              Text(
-                                  ' / ${characterState.getMaximumPerks() + Provider.of<AppState>(context, listen: false).retirements})',
+                              Text(' / ${characterState.getMaximumPerks()})',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: titleFontSize))
                             ],
@@ -55,7 +49,6 @@ class PerkListState extends State<PerkList> {
                       ListView(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-
                         // crossAxisCount: 1,
                         // childAspectRatio: 5,
                         children: List.generate(

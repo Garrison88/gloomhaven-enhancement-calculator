@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
@@ -28,6 +26,21 @@ class _CharacterDetailsState extends State<CharacterDetails> {
       TextEditingController();
   final TextEditingController _notesTextFieldController =
       TextEditingController();
+  final TextEditingController _addSubtractXpTextFieldController =
+      TextEditingController();
+  final TextEditingController _addSubtractGoldTextFieldController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AppState>(context, listen: false).setAccentColor(
+          Provider.of<CharacterState>(context, listen: false)
+              .character
+              .classColor);
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -68,9 +81,12 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                 child: characterState.isEditable
                                     ? TextField(
                                         onChanged: (String value) =>
-                                            Provider.of<AppState>(context,
-                                                    listen: false)
-                                                .retirements = int.parse(value),
+                                            characterState.updateCharacter(
+                                                _character
+                                                  ..previousRetirements =
+                                                      value == ''
+                                                          ? 0
+                                                          : int.parse(value)),
                                         style: TextStyle(
                                             fontSize: titleFontSize / 2),
                                         textAlign: TextAlign.center,
@@ -83,7 +99,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                         keyboardType: TextInputType.number,
                                       )
                                     : Text(
-                                        'Retirements: ${Provider.of<AppState>(context, listen: false).retirements}',
+                                        'Retirements: ${_character.previousRetirements}',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontSize: titleFontSize / 2),
@@ -113,19 +129,11 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                       onPressed: () => showDialog(
                                           context: context,
                                           builder: (_) => AlertDialog(
-                                                title: Row(
-                                                  children: <Widget>[
-                                                    Icon(Icons.delete),
-                                                    Padding(
-                                                        padding: EdgeInsets.only(
-                                                            left: smallPadding,
-                                                            right:
-                                                                smallPadding)),
-                                                    Text('Are you sure?'),
-                                                  ],
-                                                ),
                                                 content: Text(
-                                                    'There\s no going back!'),
+                                                  'Are you sure? There\'s no going back!',
+                                                  style: TextStyle(
+                                                      fontSize: titleFontSize),
+                                                ),
                                                 actions: <Widget>[
                                                   FlatButton(
                                                     onPressed: () =>
@@ -164,6 +172,21 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                 ],
                                               )))
                                   : Container(),
+                              // TODO: add retire character functionality
+                              // characterState.isEditable
+                              //     ? IconButton(
+                              //         color: Colors.blue,
+                              //         tooltip: 'Retire',
+                              //         icon: Icon(FontAwesomeIcons.bed),
+                              //         onPressed: () {
+                              //           characterState.updateCharacter(
+                              //               _character
+                              //                 ..isRetired = _character.isRetired
+                              //                     ? false
+                              //                     : true);
+                              //           characterState.isEditable = false;
+                              //         })
+                              //     : Container(),
                               IconButton(
                                   icon: Icon(characterState.isEditable
                                       ? FontAwesomeIcons.lockOpen
@@ -174,16 +197,12 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   onPressed: characterState.isEditable
                                       ? () => characterState.isEditable = false
                                       : () {
-                                          if (Provider.of<AppState>(context,
-                                                      listen: false)
-                                                  .retirements !=
+                                          if (_character.previousRetirements !=
                                               0)
                                             _previousRetirementsTextFieldController
-                                                .text = Provider.of<AppState>(
-                                                    context,
-                                                    listen: false)
-                                                .retirements
-                                                .toString();
+                                                    .text =
+                                                _character.previousRetirements
+                                                    .toString();
                                           _charNameTextFieldController.text =
                                               _character.name;
                                           if (_character.xp != 0)
@@ -194,16 +213,8 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                 _character.gold.toString();
                                           _notesTextFieldController.text =
                                               _character.notes;
-
                                           characterState.isEditable = true;
                                         }),
-                              // characterState.isEditable
-                              //     ? IconButton(
-                              //         tooltip: 'Cancel',
-                              //         icon: Icon(FontAwesomeIcons.lockOpen),
-                              //         onPressed: () =>
-                              //             characterState.isEditable = false)
-                              //     : Container(),
                             ],
                           )
                         ]),
@@ -278,24 +289,157 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             width: iconWidth,
                           ),
                           characterState.isEditable
-                              ? Container(
-                                  width: MediaQuery.of(context).size.width / 6,
-                                  child: TextField(
-                                    onChanged: (String value) => characterState
-                                        .updateCharacter(_character
-                                          ..xp = value == ''
-                                              ? 0
-                                              : int.parse(value)),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    style: TextStyle(fontSize: titleFontSize),
-                                    textAlign: TextAlign.center,
-                                    controller: _xpTextFieldController,
-                                    inputFormatters: [
-                                      BlacklistingTextInputFormatter(
-                                          RegExp('[\\.|\\,|\\ |\\-]'))
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                  ),
+                              ? Column(
+                                  children: <Widget>[
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 6,
+                                      child: TextField(
+                                        onChanged: (String value) =>
+                                            characterState.updateCharacter(
+                                                _character
+                                                  ..xp = value == ''
+                                                      ? 0
+                                                      : int.parse(value)),
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        style:
+                                            TextStyle(fontSize: titleFontSize),
+                                        textAlign: TextAlign.center,
+                                        controller: _xpTextFieldController,
+                                        inputFormatters: [
+                                          BlacklistingTextInputFormatter(
+                                              RegExp('[\\.|\\,|\\ |\\-]'))
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: smallPadding),
+                                    ),
+                                    Container(
+                                      child: InkWell(
+                                        child: Center(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                FontAwesomeIcons.minus,
+                                                color: Color(int.parse(
+                                                    _character.classColor)),
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                '/',
+                                                style: TextStyle(
+                                                  color: Color(int.parse(
+                                                      _character.classColor)),
+                                                ),
+                                              ),
+                                              Icon(
+                                                FontAwesomeIcons.plus,
+                                                color: Color(int.parse(
+                                                    _character.classColor)),
+                                                size: 15,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () => showDialog(
+                                          context: context,
+                                          builder: (BuildContext cxt) {
+                                            return Dialog(
+                                              child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      top: smallPadding,
+                                                      bottom: smallPadding),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        child: IconButton(
+                                                            icon: Icon(
+                                                                FontAwesomeIcons
+                                                                    .minus),
+                                                            onPressed: () {
+                                                              _xpTextFieldController
+                                                                  .text = (int.parse(_xpTextFieldController.text ==
+                                                                              ''
+                                                                          ? '0'
+                                                                          : _xpTextFieldController
+                                                                              .text) -
+                                                                      int.parse(
+                                                                          _addSubtractXpTextFieldController
+                                                                              .text))
+                                                                  .toString();
+                                                              characterState.updateCharacter(_character
+                                                                ..xp = int.parse(
+                                                                    _xpTextFieldController
+                                                                        .text));
+                                                              _addSubtractXpTextFieldController
+                                                                  .clear();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
+                                                      ),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          inputFormatters: [
+                                                            BlacklistingTextInputFormatter(
+                                                                RegExp(
+                                                                    '[\\.|\\,|\\ |\\-]'))
+                                                          ],
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          autofocus: true,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'XP'),
+                                                          controller:
+                                                              _addSubtractXpTextFieldController,
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  titleFontSize *
+                                                                      1.5),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: IconButton(
+                                                            icon: Icon(
+                                                                FontAwesomeIcons
+                                                                    .plus),
+                                                            onPressed: () {
+                                                              _xpTextFieldController
+                                                                  .text = (int.parse(_xpTextFieldController.text ==
+                                                                              ''
+                                                                          ? '0'
+                                                                          : _xpTextFieldController
+                                                                              .text) +
+                                                                      int.parse(
+                                                                          _addSubtractXpTextFieldController
+                                                                              .text))
+                                                                  .toString();
+                                                              characterState.updateCharacter(_character
+                                                                ..xp = int.parse(
+                                                                    _xpTextFieldController
+                                                                        .text));
+                                                              _addSubtractXpTextFieldController
+                                                                  .clear();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
+                                                      )
+                                                    ],
+                                                  )),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 )
                               : Text(
                                   ' ${_character.xp}',
@@ -318,23 +462,157 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             width: iconWidth,
                           ),
                           characterState.isEditable
-                              ? Container(
-                                  width: MediaQuery.of(context).size.width / 6,
-                                  child: TextField(
-                                    onChanged: (String value) => characterState
-                                        .updateCharacter(_character
-                                          ..gold = value == ''
-                                              ? 0
-                                              : int.parse(value)),
-                                    style: TextStyle(fontSize: titleFontSize),
-                                    textAlign: TextAlign.center,
-                                    controller: _goldTextFieldController,
-                                    inputFormatters: [
-                                      BlacklistingTextInputFormatter(
-                                          RegExp('[\\.|\\,|\\ |\\-]'))
-                                    ],
-                                    keyboardType: TextInputType.number,
-                                  ),
+                              ? Column(
+                                  children: <Widget>[
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 6,
+                                      child: TextField(
+                                        onChanged: (String value) =>
+                                            characterState.updateCharacter(
+                                                _character
+                                                  ..gold = value == ''
+                                                      ? 0
+                                                      : int.parse(value)),
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        style:
+                                            TextStyle(fontSize: titleFontSize),
+                                        textAlign: TextAlign.center,
+                                        controller: _goldTextFieldController,
+                                        inputFormatters: [
+                                          BlacklistingTextInputFormatter(
+                                              RegExp('[\\.|\\,|\\ |\\-]'))
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: smallPadding),
+                                    ),
+                                    Container(
+                                      child: InkWell(
+                                        child: Center(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                FontAwesomeIcons.minus,
+                                                color: Color(int.parse(
+                                                    _character.classColor)),
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                '/',
+                                                style: TextStyle(
+                                                  color: Color(int.parse(
+                                                      _character.classColor)),
+                                                ),
+                                              ),
+                                              Icon(
+                                                FontAwesomeIcons.plus,
+                                                color: Color(int.parse(
+                                                    _character.classColor)),
+                                                size: 15,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        onTap: () => showDialog(
+                                          context: context,
+                                          builder: (BuildContext cxt) {
+                                            return Dialog(
+                                              child: Container(
+                                                  padding: EdgeInsets.only(
+                                                      top: smallPadding,
+                                                      bottom: smallPadding),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        child: IconButton(
+                                                            icon: Icon(
+                                                                FontAwesomeIcons
+                                                                    .minus),
+                                                            onPressed: () {
+                                                              _goldTextFieldController
+                                                                  .text = (int.parse(_goldTextFieldController.text ==
+                                                                              ''
+                                                                          ? '0'
+                                                                          : _goldTextFieldController
+                                                                              .text) -
+                                                                      int.parse(
+                                                                          _addSubtractGoldTextFieldController
+                                                                              .text))
+                                                                  .toString();
+                                                              characterState.updateCharacter(_character
+                                                                ..gold = int.parse(
+                                                                    _goldTextFieldController
+                                                                        .text));
+                                                              _addSubtractGoldTextFieldController
+                                                                  .clear();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
+                                                      ),
+                                                      Expanded(
+                                                        child: TextField(
+                                                          inputFormatters: [
+                                                            BlacklistingTextInputFormatter(
+                                                                RegExp(
+                                                                    '[\\.|\\,|\\ |\\-]'))
+                                                          ],
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .number,
+                                                          autofocus: true,
+                                                          decoration:
+                                                              InputDecoration(
+                                                                  hintText:
+                                                                      'Gold'),
+                                                          controller:
+                                                              _addSubtractGoldTextFieldController,
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  titleFontSize *
+                                                                      1.5),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: IconButton(
+                                                            icon: Icon(
+                                                                FontAwesomeIcons
+                                                                    .plus),
+                                                            onPressed: () {
+                                                              _goldTextFieldController
+                                                                  .text = (int.parse(_goldTextFieldController.text ==
+                                                                              ''
+                                                                          ? '0'
+                                                                          : _goldTextFieldController
+                                                                              .text) +
+                                                                      int.parse(
+                                                                          _addSubtractGoldTextFieldController
+                                                                              .text))
+                                                                  .toString();
+                                                              characterState.updateCharacter(_character
+                                                                ..gold = int.parse(
+                                                                    _goldTextFieldController
+                                                                        .text));
+                                                              _addSubtractGoldTextFieldController
+                                                                  .clear();
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
+                                                      )
+                                                    ],
+                                                  )),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 )
                               : Text(
                                   ' ${_character.gold}',
@@ -381,6 +659,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                 ),
               ),
             ),
+
             // NOTES
             characterState.isEditable
                 ? Column(
@@ -395,11 +674,11 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.all(smallPadding),
                           child: TextField(
+                            maxLines: null,
+                            keyboardType: TextInputType.multiline,
                             onChanged: (String value) => characterState
                                 .updateCharacter(_character..notes = value),
                             style: TextStyle(fontFamily: highTower),
-                            minLines: 1,
-                            maxLines: 5,
                             textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                                 hintText: 'Notes',
@@ -446,24 +725,38 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          IconButton(
-                            color: Theme.of(context).accentColor,
-                            iconSize:
-                                Theme.of(context).textTheme.body1.fontSize,
-                            icon: Icon(FontAwesomeIcons.minus),
-                            onPressed: () => characterState.decreaseCheckmark(),
+                          Visibility(
+                            visible: _character.checkMarks > 0,
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            child: IconButton(
+                              color: Theme.of(context).accentColor,
+                              iconSize:
+                                  Theme.of(context).textTheme.body1.fontSize,
+                              icon: Icon(FontAwesomeIcons.minus),
+                              onPressed: () =>
+                                  characterState.decreaseCheckmark(),
+                            ),
                           ),
                           Text(
                             '${characterState.character.checkMarks} / 18',
                             style: TextStyle(fontSize: titleFontSize),
                           ),
-                          IconButton(
-                            color: Theme.of(context).accentColor,
-                            iconSize:
-                                Theme.of(context).textTheme.body1.fontSize,
-                            icon: Icon(FontAwesomeIcons.plus),
-                            onPressed: () => characterState.increaseCheckmark(),
-                          )
+                          Visibility(
+                            visible: _character.checkMarks < 18,
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            child: IconButton(
+                              color: Theme.of(context).accentColor,
+                              iconSize:
+                                  Theme.of(context).textTheme.body1.fontSize,
+                              icon: Icon(FontAwesomeIcons.plus),
+                              onPressed: () =>
+                                  characterState.increaseCheckmark(),
+                            ),
+                          ),
                         ],
                       ),
                       // Container(

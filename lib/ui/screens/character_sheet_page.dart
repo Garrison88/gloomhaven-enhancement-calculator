@@ -1,9 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
 
 import '../../data/character_sheet_list_data.dart';
 import '../../data/constants.dart';

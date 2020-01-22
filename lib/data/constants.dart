@@ -7,5 +7,4 @@ final double secondaryFontSize = 25.0,
     plusOneHeight = 25.0,
     smallPadding = 8.0;
 final String highTower = 'HighTower',
-    nyala = 'Nyala',
-    devWebsiteUrl = 'https://garrisonsiberry.com/';
+    nyala = 'Nyala';

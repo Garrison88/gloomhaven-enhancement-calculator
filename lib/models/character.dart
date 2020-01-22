@@ -1,16 +1,15 @@
 // database table and column names
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
-import 'player_class.dart';
-
-final String tableCharacters = 'CharactersTable';
+final String tableCharacters = 'Characters';
 final String columnCharacterId = '_id';
 final String columnCharacterName = 'Name';
 final String columnCharacterClassCode = 'ClassCode';
 final String columnCharacterClassColor = 'ClassColor';
 final String columnCharacterClassIcon = 'ClassIcon';
 final String columnCharacterClassRace = 'ClassRace';
-final String columnCharacterClassName = 'CLassName';
+final String columnCharacterClassName = 'ClassName';
+final String columnPreviousRetirements = 'PreviousRetirements';
 final String columnCharacterXp = 'XP';
 final String columnCharacterGold = 'Gold';
 final String columnCharacterNotes = 'Notes';
@@ -27,6 +26,7 @@ class Character {
   String classIcon;
   String classRace;
   String className;
+  int previousRetirements;
   int xp;
   int gold;
   String notes;
@@ -57,6 +57,7 @@ class Character {
     classIcon = map[columnCharacterClassIcon];
     classRace = map[columnCharacterClassRace];
     className = map[columnCharacterClassName];
+    previousRetirements = map[columnPreviousRetirements];
     xp = map[columnCharacterXp];
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
@@ -75,6 +76,7 @@ class Character {
       columnCharacterClassIcon: classIcon,
       columnCharacterClassRace: classRace,
       columnCharacterClassName: className,
+      columnPreviousRetirements: previousRetirements,
       columnCharacterXp: xp,
       columnCharacterGold: gold,
       columnCharacterNotes: notes,

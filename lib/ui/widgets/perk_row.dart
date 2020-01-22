@@ -72,7 +72,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_perks_state.dart';
 import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:provider/provider.dart';
 
@@ -124,15 +123,14 @@ class _PerkRowState extends State<PerkRow> {
             child: FutureBuilder<String>(
                 future:
                     characterState.getPerkDetails(widget.perk.associatedPerkId),
-                builder: (context, AsyncSnapshot<String> _detailsSnapshot) {
-                  return _detailsSnapshot.hasData
-                      ? AutoSizeText(
-                          _detailsSnapshot.data,
-                          maxLines: 2,
-                          style: TextStyle(fontFamily: nyala),
-                        )
-                      : Center(child: CircularProgressIndicator());
-                }),
+                builder: (context, AsyncSnapshot<String> _detailsSnapshot) =>
+                    _detailsSnapshot.hasData
+                        ? AutoSizeText(
+                            _detailsSnapshot.data,
+                            maxLines: 2,
+                            style: TextStyle(fontFamily: nyala),
+                          )
+                        : Center(child: CircularProgressIndicator())),
           )
         ],
       ),

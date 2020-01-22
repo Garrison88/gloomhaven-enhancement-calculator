@@ -4,8 +4,6 @@ import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterState with ChangeNotifier {
   bool _isEditable = false;
@@ -32,12 +30,11 @@ class CharacterState with ChangeNotifier {
   //   return true;
   // }
 
-  int getMaximumPerks() {
-    int _perks = 0;
-    _perks += currentLevel - 1;
-    _perks += ((character.checkMarks - 1) / 3).round();
-    return _perks;
-  }
+  int getMaximumPerks() =>
+      currentLevel -
+      1 +
+      ((character.checkMarks - 1) / 3).round() +
+      character.previousRetirements;
 
   bool get isEditable => _isEditable;
 
