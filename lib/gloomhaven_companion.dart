@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/characterSheet_view.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/character_view.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/enhancementCalculator_view.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/home_view.dart';
 import 'package:provider/provider.dart';
 
-class App extends StatelessWidget {
+class GloomhavenCompanion extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
+    final appState = Provider.of<AppModel>(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Gloomhaven Companion',
       routes: {
-        '/': (context) => BottomNav(),
+        '/': (context) => HomeView(),
         '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
         '/characterSheetPage': (context) => CharacterSheetPage(),
         '/characterDetailsPage': (context) => CharacterPage()

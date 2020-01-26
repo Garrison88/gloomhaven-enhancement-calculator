@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/base_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppState with ChangeNotifier {
+class AppModel extends BaseModel {
   Color _accentColor;
   // int _retirements = 0;
   int _position;
   // bool _isEditable = false;
 
-  AppState(this._position, this._accentColor);
+  AppModel(this._position, this._accentColor);
 
   // set isEditable(bool _value) {
   //   _isEditable = _value;

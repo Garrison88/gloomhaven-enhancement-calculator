@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart' as PerkRow;
+import 'package:gloomhaven_enhancement_calc/core/models/perk.dart' as PerkRow;
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
 import '../models/player_class.dart';
-import '../ui/widgets/perk.dart';
 import 'constants.dart';
 
 List<PlayerClass> classList = [
@@ -192,8 +192,7 @@ List<PerkRow.Perk> perkList = [
   PerkRow.Perk('PH', 1, 'Add two Rolling CURSE cards'),
   PerkRow.Perk('PH', 1, 'Add two Rolling IMMOBILIZE cards'),
   PerkRow.Perk('PH', 2, 'Add one Rolling STUN card'),
-  PerkRow.Perk(
-      'PH', 1, 'Ignore negative SCENARIO effects and add one +1 card'),
+  PerkRow.Perk('PH', 1, 'Ignore negative SCENARIO effects and add one +1 card'),
   // BERSERKER
   PerkRow.Perk('BE', 1, 'Remove two -1 cards'),
   PerkRow.Perk('BE', 1, 'Remove four +0 cards'),

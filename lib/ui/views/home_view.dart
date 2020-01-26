@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/characterList_view.dart';
+import 'package:gloomhaven_enhancement_calc/ui/views/enhancementCalculator_view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class BottomNav extends StatefulWidget {
-  BottomNav({Key key}) : super(key: key);
+class HomeView extends StatefulWidget {
+  HomeView({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return BottomNavState();
+    return HomeViewState();
   }
 }
 
-class BottomNavState extends State<BottomNav> {
+class HomeViewState extends State<HomeView> {
   List<Character> characterList = [];
   DatabaseHelper db = DatabaseHelper.instance;
   PageController pageController = PageController();
@@ -104,11 +104,11 @@ class BottomNavState extends State<BottomNav> {
         body: PageView(children: [
           MultiProvider(
             providers: [
-              ChangeNotifierProvider<CharacterListState>(
-                create: (context) => CharacterListState(),
+              ChangeNotifierProvider<CharacterListModel>(
+                create: (context) => CharacterListModel(),
               ),
-              ChangeNotifierProvider<CharacterState>.value(
-                value: CharacterState(),
+              ChangeNotifierProvider<CharacterModel>.value(
+                value: CharacterModel(),
               ),
             ],
             child: CharacterListPage(),

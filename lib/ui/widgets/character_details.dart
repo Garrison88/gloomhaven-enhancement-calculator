@@ -2,13 +2,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/dialogs/show_info.dart';
 import 'package:provider/provider.dart';
 
 class CharacterDetails extends StatefulWidget {
@@ -34,8 +34,8 @@ class _CharacterDetailsState extends State<CharacterDetails> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AppState>(context, listen: false).setAccentColor(
-          Provider.of<CharacterState>(context, listen: false)
+      Provider.of<AppModel>(context, listen: false).setAccentColor(
+          Provider.of<CharacterModel>(context, listen: false)
               .character
               .classColor);
     });
@@ -56,9 +56,9 @@ class _CharacterDetailsState extends State<CharacterDetails> {
   Widget build(BuildContext context) {
     print("CHARACTER DETAILS PAGE REBUILT");
     // final AppState appState = Provider.of<AppState>(context, listen: false);
-    return Consumer<CharacterState>(
-      builder: (BuildContext context, CharacterState characterState, _) {
-        Character _character = characterState.character;
+    return Consumer<CharacterModel>(
+      builder: (BuildContext context, CharacterModel characterModel, _) {
+        Character _character = characterModel.character;
         return Container(
           padding: EdgeInsets.only(top: smallPadding),
           child: Column(children: <Widget>[
@@ -78,10 +78,10 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   padding: EdgeInsets.only(left: smallPadding)),
                               Container(
                                 width: MediaQuery.of(context).size.width / 4,
-                                child: characterState.isEditable
+                                child: characterModel.isEditable
                                     ? TextField(
                                         onChanged: (String value) =>
-                                            characterState.updateCharacter(
+                                            characterModel.updateCharacter(
                                                 _character
                                                   ..previousRetirements =
                                                       value == ''
@@ -121,7 +121,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           ),
                           Row(
                             children: <Widget>[
-                              characterState.isEditable
+                              characterModel.isEditable
                                   ? IconButton(
                                       color: Colors.red,
                                       tooltip: 'Delete',
@@ -151,7 +151,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                   RaisedButton(
                                                     color: Colors.red,
                                                     onPressed: () => Provider
-                                                            .of<CharacterListState>(
+                                                            .of<CharacterListModel>(
                                                                 context,
                                                                 listen: false)
                                                         .deleteCharacter(
@@ -173,29 +173,29 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                               )))
                                   : Container(),
                               // TODO: add retire character functionality
-                              // characterState.isEditable
+                              // characterModel.isEditable
                               //     ? IconButton(
                               //         color: Colors.blue,
                               //         tooltip: 'Retire',
                               //         icon: Icon(FontAwesomeIcons.bed),
                               //         onPressed: () {
-                              //           characterState.updateCharacter(
+                              //           characterModel.updateCharacter(
                               //               _character
                               //                 ..isRetired = _character.isRetired
                               //                     ? false
                               //                     : true);
-                              //           characterState.isEditable = false;
+                              //           characterModel.isEditable = false;
                               //         })
                               //     : Container(),
                               IconButton(
-                                  icon: Icon(characterState.isEditable
+                                  icon: Icon(characterModel.isEditable
                                       ? FontAwesomeIcons.lockOpen
                                       : FontAwesomeIcons.lock),
-                                  tooltip: characterState.isEditable
+                                  tooltip: characterModel.isEditable
                                       ? 'Lock'
                                       : 'Unlock',
-                                  onPressed: characterState.isEditable
-                                      ? () => characterState.isEditable = false
+                                  onPressed: characterModel.isEditable
+                                      ? () => characterModel.isEditable = false
                                       : () {
                                           if (_character.previousRetirements !=
                                               0)
@@ -213,7 +213,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                 _character.gold.toString();
                                           _notesTextFieldController.text =
                                               _character.notes;
-                                          characterState.isEditable = true;
+                                          characterModel.isEditable = true;
                                         }),
                             ],
                           )
@@ -221,9 +221,9 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                     Container(
                       padding: EdgeInsets.only(
                           left: smallPadding, right: smallPadding),
-                      child: characterState.isEditable
+                      child: characterModel.isEditable
                           ? TextField(
-                              onChanged: (String value) => characterState
+                              onChanged: (String value) => characterModel
                                   .updateCharacter(_character..name = value),
                               minLines: 1,
                               maxLines: 2,
@@ -256,7 +256,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                               Image.asset('images/xp.png',
                                   width: iconWidth * 1.75),
                               Text(
-                                '${characterState.currentLevel}',
+                                '${characterModel.currentLevel}',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: titleFontSize),
@@ -288,7 +288,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             'images/xp.png',
                             width: iconWidth,
                           ),
-                          characterState.isEditable
+                          characterModel.isEditable
                               ? Column(
                                   children: <Widget>[
                                     Container(
@@ -296,7 +296,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                           MediaQuery.of(context).size.width / 6,
                                       child: TextField(
                                         onChanged: (String value) =>
-                                            characterState.updateCharacter(
+                                            characterModel.updateCharacter(
                                                 _character
                                                   ..xp = value == ''
                                                       ? 0
@@ -371,7 +371,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                                           _addSubtractXpTextFieldController
                                                                               .text))
                                                                   .toString();
-                                                              characterState.updateCharacter(_character
+                                                              characterModel.updateCharacter(_character
                                                                 ..xp = int.parse(
                                                                     _xpTextFieldController
                                                                         .text));
@@ -422,7 +422,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                                           _addSubtractXpTextFieldController
                                                                               .text))
                                                                   .toString();
-                                                              characterState.updateCharacter(_character
+                                                              characterModel.updateCharacter(_character
                                                                 ..xp = int.parse(
                                                                     _xpTextFieldController
                                                                         .text));
@@ -446,7 +446,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   style: TextStyle(fontSize: titleFontSize),
                                 ),
                           Text(
-                            ' / ${characterState.nextLevelXp}',
+                            ' / ${characterModel.nextLevelXp}',
                             style: TextStyle(fontSize: titleFontSize / 2),
                           ),
                         ],
@@ -461,7 +461,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             'images/loot.png',
                             width: iconWidth,
                           ),
-                          characterState.isEditable
+                          characterModel.isEditable
                               ? Column(
                                   children: <Widget>[
                                     Container(
@@ -469,7 +469,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                           MediaQuery.of(context).size.width / 6,
                                       child: TextField(
                                         onChanged: (String value) =>
-                                            characterState.updateCharacter(
+                                            characterModel.updateCharacter(
                                                 _character
                                                   ..gold = value == ''
                                                       ? 0
@@ -544,7 +544,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                                           _addSubtractGoldTextFieldController
                                                                               .text))
                                                                   .toString();
-                                                              characterState.updateCharacter(_character
+                                                              characterModel.updateCharacter(_character
                                                                 ..gold = int.parse(
                                                                     _goldTextFieldController
                                                                         .text));
@@ -595,7 +595,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                                                           _addSubtractGoldTextFieldController
                                                                               .text))
                                                                   .toString();
-                                                              characterState.updateCharacter(_character
+                                                              characterModel.updateCharacter(_character
                                                                 ..gold = int.parse(
                                                                     _goldTextFieldController
                                                                         .text));
@@ -631,13 +631,13 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                             width: iconWidth,
                           ),
                           Text(
-                            '${characterState.checkMarkProgress} / 3',
+                            '${characterModel.checkMarkProgress} / 3',
                             style: TextStyle(fontSize: titleFontSize),
                           )
                         ],
                       ),
                     ),
-                    characterState.isEditable
+                    characterModel.isEditable
                         ? Container()
                         : Container(
                             padding: EdgeInsets.all(smallPadding),
@@ -649,7 +649,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   width: iconWidth,
                                 ),
                                 Text(
-                                  ' ${characterState.numOfPocketItems}',
+                                  ' ${characterModel.numOfPocketItems}',
                                   style: TextStyle(fontSize: titleFontSize),
                                 )
                               ],
@@ -661,7 +661,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
             ),
 
             // NOTES
-            characterState.isEditable
+            characterModel.isEditable
                 ? Column(
                     children: <Widget>[
                       Padding(padding: EdgeInsets.only(bottom: smallPadding)),
@@ -676,7 +676,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           child: TextField(
                             maxLines: null,
                             keyboardType: TextInputType.multiline,
-                            onChanged: (String value) => characterState
+                            onChanged: (String value) => characterModel
                                 .updateCharacter(_character..notes = value),
                             style: TextStyle(fontFamily: highTower),
                             textCapitalization: TextCapitalization.sentences,
@@ -687,7 +687,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                           )),
                     ],
                   )
-                : characterState.character.notes != ''
+                : characterModel.character.notes != ''
                     ? Column(
                         children: <Widget>[
                           Padding(
@@ -711,7 +711,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                       )
                     : Container(),
             // BATTLE GOAL CHECKMARKS
-            characterState.isEditable
+            characterModel.isEditable
                 ? Column(
                     children: <Widget>[
                       Container(
@@ -736,11 +736,11 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   Theme.of(context).textTheme.body1.fontSize,
                               icon: Icon(FontAwesomeIcons.minus),
                               onPressed: () =>
-                                  characterState.decreaseCheckmark(),
+                                  characterModel.decreaseCheckmark(),
                             ),
                           ),
                           Text(
-                            '${characterState.character.checkMarks} / 18',
+                            '${characterModel.character.checkMarks} / 18',
                             style: TextStyle(fontSize: titleFontSize),
                           ),
                           Visibility(
@@ -754,7 +754,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                                   Theme.of(context).textTheme.body1.fontSize,
                               icon: Icon(FontAwesomeIcons.plus),
                               onPressed: () =>
-                                  characterState.increaseCheckmark(),
+                                  characterModel.increaseCheckmark(),
                             ),
                           ),
                         ],
@@ -772,7 +772,7 @@ class _CharacterDetailsState extends State<CharacterDetails> {
                       //         crossAxisCount: 3, childAspectRatio: 1),
                       //     itemBuilder: (context, index) {
                       //       // return CheckMarkRow(index);
-                      //       // for(var x = 0; x < characterState.character.checkMarks; x++)
+                      //       // for(var x = 0; x < characterModel.character.checkMarks; x++)
                       //       return Checkbox(
                       //         value: false,
                       //         onChanged: (_) => null,

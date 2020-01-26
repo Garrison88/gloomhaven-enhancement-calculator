@@ -7,7 +7,7 @@ description: Character sheet and enhancement calculator
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 3.0.0+31
+version: 3.0.0+33
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -15,19 +15,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.1+1
+  shared_preferences: ^0.5.6
   url_launcher: ^4.1.0+1
   dynamic_theme: ^1.0.1
 #  flutter_rating: ^0.0.2
-  auto_size_text: ^1.0.0
+  auto_size_text: ^2.1.0
   sqflite: ^1.2.0
-  path_provider: 1.4.0
+  path_provider: ^1.5.1
   provider: ^4.0.1
   flutter_speed_dial: ^1.2.4
-  flutter_stetho: ^0.5.0
+  # flutter_stetho: ^0.5.0
   page_indicator: ^0.3.0
   font_awesome_flutter: ^8.5.0
-  device_info: ^0.4.1+4
+  get_it: ^3.0.3
+  # device_info: ^0.4.1+4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

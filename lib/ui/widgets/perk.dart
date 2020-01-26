@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
 
 import '../../main.dart';
 

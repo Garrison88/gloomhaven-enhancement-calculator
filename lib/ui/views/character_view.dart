@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/character_details.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_list.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
 import 'package:provider/provider.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -14,8 +14,8 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AppState>(context, listen: false).setAccentColor(
-          Provider.of<CharacterState>(context, listen: false)
+      Provider.of<AppModel>(context, listen: false).setAccentColor(
+          Provider.of<CharacterModel>(context, listen: false)
               .character
               .classColor);
     });

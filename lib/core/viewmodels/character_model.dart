@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/base_model.dart';
 
-class CharacterState with ChangeNotifier {
+class CharacterModel extends BaseModel {
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> _characterPerks = [];
   int numOfSelectedPerks = 0;
-  CharacterState({this.character});
+  CharacterModel({this.character});
   DatabaseHelper db = DatabaseHelper.instance;
   // PlayerClass playerClass;
 

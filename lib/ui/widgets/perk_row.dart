@@ -20,7 +20,7 @@
 
 // class PerkRowState extends State<PerkRow> {
 //   Widget build(BuildContext context) {
-//     final CharacterState characterState = Provider.of<CharacterState>(context);
+//     final CharacterModel characterState = Provider.of<CharacterModel>(context);
 //     return FutureBuilder<Perk>(
 //         future: characterState.getPerk(_perk),
 //         builder: (context, AsyncSnapshot<Perk> _snapshot) {
@@ -70,9 +70,9 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
 class PerkRow extends StatefulWidget {
@@ -89,7 +89,7 @@ class _PerkRowState extends State<PerkRow> {
   Widget build(BuildContext context) {
     // final CharacterPerksState characterPerksState =
     //     Provider.of<CharacterPerksState>(context);
-    final CharacterState characterState = Provider.of<CharacterState>(context);
+    final CharacterModel characterState = Provider.of<CharacterModel>(context);
     return Container(
       height: 58,
       child: Row(

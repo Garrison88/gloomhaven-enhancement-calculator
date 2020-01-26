@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
 
 _createIconsListForDialog(List<String> _list) {
   List<Widget> _icons = [];

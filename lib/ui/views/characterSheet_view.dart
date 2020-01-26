@@ -2,13 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../data/character_sheet_list_data.dart';
-import '../../data/constants.dart';
-import '../../data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/dialogs/show_info.dart';
 import '../../main.dart';
-import '../../models/player_class.dart';
-import '../dialogs/show_info.dart';
 import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {

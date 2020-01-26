@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +11,10 @@ class PerkList extends StatefulWidget {
 
 class PerkListState extends State<PerkList> {
   Widget build(BuildContext context) {
-    final CharacterState characterState =
-        Provider.of<CharacterState>(context, listen: false);
+    final CharacterModel characterModel =
+        Provider.of<CharacterModel>(context, listen: false);
     return FutureBuilder<bool>(
-        future: Provider.of<CharacterState>(context).setCharacterPerks(),
+        future: Provider.of<CharacterModel>(context).setCharacterPerks(),
         builder: (context, AsyncSnapshot<bool> _perksSnapshot) => _perksSnapshot
                     .data ==
                 true
@@ -33,15 +33,15 @@ class PerkListState extends State<PerkList> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: titleFontSize),
                               ),
-                              Text('${characterState.numOfSelectedPerks}',
+                              Text('${characterModel.numOfSelectedPerks}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: titleFontSize,
-                                      color: characterState.getMaximumPerks() >=
-                                              characterState.numOfSelectedPerks
+                                      color: characterModel.getMaximumPerks() >=
+                                              characterModel.numOfSelectedPerks
                                           ? Colors.black
                                           : Colors.red)),
-                              Text(' / ${characterState.getMaximumPerks()})',
+                              Text(' / ${characterModel.getMaximumPerks()})',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontSize: titleFontSize))
                             ],
@@ -52,9 +52,9 @@ class PerkListState extends State<PerkList> {
                         // crossAxisCount: 1,
                         // childAspectRatio: 5,
                         children: List.generate(
-                            characterState.characterPerks.length,
+                            characterModel.characterPerks.length,
                             (index) => PerkRow(
-                                perk: characterState.characterPerks[index])),
+                                perk: characterModel.characterPerks[index])),
                       ),
                       Container(
                         height: 58,

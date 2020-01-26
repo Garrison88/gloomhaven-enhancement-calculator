@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/app.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/gloomhaven_companion.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,9 +16,9 @@ main() async {
     Color _accentColor =
         Color(int.parse(prefs.getString('themeColor') ?? '0xff4e7ec1'));
     runApp(
-      ChangeNotifierProvider<AppState>(
-        create: (_) => AppState(_position, _accentColor),
-        child: App(),
+      ChangeNotifierProvider<AppModel>(
+        create: (_) => AppModel(_position, _accentColor),
+        child: GloomhavenCompanion(),
       ),
     );
   });

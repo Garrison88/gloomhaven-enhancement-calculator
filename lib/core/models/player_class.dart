@@ -1,4 +1,4 @@
-import '../ui/widgets/perk.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
 final String tablePlayerClass = 'PlayerClassTable';
 final String columnClassCode = '_Code';

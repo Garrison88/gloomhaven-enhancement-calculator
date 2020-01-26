@@ -1,13 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-
-import '../../data/constants.dart';
-import '../../data/enhancement_list_data.dart';
-import '../../data/strings.dart';
-import '../../enums/enhancement_category.dart';
-import '../../main.dart';
-import '../../models/enhancement.dart';
-import '../dialogs/show_info.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/enhancement_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/main.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/dialogs/show_info.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
   EnhancementCalculatorPage({Key key}) : super(key: key);

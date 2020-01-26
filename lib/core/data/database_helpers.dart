@@ -1,10 +1,9 @@
 import 'dart:io';
-
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/models/player_class.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';

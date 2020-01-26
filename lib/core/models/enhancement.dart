@@ -1,4 +1,4 @@
-import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/core/data/enums/enhancement_category.dart';
 
 class Enhancement {
   final EnhancementCategory category;
