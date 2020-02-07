@@ -1,27 +1,32 @@
 import 'package:gloomhaven_enhancement_calc/core/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/core/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/models/base_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/services/characterList_service.dart';
+import 'package:gloomhaven_enhancement_calc/core/services/database_helper.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/base_model.dart';
+import 'package:gloomhaven_enhancement_calc/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CharacterListModel extends BaseModel {
-  List<Character> _characterList = [];
+  // final CharacterListService _characterListService =
+  //     locator<CharacterListService>();
+  DatabaseHelper _databaseHelper = locator<DatabaseHelper>();
+
+  List<Character> characterList;
   List<bool> _legacyPerks = [];
-  DatabaseHelper db = DatabaseHelper.instance;
 
-  List<Character> get characterList => _characterList;
+  // List<Character> get characterList => _characterList;
 
-  Future<bool> setCharacterList() async {
-    _characterList = await db.queryAllCharacters();
-    // notifyListeners();
-    // _list.forEach((_result) => _result.))
-    // await db.queryPlayerClass(_classCode)
+  Future<bool> fetchCharacterList() async {
+    setState(ViewState.Busy);
+    characterList = await _databaseHelper.queryAllCharacters();
+    setState(ViewState.Idle);
     return true;
   }
 
-  Future addCharacter(String _name, PlayerClass _playerClass, int _initialLevel,
-      int _previousRetirements) async {
+  Future<bool> addCharacter(String _name, PlayerClass _playerClass,
+      int _initialLevel, int _previousRetirements) async {
+    setState(ViewState.Busy);
     Character _character = Character();
     List<bool> _perks = [];
     perkList.forEach((_perk) {
@@ -42,17 +47,18 @@ class CharacterListModel extends BaseModel {
       ..notes = 'Add notes here'
       ..checkMarks = 0
       ..isRetired = false
-      ..id = await db.insertCharacter(_character, _perks);
+      ..id = await _databaseHelper.insertCharacter(_character, _perks);
     // print('inserted row: $id');
     print(_character.name);
     print(_character.classCode);
-    notifyListeners();
+    setState(ViewState.Idle);
+    return true;
   }
 
   Future deleteCharacter(int _characterId) async {
-    await db.deleteCharacter(_characterId).then((_) {
-      notifyListeners();
-    });
+    setState(ViewState.Busy);
+    await _databaseHelper.deleteCharacter(_characterId);
+    setState(ViewState.Idle);
   }
 
   Future<Character> compileLegacyCharacterDetails() async {
@@ -105,10 +111,14 @@ class CharacterListModel extends BaseModel {
     return _character;
   }
 
-  Future addLegacyCharacter() async {
-    await compileLegacyCharacterDetails().then((_character) => db
+  Future<bool> addLegacyCharacter() async {
+    setState(ViewState.Busy);
+    // var success = await _characterListService.addLegacyCharacter();
+    await compileLegacyCharacterDetails().then((_character) => _databaseHelper
         .insertCharacter(_character, _legacyPerks)
         .then((_id) => _character.id = _id)
         .then((_) => notifyListeners()));
+    setState(ViewState.Idle);
+    return true;
   }
 }

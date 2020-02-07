@@ -17,9 +17,9 @@ class DatabaseHelper {
   static final _databaseVersion = 1;
 
   // Make this a singleton class.
-  DatabaseHelper._privateConstructor();
+  // DatabaseHelper._privateConstructor();
 
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  // static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // Only allow a single open connection to the database.
   static Database _database;

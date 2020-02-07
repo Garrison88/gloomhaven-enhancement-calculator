@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/core/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/core/viewmodels/characterList_model.dart';
 import 'package:gloomhaven_enhancement_calc/gloomhaven_companion.dart';
+import 'package:gloomhaven_enhancement_calc/locator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences sp;
 
+// void setupLocator() {
+//   // locator.registerLazySingleton(() => CharacterListModel());
+//   // GetIt.instance<CharactersListService>
+// }
+
 main() async {
+  setupLocator();
   // Sqflite.devSetDebugModeOn(true);
   // Stetho.initialize();
   WidgetsFlutterBinding.ensureInitialized();

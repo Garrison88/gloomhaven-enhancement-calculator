@@ -1,34 +1,37 @@
 import 'package:gloomhaven_enhancement_calc/core/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_enhancement_calc/core/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/core/services/database_helper.dart';
 import 'package:gloomhaven_enhancement_calc/core/viewmodels/base_model.dart';
+import 'package:gloomhaven_enhancement_calc/locator.dart';
 
 class CharacterModel extends BaseModel {
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> _characterPerks = [];
   int numOfSelectedPerks = 0;
-  CharacterModel({this.character});
-  DatabaseHelper db = DatabaseHelper.instance;
+  // CharacterModel({this.character});
+  DatabaseHelper _databaseHelper = locator<DatabaseHelper>();
   // PlayerClass playerClass;
 
   // PlayerClass get playerClass => playerClass;
 
   // Future<bool> setPlayerClass() {
-  //   return db
+  //   return _databaseHelper
   //       .queryPlayerClass(character.classCode)
   //       .then((_class) => playerClass = _class)
   //       .then((_) => true);
   //   // return true;
   // }
 
-  // Future<bool> setCharacter() async {
-  //   character = await db.queryCharacter(_characterId);
-  //   // _playerClass = await db.queryPlayerClass(character.classCode);
-  //   return true;
-  // }
+  setCharacter(Character _character) {
+    character = _character;
+    fetchCharacterPerks();
+    // character = await _databaseHelper.queryCharacter(_characterId);
+    // _playerClass = await _databaseHelper.queryPlayerClass(character.classCode);
+    // return true;
+  }
 
   int getMaximumPerks() =>
       currentLevel -
@@ -55,7 +58,7 @@ class CharacterModel extends BaseModel {
 
   Future updateCharacter(Character _updatedCharacter) async {
     character = _updatedCharacter;
-    await db.updateCharacter(_updatedCharacter);
+    await _databaseHelper.updateCharacter(_updatedCharacter);
     notifyListeners();
   }
 
@@ -79,26 +82,28 @@ class CharacterModel extends BaseModel {
     }
   }
 
-  Future<bool> setCharacterPerks() async {
-    _characterPerks = await db.queryCharacterPerks(character.id);
+  Future<bool> fetchCharacterPerks() async {
+    setState(ViewState.Busy);
+    _characterPerks = await _databaseHelper.queryCharacterPerks(character.id);
     numOfSelectedPerks = 0;
     _characterPerks.forEach((_perk) {
       if (_perk.characterPerkIsSelected) {
         numOfSelectedPerks++;
       }
     });
+    setState(ViewState.Idle);
     return true;
   }
 
   List<CharacterPerk> get characterPerks => _characterPerks;
 
   Future togglePerk(_perk, _value) async {
-    await db.updateCharacterPerk(_perk, _value);
+    await _databaseHelper.updateCharacterPerk(_perk, _value);
     notifyListeners();
   }
 
   Future<String> getPerkDetails(int _perkId) async {
-    Perk _perk = await db.queryPerk(_perkId);
+    Perk _perk = await _databaseHelper.queryPerk(_perkId);
     return _perk.perkDetails;
   }
 }

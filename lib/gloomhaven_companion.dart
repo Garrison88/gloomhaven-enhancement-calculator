@@ -17,7 +17,7 @@ class GloomhavenCompanion extends StatelessWidget {
         '/': (context) => HomeView(),
         '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
         '/characterSheetPage': (context) => CharacterSheetPage(),
-        '/characterDetailsPage': (context) => CharacterPage()
+        '/characterDetailsPage': (context) => CharacterView()
       },
       theme: ThemeData(
           accentColor: appState.accentColor,

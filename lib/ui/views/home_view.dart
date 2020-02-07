@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/core/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/core/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/core/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/core/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/core/services/database_helper.dart';
 import 'package:gloomhaven_enhancement_calc/core/viewmodels/characterList_model.dart';
 import 'package:gloomhaven_enhancement_calc/core/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/locator.dart';
 import 'package:gloomhaven_enhancement_calc/ui/views/characterList_view.dart';
 import 'package:gloomhaven_enhancement_calc/ui/views/enhancementCalculator_view.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class HomeView extends StatefulWidget {
 
 class HomeViewState extends State<HomeView> {
   List<Character> characterList = [];
-  DatabaseHelper db = DatabaseHelper.instance;
+  // DatabaseHelper _databaseHelper = locator<DatabaseHelper>();
   PageController pageController = PageController();
   int page = 0;
 
@@ -101,20 +102,10 @@ class HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-        body: PageView(children: [
-          MultiProvider(
-            providers: [
-              ChangeNotifierProvider<CharacterListModel>(
-                create: (context) => CharacterListModel(),
-              ),
-              ChangeNotifierProvider<CharacterModel>.value(
-                value: CharacterModel(),
-              ),
-            ],
-            child: CharacterListPage(),
-          ),
-          EnhancementCalculatorPage()
-        ], controller: pageController, onPageChanged: _onPageChanged),
+        body: PageView(
+            children: [CharacterListView(), EnhancementCalculatorPage()],
+            controller: pageController,
+            onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
               icon: Icon(FontAwesomeIcons.scroll),
