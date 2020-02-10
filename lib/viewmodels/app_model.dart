@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppState with ChangeNotifier {
+class AppModel with ChangeNotifier {
   Color _accentColor;
   // int _retirements = 0;
   int _position;
   // bool _isEditable = false;
 
-  AppState(this._position, this._accentColor);
+  AppModel(this._position, this._accentColor);
 
   // set isEditable(bool _value) {
   //   _isEditable = _value;

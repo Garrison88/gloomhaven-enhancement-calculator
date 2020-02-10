@@ -353,7 +353,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                                   Theme.of(context).accentColor,
                                             ),
                                             onPressed: () {
-                                              showInfoAlert(
+                                              showInfoDialog(
                                                   context,
                                                   Strings
                                                       .previousRetirementsInfoTitle,

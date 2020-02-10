@@ -22,7 +22,7 @@ _createIconsListForDialog(List<String> _list) {
   return _icons;
 }
 
-void showInfoAlert(BuildContext _context, String _dialogTitle,
+void showInfoDialog(BuildContext _context, String _dialogTitle,
     RichText _dialogMessage, EnhancementCategory _category) {
   RichText _bodyText;
   List<String> _titleIcons;

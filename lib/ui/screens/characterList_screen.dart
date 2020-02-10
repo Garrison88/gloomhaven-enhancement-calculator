@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -22,13 +22,13 @@ class _CharacterListPageState extends State<CharacterListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CharacterListState>(builder:
-        (BuildContext context, CharacterListState characterListState, _) {
+    return Consumer<CharacterListModel>(builder:
+        (BuildContext context, CharacterListModel characterListModel, _) {
       print("CHARACTER LIST PAGE REBUILT");
       return Scaffold(
         resizeToAvoidBottomPadding: true,
         body: FutureBuilder<bool>(
-            future: characterListState.setCharacterList(),
+            future: characterListModel.setCharacterList(),
             builder: (context, AsyncSnapshot<bool> _snapshot) {
               return _snapshot.hasError
                   ? Container(child: Text(_snapshot.error.toString()))
@@ -45,22 +45,17 @@ class _CharacterListPageState extends State<CharacterListPage> {
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
                         )
-                      : characterListState.characterList.length > 0
+                      : characterListModel.characterList.length > 0
                           ? PageIndicatorContainer(
                               child: PageView.builder(
                                 controller: _pageController = PageController(
-                                    initialPage: Provider.of<AppState>(context,
+                                    initialPage: Provider.of<AppModel>(context,
                                             listen: false)
                                         .position),
-                                onPageChanged: (_index) {
-                                  Provider.of<AppState>(context, listen: false)
-                                      .position = _index;
-                                  Provider.of<AppState>(context, listen: false)
-                                      .setAccentColor(characterListState
-                                          .characterList[_index].classColor);
-                                },
+                                onPageChanged: (_index) =>
+                                    updateCurrentCharacter(_index),
                                 itemCount:
-                                    characterListState.characterList.length,
+                                    characterListModel.characterList.length,
                                 itemBuilder:
                                     (BuildContext context, int _index) {
                                   return Container(
@@ -73,43 +68,19 @@ class _CharacterListPageState extends State<CharacterListPage> {
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: Image.asset(
-                                              'images/class_icons/${characterListState.characterList[_index].classIcon}',
+                                              'images/class_icons/${characterListModel.characterList[_index].classIcon}',
                                               width: iconWidth,
-                                              color: Provider.of<AppState>(
+                                              color: Provider.of<AppModel>(
                                                       context,
                                                       listen: false)
                                                   .accentColor
-                                                  .withOpacity(0.1)
-
-                                              // Theme.of(context)
-                                              //     .accentColor
-                                              //     .withOpacity(.1),
-                                              ),
+                                                  .withOpacity(0.1)),
                                         ),
-                                        // Container(
-                                        //   decoration: BoxDecoration(
-                                        //     color:
-                                        //         Colors.white.withOpacity(0.95),
-                                        //     image: DecorationImage(
-                                        //       image: AssetImage(
-                                        //           'images/class_icons/${characterListState.characterList[_index].classIcon}'),
-                                        //       colorFilter: ColorFilter.mode(
-                                        //           Theme.of(context).accentColor
-                                        //               .withOpacity(0.95),
-                                        //           BlendMode.lighten),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        // Container(
-                                        //   color: Theme.of(context)
-                                        //       .accentColor
-                                        //       .withOpacity(0.2),
-                                        // ),
                                         SingleChildScrollView(
                                           child: ChangeNotifierProvider<
-                                              CharacterState>.value(
-                                            value: CharacterState(
-                                                character: characterListState
+                                              CharacterModel>.value(
+                                            value: CharacterModel(
+                                                character: characterListModel
                                                     .characterList[_index]),
                                             child: Container(
                                               padding:
@@ -124,15 +95,15 @@ class _CharacterListPageState extends State<CharacterListPage> {
                                 },
                               ),
                               align: IndicatorAlign.top,
-                              length: characterListState.characterList.length,
+                              length: characterListModel.characterList.length,
                               indicatorSpace: smallPadding,
                               padding: const EdgeInsets.only(top: 20),
                               indicatorColor:
-                                  characterListState.characterList.length < 2
+                                  characterListModel.characterList.length < 2
                                       ? Colors.transparent
                                       : Colors.grey.withOpacity(0.25),
                               indicatorSelectorColor:
-                                  characterListState.characterList.length < 2
+                                  characterListModel.characterList.length < 2
                                       ? Colors.transparent
                                       : Theme.of(context).accentColor,
                               shape: IndicatorShape.circle(size: 12),
@@ -202,10 +173,10 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return NewCharacterDialog(
-                        characterListState: characterListState);
+                        characterListModel: characterListModel);
                   },
                 ).whenComplete(() => _pageController.animateToPage(
-                    characterListState.characterList.length,
+                    characterListModel.characterList.length,
                     duration: Duration(milliseconds: 600),
                     curve: Curves.decelerate));
               },
@@ -215,10 +186,10 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 backgroundColor: Colors.blue,
                 label: 'Import Character',
                 labelStyle: TextStyle(fontSize: 18.0),
-                onTap: () => characterListState
+                onTap: () => characterListModel
                     .addLegacyCharacter()
                     .whenComplete(() => _pageController.animateToPage(
-                        characterListState.characterList.length,
+                        characterListModel.characterList.length,
                         duration: Duration(milliseconds: 600),
                         curve: Curves.decelerate))),
             // SpeedDialChild(
@@ -237,5 +208,13 @@ class _CharacterListPageState extends State<CharacterListPage> {
         ),
       );
     });
+  }
+
+  updateCurrentCharacter(int _index) {
+    Provider.of<AppModel>(context, listen: false)
+      ..position = _index
+      ..setAccentColor(Provider.of<CharacterListModel>(context, listen: false)
+          .characterList[_index]
+          .classColor);
   }
 }

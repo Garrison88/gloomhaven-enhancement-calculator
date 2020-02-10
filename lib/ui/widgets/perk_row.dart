@@ -20,9 +20,9 @@
 
 // class PerkRowState extends State<PerkRow> {
 //   Widget build(BuildContext context) {
-//     final CharacterState characterState = Provider.of<CharacterState>(context);
+//     final CharacterState characterModel = Provider.of<CharacterState>(context);
 //     return FutureBuilder<Perk>(
-//         future: characterState.getPerk(_perk),
+//         future: characterModel.getPerk(_perk),
 //         builder: (context, AsyncSnapshot<Perk> _snapshot) {
 //           // switch (_snapshot.connectionState) {
 //           //   case ConnectionState.none:
@@ -38,13 +38,13 @@
 //                   child: Row(
 //                     children: <Widget>[
 //                       Checkbox(
-//                           value: characterState
+//                           value: characterModel
 //                               .getCharacterPerks()[
-//                                   characterState.getPerk(widget._characterPerk)]
+//                                   characterModel.getPerk(widget._characterPerk)]
 //                               .characterPerkIsSelected,
 //                           onChanged: (_) => {}
 //                           //     (bool value) => setState(() {
-//                           //            characterState.togglePerk(widget.characterPerk);
+//                           //            characterModel.togglePerk(widget.characterPerk);
 //                           //         }),
 //                           ),
 //                       Container(
@@ -72,57 +72,36 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
-class PerkRow extends StatefulWidget {
+class PerkRow extends StatelessWidget {
   final CharacterPerk perk;
+  final Function onToggle;
 
-  PerkRow({this.perk});
+  PerkRow({this.perk, this.onToggle});
 
-  @override
-  _PerkRowState createState() => _PerkRowState();
-}
-
-class _PerkRowState extends State<PerkRow> {
   @override
   Widget build(BuildContext context) {
-    // final CharacterPerksState characterPerksState =
-    //     Provider.of<CharacterPerksState>(context);
-    final CharacterState characterState = Provider.of<CharacterState>(context);
     return Container(
       height: 58,
       child: Row(
         children: <Widget>[
           Checkbox(
-              // activeColor: characterState.isEditable
-              //     ? Color(int.parse(characterState.character.classColor))
-              //     : Colors.white,
-              // checkColor: characterState.isEditable
-              //     ? Colors.white
-              //     : Color(int.parse(characterState.character.classColor)),
-              value: widget.perk.characterPerkIsSelected,
-              onChanged: (value) =>
-                  characterState.togglePerk(widget.perk, value)),
-          // : (_) => Scaffold.of(context).showSnackBar(SnackBar(
-          //       content: Text('Must be in Edit mode'),
-          //       duration: Duration(seconds: 2),
-          //       action: SnackBarAction(
-          //           label: 'EDIT',
-          //           onPressed: () => characterState.isEditable = true),
-          //     ))),
+              value: perk.characterPerkIsSelected,
+              onChanged: (value) => onToggle(value)),
           Container(
             height: 30.0,
             width: 1.0,
-            color: widget.perk.characterPerkIsSelected
-                ? Color(int.parse(characterState.character.classColor))
+            color: perk.characterPerkIsSelected
+                ? Theme.of(context).accentColor
                 : Colors.grey,
             margin: EdgeInsets.only(right: 10.0),
           ),
           Expanded(
             child: FutureBuilder<String>(
-                future:
-                    characterState.getPerkDetails(widget.perk.associatedPerkId),
+                future: Provider.of<CharacterModel>(context, listen: false)
+                    .getPerkDetails(perk.associatedPerkId),
                 builder: (context, AsyncSnapshot<String> _detailsSnapshot) =>
                     _detailsSnapshot.hasData
                         ? AutoSizeText(

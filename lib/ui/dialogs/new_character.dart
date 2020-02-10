@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
 
 class NewCharacterDialog extends StatefulWidget {
   // final PlayerClass initialValue;
-  final CharacterListState characterListState;
+  final CharacterListModel characterListModel;
   // final void Function(String) onValueChange;
 
-  NewCharacterDialog({Key key, this.characterListState}) : super(key: key);
+  NewCharacterDialog({Key key, this.characterListModel}) : super(key: key);
 
   @override
   _NewCharacterDialogState createState() => _NewCharacterDialogState();
@@ -130,7 +130,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
           color: Colors.green,
           onPressed: () {
             if (_newCharacterFormKey.currentState.validate()) {
-              widget.characterListState
+              widget.characterListModel
                   .addCharacter(_nameTextFieldController.text, _selectedClass,
                       _initialXp, _previousRetirements)
                   .whenComplete(() => Navigator.of(context).pop());

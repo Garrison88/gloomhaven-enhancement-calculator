@@ -5,12 +5,12 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 
-class CharacterState with ChangeNotifier {
+class CharacterModel with ChangeNotifier {
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> _characterPerks = [];
   int numOfSelectedPerks = 0;
-  CharacterState({this.character});
+  CharacterModel({this.character});
   DatabaseHelper db = DatabaseHelper.instance;
   // PlayerClass playerClass;
 
@@ -53,7 +53,7 @@ class CharacterState with ChangeNotifier {
       ? levelXpList.firstWhere((_threshold) => _threshold > character.xp)
       : levelXpList.last;
 
-  Future updateCharacter(Character _updatedCharacter) async {
+  Future<void> updateCharacter(Character _updatedCharacter) async {
     character = _updatedCharacter;
     await db.updateCharacter(_updatedCharacter);
     notifyListeners();
@@ -65,7 +65,6 @@ class CharacterState with ChangeNotifier {
 
   increaseCheckmark() {
     if (character.checkMarks < 18) {
-      // character.checkMarks++;
       updateCharacter(character..checkMarks = character.checkMarks + 1);
       notifyListeners();
     }
@@ -73,7 +72,6 @@ class CharacterState with ChangeNotifier {
 
   decreaseCheckmark() {
     if (character.checkMarks > 0) {
-      // character.checkMarks++;
       updateCharacter(character..checkMarks = character.checkMarks - 1);
       notifyListeners();
     }
@@ -92,7 +90,7 @@ class CharacterState with ChangeNotifier {
 
   List<CharacterPerk> get characterPerks => _characterPerks;
 
-  Future togglePerk(_perk, _value) async {
+  Future<void> togglePerk(_perk, _value) async {
     await db.updateCharacterPerk(_perk, _value);
     notifyListeners();
   }

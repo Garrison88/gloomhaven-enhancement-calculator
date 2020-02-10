@@ -4,9 +4,9 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_list_state.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_list_page.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characterList_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -104,11 +104,11 @@ class BottomNavState extends State<BottomNav> {
         body: PageView(children: [
           MultiProvider(
             providers: [
-              ChangeNotifierProvider<CharacterListState>(
-                create: (context) => CharacterListState(),
+              ChangeNotifierProvider<CharacterListModel>(
+                create: (context) => CharacterListModel(),
               ),
-              ChangeNotifierProvider<CharacterState>.value(
-                value: CharacterState(),
+              ChangeNotifierProvider<CharacterModel>.value(
+                value: CharacterModel(),
               ),
             ],
             child: CharacterListPage(),

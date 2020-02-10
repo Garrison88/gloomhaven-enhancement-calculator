@@ -27,9 +27,6 @@ class CharacterPerk {
       columnAssociatedPerkId: associatedPerkId,
       columnCharacterPerkIsSelected: characterPerkIsSelected ? 1 : 0
     };
-    // if (associatedCharacterId != null) {
-    //   map[columnAssociatedPerkId] = associatedPerkId;
-    // }
     return map;
   }
 }

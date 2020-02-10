@@ -156,7 +156,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                     ? Colors.white
                                     : Colors.black),
                           ),
-                          onPressed: () => showInfoAlert(
+                          onPressed: () => showInfoDialog(
                               context,
                               Strings.generalInfoTitle,
                               Strings.generalInfoBody,
@@ -173,7 +173,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               icon: Icon(Icons.info_outline,
                                   color: Theme.of(context).accentColor),
                               onPressed: () {
-                                showInfoAlert(
+                                showInfoDialog(
                                     context,
                                     Strings.cardLevelInfoTitle,
                                     Strings.cardLevelInfoBody,
@@ -205,7 +205,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 color: Theme.of(context).accentColor,
                               ),
                               onPressed: () {
-                                showInfoAlert(
+                                showInfoDialog(
                                     context,
                                     Strings.previousEnhancementsInfoTitle,
                                     Strings.previousEnhancementsInfoBody,
@@ -249,7 +249,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                         color: Theme.of(context).accentColor),
                                     onPressed: _selectedEnhancement != null
                                         ? () {
-                                            showInfoAlert(context, null, null,
+                                            showInfoDialog(context, null, null,
                                                 _selectedEnhancement.category);
                                           }
                                         : null),
@@ -287,7 +287,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               icon: Icon(Icons.info_outline,
                                   color: Theme.of(context).accentColor),
                               onPressed: () {
-                                showInfoAlert(
+                                showInfoDialog(
                                     context,
                                     Strings.multipleTargetsInfoTitle,
                                     Strings.multipleTargetsInfoBody,

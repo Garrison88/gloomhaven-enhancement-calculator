@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/providers/app_state.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/bottom_nav.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_page.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_sheet_page.dart';
@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
+    final appState = Provider.of<AppModel>(context);
     return MaterialApp(
       title: 'Gloomhaven Companion',
       routes: {

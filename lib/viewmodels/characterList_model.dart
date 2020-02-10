@@ -5,7 +5,7 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CharacterListState with ChangeNotifier {
+class CharacterListModel with ChangeNotifier {
   List<Character> _characterList = [];
   List<bool> _legacyPerks = [];
   DatabaseHelper db = DatabaseHelper.instance;

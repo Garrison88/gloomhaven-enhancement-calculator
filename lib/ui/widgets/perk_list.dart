@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/providers/character_state.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
@@ -10,57 +10,70 @@ class PerkList extends StatefulWidget {
 }
 
 class PerkListState extends State<PerkList> {
-  Widget build(BuildContext context) {
-    final CharacterState characterState =
-        Provider.of<CharacterState>(context, listen: false);
-    return FutureBuilder<bool>(
-        future: Provider.of<CharacterState>(context).setCharacterPerks(),
-        builder: (context, AsyncSnapshot<bool> _perksSnapshot) => _perksSnapshot
-                    .data ==
-                true
-            ? _perksSnapshot.hasError
-                ? Container(child: Text(_perksSnapshot.error.toString()))
-                : Column(
-                    children: <Widget>[
-                      Padding(padding: EdgeInsets.only(bottom: smallPadding)),
-                      Container(
-                          padding: EdgeInsets.all(smallPadding),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Perks (',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: titleFontSize),
-                              ),
-                              Text('${characterState.numOfSelectedPerks}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: titleFontSize,
-                                      color: characterState.getMaximumPerks() >=
-                                              characterState.numOfSelectedPerks
-                                          ? Colors.black
-                                          : Colors.red)),
-                              Text(' / ${characterState.getMaximumPerks()})',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: titleFontSize))
-                            ],
-                          )),
-                      ListView(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        // crossAxisCount: 1,
-                        // childAspectRatio: 5,
-                        children: List.generate(
-                            characterState.characterPerks.length,
-                            (index) => PerkRow(
-                                perk: characterState.characterPerks[index])),
-                      ),
-                      Container(
-                        height: 58,
-                      )
-                    ],
-                  )
-            : CircularProgressIndicator());
-  }
+  @override
+  Widget build(BuildContext context) => Consumer<CharacterModel>(
+      builder: (BuildContext context, CharacterModel _characterModel, _) =>
+          FutureBuilder<bool>(
+              future: Provider.of<CharacterModel>(context).setCharacterPerks(),
+              builder: (context, AsyncSnapshot<bool> _perksSnapshot) =>
+                  _perksSnapshot.data == true
+                      ? _perksSnapshot.hasError
+                          ? Container(
+                              child: Text(_perksSnapshot.error.toString()))
+                          : Column(
+                              children: <Widget>[
+                                Padding(
+                                    padding:
+                                        EdgeInsets.only(bottom: smallPadding)),
+                                Container(
+                                    padding: EdgeInsets.all(smallPadding),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          'Perks (',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: titleFontSize),
+                                        ),
+                                        Text(
+                                            '${_characterModel.numOfSelectedPerks}',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: titleFontSize,
+                                                color: _characterModel
+                                                            .getMaximumPerks() >=
+                                                        _characterModel
+                                                            .numOfSelectedPerks
+                                                    ? Colors.black
+                                                    : Colors.red)),
+                                        Text(
+                                            ' / ${_characterModel.getMaximumPerks()})',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: titleFontSize))
+                                      ],
+                                    )),
+                                ListView(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  children: List.generate(
+                                      _characterModel.characterPerks.length,
+                                      (index) => PerkRow(
+                                            perk: _characterModel
+                                                .characterPerks[index],
+                                            onToggle: (value) =>
+                                                _characterModel.togglePerk(
+                                                    _characterModel
+                                                        .characterPerks[index],
+                                                    value),
+                                          )),
+                                ),
+                                Container(
+                                  height: 58,
+                                )
+                              ],
+                            )
+                      : CircularProgressIndicator()));
 }
