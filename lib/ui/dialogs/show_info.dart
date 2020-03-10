@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_companion/data/constants.dart';
-import 'package:gloomhaven_companion/data/strings.dart';
-import 'package:gloomhaven_companion/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 
 _createIconsListForDialog(List<String> _list) {
   List<Widget> _icons = [];
   _list.forEach(
     (icon) => _icons.add(
-          Padding(
-            child: Image.asset(
-              'images/$icon',
-              height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
-              width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
-            ),
-            padding: EdgeInsets.only(
-              right: (smallPadding / 2),
-            ),
-          ),
+      Padding(
+        child: Image.asset(
+          'images/$icon',
+          height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
+          width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
         ),
+        padding: EdgeInsets.only(
+          right: (smallPadding / 2),
+        ),
+      ),
+    ),
   );
   return _icons;
 }
 
-void showInfoAlert(BuildContext _context, String _dialogTitle,
+void showInfoDialog(BuildContext _context, String _dialogTitle,
     RichText _dialogMessage, EnhancementCategory _category) {
   RichText _bodyText;
   List<String> _titleIcons;
@@ -136,13 +136,13 @@ void showInfoAlert(BuildContext _context, String _dialogTitle,
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () {
-                  Navigator.of(_context).pop();
-                },
+                onPressed: () => Navigator.of(_context).pop(),
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                      fontSize: secondaryFontSize, fontFamily: highTower),
+                      color: Theme.of(_context).accentColor,
+                      fontSize: secondaryFontSize,
+                      fontFamily: highTower),
                 ),
               ),
             ],

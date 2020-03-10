@@ -1,17 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gloomhaven_companion/data/character_sheet_list_data.dart';
-import 'package:gloomhaven_companion/data/constants.dart';
-import 'package:gloomhaven_companion/data/strings.dart';
-import 'package:gloomhaven_companion/main.dart';
-import 'package:gloomhaven_companion/models/player_class.dart';
-import 'package:gloomhaven_companion/ui/dialogs/dialog_show_info.dart';
-import 'package:gloomhaven_companion/ui/perk_section.dart';
+
+import '../../data/character_sheet_list_data.dart';
+import '../../data/constants.dart';
+import '../../data/strings.dart';
+import '../../main.dart';
+import '../../models/player_class.dart';
+import '../dialogs/show_info.dart';
+import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
+    // CharacterSheetPage({Key key, this.character}) : super(key: key);
+
+  // final Character character;
+
   @override
   State<StatefulWidget> createState() {
     return CharacterSheetPageState();
@@ -19,6 +23,7 @@ class CharacterSheetPage extends StatefulWidget {
 }
 
 class CharacterSheetPageState extends State<CharacterSheetPage> {
+
 //  List<Item> _itemList = [
 //    Item('sgg', 56, Slot('sgf', 'sgfd')),
 //    Item('allf', 56, Slot('sgf', 'sgfd')),
@@ -77,6 +82,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
 //      }
 //    });
     _handleExpChanged();
+    // print(widget.character.name);
   }
 
   Future _readFromSharedPrefs() async {
@@ -150,22 +156,22 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
     setState(() {
       _selectedClass = _value;
 
-      DynamicTheme.of(context).setThemeData(ThemeData(
-        accentColor:
-            _selectedClass != null ? _selectedClass.color : Color(0xff4e7ec1),
-        primarySwatch: Colors.brown,
-        // Define the default Font Family
-        fontFamily: 'PirataOne',
+      // DynamicTheme.of(context).setThemeData(ThemeData(
+      //   accentColor:
+      //       _selectedClass != null ? _selectedClass.classColor : Color(0xff4e7ec1),
+      //   primarySwatch: Colors.brown,
+      //   // Define the default Font Family
+      //   fontFamily: 'PirataOne',
 
-        // Define the default TextTheme. Use this to specify the default
-        // text styling for headlines, titles, bodies of text, and more.
-        textTheme: TextTheme(
-          // DropDownButton text
-          subhead: TextStyle(fontSize: 23.0),
-          // Text widgets
-          body1: TextStyle(fontSize: 23.0, letterSpacing: 0.7),
-        ),
-      ));
+      //   // Define the default TextTheme. Use this to specify the default
+      //   // text styling for headlines, titles, bodies of text, and more.
+      //   textTheme: TextTheme(
+      //     // DropDownButton text
+      //     subhead: TextStyle(fontSize: 23.0),
+      //     // Text widgets
+      //     body1: TextStyle(fontSize: 23.0, letterSpacing: 0.7),
+      //   ),
+      // ));
       _writeToSharedPrefs();
 //      _readFromSharedPrefs();
     });
@@ -278,7 +284,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
           color: Colors.white.withOpacity(0.95),
           image: DecorationImage(
               image: AssetImage(_selectedClass != null
-                  ? 'images/class_icons/${_selectedClass.icon}'
+                  ? 'images/class_icons/${_selectedClass.classIconUrl}'
                   : ''),
               colorFilter: ColorFilter.mode(
                   Colors.white.withOpacity(0.95), BlendMode.lighten),
@@ -347,7 +353,7 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                                   Theme.of(context).accentColor,
                                             ),
                                             onPressed: () {
-                                              showInfoAlert(
+                                              showInfoDialog(
                                                   context,
                                                   Strings
                                                       .previousRetirementsInfoTitle,

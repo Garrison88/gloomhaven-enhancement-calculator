@@ -1,9 +1,14 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_companion/data/constants.dart';
-import 'package:gloomhaven_companion/data/strings.dart';
-import 'package:gloomhaven_companion/ui/character_sheet_page.dart';
-import 'package:gloomhaven_companion/ui/enhancement_calculator_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characterList_screen.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BottomNav extends StatefulWidget {
@@ -16,7 +21,9 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
-  PageController pageController;
+  List<Character> characterList = [];
+  DatabaseHelper db = DatabaseHelper.instance;
+  PageController pageController = PageController();
   int page = 0;
 
   /// Called when the user presses on of the
@@ -48,11 +55,19 @@ class BottomNavState extends State<BottomNav> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   pageController = PageController();
+  //   db.queryAllRows().then((characters) {
+  //     setState(() {
+  //       characters.forEach((character) {
+  //         characterList.add(Character.fromMap(character));
+  //         print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
+  //       });
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -63,8 +78,8 @@ class BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: true,
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'Gloomhaven Companion',
             style: TextStyle(fontSize: 25.0),
@@ -86,23 +101,33 @@ class BottomNavState extends State<BottomNav> {
             ),
           ],
         ),
-        body: PageView(
-            children: [CharacterSheetPage(), EnhancementCalculatorPage()],
-            controller: pageController,
-            onPageChanged: _onPageChanged),
+        body: PageView(children: [
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<CharacterListModel>(
+                create: (context) => CharacterListModel(),
+              ),
+              ChangeNotifierProvider<CharacterModel>.value(
+                value: CharacterModel(),
+              ),
+            ],
+            child: CharacterListPage(),
+          ),
+          EnhancementCalculatorPage()
+        ], controller: pageController, onPageChanged: _onPageChanged),
         bottomNavigationBar: BottomNavigationBar(items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.content_paste),
-              title: AutoSizeText(
-                'CHARACTER\nSHEET',
+              icon: Icon(FontAwesomeIcons.scroll),
+              title: Text(
+                'CHARACTER\nSHEETS',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: highTower, fontWeight: FontWeight.bold),
               )),
           BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              title: AutoSizeText(
+              icon: Icon(FontAwesomeIcons.calculator),
+              title: Text(
                 'ENHANCEMENT\nCALCULATOR',
                 maxLines: 2,
                 textAlign: TextAlign.center,

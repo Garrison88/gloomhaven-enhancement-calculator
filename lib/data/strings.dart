@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_companion/data/custom_text_styles.dart';
+
+import 'custom_text_styles.dart';
 
 class Strings {
   // menu items
   static List<String> choices = ['Developer Website'];
 
   // developer website url
-  static String devWebsiteUrl = 'https://garrisonsiberry.com/';
+  static String devWebsiteUrl = 'https://www.tomkatcreative.com/contact';
 
   // general info
   static String generalInfoTitle = "Enhancements";
