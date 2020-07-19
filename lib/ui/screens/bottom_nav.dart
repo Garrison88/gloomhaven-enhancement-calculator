@@ -4,11 +4,14 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/envelope_x.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characterList_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BottomNav extends StatefulWidget {
@@ -21,6 +24,8 @@ class BottomNav extends StatefulWidget {
 }
 
 class BottomNavState extends State<BottomNav> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<Character> characterList = [];
   DatabaseHelper db = DatabaseHelper.instance;
   PageController pageController = PageController();
@@ -44,6 +49,8 @@ class BottomNavState extends State<BottomNav> {
   void _menuItemSelected(String _choice) {
     if (_choice == 'Developer Website') {
       _launchUrl();
+    } else if (_choice == 'Envelope X') {
+      _envelopeXDialog();
     }
   }
 
@@ -53,6 +60,37 @@ class BottomNavState extends State<BottomNav> {
     } else {
       throw 'Could not launch ${Strings.devWebsiteUrl}';
     }
+  }
+
+  void _envelopeXDialog() {
+    AppModel appModel = Provider.of<AppModel>(context, listen: false);
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => EnvelopeXDialog(
+              isOpen: appModel.envelopeX,
+              onChanged: (bool isOpen) {
+                appModel.envelopeX = isOpen;
+                if (isOpen)
+                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Image.asset(
+                        'images/class_icons/bladeswarm.png',
+                        color: Colors.white,
+                      ),
+                      Text(
+                        'Bladeswarm Unlocked!',
+                        style: TextStyle(
+                          fontSize: titleFontSize,
+                          fontFamily: nyala,
+                        ),
+                      ),
+                    ],
+                  )));
+              },
+            ));
   }
 
   // @override
@@ -77,63 +115,79 @@ class BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            'Gloomhaven Companion',
-            style: TextStyle(fontSize: 25.0),
-          ),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: _menuItemSelected,
-              itemBuilder: (BuildContext context) {
-                return Strings.choices.map((String choice) {
-                  return PopupMenuItem<String>(
-                    value: choice,
-                    child: Text(
-                      choice,
-                      style: TextStyle(fontFamily: highTower, fontSize: 20.0),
+    return
+        // DefaultTabController(
+        //   length: 4,
+        //   child:
+        Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Gloomhaven Companion',
+          style: TextStyle(fontSize: 25.0),
+        ),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: _menuItemSelected,
+            itemBuilder: (BuildContext context) {
+              return Strings.choices.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(
+                    choice,
+                    style: TextStyle(
+                      fontFamily: highTower,
+                      fontSize: 20.0,
                     ),
-                  );
-                }).toList();
-              },
+                  ),
+                );
+              }).toList();
+            },
+          ),
+        ],
+        // bottom: TabBar(tabs: <Widget>[
+        //   Tab(icon: Icon(Icons.photo_camera)),
+        //   Tab(text: "Chats"),
+        //   Tab(text: "Status"),
+        //   Tab(text: "Calls")
+        // ]),
+      ),
+      body: PageView(children: [
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<CharacterListModel>(
+              create: (context) => CharacterListModel(),
+            ),
+            ChangeNotifierProvider<CharacterModel>.value(
+              value: CharacterModel(),
             ),
           ],
+          child: CharacterListPage(),
         ),
-        body: PageView(children: [
-          MultiProvider(
-            providers: [
-              ChangeNotifierProvider<CharacterListModel>(
-                create: (context) => CharacterListModel(),
-              ),
-              ChangeNotifierProvider<CharacterModel>.value(
-                value: CharacterModel(),
-              ),
-            ],
-            child: CharacterListPage(),
-          ),
-          EnhancementCalculatorPage()
-        ], controller: pageController, onPageChanged: _onPageChanged),
-        bottomNavigationBar: BottomNavigationBar(items: [
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.scroll),
-              title: Text(
-                'CHARACTER\nSHEETS',
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: highTower, fontWeight: FontWeight.bold),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.calculator),
-              title: Text(
-                'ENHANCEMENT\nCALCULATOR',
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: highTower, fontWeight: FontWeight.bold),
-              )),
-        ], onTap: _navigationTapped, currentIndex: page));
+        EnhancementCalculatorPage()
+      ], controller: pageController, onPageChanged: _onPageChanged),
+      bottomNavigationBar: BottomNavigationBar(items: [
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.scroll),
+            title: Text(
+              'CHARACTER\nSHEETS',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontFamily: highTower, fontWeight: FontWeight.bold),
+            )),
+        BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.calculator),
+            title: Text(
+              'ENHANCEMENT\nCALCULATOR',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontFamily: highTower, fontWeight: FontWeight.bold),
+            )),
+      ], onTap: _navigationTapped, currentIndex: page),
+      // ),
+    );
   }
 }

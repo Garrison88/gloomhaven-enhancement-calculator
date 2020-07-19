@@ -4,7 +4,7 @@ import 'custom_text_styles.dart';
 
 class Strings {
   // menu items
-  static List<String> choices = ['Developer Website'];
+  static List<String> choices = ['Envelope X'];
 
   // developer website url
   static String devWebsiteUrl = 'https://www.tomkatcreative.com/contact';
@@ -103,6 +103,7 @@ class Strings {
   static List<String> plusOneIcon = ['plus_one.png'];
   static List<String> plusOneCharacterEligibleIcons = [
     'move.png',
+    'teleport.png',
     'attack.png',
     'target.png',
     'range.png',
@@ -181,13 +182,18 @@ class Strings {
     ]),
   );
 
-  static List<String> posEffectIcons = ['strengthen.png', 'bless.png'];
+  static List<String> posEffectIcons = [
+    'strengthen.png',
+    'bless.png',
+    'regenerate.png'
+  ];
   static List<String> posEffectEligibleIcons = [
     'heal.png',
     'retaliate.png',
     'shield.png',
     'strengthen.png',
     'bless.png',
+    'regenerate.png',
     'invisible.png'
   ];
 
@@ -244,6 +250,7 @@ class Strings {
     'disarm.png',
     'curse.png',
     'strengthen.png',
+    'regenerate.png',
     'bless.png',
     'invisible.png'
   ];

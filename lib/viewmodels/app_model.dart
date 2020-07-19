@@ -3,18 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppModel with ChangeNotifier {
   Color _accentColor;
-  // int _retirements = 0;
   int _position;
-  // bool _isEditable = false;
+  bool _envelopeX;
 
-  AppModel(this._position, this._accentColor);
-
-  // set isEditable(bool _value) {
-  //   _isEditable = _value;
-  //   // notifyListeners();
-  // }
-
-  // get isEditable => _isEditable;
+  AppModel(this._position, this._accentColor, this._envelopeX);
 
   get accentColor => _accentColor;
 
@@ -26,6 +18,15 @@ class AppModel with ChangeNotifier {
 
     notifyListeners();
   }
+
+  get envelopeX => this._envelopeX;
+
+  set envelopeX(bool _envelopeX) =>
+      SharedPreferences.getInstance().then((_prefs) {
+        _prefs.setBool('envelope_x', _envelopeX);
+        this._envelopeX = _envelopeX;
+        notifyListeners();
+      });
 
   // int get retirements {
   //   SharedPreferences.getInstance().then((_prefs) {

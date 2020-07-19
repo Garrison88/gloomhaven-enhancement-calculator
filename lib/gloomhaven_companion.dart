@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
     final appState = Provider.of<AppModel>(context);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Gloomhaven Companion',
       routes: {
         '/': (context) => BottomNav(),

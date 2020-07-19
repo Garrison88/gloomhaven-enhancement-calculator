@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:provider/provider.dart';
 
 class NewCharacterDialog extends StatefulWidget {
   // final PlayerClass initialValue;
@@ -25,7 +27,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
     super.dispose();
   }
 
-  PlayerClass _selectedClass = classList[0];
+  PlayerClass _selectedClass;
   int _initialXp = 1;
   int _previousRetirements = 0;
 
@@ -33,6 +35,10 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // return FutureBuilder(
+    //     future: ,
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
     return AlertDialog(
       content: SingleChildScrollView(
         child: Column(
@@ -61,7 +67,9 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                       ),
                       onChanged: (PlayerClass _value) =>
                           setState(() => _selectedClass = _value),
-                      items: classListMenuItems,
+                      items: generatePlayerClassList(
+                          Provider.of<AppModel>(context, listen: false)
+                              .envelopeX),
                     ),
                   ),
                 ),
@@ -119,32 +127,46 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
       ),
       actions: <Widget>[
         MaterialButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style:
-                TextStyle(fontSize: secondaryFontSize, fontFamily: highTower),
+            style: TextStyle(
+              fontSize: secondaryFontSize,
+              fontFamily: highTower,
+            ),
           ),
         ),
         RaisedButton(
           color: Colors.green,
           onPressed: () {
-            if (_newCharacterFormKey.currentState.validate()) {
+            if (_newCharacterFormKey.currentState.validate() &&
+                _selectedClass != null) {
               widget.characterListModel
-                  .addCharacter(_nameTextFieldController.text, _selectedClass,
-                      _initialXp, _previousRetirements)
-                  .whenComplete(() => Navigator.of(context).pop());
+                  .addCharacter(
+                    _nameTextFieldController.text,
+                    _selectedClass,
+                    _initialXp,
+                    _previousRetirements,
+                  )
+                  .whenComplete(() => Navigator.pop(context));
             }
           },
           child: Text(
             'Create',
             style: TextStyle(
-                fontSize: secondaryFontSize,
-                fontFamily: highTower,
-                color: Colors.white),
+              fontSize: secondaryFontSize,
+              fontFamily: highTower,
+              color: Colors.white,
+            ),
           ),
         ),
       ],
     );
+    //   } else {
+    //     return Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   }
+    // });
   }
 }

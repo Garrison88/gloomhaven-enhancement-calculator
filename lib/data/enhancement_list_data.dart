@@ -8,6 +8,7 @@ final List<Enhancement> enhancementList = [
   Enhancement(
       EnhancementCategory.title, null, 'plus_one.png', ' For Character'),
   Enhancement(EnhancementCategory.charPlusOne, 30, 'move.png', 'Move'),
+  Enhancement(EnhancementCategory.charPlusOne, 40, 'teleport.png', 'Teleport'),
   Enhancement(EnhancementCategory.charPlusOne, 50, 'attack.png', 'Attack'),
   Enhancement(EnhancementCategory.charPlusOne, 30, 'range.png', 'Range'),
   Enhancement(EnhancementCategory.charPlusOne, 100, 'shield.png', 'Shield'),
@@ -36,6 +37,8 @@ final List<Enhancement> enhancementList = [
   Enhancement(
       EnhancementCategory.posEffect, 50, 'strengthen.png', 'Strengthen'),
   Enhancement(EnhancementCategory.posEffect, 50, 'bless.png', 'Bless'),
+  Enhancement(
+      EnhancementCategory.posEffect, 50, 'regenerate.png', 'Regenerate'),
   Enhancement(EnhancementCategory.jump, 50, 'jump.png', 'Jump'),
   Enhancement(
       EnhancementCategory.specElem, 100, 'elem_fire.png', 'Specific Element'),

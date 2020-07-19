@@ -118,7 +118,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -156,8 +156,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                     fontFamily: highTower),
                               ),
                               onPressed: () {
-                                showInfoDialog(context, Strings.generalInfoTitle,
-                                    Strings.generalInfoBody, null);
+                                showInfoDialog(
+                                    context,
+                                    Strings.generalInfoTitle,
+                                    Strings.generalInfoBody,
+                                    null);
                               },
                             ),
                           ],
@@ -182,8 +185,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<int>(
                                   hint: Text(
                                     '1 / x',
-                                    style: TextStyle(
-                                        fontFamily: highTower),
+                                    style: TextStyle(fontFamily: highTower),
                                   ),
                                   value: _targetCardLvl,
                                   items: cardLevelList,
@@ -224,8 +226,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<int>(
                                   hint: Text(
                                     'None',
-                                    style: TextStyle(
-                                        fontFamily: highTower),
+                                    style: TextStyle(fontFamily: highTower),
                                   ),
                                   value: _previousEnhancements,
                                   items: previousEnhancementsList,
@@ -278,8 +279,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 child: DropdownButton<Enhancement>(
                                     hint: Text(
                                       'Type',
-                                      style: TextStyle(
-                                          fontFamily: highTower),
+                                      style: TextStyle(fontFamily: highTower),
                                     ),
                                     value: _selectedEnhancement,
                                     items: enhancementTypeList,

@@ -56,6 +56,9 @@ class _CharacterDetailsState extends State<CharacterDetails> {
       builder: (BuildContext context, CharacterModel _characterModel, _) =>
           Column(
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: smallPadding * 3),
+              ),
               // RETIREMENTS AND LOCK
               buildRetirementsAndLockSection(_characterModel),
               // NAME AND CLASS

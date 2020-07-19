@@ -11,26 +11,34 @@ class CharacterPage extends StatefulWidget {
 }
 
 class _CharacterPageState extends State<CharacterPage> {
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     Provider.of<AppModel>(context, listen: false).setAccentColor(
+  //         Provider.of<CharacterModel>(context, listen: false)
+  //             .character
+  //             .classColor);
+  //   });
+  //   super.initState();
+  // }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<AppModel>(context, listen: false).setAccentColor(
           Provider.of<CharacterModel>(context, listen: false)
               .character
               .classColor);
     });
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: <Widget>[
-          CharacterDetails(),
-            PerkList(),
-        ])
-    );
+        child: Column(children: <Widget>[
+      CharacterDetails(),
+      PerkList(),
+    ]));
   }
 }

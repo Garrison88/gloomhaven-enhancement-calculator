@@ -12,7 +12,7 @@ import '../dialogs/show_info.dart';
 import '../widgets/perk_section.dart';
 
 class CharacterSheetPage extends StatefulWidget {
-    // CharacterSheetPage({Key key, this.character}) : super(key: key);
+  // CharacterSheetPage({Key key, this.character}) : super(key: key);
 
   // final Character character;
 
@@ -23,7 +23,6 @@ class CharacterSheetPage extends StatefulWidget {
 }
 
 class CharacterSheetPageState extends State<CharacterSheetPage> {
-
 //  List<Item> _itemList = [
 //    Item('sgg', 56, Slot('sgf', 'sgfd')),
 //    Item('allf', 56, Slot('sgf', 'sgfd')),
@@ -86,44 +85,44 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
   }
 
   Future _readFromSharedPrefs() async {
-    setState(() {
-      _selectedClass = sp.getInt('selectedClass') != null && classList != null
-          ? classList[sp.getInt('selectedClass')]
-          : classList[0];
-      _previousRetirementsTextFieldController.text =
-          sp.getString('previousRetirements') ?? '0';
-      _charNameTextFieldController.text = sp.getString('characterName') ?? '';
-      _xpTextFieldController.text = sp.getString('characterXP') ?? '0';
-      _goldTextFieldController.text = sp.getString('characterGold') ?? '0';
-      _firstCheck = sp.getBool('firstCheck') ?? false;
-      _secondCheck = sp.getBool('secondCheck') ?? false;
-      _thirdCheck = sp.getBool('thirdCheck') ?? false;
-      _2FirstCheck = sp.getBool('2FirstCheck') ?? false;
-      _2SecondCheck = sp.getBool('2SecondCheck') ?? false;
-      _2ThirdCheck = sp.getBool('2ThirdCheck') ?? false;
-      _3FirstCheck = sp.getBool('3FirstCheck') ?? false;
-      _3SecondCheck = sp.getBool('3SecondCheck') ?? false;
-      _3ThirdCheck = sp.getBool('3ThirdCheck') ?? false;
-      _4FirstCheck = sp.getBool('4FirstCheck') ?? false;
-      _4SecondCheck = sp.getBool('4SecondCheck') ?? false;
-      _4ThirdCheck = sp.getBool('4ThirdCheck') ?? false;
-      _5FirstCheck = sp.getBool('5FirstCheck') ?? false;
-      _5SecondCheck = sp.getBool('5SecondCheck') ?? false;
-      _5ThirdCheck = sp.getBool('5ThirdCheck') ?? false;
-      _6FirstCheck = sp.getBool('6FirstCheck') ?? false;
-      _6SecondCheck = sp.getBool('6SecondCheck') ?? false;
-      _6ThirdCheck = sp.getBool('6ThirdCheck') ?? false;
-      _notesTextFieldController.text = sp.getString('notes') ?? null;
-//      json
-//          .decode(sp.getString('itemsList'))
-//          .forEach((map) => _itemList.add(Item.fromJson(map)));
-//    });
-    });
+//     setState(() {
+//       _selectedClass = sp.getInt('selectedClass') != null && classList != null
+//           ? classList[sp.getInt('selectedClass')]
+//           : classList[0];
+//       _previousRetirementsTextFieldController.text =
+//           sp.getString('previousRetirements') ?? '0';
+//       _charNameTextFieldController.text = sp.getString('characterName') ?? '';
+//       _xpTextFieldController.text = sp.getString('characterXP') ?? '0';
+//       _goldTextFieldController.text = sp.getString('characterGold') ?? '0';
+//       _firstCheck = sp.getBool('firstCheck') ?? false;
+//       _secondCheck = sp.getBool('secondCheck') ?? false;
+//       _thirdCheck = sp.getBool('thirdCheck') ?? false;
+//       _2FirstCheck = sp.getBool('2FirstCheck') ?? false;
+//       _2SecondCheck = sp.getBool('2SecondCheck') ?? false;
+//       _2ThirdCheck = sp.getBool('2ThirdCheck') ?? false;
+//       _3FirstCheck = sp.getBool('3FirstCheck') ?? false;
+//       _3SecondCheck = sp.getBool('3SecondCheck') ?? false;
+//       _3ThirdCheck = sp.getBool('3ThirdCheck') ?? false;
+//       _4FirstCheck = sp.getBool('4FirstCheck') ?? false;
+//       _4SecondCheck = sp.getBool('4SecondCheck') ?? false;
+//       _4ThirdCheck = sp.getBool('4ThirdCheck') ?? false;
+//       _5FirstCheck = sp.getBool('5FirstCheck') ?? false;
+//       _5SecondCheck = sp.getBool('5SecondCheck') ?? false;
+//       _5ThirdCheck = sp.getBool('5ThirdCheck') ?? false;
+//       _6FirstCheck = sp.getBool('6FirstCheck') ?? false;
+//       _6SecondCheck = sp.getBool('6SecondCheck') ?? false;
+//       _6ThirdCheck = sp.getBool('6ThirdCheck') ?? false;
+//       _notesTextFieldController.text = sp.getString('notes') ?? null;
+// //      json
+// //          .decode(sp.getString('itemsList'))
+// //          .forEach((map) => _itemList.add(Item.fromJson(map)));
+// //    });
+//     });
   }
 
   Future _writeToSharedPrefs() async {
     setState(() {
-      sp.setInt('selectedClass', classList.indexOf(_selectedClass));
+      // sp.setInt('selectedClass', classList.indexOf(_selectedClass));
       sp.setString(
           'previousRetirements', _previousRetirementsTextFieldController.text);
       sp.setString('characterName', _charNameTextFieldController.text);
@@ -389,44 +388,44 @@ class CharacterSheetPageState extends State<CharacterSheetPage> {
                                         fontFamily: highTower),
                                     textAlign: TextAlign.center,
                                   ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: _isEditable
-                                    ? <Widget>[
-                                        DropdownButtonHideUnderline(
-                                          child: DropdownButton<PlayerClass>(
-                                            hint: Text(
-                                              'Class',
-                                              style: TextStyle(
-                                                  fontSize: titleFontSize),
-                                            ),
-                                            onChanged: _onClassSelected,
-                                            value: _selectedClass,
-                                            items: classListMenuItems,
-                                          ),
-                                        )
-                                      ]
-                                    : <Widget>[
-                                        Stack(
-                                          alignment: Alignment(0.0, 0.0),
-                                          children: <Widget>[
-                                            Image.asset('images/xp.png',
-                                                width: iconWidth * 1.75),
-                                            Text(
-                                              '$_charLevel',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: titleFontSize),
-                                            )
-                                          ],
-                                        ),
-                                        Flexible(
-                                            child: AutoSizeText(
-                                                '${_selectedClass.race} ${_selectedClass.className}',
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    fontSize: titleFontSize))),
-                                      ]),
+                            // Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: _isEditable
+                            //         ? <Widget>[
+                            //             DropdownButtonHideUnderline(
+                            //               child: DropdownButton<PlayerClass>(
+                            //                 hint: Text(
+                            //                   'Class',
+                            //                   style: TextStyle(
+                            //                       fontSize: titleFontSize),
+                            //                 ),
+                            //                 onChanged: _onClassSelected,
+                            //                 value: _selectedClass,
+                            //                 items: classListMenuItems,
+                            //               ),
+                            //             )
+                            //           ]
+                            //         : <Widget>[
+                            //             Stack(
+                            //               alignment: Alignment(0.0, 0.0),
+                            //               children: <Widget>[
+                            //                 Image.asset('images/xp.png',
+                            //                     width: iconWidth * 1.75),
+                            //                 Text(
+                            //                   '$_charLevel',
+                            //                   style: TextStyle(
+                            //                       color: Colors.white,
+                            //                       fontSize: titleFontSize),
+                            //                 )
+                            //               ],
+                            //             ),
+                            //             Flexible(
+                            //                 child: AutoSizeText(
+                            //                     '${_selectedClass.race} ${_selectedClass.className}',
+                            //                     maxLines: 1,
+                            //                     style: TextStyle(
+                            //                         fontSize: titleFontSize))),
+                            //           ]),
                           ],
                         )),
                       ],

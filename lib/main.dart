@@ -12,12 +12,13 @@ main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sp = await SharedPreferences.getInstance();
   SharedPreferences.getInstance().then((prefs) {
-    var _position = prefs.getInt('position') ?? 0;
+    int _position = prefs.getInt('position') ?? 0;
     Color _accentColor =
         Color(int.parse(prefs.getString('themeColor') ?? '0xff4e7ec1'));
+    bool _envelopeX = prefs.getBool('envelope_x') ?? false;
     runApp(
       ChangeNotifierProvider<AppModel>(
-        create: (_) => AppModel(_position, _accentColor),
+        create: (_) => AppModel(_position, _accentColor, _envelopeX),
         child: App(),
       ),
     );

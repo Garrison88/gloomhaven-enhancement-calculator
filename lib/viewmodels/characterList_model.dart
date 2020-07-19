@@ -60,9 +60,9 @@ class CharacterListModel with ChangeNotifier {
     Character _character = Character();
     int _checkMarks = 0;
     PlayerClass _playerClass =
-        _prefs.getInt('selectedClass') != null && classList != null
-            ? classList[_prefs.getInt('selectedClass')]
-            : classList[0];
+        _prefs.getInt('selectedClass') != null && playerClassList != null
+            ? playerClassList[_prefs.getInt('selectedClass')]
+            : playerClassList[0];
     _character
       ..name = _prefs.getString('characterName') ?? '[UNKNOWN]'
       ..classCode = _playerClass.classCode

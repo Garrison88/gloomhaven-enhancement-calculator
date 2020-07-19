@@ -15,7 +15,7 @@ class DatabaseHelper {
   static final _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -38,9 +38,7 @@ class DatabaseHelper {
     String path = join(documentsDirectory.path, _databaseName);
     // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate
-        // , onUpgrade: _onUpgrade
-        );
+        version: _databaseVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   // SQL string to create the database
@@ -110,29 +108,30 @@ class DatabaseHelper {
     });
   }
 
-  //   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-  //   await db.transaction((txn) async {
-  //     await txn.execute('''
-  //             ALTER TABLE $tablePerks (
-  //               MODIFY $columnPerkId INTEGER PRIMARY KEY,
-  //               MODIFY $columnPerkClass TEXT NOT NULL,
-  //               MODIFY $columnPerkDetails TEXT NOT NULL
-  //             )''').then((_) async {
-  //       for (Perk perk in perkList) {
-  //         for (int i = 0; i < perk.numOfPerks; i++) {
-  //           int id = await txn.insert(tablePerks, perk.toMap());
-  //           print("ID: " +
-  //               id.toString() +
-  //               " : " +
-  //               perk.perkClassCode +
-  //               " : " +
-  //               perk.perkDetails);
-  //         }
-  //       }
-  //     });
-  //   });
-  //   print("DB HELPER - DATABASE INITIALIZED");
-  // }
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    await db.transaction((txn) async {
+      await txn.execute('DROP TABLE IF EXISTS $tablePerks');
+      await txn.execute('''
+              CREATE TABLE $tablePerks (
+                $columnPerkId INTEGER PRIMARY KEY,
+                $columnPerkClass TEXT NOT NULL,
+                $columnPerkDetails TEXT NOT NULL
+              )''').then((_) async {
+        for (Perk perk in perkList) {
+          for (int i = 0; i < perk.numOfPerks; i++) {
+            int id = await txn.insert(tablePerks, perk.toMap());
+            print("ID: " +
+                id.toString() +
+                " : " +
+                perk.perkClassCode +
+                " : " +
+                perk.perkDetails);
+          }
+        }
+      });
+    });
+    print("DB HELPER - DATABASE INITIALIZED");
+  }
 
   Future<int> insertCharacter(
       Character _character, List<bool> _selectedPerks) async {
