@@ -6,21 +6,18 @@ import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/envelope_x.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/characterList_screen.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return BottomNavState();
-  }
+  State<StatefulWidget> createState() => BottomNavState();
 }
 
 class BottomNavState extends State<BottomNav> {
@@ -31,11 +28,7 @@ class BottomNavState extends State<BottomNav> {
   PageController pageController = PageController();
   int page = 0;
 
-  /// Called when the user presses on of the
-  /// [BottomNavigationBarItem] with corresponding
-  /// page index
   void _navigationTapped(int page) {
-    // Animating to the page
     pageController.animateToPage(page,
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
@@ -72,7 +65,7 @@ class BottomNavState extends State<BottomNav> {
               onChanged: (bool isOpen) {
                 appModel.envelopeX = isOpen;
                 if (isOpen)
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -115,11 +108,7 @@ class BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // DefaultTabController(
-        //   length: 4,
-        //   child:
-        Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
@@ -146,47 +135,51 @@ class BottomNavState extends State<BottomNav> {
             },
           ),
         ],
-        // bottom: TabBar(tabs: <Widget>[
-        //   Tab(icon: Icon(Icons.photo_camera)),
-        //   Tab(text: "Chats"),
-        //   Tab(text: "Status"),
-        //   Tab(text: "Calls")
-        // ]),
       ),
-      body: PageView(children: [
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider<CharacterListModel>(
-              create: (context) => CharacterListModel(),
-            ),
-            ChangeNotifierProvider<CharacterModel>.value(
-              value: CharacterModel(),
-            ),
-          ],
-          child: CharacterListPage(),
-        ),
-        EnhancementCalculatorPage()
-      ], controller: pageController, onPageChanged: _onPageChanged),
-      bottomNavigationBar: BottomNavigationBar(items: [
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.scroll),
-            title: Text(
-              'CHARACTER\nSHEETS',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontFamily: highTower, fontWeight: FontWeight.bold),
-            )),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.calculator),
-            title: Text(
-              'ENHANCEMENT\nCALCULATOR',
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontFamily: highTower, fontWeight: FontWeight.bold),
-            )),
-      ], onTap: _navigationTapped, currentIndex: page),
+      body: PageView(
+        children: [
+          MultiProvider(
+            providers: [
+              ChangeNotifierProvider<CharactersModel>(
+                  create: (context) => CharactersModel()),
+              ChangeNotifierProvider<CharacterModel>(
+                  create: (context) => CharacterModel()),
+            ],
+            child: CharactersPage(),
+          ),
+          EnhancementCalculatorPage()
+        ],
+        controller: pageController,
+        onPageChanged: _onPageChanged,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.scroll),
+              title: Text(
+                'CHARACTER\nSHEETS',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: highTower,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.calculator),
+              title: Text(
+                'ENHANCEMENT\nCALCULATOR',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: highTower,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+        ],
+        onTap: _navigationTapped,
+        currentIndex: page,
+      ),
       // ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart' as PerkRow;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/player_class.dart';
 import '../ui/widgets/perk.dart';

@@ -1,33 +1,88 @@
 import 'package:flutter/material.dart';
-
-import 'perk.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import 'package:provider/provider.dart';
 
 class PerkSection extends StatefulWidget {
-  final List<Perk> perkList;
+  final int id;
 
-  PerkSection(this.perkList);
-
+  const PerkSection({Key key, this.id}) : super(key: key);
   @override
   State<StatefulWidget> createState() => PerkSectionState();
 }
 
 class PerkSectionState extends State<PerkSection> {
-  List<Perk> _perkList = [];
+  Future _future;
 
   @override
   void initState() {
     super.initState();
-
-    setState(() {
-      _perkList = widget.perkList;
-    });
+    _future = Provider.of<CharacterModel>(context, listen: false)
+        .loadCharacterPerks(widget.id);
   }
 
+  @override
   Widget build(BuildContext context) {
-    return SliverGrid.count(
-      crossAxisCount: 1,
-      childAspectRatio: 5,
-      children: List.generate(_perkList.length, (index) => _perkList[index]),
-    );
+    CharacterModel characterModel = Provider.of<CharacterModel>(context);
+    return FutureBuilder(
+        future: _future,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Container(child: Text(snapshot.error.toString()));
+          }
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            characterModel.characterPerks = snapshot.data;
+            return Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                Container(
+                    padding: EdgeInsets.all(smallPadding),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Perks (',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: titleFontSize),
+                        ),
+                        Text('${characterModel.numOfSelectedPerks}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: titleFontSize,
+                                color: characterModel.getMaximumPerks() >=
+                                        characterModel.numOfSelectedPerks
+                                    ? Colors.black
+                                    : Colors.red)),
+                        Text(' / ${characterModel.getMaximumPerks()})',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: titleFontSize))
+                      ],
+                    )),
+                ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List.generate(
+                      characterModel.characterPerks.length,
+                      (index) => PerkRow(
+                            perk: characterModel.characterPerks[index],
+                            onToggle: (value) {
+                              characterModel.togglePerk(
+                                characterModel.characterPerks[index],
+                                value,
+                              );
+                            },
+                          )),
+                ),
+                Container(
+                  height: 58,
+                )
+              ],
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

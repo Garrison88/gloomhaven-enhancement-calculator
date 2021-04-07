@@ -269,8 +269,14 @@ class DatabaseHelper {
     //     where: '$columnClassCode = ?',
     //     whereArgs: [_classCode]);
     // });
-    await db.query(tableCharacters).then((result) => result
-        .forEach((_character) => _list.add(Character.fromMap(_character))));
+    await db.query(tableCharacters).then(
+          (result) => result.forEach(
+            (_character) => _list.add(
+              Character.fromMap(_character),
+            ),
+          ),
+        );
+
     print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
     return _list;
   }

@@ -4,15 +4,13 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characterList_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 class NewCharacterDialog extends StatefulWidget {
-  // final PlayerClass initialValue;
-  final CharacterListModel characterListModel;
-  // final void Function(String) onValueChange;
+  final CharactersModel charactersModel;
 
-  NewCharacterDialog({Key key, this.characterListModel}) : super(key: key);
+  NewCharacterDialog({Key key, this.charactersModel}) : super(key: key);
 
   @override
   _NewCharacterDialogState createState() => _NewCharacterDialogState();
@@ -35,10 +33,6 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //     future: ,
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasData) {
     return AlertDialog(
       content: SingleChildScrollView(
         child: Column(
@@ -110,7 +104,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                     style: TextStyle(fontSize: titleFontSize),
                     textAlign: TextAlign.center,
                     inputFormatters: [
-                      BlacklistingTextInputFormatter(
+                      FilteringTextInputFormatter.deny(
                           RegExp('[\\.|\\,|\\ |\\-]'))
                     ],
                     // decoration: InputDecoration(hintText: 'Previous Retirements'),
@@ -138,17 +132,16 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
         ),
         RaisedButton(
           color: Colors.green,
-          onPressed: () {
+          onPressed: () async {
             if (_newCharacterFormKey.currentState.validate() &&
                 _selectedClass != null) {
-              widget.characterListModel
-                  .addCharacter(
-                    _nameTextFieldController.text,
-                    _selectedClass,
-                    _initialXp,
-                    _previousRetirements,
-                  )
-                  .whenComplete(() => Navigator.pop(context));
+              await widget.charactersModel.createCharacter(
+                _nameTextFieldController.text,
+                _selectedClass,
+                _initialXp,
+                _previousRetirements,
+              );
+              Navigator.pop(context);
             }
           },
           child: Text(
@@ -162,11 +155,5 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
         ),
       ],
     );
-    //   } else {
-    //     return Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   }
-    // });
   }
 }

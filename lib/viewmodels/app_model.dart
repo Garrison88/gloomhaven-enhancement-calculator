@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppModel with ChangeNotifier {
-  Color _accentColor;
-  int _position;
+  String _accentColor = '0xff4e7ec1';
+  // int _position;
   bool _envelopeX;
 
-  AppModel(this._position, this._accentColor, this._envelopeX);
+  // PageController _pageController;
 
-  get accentColor => _accentColor;
+  // PageController get pageController => _pageController;
 
-  setAccentColor(String _color) {
+  // set pageController(PageController pageController) {
+  //   _pageController = pageController;
+  // }
+
+  String get accentColor => _accentColor;
+
+  set accentColor(String color) {
     SharedPreferences.getInstance().then((_prefs) {
-      _prefs.setString('themeColor', _color);
-      _accentColor = Color(int.parse(_color));
+      _prefs.setString('themeColor', color.toString());
+      _accentColor = color;
     });
 
     notifyListeners();
@@ -41,11 +47,11 @@ class AppModel with ChangeNotifier {
   //   _retirements = _numOfRetirements;
   // }
 
-  get position => this._position;
+  // get position => _position;
 
-  set position(int _position) => SharedPreferences.getInstance().then((_prefs) {
-        _prefs.setInt('position', _position);
-        this._position = _position;
-        notifyListeners();
-      });
+  // set position(int _position) => SharedPreferences.getInstance().then((_prefs) {
+  //       _prefs.setInt('position', _position);
+  //       this._position = _position;
+  //       notifyListeners();
+  //     });
 }

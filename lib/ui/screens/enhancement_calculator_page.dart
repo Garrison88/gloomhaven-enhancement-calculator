@@ -13,13 +13,11 @@ class EnhancementCalculatorPage extends StatefulWidget {
   EnhancementCalculatorPage({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _EnhancementCalculatorPageState();
-  }
+  State<StatefulWidget> createState() => _EnhancementCalculatorPageState();
 }
 
 class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
-  int _targetCardLvl, _previousEnhancements, _enhancementCost;
+  int _targetCardLvl = 0, _previousEnhancements = 0, _enhancementCost = 0;
 
   bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = false;
 
@@ -33,38 +31,39 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   }
 
   Future _writeToSharedPrefs() async {
-    sp.setInt('targetCardLvlKey', _targetCardLvl);
-    sp.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
-    sp.setInt('enhancementTypeKey',
+    prefs.setInt('targetCardLvlKey', _targetCardLvl);
+    prefs.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
+    prefs.setInt('enhancementTypeKey',
         enhancementList.indexOf(_selectedEnhancement ?? null));
-    sp.setBool('disableMultiTargetsSwitchKey', _disableMultiTargetSwitch);
-    sp.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
-//    sp.setInt('enhancementCostKey', _enhancementCost);
+    prefs.setBool('disableMultiTargetsSwitchKey', _disableMultiTargetSwitch);
+    prefs.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
+//    prefs.setInt('enhancementCostKey', _enhancementCost);
     print('shared prefs to ' '$_enhancementCost');
     setState(() {});
   }
 
   Future _readFromSharedPrefs() async {
-    _targetCardLvl = sp.getInt('targetCardLvlKey') ?? null;
-    _previousEnhancements = sp.getInt('enhancementsOnTargetActionKey') ?? null;
-    _selectedEnhancement = sp.getInt('enhancementTypeKey') != null
-        ? enhancementList[sp.getInt('enhancementTypeKey')]
+    _targetCardLvl = prefs.getInt('targetCardLvlKey') ?? 0;
+    _previousEnhancements = prefs.getInt('enhancementsOnTargetActionKey') ?? 0;
+    _selectedEnhancement = prefs.getInt('enhancementTypeKey') != null
+        ? enhancementList[prefs.getInt('enhancementTypeKey')]
         : null;
     _disableMultiTargetSwitch =
-        sp.getBool('disableMultiTargetsSwitchKey') ?? false;
-    _multipleTargetsSwitch = sp.getBool('multipleTargetsSelectedKey') ?? false;
+        prefs.getBool('disableMultiTargetsSwitchKey') ?? false;
+    _multipleTargetsSwitch =
+        prefs.getBool('multipleTargetsSelectedKey') ?? false;
     print('shared prefs from ' + '$_enhancementCost');
     _updateEnhancementCost();
     setState(() {});
   }
 
   Future _resetAllFields() async {
-    sp.remove('targetCardLvlKey');
-    sp.remove('enhancementsOnTargetActionKey');
-    sp.remove('enhancementTypeKey');
-    sp.remove('disableMultiTargetsSwitchKey');
-    sp.remove('multipleTargetsSelectedKey');
-//    sp.remove('enhancementCostKey');
+    prefs.remove('targetCardLvlKey');
+    prefs.remove('enhancementsOnTargetActionKey');
+    prefs.remove('enhancementTypeKey');
+    prefs.remove('disableMultiTargetsSwitchKey');
+    prefs.remove('multipleTargetsSelectedKey');
+//    prefs.remove('enhancementCostKey');
     _readFromSharedPrefs();
   }
 
@@ -119,7 +118,6 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: Center(
         child: Container(
           padding: EdgeInsets.all(smallPadding),

@@ -1,8 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-
-import '../../main.dart';
+import 'package:gloomhaven_enhancement_calc/main.dart';
 
 class Perk extends StatefulWidget {
   final String classCode;
@@ -30,8 +29,9 @@ class PerkState extends State<Perk> {
     _details = widget.details;
     _checkList = List.generate(widget.numOfChecks, (i) {
       // get state of checkbox from unique SP
-      print('$_classCode$_details${i.toString()}' + '${sp.getBool('$_classCode$_details${i.toString()}')}');
-      return sp.getBool('$_classCode$_details${i.toString()}') ?? false;
+      print('$_classCode$_details${i.toString()}' +
+          '${prefs.getBool('$_classCode$_details${i.toString()}')}');
+      return prefs.getBool('$_classCode$_details${i.toString()}') ?? false;
     });
   }
 
@@ -46,15 +46,15 @@ class PerkState extends State<Perk> {
               children: List.generate(
                 _numOfChecks,
                 (i) => Checkbox(
-                      value: _checkList[i],
-                      onChanged: (bool value) => setState(() {
-                            sp.setBool(
-                                // save state of checkbox to unique SP
-                                '$_classCode$_details${i.toString()}',
-                                value);
-                            _checkList[i] = value;
-                          }),
-                    ),
+                  value: _checkList[i],
+                  onChanged: (bool value) => setState(() {
+                    prefs.setBool(
+                        // save state of checkbox to unique SP
+                        '$_classCode$_details${i.toString()}',
+                        value);
+                    _checkList[i] = value;
+                  }),
+                ),
               ).toList(),
             ),
             Container(

@@ -34,7 +34,7 @@ class AddSubtractDialog extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     inputFormatters: [
-                      BlacklistingTextInputFormatter(
+                      FilteringTextInputFormatter.deny(
                           RegExp('[\\.|\\,|\\ |\\-]'))
                     ],
                     keyboardType: TextInputType.number,

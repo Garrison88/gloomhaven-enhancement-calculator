@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class EnvelopeXDialog extends StatefulWidget {
   bool isOpen;
   final Function onChanged;
-  EnvelopeXDialog({bool isOpen, Function onChanged})
-      : this.isOpen = isOpen,
+  EnvelopeXDialog({
+    bool isOpen,
+    Function onChanged,
+  })  : this.isOpen = isOpen,
         this.onChanged = onChanged;
   @override
   _EnvelopeXDialogState createState() => _EnvelopeXDialogState();
