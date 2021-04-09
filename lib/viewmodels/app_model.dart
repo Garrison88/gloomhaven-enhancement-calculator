@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppModel with ChangeNotifier {
-  String _accentColor = '0xff4e7ec1';
+  // String _accentColor = '0xff4e7ec1';
   // int _position;
-  bool _envelopeX;
+  bool _envelopeX = false;
+
+  AppModel(
+    String accentColor,
+    bool envelopeX,
+  ) {
+    // this._accentColor = accentColor;
+    this._envelopeX = envelopeX;
+  }
 
   // PageController _pageController;
 
@@ -14,16 +22,16 @@ class AppModel with ChangeNotifier {
   //   _pageController = pageController;
   // }
 
-  String get accentColor => _accentColor;
+  // String get accentColor => _accentColor;
 
-  set accentColor(String color) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString('themeColor', color);
-      accentColor = color;
-    });
+  // set accentColor(String color) {
+  //   // SharedPreferences.getInstance().then((prefs) {
+  //   //   prefs.setString('themeColor', color);
+  //   accentColor = color;
+  //   // });
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   get envelopeX => this._envelopeX;
 

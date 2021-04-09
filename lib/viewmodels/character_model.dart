@@ -118,8 +118,8 @@ class CharacterModel with ChangeNotifier {
 
   Future<List<CharacterPerk>> loadCharacterPerks(int id) async {
     print('LOAD CHARACTER PERKS');
-    this.characterPerks =
-        await DatabaseHelper.instance.queryCharacterPerks(this.character.id);
+    characterPerks =
+        await DatabaseHelper.instance.queryCharacterPerks(character.id);
     notifyListeners();
     return characterPerks;
   }

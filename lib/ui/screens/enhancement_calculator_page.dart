@@ -1,11 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 import '../../data/constants.dart';
 import '../../data/enhancement_list_data.dart';
 import '../../data/strings.dart';
 import '../../enums/enhancement_category.dart';
-import '../../main.dart';
 import '../../models/enhancement.dart';
 import '../dialogs/show_info.dart';
 
@@ -32,38 +32,36 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   }
 
   void _writeToSharedPrefs() async {
-    prefs.setInt('targetCardLvlKey', _targetCardLvl);
-    prefs.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
-    prefs.setInt('enhancementTypeKey',
-        enhancementList.indexOf(_selectedEnhancement ?? null) ?? 0);
-    prefs.setBool('disableMultiTargetsSwitchKey', _disableMultiTargetSwitch);
-    prefs.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
+    SharedPrefs().targetCardLvl = _targetCardLvl;
+    SharedPrefs().previousEnhancements = _previousEnhancements;
+    SharedPrefs().enhancementType =
+        enhancementList.indexOf(_selectedEnhancement ?? null) ?? 0;
+    SharedPrefs().disableMultiTargetSwitch = _disableMultiTargetSwitch;
+    SharedPrefs().multipleTargetsSwitch = _multipleTargetsSwitch;
 //    prefs.setInt('enhancementCostKey', _enhancementCost);
     print('shared prefs to ' '$_enhancementCost');
     setState(() {});
   }
 
   Future _readFromSharedPrefs() async {
-    _targetCardLvl = prefs.getInt('targetCardLvlKey') ?? 0;
-    _previousEnhancements = prefs.getInt('enhancementsOnTargetActionKey') ?? 0;
-    _selectedEnhancement = prefs.getInt('enhancementTypeKey') != null
-        ? enhancementList[prefs.getInt('enhancementTypeKey') ?? 0]
+    SharedPrefs().targetCardLvl = SharedPrefs().targetCardLvl;
+    _previousEnhancements = SharedPrefs().previousEnhancements;
+    _selectedEnhancement = SharedPrefs().enhancementType != null
+        ? enhancementList[SharedPrefs().enhancementType]
         : null;
-    _disableMultiTargetSwitch =
-        prefs.getBool('disableMultiTargetsSwitchKey') ?? false;
-    _multipleTargetsSwitch =
-        prefs.getBool('multipleTargetsSelectedKey') ?? false;
+    _disableMultiTargetSwitch = SharedPrefs().disableMultiTargetSwitch;
+    _multipleTargetsSwitch = SharedPrefs().multipleTargetsSwitch;
     print('shared prefs from ' + '$_enhancementCost');
     _updateEnhancementCost();
     setState(() {});
   }
 
   Future _resetAllFields() async {
-    prefs.remove('targetCardLvlKey');
-    prefs.remove('enhancementsOnTargetActionKey');
-    prefs.remove('enhancementTypeKey');
-    prefs.remove('disableMultiTargetsSwitchKey');
-    prefs.remove('multipleTargetsSelectedKey');
+    SharedPrefs().remove('targetCardLvlKey');
+    SharedPrefs().remove('enhancementsOnTargetActionKey');
+    SharedPrefs().remove('enhancementTypeKey');
+    SharedPrefs().remove('disableMultiTargetsSwitchKey');
+    SharedPrefs().remove('multipleTargetsSelectedKey');
 //    prefs.remove('enhancementCostKey');
     _readFromSharedPrefs();
   }

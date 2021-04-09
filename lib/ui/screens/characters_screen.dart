@@ -1,15 +1,16 @@
 import 'dart:math';
 
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/new_character.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/character_screen.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class CharactersPage extends StatefulWidget {
 
 class _CharactersPageState extends State<CharactersPage> {
   PageController _pageController =
-      PageController(initialPage: prefs.getInt('position') ?? 0);
+      PageController(initialPage: SharedPrefs().initialPage);
   Future<List<Character>> _runFuture;
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _CharactersPageState extends State<CharactersPage> {
 
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.watch<CharactersModel>();
+    CharactersModel charactersModel = Provider.of<CharactersModel>(context);
     return Scaffold(
       body: FutureBuilder<List<Character>>(
           future: _runFuture,
@@ -79,11 +80,15 @@ class _CharactersPageState extends State<CharactersPage> {
                 return PageIndicatorContainer(
                   child: PageView.builder(
                     controller: _pageController,
-                    onPageChanged: (index) => updateCurrentCharacter(index),
+                    onPageChanged: (index) => updateCurrentCharacter(
+                      context,
+                      index,
+                    ),
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, int index) {
                       CharacterModel cm = CharacterModel();
                       cm.character = snapshot.data[index];
+                      print('AT CREATION HASHCODE IS:::: ${cm.hashCode}');
                       return Container(
                         child: Stack(
                           children: <Widget>[
@@ -93,21 +98,11 @@ class _CharactersPageState extends State<CharactersPage> {
                               child: Image.asset(
                                   'images/class_icons/${snapshot.data[index].classIcon}',
                                   width: iconWidth,
-                                  color: Color(int.parse(Provider.of<AppModel>(
-                                              context,
-                                              listen: false)
-                                          .accentColor))
-                                      .withOpacity(0.1)),
+                                  color:
+                                      Color(int.parse(SharedPrefs().themeColor))
+                                          .withOpacity(0.1)),
                             ),
                             SingleChildScrollView(
-                              // child: ChangeNotifierProvider(
-                              //   create: (_) => CharacterModel()
-                              //     ..character = snapshot.data[index],
-                              //   child: Container(
-                              //     padding: EdgeInsets.all(smallPadding),
-                              //     child: CharacterScreen(),
-                              //   ),
-                              // ),
                               child: ChangeNotifierProvider.value(
                                   value: cm,
                                   child: Container(
@@ -167,16 +162,17 @@ class _CharactersPageState extends State<CharactersPage> {
               await showDialog(
                 context: context,
                 builder: (_) {
-                  return NewCharacterDialog(
+                  return CreateCharacterDialog(
                     charactersModel: charactersModel,
                   );
                 },
               ).then((result) {
                 if (result) {
-                  // setState(() {});
-                  if (charactersModel.characters.length <= 1) {
-                    Provider.of<AppModel>(context, listen: false).accentColor =
-                        charactersModel.characters[0].classColor;
+                  setState(() {});
+                  if (charactersModel.characters.length == 1) {
+                    updateCurrentCharacter(context, 0);
+                    // Provider.of<AppModel>(context, listen: false).accentColor =
+                    //     charactersModel.characters[0].classColor;
                   } else {
                     _pageController.animateToPage(
                       charactersModel.characters.length - 1,
@@ -203,12 +199,20 @@ class _CharactersPageState extends State<CharactersPage> {
     );
     // });
   }
+}
 
-  updateCurrentCharacter(int index) {
-    prefs.setInt('position', index);
-    Provider.of<AppModel>(context, listen: false).accentColor =
-        Provider.of<CharactersModel>(context, listen: false)
-            .characters[index]
-            .classColor;
-  }
+updateCurrentCharacter(
+  BuildContext context,
+  int index,
+) {
+  SharedPrefs().initialPage = index;
+  SharedPrefs().themeColor =
+      Provider.of<CharactersModel>(context, listen: false)
+          .characters[index]
+          .classColor;
+  // Provider.of<AppModel>(context, listen: false).accentColor =
+  //     Provider.of<CharactersModel>(context, listen: false)
+  //         .characters[index]
+  //         .classColor;
+  EasyDynamicTheme.of(context).changeTheme(dynamic: true);
 }

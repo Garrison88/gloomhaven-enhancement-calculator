@@ -1,5 +1,5 @@
 // database table and column names
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
+// import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
 final String tableCharacters = 'Characters';
 final String columnCharacterId = '_id';
@@ -31,7 +31,7 @@ class Character {
   int gold;
   String notes;
   int checkMarks;
-  List<Perk> perksList;
+  // List<Perk> perksList;
   bool isRetired;
   // PlayerClass playerClass;
 

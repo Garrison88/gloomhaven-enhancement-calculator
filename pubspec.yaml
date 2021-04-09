@@ -10,7 +10,7 @@ description: Character sheet and enhancement calculator
 version: 3.1.0+47
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -18,6 +18,7 @@ dependencies:
   shared_preferences: ^2.0.5
   url_launcher: ^6.0.2
   # dynamic_theme: ^1.0.1
+  # easy_dynamic_theme: ^2.0.0
   easy_dynamic_theme: ^2.0.0
   auto_size_text: ^2.1.0
   sqflite: ^2.0.0
@@ -26,15 +27,15 @@ dependencies:
   flutter_speed_dial: ^3.0.5
   # flutter_stetho: ^0.5.0
   page_indicator: ^0.4.1
-  font_awesome_flutter: ^8.12.0
-  device_info: ^0.4.1+4
+  font_awesome_flutter: ^9.0.0
+  device_info: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
-  flutter_launcher_icons: 0.7.5
+  flutter_launcher_icons: ^0.9.0
   flutter_test:
     sdk: flutter
 

@@ -7,16 +7,18 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
-class NewCharacterDialog extends StatefulWidget {
+class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
-  NewCharacterDialog({Key key, this.charactersModel}) : super(key: key);
+  CreateCharacterDialog({
+    this.charactersModel,
+  });
 
   @override
-  _NewCharacterDialogState createState() => _NewCharacterDialogState();
+  _CreateCharacterDialogState createState() => _CreateCharacterDialogState();
 }
 
-class _NewCharacterDialogState extends State<NewCharacterDialog> {
+class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
 

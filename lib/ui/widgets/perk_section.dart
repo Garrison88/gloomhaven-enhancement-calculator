@@ -3,6 +3,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import 'package:provider/provider.dart';
 
 class PerkSection extends StatefulWidget {
   final CharacterModel characterModel;
@@ -19,18 +20,19 @@ class PerkSection extends StatefulWidget {
 class PerkSectionState extends State<PerkSection> {
   Future<List<CharacterPerk>> _runFuture;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   print(
-  //       'HASHCODE BEFORE LOAD CHAR PERKS::::: ${widget.characterModel.hashCode}');
-  //   _runFuture = widget.characterModel
-  //       .loadCharacterPerks(widget.characterModel.character.id);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    print(
+        'HASHCODE BEFORE LOAD CHAR PERKS::::: ${widget.characterModel..hashCode}');
+    _runFuture = widget.characterModel
+        .loadCharacterPerks(widget.characterModel.character.id);
+  }
 
   @override
   void didUpdateWidget(covariant PerkSection oldWidget) {
-    if (oldWidget.characterModel.hashCode != widget.characterModel.hashCode) {
+    if (oldWidget.characterModel.character.id !=
+        widget.characterModel.character.id) {
       _runFuture = widget.characterModel
           .loadCharacterPerks(widget.characterModel.character.id);
     }

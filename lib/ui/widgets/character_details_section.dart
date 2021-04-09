@@ -1,25 +1,29 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/addSubtract_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/addSubtract_button.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_section.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 class CharacterDetailsSection extends StatefulWidget {
-  final CharacterModel characterModel;
-  final DeleteCharacter deleteCharacter;
+  // final CharacterModel characterModel;
+  // final DeleteCharacter deleteCharacter;
 
-  const CharacterDetailsSection({
-    Key key,
-    this.characterModel,
-    this.deleteCharacter,
-  }) : super(key: key);
+  // const CharacterDetailsSection({
+  //   Key key,
+  //   this.characterModel,
+  //   this.deleteCharacter,
+  // }) : super(key: key);
   @override
   _CharacterDetailsSectionState createState() =>
       _CharacterDetailsSectionState();
@@ -28,10 +32,12 @@ class CharacterDetailsSection extends StatefulWidget {
 class _CharacterDetailsSectionState extends State<CharacterDetailsSection> {
   @override
   Widget build(BuildContext context) {
+    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     // print('BUILD IN CHARACTER DETAILS SECTION');
     // CharactersModel charactersModel = context.watch<CharactersModel>();
     print(
-        'CHARACTER MODEL HASHCODE IN DETAILS SECTION::: ${widget.characterModel.hashCode}');
+        'CHARACTER MODEL HASHCODE IN DETAILS SECTION::: ${characterModel.hashCode}');
 
     return Column(
       children: <Widget>[
@@ -40,25 +46,28 @@ class _CharacterDetailsSectionState extends State<CharacterDetailsSection> {
         ),
         // RETIREMENTS AND LOCK
         RetirementsAndLockSection(
-          characterModel: widget.characterModel,
+          characterModel: characterModel,
           // charactersModel: charactersModel,
-          deleteCharacter: widget.deleteCharacter,
+          deleteCharacter: charactersModel.deleteCharacter,
         ),
         // NAME AND CLASS
         NameAndClassSection(
-          characterModel: widget.characterModel,
+          characterModel: characterModel,
         ),
         // STATS
         StatsSection(
-          characterModel: widget.characterModel,
+          characterModel: characterModel,
         ),
         // NOTES
         NotesSection(
-          characterModel: widget.characterModel,
+          characterModel: characterModel,
         ),
         // BATTLE GOAL CHECKMARKS
         BattleGoalCheckmarksSection(
-          characterModel: widget.characterModel,
+          characterModel: characterModel,
+        ),
+        PerkSection(
+          characterModel: characterModel,
         ),
       ],
     );
@@ -134,76 +143,57 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                     tooltip: 'Delete',
                     icon: Icon(FontAwesomeIcons.trash),
                     onPressed: () async => await showDialog<bool>(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                  content: Text(
-                                    'Are you sure? There\'s no going back!',
-                                    style: TextStyle(fontSize: titleFontSize),
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              content: Text(
+                                'Are you sure? There\'s no going back!',
+                                style: TextStyle(fontSize: titleFontSize),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: secondaryFontSize,
+                                        fontFamily: highTower),
                                   ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: Text(
-                                        'Cancel',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: secondaryFontSize,
-                                            fontFamily: highTower),
-                                      ),
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
-                                    ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.red),
-                                      ),
-                                      onPressed: () =>
-                                          Navigator.pop(context, true),
-                                      child: Text(
-                                        'Delete',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: secondaryFontSize,
-                                            fontFamily: highTower),
-                                      ),
-                                    ),
-                                  ],
-                                )).then((result) async {
-                          if (result) {
-                            await widget.deleteCharacter(
-                                widget.characterModel.character.id);
-                            print(
-                                'DELETED IS::: ${widget.characterModel.character.id}');
-                            print(
-                                'CHARACTER MODEL HASHCODE AFTER DELETE::: ${widget.characterModel.hashCode}');
-                            widget.characterModel.loadCharacterPerks(
-                                Provider.of<CharactersModel>(context,
-                                        listen: false)
-                                    .characters
-                                    .last
-                                    .id);
-                            print(
-                                'NEW IS::: ${Provider.of<CharactersModel>(context, listen: false).characters.last.id}');
-                            setState(() {});
-                            // .then((_) {
-                            // Provider.of<AppModel>(context,
-                            //           listen: false)
-                            //       .accentColor =
-                            //   widget.characterModel.character.classColor;
-                            // });
-
-                            // setState(() {
-                            // widget.characterModel.character =
-                            //     Provider.of<CharactersModel>(context,
-                            //             listen: false)
-                            //         .characters[0];
-                            // });
-                            // Navigator.pop(context, true);
-                          }
-                          // charactersModel.c
-                          // }
-                        }))
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                ),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red),
+                                  ),
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: secondaryFontSize,
+                                        fontFamily: highTower),
+                                  ),
+                                ),
+                              ],
+                            )).then(
+                      (result) async {
+                        if (result) {
+                          int _position = Provider.of<CharactersModel>(context,
+                                  listen: false)
+                              .characters
+                              .indexWhere((element) =>
+                                  element.id ==
+                                  widget.characterModel.character.id);
+                          await widget.deleteCharacter(
+                              widget.characterModel.character.id);
+                          updateCurrentCharacter(context, _position);
+                          setState(() {});
+                        }
+                      },
+                    ),
+                  )
                 : Container(),
             // TODO: add retire character functionality
             // widget.characterModel.isEditable

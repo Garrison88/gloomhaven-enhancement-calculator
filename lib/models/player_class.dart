@@ -15,10 +15,16 @@ class PlayerClass {
   String classIconUrl;
   bool locked;
   String classColor;
-  List<Perk> perks;
+  // List<Perk> perks;
 
-  PlayerClass(this.race, this.className, this.classCode, this.classIconUrl,
-      this.locked, this.classColor, this.perks);
+  PlayerClass(
+    this.race,
+    this.className,
+    this.classCode,
+    this.classIconUrl,
+    this.locked,
+    this.classColor,
+  );
 
   // convenience constructor to create a PlayerClass object
   PlayerClass.fromMap(Map<String, dynamic> map) {

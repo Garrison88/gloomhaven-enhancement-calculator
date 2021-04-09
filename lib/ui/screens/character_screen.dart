@@ -13,19 +13,15 @@ class CharacterScreen extends StatelessWidget {
 // class _CharacterScreenState extends State<CharacterScreen> {
 //   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
-    CharactersModel charactersModel = context.watch<CharactersModel>();
+    // CharacterModel characterModel = context.watch<CharacterModel>();
+    // CharactersModel charactersModel = context.watch<CharactersModel>();
     return Container(
       child: Column(
         children: <Widget>[
           CharacterDetailsSection(
-            characterModel: characterModel,
-            deleteCharacter: charactersModel.deleteCharacter,
-          ),
-          PerkSection(
-            // id: characterModel.character.id,
-            characterModel: characterModel,
-          ),
+              // characterModel: characterModel,
+              // deleteCharacter: charactersModel.deleteCharacter,
+              ),
         ],
       ),
     );

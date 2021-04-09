@@ -3,11 +3,13 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 
 class CharactersModel with ChangeNotifier {
   List<Character> _characters = [];
   // List<bool> _legacyPerks = [];
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  // Map<int, CharacterModel> characterModels = {};
 
   List<Character> get characters => _characters;
 
@@ -48,6 +50,7 @@ class CharactersModel with ChangeNotifier {
     print(character.name);
     print(character.classCode);
     characters.add(character);
+    // characterModels[character.id] = CharacterModel();
     notifyListeners();
     // return character;
   }
