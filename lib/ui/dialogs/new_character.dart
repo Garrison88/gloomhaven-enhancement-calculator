@@ -121,7 +121,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
       ),
       actions: <Widget>[
         MaterialButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, false),
           child: Text(
             'Cancel',
             style: TextStyle(
@@ -130,8 +130,10 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
             ),
           ),
         ),
-        RaisedButton(
-          color: Colors.green,
+        ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+          ),
           onPressed: () async {
             if (_newCharacterFormKey.currentState.validate() &&
                 _selectedClass != null) {
@@ -141,7 +143,7 @@ class _NewCharacterDialogState extends State<NewCharacterDialog> {
                 _initialXp,
                 _previousRetirements,
               );
-              Navigator.pop(context);
+              Navigator.pop(context, true);
             }
           },
           child: Text(

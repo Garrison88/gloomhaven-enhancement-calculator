@@ -5,19 +5,20 @@ import 'package:gloomhaven_enhancement_calc/ui/screens/character_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
 
-class App extends StatelessWidget {
+class GloomhavenCompanion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Gloomhaven Companion',
-      routes: {
-        '/': (context) => BottomNav(),
-        '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
-        // '/characterSheetPage': (context) => CharacterSheetPage(),
-        '/characterDetailsPage': (context) => CharacterScreen()
-      },
+      // routes: {
+      //   '/': (context) => BottomNav(),
+      //   '/enhancementCalculatorPage': (context) => EnhancementCalculatorPage(),
+      //   // '/characterSheetPage': (context) => CharacterSheetPage(),
+      //   '/characterDetailsPage': (context) => CharacterScreen()
+      // },
+      home: BottomNav(),
       theme: ThemeData(
           accentColor: Color(int.parse(appModel.accentColor)),
           primaryColor: Color(int.parse(appModel.accentColor)),

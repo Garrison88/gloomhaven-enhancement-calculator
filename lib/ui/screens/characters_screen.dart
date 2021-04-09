@@ -32,17 +32,14 @@ class _CharactersPageState extends State<CharactersPage> {
 
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel =
-        Provider.of<CharactersModel>(context, listen: false);
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Scaffold(
       body: FutureBuilder<List<Character>>(
           future: _runFuture,
           builder: (context, AsyncSnapshot<List<Character>> snapshot) {
             if (snapshot.hasError) {
               return Container(
-                child: Text(
-                  snapshot.error.toString(),
-                ),
+                child: Text(snapshot.error.toString()),
               );
             } else if (snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.done) {
@@ -61,7 +58,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                 right: smallPadding * 2,
                               ),
                               child: Text(
-                                'Import your existing character or create a new one using the menu below',
+                                'Create a new character using the menu below',
                                 style:
                                     TextStyle(fontFamily: nyala, fontSize: 24),
                                 textAlign: TextAlign.center,
@@ -84,7 +81,9 @@ class _CharactersPageState extends State<CharactersPage> {
                     controller: _pageController,
                     onPageChanged: (index) => updateCurrentCharacter(index),
                     itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (_, int index) {
+                      CharacterModel cm = CharacterModel();
+                      cm.character = snapshot.data[index];
                       return Container(
                         child: Stack(
                           children: <Widget>[
@@ -101,14 +100,20 @@ class _CharactersPageState extends State<CharactersPage> {
                                       .withOpacity(0.1)),
                             ),
                             SingleChildScrollView(
-                              child: ChangeNotifierProvider<CharacterModel>(
-                                create: (context) => CharacterModel(
-                                    character: snapshot.data[index]),
-                                child: Container(
-                                  padding: EdgeInsets.all(smallPadding),
-                                  child: CharacterScreen(),
-                                ),
-                              ),
+                              // child: ChangeNotifierProvider(
+                              //   create: (_) => CharacterModel()
+                              //     ..character = snapshot.data[index],
+                              //   child: Container(
+                              //     padding: EdgeInsets.all(smallPadding),
+                              //     child: CharacterScreen(),
+                              //   ),
+                              // ),
+                              child: ChangeNotifierProvider.value(
+                                  value: cm,
+                                  child: Container(
+                                    padding: EdgeInsets.all(smallPadding),
+                                    child: CharacterScreen(),
+                                  )),
                             )
                           ],
                         ),
@@ -161,22 +166,24 @@ class _CharactersPageState extends State<CharactersPage> {
             onTap: () async {
               await showDialog(
                 context: context,
-                builder: (BuildContext _) {
+                builder: (_) {
                   return NewCharacterDialog(
                     charactersModel: charactersModel,
                   );
                 },
-              ).then((_) {
-                setState(() {});
-                if (charactersModel.characters.length <= 1) {
-                  Provider.of<AppModel>(context, listen: false).accentColor =
-                      charactersModel.characters[0].classColor;
-                } else {
-                  _pageController.animateToPage(
-                    charactersModel.characters.length - 1,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
+              ).then((result) {
+                if (result) {
+                  // setState(() {});
+                  if (charactersModel.characters.length <= 1) {
+                    Provider.of<AppModel>(context, listen: false).accentColor =
+                        charactersModel.characters[0].classColor;
+                  } else {
+                    _pageController.animateToPage(
+                      charactersModel.characters.length - 1,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
+                  }
                 }
               });
             },

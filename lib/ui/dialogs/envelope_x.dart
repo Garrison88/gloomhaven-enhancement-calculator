@@ -15,13 +15,6 @@ class EnvelopeXDialog extends StatefulWidget {
 }
 
 class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
-  // bool isOpen = false;
-
-  // Future<bool> getSwitchState() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   return prefs.getBool('envelope_x');
-  // }
-
   _toggleSwitch(bool _value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -48,7 +41,7 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
           ),
           Expanded(
             child: Text(
-              "Major Spoilers Ahead!",
+              'Major Spoilers Ahead!',
               style: TextStyle(fontSize: secondaryFontSize),
             ),
           ),
@@ -74,10 +67,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                 visible: !widget.isOpen,
                 child: Icon(Icons.mail),
               ),
-              // Text(
-              //   'Close',
-              //   style: TextStyle(fontFamily: nyala),
-              // ),
               Switch(
                 value: widget.isOpen,
                 onChanged: (value) => _toggleSwitch(value),
@@ -111,8 +100,11 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
           ),
         ),
         !widget.isOpen
-            ? RaisedButton(
-                color: Colors.blue,
+            ? ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
                 onPressed: () {
                   widget.onChanged(widget.isOpen);
                   Navigator.of(context).pop();
@@ -125,9 +117,15 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                   ),
                 ),
               )
-            : RaisedButton.icon(
-                icon: Icon(Icons.warning),
-                color: Colors.yellow,
+            : ElevatedButton.icon(
+                icon: Icon(
+                  Icons.warning,
+                  color: Colors.black,
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.yellow),
+                ),
                 onPressed: () {
                   widget.onChanged(widget.isOpen);
                   Navigator.of(context).pop();
@@ -135,6 +133,7 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                 label: Text(
                   'Save',
                   style: TextStyle(
+                    color: Colors.black,
                     fontSize: secondaryFontSize,
                     fontFamily: highTower,
                   ),
@@ -159,9 +158,5 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
         // ),
       ],
     );
-    //   } else {
-    //     return Container();
-    //   }
-    // });
   }
 }

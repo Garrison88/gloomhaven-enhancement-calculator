@@ -10,13 +10,14 @@ class CharacterModel with ChangeNotifier {
   Character character;
   List<CharacterPerk> characterPerks = [];
   int numOfSelectedPerks = 0;
+  TextEditingController previousRetirementsController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController xpController = TextEditingController();
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-  CharacterModel({
-    this.character,
-  });
+  // CharacterModel({
+  //   this.character,
+  // });
   DatabaseHelper db = DatabaseHelper.instance;
   // PlayerClass playerClass;
 
@@ -35,6 +36,34 @@ class CharacterModel with ChangeNotifier {
   //   // _playerClass = await db.queryPlayerClass(character.classCode);
   //   return true;
   // }
+  //
+  // int get numOfSelectedPerks => _numOfSelectedPerks;
+
+  // set numOfSelectedPerks(int num) => _numOfSelectedPerks = num;
+
+  // setNumOfSelectedPerks() {
+  //   int tempNum = 0;
+  //   characterPerks.forEach((element) {
+  //     if (element.characterPerkIsSelected) {
+  //       tempNum++;
+  //     } else {
+  //       tempNum--;
+  //     }
+  //   });
+  //   // notifyListeners();
+  // }
+  //
+  //
+
+// int get numOfSelected
+
+  // Character get character => _character;
+
+  // set character(Character character) {
+  //   _character = character;
+  //   // loadCharacterPerks();
+  //   // notifyListeners();
+  // }
 
   int getMaximumPerks() =>
       currentLevel -
@@ -43,12 +72,10 @@ class CharacterModel with ChangeNotifier {
       character.previousRetirements;
 
   bool get isEditable {
-    // print('get isEditable');
     return _isEditable;
   }
 
   set isEditable(bool value) {
-    // print('edit changed');
     _isEditable = value;
     notifyListeners();
   }
@@ -91,28 +118,26 @@ class CharacterModel with ChangeNotifier {
 
   Future<List<CharacterPerk>> loadCharacterPerks(int id) async {
     print('LOAD CHARACTER PERKS');
-    List<CharacterPerk> perks = [];
-    numOfSelectedPerks = 0;
-    perks = await DatabaseHelper.instance.queryCharacterPerks(id);
-    for (CharacterPerk perk in perks) {
-      if (perk.characterPerkIsSelected) {
-        numOfSelectedPerks++;
-      }
-    }
-    characterPerks = perks;
+    this.characterPerks =
+        await DatabaseHelper.instance.queryCharacterPerks(this.character.id);
     notifyListeners();
-    return perks;
+    return characterPerks;
   }
 
   Future<bool> togglePerk(
     CharacterPerk perk,
     bool value,
   ) async {
-    characterPerks.forEach((element) {
-      if (element.associatedPerkId == perk.associatedPerkId) {
-        element.characterPerkIsSelected = value;
+    if (value) {
+      numOfSelectedPerks++;
+    } else {
+      numOfSelectedPerks--;
+    }
+    for (CharacterPerk characterPerk in characterPerks) {
+      if (characterPerk.associatedPerkId == perk.associatedPerkId) {
+        characterPerk.characterPerkIsSelected = value;
       }
-    });
+    }
     await db.updateCharacterPerk(perk, value);
     notifyListeners();
     return value;

@@ -7,7 +7,6 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/envelope_x.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
@@ -86,20 +85,6 @@ class BottomNavState extends State<BottomNav> {
             ));
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   pageController = PageController();
-  //   db.queryAllRows().then((characters) {
-  //     setState(() {
-  //       characters.forEach((character) {
-  //         characterList.add(Character.fromMap(character));
-  //         print("*************** BOTTOM NAV ONINIT RAN - CHARACTERS QUERIED: " + character.toString());
-  //       });
-  //     });
-  //   });
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -138,13 +123,8 @@ class BottomNavState extends State<BottomNav> {
       ),
       body: PageView(
         children: [
-          MultiProvider(
-            providers: [
-              ChangeNotifierProvider<CharactersModel>(
-                  create: (context) => CharactersModel()),
-              ChangeNotifierProvider<CharacterModel>(
-                  create: (context) => CharacterModel()),
-            ],
+          ChangeNotifierProvider<CharactersModel>(
+            create: (context) => CharactersModel(),
             child: CharactersPage(),
           ),
           EnhancementCalculatorPage()

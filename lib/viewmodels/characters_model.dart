@@ -12,6 +12,7 @@ class CharactersModel with ChangeNotifier {
   List<Character> get characters => _characters;
 
   Future<List<Character>> loadCharacters() async {
+    print('LOAD CHARACTERS IN CHARACTERS MODEL');
     _characters = await databaseHelper.queryAllCharacters();
     return _characters;
   }
@@ -51,9 +52,10 @@ class CharactersModel with ChangeNotifier {
     // return character;
   }
 
-  Future deleteCharacter(int _characterId) async {
-    await databaseHelper.deleteCharacter(_characterId);
-    characters.removeWhere((element) => element.id == _characterId);
+  Future<void> deleteCharacter(int characterId) async {
+    print('DELETE IN MODEL');
+    await databaseHelper.deleteCharacter(characterId);
+    characters.removeWhere((element) => element.id == characterId);
     notifyListeners();
   }
 

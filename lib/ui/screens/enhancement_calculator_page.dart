@@ -26,15 +26,16 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   @override
   void initState() {
     super.initState();
+    // _writeToSharedPrefs();
     _readFromSharedPrefs();
     _updateEnhancementCost();
   }
 
-  Future _writeToSharedPrefs() async {
+  void _writeToSharedPrefs() async {
     prefs.setInt('targetCardLvlKey', _targetCardLvl);
     prefs.setInt('enhancementsOnTargetActionKey', _previousEnhancements);
     prefs.setInt('enhancementTypeKey',
-        enhancementList.indexOf(_selectedEnhancement ?? null));
+        enhancementList.indexOf(_selectedEnhancement ?? null) ?? 0);
     prefs.setBool('disableMultiTargetsSwitchKey', _disableMultiTargetSwitch);
     prefs.setBool('multipleTargetsSelectedKey', _multipleTargetsSwitch);
 //    prefs.setInt('enhancementCostKey', _enhancementCost);
@@ -46,7 +47,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     _targetCardLvl = prefs.getInt('targetCardLvlKey') ?? 0;
     _previousEnhancements = prefs.getInt('enhancementsOnTargetActionKey') ?? 0;
     _selectedEnhancement = prefs.getInt('enhancementTypeKey') != null
-        ? enhancementList[prefs.getInt('enhancementTypeKey')]
+        ? enhancementList[prefs.getInt('enhancementTypeKey') ?? 0]
         : null;
     _disableMultiTargetSwitch =
         prefs.getBool('disableMultiTargetsSwitchKey') ?? false;

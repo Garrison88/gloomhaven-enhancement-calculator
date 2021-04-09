@@ -17,9 +17,9 @@ class AppModel with ChangeNotifier {
   String get accentColor => _accentColor;
 
   set accentColor(String color) {
-    SharedPreferences.getInstance().then((_prefs) {
-      _prefs.setString('themeColor', color.toString());
-      _accentColor = color;
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('themeColor', color);
+      accentColor = color;
     });
 
     notifyListeners();

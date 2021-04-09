@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences prefs;
 
-main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   prefs = await SharedPreferences.getInstance();
   // SharedPreferences.getInstance().then((prefs) {
@@ -17,9 +17,9 @@ main() async {
     ..accentColor = prefs.getString('themeColor') ?? '0xff4e7ec1'
     ..envelopeX = prefs.getBool('envelope_x') ?? false;
   runApp(
-    ChangeNotifierProvider<AppModel>(
-      create: (_) => appModel,
-      child: App(),
+    ChangeNotifierProvider.value(
+      value: appModel,
+      child: GloomhavenCompanion(),
     ),
   );
   // });
@@ -30,5 +30,5 @@ main() async {
 
 // }
 
-PageStorageKey enhancementKey = new PageStorageKey('enhancementKey');
-final PageStorageBucket bucket = new PageStorageBucket();
+// PageStorageKey enhancementKey = new PageStorageKey('enhancementKey');
+// final PageStorageBucket bucket = new PageStorageBucket();

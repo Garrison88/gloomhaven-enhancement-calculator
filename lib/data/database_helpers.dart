@@ -166,7 +166,7 @@ class DatabaseHelper {
         where: '$columnPerkId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      print("DB HELPER - QUERY PERK: " + maps.toString());
+      // print("DB HELPER - QUERY PERK: " + maps.toString());
       return Perk.fromMap(maps.first);
     }
     return null;
@@ -192,7 +192,7 @@ class DatabaseHelper {
     List result = await db.query(tableCharacterPerks,
         where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
     result.forEach((perk) => _list.add(CharacterPerk.fromMap(perk)));
-    print("DB HELPER - QUERY CHARACTER PERKS: " + _list.toString());
+    // print("DB HELPER - QUERY CHARACTER PERKS: " + _list.toString());
     return _list;
   }
 

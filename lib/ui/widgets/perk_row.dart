@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 
 class PerkRow extends StatefulWidget {
   final CharacterPerk perk;
-  final Function onToggle;
+  final TogglePerk togglePerk;
 
   PerkRow({
     this.perk,
-    this.onToggle,
+    this.togglePerk,
   });
 
   @override
@@ -37,7 +37,7 @@ class _PerkRowState extends State<PerkRow> {
           Checkbox(
               value: widget.perk.characterPerkIsSelected,
               onChanged: (value) {
-                return widget.onToggle(value);
+                return widget.togglePerk(value);
               }),
           Container(
             height: 30.0,
@@ -70,3 +70,5 @@ class _PerkRowState extends State<PerkRow> {
     );
   }
 }
+
+typedef TogglePerk = Function(bool value);
