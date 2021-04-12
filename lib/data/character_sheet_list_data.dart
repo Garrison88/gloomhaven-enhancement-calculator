@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 
 import '../models/player_class.dart';
-import '../ui/widgets/perk.dart';
 import 'constants.dart';
 
 List<PlayerClass> playerClassList = [

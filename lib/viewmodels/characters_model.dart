@@ -3,7 +3,6 @@ import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart'
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 
 class CharactersModel with ChangeNotifier {
   List<Character> _characters = [];
@@ -59,7 +58,7 @@ class CharactersModel with ChangeNotifier {
     print('DELETE IN MODEL');
     await databaseHelper.deleteCharacter(characterId);
     characters.removeWhere((element) => element.id == characterId);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // Future<Character> compileLegacyCharacterDetails() async {

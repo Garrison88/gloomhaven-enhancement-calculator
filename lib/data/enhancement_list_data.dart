@@ -68,8 +68,9 @@ _generateCardLevelList(int _maxLevel) {
   List<DropdownMenuItem<int>> _list = [];
   for (int x = 0; x <= _maxLevel; x++) {
     _list.add(DropdownMenuItem(
-        child: Text(x == 0 ? '1 / x' : '${x + 1} (${(x * 25)}g)',
-            style: TextStyle(fontFamily: highTower)),
+        child: Text(
+          x == 0 ? '1 / x' : '${x + 1} (${(x * 25)}g)',
+        ),
         value: x));
   }
   return _list;
@@ -79,8 +80,9 @@ _generatePreviousEnhancementsList(int _maxNumber) {
   List<DropdownMenuItem<int>> _list = [];
   for (int x = 0; x <= _maxNumber; x++) {
     _list.add(DropdownMenuItem(
-        child: Text(x == 0 ? 'None' : '$x (${(x * 75)}g)',
-            style: TextStyle(fontFamily: highTower)),
+        child: Text(
+          x == 0 ? 'None' : '$x (${(x * 75)}g)',
+        ),
         value: x));
   }
   return _list;
@@ -107,9 +109,9 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: highTower,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold),
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             // add an empty spacer to the right to center the title
                             Container(
@@ -121,9 +123,9 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             Text(
                               '${_enhancement.name}',
                               style: TextStyle(
-                                  fontFamily: highTower,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold),
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ],
                   ),
@@ -149,10 +151,13 @@ _generateEnhancementList(List<Enhancement> _enhancementsList) {
                             ],
                           )
                         // otherwise, no +1 icon
-                        : Image.asset('images/${_enhancement.icon}',
-                            width: iconWidth),
-                    Text(' ${_enhancement.name} (${_enhancement.baseCost}g)',
-                        style: TextStyle(fontFamily: highTower))
+                        : Image.asset(
+                            'images/${_enhancement.icon}',
+                            width: iconWidth,
+                          ),
+                    Text(
+                      ' ${_enhancement.name} (${_enhancement.baseCost}g)',
+                    )
                   ],
                 ),
                 value: _enhancement),

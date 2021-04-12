@@ -22,8 +22,12 @@ _createIconsListForDialog(List<String> _list) {
   return _icons;
 }
 
-void showInfoDialog(BuildContext _context, String _dialogTitle,
-    RichText _dialogMessage, EnhancementCategory _category) {
+void showInfoDialog(
+  BuildContext _context,
+  String _dialogTitle,
+  RichText _dialogMessage,
+  EnhancementCategory _category,
+) {
   RichText _bodyText;
   List<String> _titleIcons;
   List<String> _eligibleForIcons;
@@ -101,7 +105,7 @@ void showInfoDialog(BuildContext _context, String _dialogTitle,
                 : Center(
                     child: Text(
                       _dialogTitle,
-                      style: TextStyle(fontSize: 28.0),
+                      style: TextStyle(fontSize: 28.0, fontFamily: pirataOne),
                     ),
                   ),
             content: SingleChildScrollView(
@@ -140,9 +144,9 @@ void showInfoDialog(BuildContext _context, String _dialogTitle,
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                      color: Theme.of(_context).accentColor,
-                      fontSize: secondaryFontSize,
-                      fontFamily: highTower),
+                    color: Theme.of(_context).accentColor,
+                    fontSize: secondaryFontSize,
+                  ),
                 ),
               ),
             ],

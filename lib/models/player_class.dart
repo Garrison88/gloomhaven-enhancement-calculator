@@ -1,5 +1,3 @@
-import '../ui/widgets/perk.dart';
-
 final String tablePlayerClass = 'PlayerClassTable';
 final String columnClassCode = '_Code';
 final String columnClassRace = 'Race';
@@ -15,7 +13,6 @@ class PlayerClass {
   String classIconUrl;
   bool locked;
   String classColor;
-  // List<Perk> perks;
 
   PlayerClass(
     this.race,

@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:provider/provider.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
@@ -44,8 +43,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               child: TextFormField(
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(hintText: 'Name'),
-                style:
-                    TextStyle(fontFamily: highTower, fontSize: titleFontSize),
+                style: TextStyle(fontSize: titleFontSize),
                 validator: (value) =>
                     value.isNotEmpty ? null : 'Please enter a name',
                 controller: _nameTextFieldController,
@@ -63,9 +61,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       ),
                       onChanged: (PlayerClass _value) =>
                           setState(() => _selectedClass = _value),
-                      items: generatePlayerClassList(
-                          Provider.of<AppModel>(context, listen: false)
-                              .envelopeX),
+                      items: generatePlayerClassList(SharedPrefs().envelopeX),
                     ),
                   ),
                 ),
@@ -128,7 +124,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             'Cancel',
             style: TextStyle(
               fontSize: secondaryFontSize,
-              fontFamily: highTower,
             ),
           ),
         ),
@@ -152,7 +147,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             'Create',
             style: TextStyle(
               fontSize: secondaryFontSize,
-              fontFamily: highTower,
               color: Colors.white,
             ),
           ),

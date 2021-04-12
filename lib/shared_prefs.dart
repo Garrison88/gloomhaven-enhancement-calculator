@@ -65,4 +65,10 @@ class SharedPrefs {
   set multipleTargetsSwitch(bool value) {
     _sharedPrefs.setBool('multipleTargetsSelectedKey', value);
   }
+
+  int get enhancementCost => _sharedPrefs.getInt('enhancementCost') ?? 0;
+
+  set enhancementCost(int value) {
+    _sharedPrefs.setInt('enhancementCost', value);
+  }
 }

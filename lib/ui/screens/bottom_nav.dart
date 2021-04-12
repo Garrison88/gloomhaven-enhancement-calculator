@@ -4,8 +4,8 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/envelope_x.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
@@ -55,32 +55,35 @@ class BottomNavState extends State<BottomNav> {
   }
 
   void _envelopeXDialog() {
-    AppModel appModel = Provider.of<AppModel>(context, listen: false);
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (_) => EnvelopeXDialog(
-              isOpen: appModel.envelopeX,
-              onChanged: (bool isOpen) {
-                appModel.envelopeX = isOpen;
-                if (isOpen)
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              isOpen: SharedPrefs().envelopeX,
+              onChanged: (bool value) {
+                SharedPrefs().envelopeX = value;
+                if (value) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
                       content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Image.asset(
-                        'images/class_icons/bladeswarm.png',
-                        color: Colors.white,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/class_icons/bladeswarm.png',
+                            color: Colors.white,
+                          ),
+                          Text(
+                            'Bladeswarm Unlocked!',
+                            style: TextStyle(
+                              fontSize: titleFontSize,
+                              fontFamily: nyala,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Bladeswarm Unlocked!',
-                        style: TextStyle(
-                          fontSize: titleFontSize,
-                          fontFamily: nyala,
-                        ),
-                      ),
-                    ],
-                  )));
+                    ),
+                  );
+                }
               },
             ));
   }
@@ -99,7 +102,10 @@ class BottomNavState extends State<BottomNav> {
         centerTitle: true,
         title: Text(
           'Gloomhaven Companion',
-          style: TextStyle(fontSize: 25.0),
+          style: TextStyle(
+            fontSize: 25.0,
+            fontFamily: nyala,
+          ),
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
@@ -111,7 +117,6 @@ class BottomNavState extends State<BottomNav> {
                   child: Text(
                     choice,
                     style: TextStyle(
-                      fontFamily: highTower,
                       fontSize: 20.0,
                     ),
                   ),
@@ -125,7 +130,7 @@ class BottomNavState extends State<BottomNav> {
         children: [
           ChangeNotifierProvider<CharactersModel>(
             create: (context) => CharactersModel(),
-            child: CharactersPage(),
+            child: CharactersScreen(),
           ),
           EnhancementCalculatorPage()
         ],
@@ -141,7 +146,6 @@ class BottomNavState extends State<BottomNav> {
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: highTower,
                   fontWeight: FontWeight.bold,
                 ),
               )),
@@ -152,7 +156,6 @@ class BottomNavState extends State<BottomNav> {
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: highTower,
                   fontWeight: FontWeight.bold,
                 ),
               )),

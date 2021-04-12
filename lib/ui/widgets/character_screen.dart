@@ -1,12 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/addSubtract_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/addSubtract_button.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_section.dart';
@@ -15,30 +13,11 @@ import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
-class CharacterDetailsSection extends StatefulWidget {
-  // final CharacterModel characterModel;
-  // final DeleteCharacter deleteCharacter;
-
-  // const CharacterDetailsSection({
-  //   Key key,
-  //   this.characterModel,
-  //   this.deleteCharacter,
-  // }) : super(key: key);
-  @override
-  _CharacterDetailsSectionState createState() =>
-      _CharacterDetailsSectionState();
-}
-
-class _CharacterDetailsSectionState extends State<CharacterDetailsSection> {
+class CharacterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
     CharactersModel charactersModel = context.watch<CharactersModel>();
-    // print('BUILD IN CHARACTER DETAILS SECTION');
-    // CharactersModel charactersModel = context.watch<CharactersModel>();
-    print(
-        'CHARACTER MODEL HASHCODE IN DETAILS SECTION::: ${characterModel.hashCode}');
-
     return Column(
       children: <Widget>[
         Padding(
@@ -47,7 +26,6 @@ class _CharacterDetailsSectionState extends State<CharacterDetailsSection> {
         // RETIREMENTS AND LOCK
         RetirementsAndLockSection(
           characterModel: characterModel,
-          // charactersModel: charactersModel,
           deleteCharacter: charactersModel.deleteCharacter,
         ),
         // NAME AND CLASS
@@ -75,12 +53,10 @@ class _CharacterDetailsSectionState extends State<CharacterDetailsSection> {
 }
 
 class RetirementsAndLockSection extends StatefulWidget {
-  // final CharactersModel charactersModel;
   final CharacterModel characterModel;
   final DeleteCharacter deleteCharacter;
 
   const RetirementsAndLockSection({
-    // this.charactersModel,
     this.characterModel,
     this.deleteCharacter,
   });
@@ -98,7 +74,9 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: smallPadding)),
+            Padding(
+              padding: EdgeInsets.only(left: smallPadding),
+            ),
             Container(
               width: MediaQuery.of(context).size.width / 4,
               child: widget.characterModel.isEditable
@@ -124,15 +102,17 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                     ),
             ),
             IconButton(
-                icon: Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).accentColor,
-                ),
-                onPressed: () => showInfoDialog(
-                    context,
-                    Strings.previousRetirementsInfoTitle,
-                    Strings.previousRetirementsInfoBody,
-                    null)),
+              icon: Icon(
+                Icons.info_outline,
+                color: Theme.of(context).accentColor,
+              ),
+              onPressed: () => showInfoDialog(
+                context,
+                Strings.previousRetirementsInfoTitle,
+                Strings.previousRetirementsInfoBody,
+                null,
+              ),
+            ),
           ],
         ),
         Row(
@@ -154,9 +134,9 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                                   child: Text(
                                     'Cancel',
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: secondaryFontSize,
-                                        fontFamily: highTower),
+                                      color: Colors.black,
+                                      fontSize: secondaryFontSize,
+                                    ),
                                   ),
                                   onPressed: () =>
                                       Navigator.pop(context, false),
@@ -171,28 +151,31 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                                   child: Text(
                                     'Delete',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: secondaryFontSize,
-                                        fontFamily: highTower),
+                                      color: Colors.white,
+                                      fontSize: secondaryFontSize,
+                                    ),
                                   ),
-                                ),
+                                )
                               ],
-                            )).then(
-                      (result) async {
-                        if (result) {
-                          int _position = Provider.of<CharactersModel>(context,
-                                  listen: false)
-                              .characters
-                              .indexWhere((element) =>
-                                  element.id ==
-                                  widget.characterModel.character.id);
-                          await widget.deleteCharacter(
-                              widget.characterModel.character.id);
-                          updateCurrentCharacter(context, _position);
-                          setState(() {});
+                            )).then((result) async {
+                      CharactersModel charactersModel =
+                          Provider.of<CharactersModel>(context, listen: false);
+                      if (result) {
+                        int _position = charactersModel.characters.indexWhere(
+                            (element) =>
+                                element.id ==
+                                widget.characterModel.character.id);
+                        if (_position > charactersModel.characters.length - 2) {
+                          _position = _position - 1;
                         }
-                      },
-                    ),
+                        if (_position.isNegative) {
+                          _position = 0;
+                        }
+                        await widget.deleteCharacter(
+                            widget.characterModel.character.id);
+                        updateCurrentCharacter(context, _position);
+                      }
+                    }),
                   )
                 : Container(),
             // TODO: add retire character functionality
@@ -255,24 +238,17 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
 class NameAndClassSection extends StatefulWidget {
   final CharacterModel characterModel;
 
-  const NameAndClassSection({Key key, this.characterModel}) : super(key: key);
+  const NameAndClassSection({
+    this.characterModel,
+  });
 
   @override
   _NameAndClassSectionState createState() => _NameAndClassSectionState();
 }
 
 class _NameAndClassSectionState extends State<NameAndClassSection> {
-  // @override
-  // void dispose() {
-  //   Provider.of<CharacterModel>(context, listen: false)
-  //       .nameController
-  //       .dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // CharacterModel characterModel = context.watch<CharacterModel>();
     return Column(
       children: <Widget>[
         widget.characterModel.isEditable
@@ -283,38 +259,49 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
                 minLines: 1,
                 maxLines: 2,
                 controller: widget.characterModel.nameController,
-                style: TextStyle(
-                    fontSize: titleFontSize * 1.5, fontFamily: highTower),
+                style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(
-                        fontSize: titleFontSize * 1.5, fontFamily: highTower)),
+                  fontSize: titleFontSize * 1.5,
+                )),
               )
             : AutoSizeText(
                 widget.characterModel.character.name,
                 maxLines: 2,
-                style: TextStyle(
-                    fontSize: titleFontSize * 1.5, fontFamily: highTower),
+                style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
               ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-          Stack(
-            alignment: Alignment(0.0, 0.0),
-            children: <Widget>[
-              Image.asset('images/xp.png', width: iconWidth * 1.75),
-              Text(
-                '${widget.characterModel.currentLevel}',
-                style: TextStyle(color: Colors.white, fontSize: titleFontSize),
-              )
-            ],
-          ),
-          Flexible(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment(0.0, 0.0),
+              children: <Widget>[
+                Image.asset(
+                  'images/xp.png',
+                  width: iconWidth * 1.75,
+                ),
+                Text(
+                  '${widget.characterModel.currentLevel}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: titleFontSize,
+                    fontFamily: pirataOne,
+                  ),
+                )
+              ],
+            ),
+            Flexible(
               child: AutoSizeText(
-                  '${widget.characterModel.character.classRace} ${widget.characterModel.character.className}',
-                  maxLines: 1,
-                  style: TextStyle(fontSize: titleFontSize))),
-        ]),
+                '${widget.characterModel.character.classRace} ${widget.characterModel.character.className}',
+                maxLines: 1,
+                style: TextStyle(fontSize: titleFontSize),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -323,21 +310,16 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
 class StatsSection extends StatefulWidget {
   final CharacterModel characterModel;
 
-  const StatsSection({Key key, this.characterModel}) : super(key: key);
+  const StatsSection({
+    this.characterModel,
+  });
   @override
   _StatsSectionState createState() => _StatsSectionState();
 }
 
 class _StatsSectionState extends State<StatsSection> {
-  // @override
-  // void dispose() {
-  //   Provider.of<CharacterModel>(context, listen: false).xpController.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // CharacterModel characterModel = context.watch<CharacterModel>();
     return Center(
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -365,7 +347,9 @@ class _StatsSectionState extends State<StatsSection> {
                                       ..xp =
                                           value == '' ? 0 : int.parse(value)),
                                 textAlignVertical: TextAlignVertical.center,
-                                style: TextStyle(fontSize: titleFontSize),
+                                style: TextStyle(
+                                  fontSize: titleFontSize,
+                                ),
                                 textAlign: TextAlign.center,
                                 controller: widget.characterModel.xpController,
                                 inputFormatters: [
@@ -506,31 +490,31 @@ class _StatsSectionState extends State<StatsSection> {
 class NotesSection extends StatefulWidget {
   final CharacterModel characterModel;
 
-  const NotesSection({Key key, this.characterModel}) : super(key: key);
+  const NotesSection({
+    this.characterModel,
+  });
   @override
   _NotesSectionState createState() => _NotesSectionState();
 }
 
 class _NotesSectionState extends State<NotesSection> {
-  // @override
-  // void dispose() {
-  //   Provider.of<CharacterModel>(context, listen: false)
-  //       .notesController
-  //       .dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // CharacterModel characterModel = context.watch<CharacterModel>();
     return widget.characterModel.isEditable
         ? Column(
             children: <Widget>[
-              Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: smallPadding,
+                ),
+              ),
               Text(
                 'Notes',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: titleFontSize),
+                style: TextStyle(
+                  fontSize: titleFontSize,
+                  fontFamily: pirataOne,
+                ),
               ),
               Container(
                   width: MediaQuery.of(context).size.width,
@@ -541,11 +525,10 @@ class _NotesSectionState extends State<NotesSection> {
                     onChanged: (String value) => widget.characterModel
                         .updateCharacter(
                             widget.characterModel.character..notes = value),
-                    style: TextStyle(fontFamily: highTower),
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                        hintText: 'Notes',
-                        hintStyle: TextStyle(fontFamily: highTower)),
+                      hintText: 'Notes',
+                    ),
                     controller: widget.characterModel.notesController,
                   )),
             ],
@@ -553,19 +536,25 @@ class _NotesSectionState extends State<NotesSection> {
         : widget.characterModel.character.notes != ''
             ? Column(
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: smallPadding),
+                  ),
                   Text(
                     'Notes',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: titleFontSize),
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                      fontFamily: pirataOne,
+                    ),
                   ),
-                  Padding(padding: EdgeInsets.only(bottom: smallPadding)),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: smallPadding),
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(smallPadding),
                     child: Text(
                       widget.characterModel.character.notes,
-                      style: TextStyle(fontFamily: highTower),
                     ),
                   ),
                 ],
@@ -577,8 +566,9 @@ class _NotesSectionState extends State<NotesSection> {
 class BattleGoalCheckmarksSection extends StatefulWidget {
   final CharacterModel characterModel;
 
-  const BattleGoalCheckmarksSection({Key key, this.characterModel})
-      : super(key: key);
+  const BattleGoalCheckmarksSection({
+    this.characterModel,
+  });
   @override
   _BattleGoalCheckmarksSectionState createState() =>
       _BattleGoalCheckmarksSectionState();
@@ -588,7 +578,6 @@ class _BattleGoalCheckmarksSectionState
     extends State<BattleGoalCheckmarksSection> {
   @override
   Widget build(BuildContext context) {
-    // CharacterModel characterModel = context.watch<CharacterModel>();
     return widget.characterModel.isEditable
         ? Column(
             children: <Widget>[

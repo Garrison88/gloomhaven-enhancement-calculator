@@ -10,108 +10,75 @@ import '../../models/enhancement.dart';
 import '../dialogs/show_info.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
-  EnhancementCalculatorPage({Key key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _EnhancementCalculatorPageState();
 }
 
 class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
-  int _targetCardLvl = 0, _previousEnhancements = 0, _enhancementCost = 0;
-
-  bool _multipleTargetsSwitch = false, _disableMultiTargetSwitch = false;
+  bool _disableMultiTargetSwitch = false;
 
   Enhancement _selectedEnhancement;
 
   @override
   void initState() {
     super.initState();
-    // _writeToSharedPrefs();
-    _readFromSharedPrefs();
-    _updateEnhancementCost();
-  }
-
-  void _writeToSharedPrefs() async {
-    SharedPrefs().targetCardLvl = _targetCardLvl;
-    SharedPrefs().previousEnhancements = _previousEnhancements;
-    SharedPrefs().enhancementType =
-        enhancementList.indexOf(_selectedEnhancement ?? null) ?? 0;
-    SharedPrefs().disableMultiTargetSwitch = _disableMultiTargetSwitch;
-    SharedPrefs().multipleTargetsSwitch = _multipleTargetsSwitch;
-//    prefs.setInt('enhancementCostKey', _enhancementCost);
-    print('shared prefs to ' '$_enhancementCost');
-    setState(() {});
-  }
-
-  Future _readFromSharedPrefs() async {
-    SharedPrefs().targetCardLvl = SharedPrefs().targetCardLvl;
-    _previousEnhancements = SharedPrefs().previousEnhancements;
-    _selectedEnhancement = SharedPrefs().enhancementType != null
+    _selectedEnhancement = SharedPrefs().enhancementType != 0
         ? enhancementList[SharedPrefs().enhancementType]
         : null;
-    _disableMultiTargetSwitch = SharedPrefs().disableMultiTargetSwitch;
-    _multipleTargetsSwitch = SharedPrefs().multipleTargetsSwitch;
-    print('shared prefs from ' + '$_enhancementCost');
     _updateEnhancementCost();
-    setState(() {});
   }
 
-  Future _resetAllFields() async {
+  void _resetAllFields() {
+    _selectedEnhancement = null;
     SharedPrefs().remove('targetCardLvlKey');
     SharedPrefs().remove('enhancementsOnTargetActionKey');
     SharedPrefs().remove('enhancementTypeKey');
     SharedPrefs().remove('disableMultiTargetsSwitchKey');
     SharedPrefs().remove('multipleTargetsSelectedKey');
-//    prefs.remove('enhancementCostKey');
-    _readFromSharedPrefs();
+    SharedPrefs().remove('enhancementCost');
+    setState(() {});
   }
 
-  void _handleLevelOfTargetCardSelection(int _value) {
-    _targetCardLvl = _value;
-    _updateEnhancementCost();
-  }
-
-  void _handlePreviousEnhancementsSelection(int _value) {
-    _previousEnhancements = _value;
-    _updateEnhancementCost();
-  }
-
-  void _handleMultipleTargetsSelection(bool _value) {
-    _multipleTargetsSwitch = _value;
-    _updateEnhancementCost();
-  }
-
-  void _handleTypeSelection(Enhancement _value) {
-    switch (_value.category) {
+  void _handleTypeSelection(Enhancement value) {
+    switch (value.category) {
+      case EnhancementCategory.title:
+        return;
       case EnhancementCategory.target:
-        _multipleTargetsSwitch = true;
+        SharedPrefs().multipleTargetsSwitch = true;
         _disableMultiTargetSwitch = true;
+        _selectedEnhancement = value;
         break;
       case EnhancementCategory.hex:
-        _multipleTargetsSwitch = false;
+        SharedPrefs().multipleTargetsSwitch = false;
         _disableMultiTargetSwitch = true;
+        _selectedEnhancement = value;
         break;
       default:
         _disableMultiTargetSwitch = false;
+        _selectedEnhancement = value;
         break;
     }
-    _selectedEnhancement = _value;
+    SharedPrefs().enhancementType = enhancementList.indexOf(value);
     _updateEnhancementCost();
   }
 
   void _updateEnhancementCost() {
     int _baseCost =
-        _selectedEnhancement != null ? _selectedEnhancement.baseCost : 0;
-    _enhancementCost =
+        _selectedEnhancement != null && _selectedEnhancement.baseCost != null
+            ? _selectedEnhancement.baseCost
+            : 0;
+    SharedPrefs().enhancementCost =
         // add 25g for each card level beyond 1
-        (_targetCardLvl != null && _targetCardLvl > 0
-                ? _targetCardLvl * 25
+        (SharedPrefs().targetCardLvl != null && SharedPrefs().targetCardLvl > 0
+                ? SharedPrefs().targetCardLvl * 25
                 : 0) +
             // add 75g for each previous enhancement on target action
-            (_previousEnhancements != null ? _previousEnhancements * 75 : 0) +
+            (SharedPrefs().previousEnhancements != null
+                ? SharedPrefs().previousEnhancements * 75
+                : 0) +
             // multiply base cost x2 if multiple targets switch is true
-            (_multipleTargetsSwitch ? _baseCost * 2 : _baseCost);
-    _writeToSharedPrefs();
+            (SharedPrefs().multipleTargetsSwitch ? _baseCost * 2 : _baseCost);
+    setState(() {});
   }
 
   @override
@@ -146,7 +113,6 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             'General Guidelines',
                             style: TextStyle(
                                 fontSize: 20.0,
-                                fontFamily: highTower,
                                 color: ThemeData.estimateBrightnessForColor(
                                             Theme.of(context).accentColor) ==
                                         Brightness.dark
@@ -181,11 +147,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             child: DropdownButton<int>(
                               hint: Text(
                                 '1 / x',
-                                style: TextStyle(fontFamily: highTower),
                               ),
-                              value: _targetCardLvl,
+                              value: SharedPrefs().targetCardLvl,
                               items: cardLevelList,
-                              onChanged: _handleLevelOfTargetCardSelection,
+                              onChanged: (int value) {
+                                SharedPrefs().targetCardLvl = value;
+                                _updateEnhancementCost();
+                              },
                             ),
                           ),
                         ],
@@ -203,10 +171,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               ),
                               onPressed: () {
                                 showInfoDialog(
-                                    context,
-                                    Strings.previousEnhancementsInfoTitle,
-                                    Strings.previousEnhancementsInfoBody,
-                                    null);
+                                  context,
+                                  Strings.previousEnhancementsInfoTitle,
+                                  Strings.previousEnhancementsInfoBody,
+                                  null,
+                                );
                               }),
                           Expanded(
                             child: AutoSizeText(
@@ -221,11 +190,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             child: DropdownButton<int>(
                               hint: Text(
                                 'None',
-                                style: TextStyle(fontFamily: highTower),
                               ),
-                              value: _previousEnhancements,
+                              value: SharedPrefs().previousEnhancements,
                               items: previousEnhancementsList,
-                              onChanged: _handlePreviousEnhancementsSelection,
+                              onChanged: (int value) {
+                                SharedPrefs().previousEnhancements = value;
+                                _updateEnhancementCost();
+                              },
                             ),
                           ),
                         ],
@@ -246,8 +217,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                         color: Theme.of(context).accentColor),
                                     onPressed: _selectedEnhancement != null
                                         ? () {
-                                            showInfoDialog(context, null, null,
-                                                _selectedEnhancement.category);
+                                            showInfoDialog(
+                                              context,
+                                              null,
+                                              null,
+                                              _selectedEnhancement.category,
+                                            );
                                           }
                                         : null),
                               ),
@@ -264,13 +239,15 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<Enhancement>(
-                                hint: Text(
-                                  'Type',
-                                  style: TextStyle(fontFamily: highTower),
-                                ),
-                                value: _selectedEnhancement,
-                                items: enhancementTypeList,
-                                onChanged: _handleTypeSelection),
+                              hint: Text(
+                                'Type',
+                              ),
+                              value: _selectedEnhancement,
+                              items: enhancementTypeList,
+                              onChanged: (Enhancement enhancement) {
+                                _handleTypeSelection(enhancement);
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -296,8 +273,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             child: Opacity(
                               opacity: _disableMultiTargetSwitch ? 0.5 : 1.0,
                               child: Switch(
-                                  value: _multipleTargetsSwitch,
-                                  onChanged: _handleMultipleTargetsSelection),
+                                  value: SharedPrefs().multipleTargetsSwitch,
+                                  onChanged: (bool value) {
+                                    SharedPrefs().multipleTargetsSwitch = value;
+                                    _updateEnhancementCost();
+                                  }),
                             ),
                           ),
                           IconButton(
@@ -315,12 +295,16 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      AutoSizeText('Enhancement Cost:',
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 75.0)),
-                      Text('${_enhancementCost ?? 0}' + 'g',
-                          style: TextStyle(fontSize: 75.0))
+                      AutoSizeText(
+                        'Enhancement Cost:',
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                      Text(
+                        '${SharedPrefs().enhancementCost}' + 'g',
+                        style: Theme.of(context).textTheme.headline1,
+                      )
                     ],
                   ),
                 ),

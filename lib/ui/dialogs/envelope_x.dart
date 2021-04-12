@@ -42,7 +42,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
           Expanded(
             child: Text(
               'Major Spoilers Ahead!',
-              style: TextStyle(fontSize: secondaryFontSize),
             ),
           ),
           Padding(
@@ -54,8 +53,7 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-            "Open 'Envelope X'?",
-            style: TextStyle(fontFamily: nyala),
+            "${widget.isOpen ? 'Open' : 'Close'} 'Envelope X'?",
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -78,10 +76,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                 visible: widget.isOpen,
                 child: Icon(Icons.drafts),
               ),
-              // Text(
-              //   'Open',
-              //   style: TextStyle(fontFamily: nyala),
-              // ),
             ],
           ),
         ],
@@ -95,7 +89,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
             'Cancel',
             style: TextStyle(
               fontSize: secondaryFontSize,
-              fontFamily: highTower,
             ),
           ),
         ),
@@ -111,10 +104,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                 },
                 child: Text(
                   'Save',
-                  style: TextStyle(
-                    fontSize: secondaryFontSize,
-                    fontFamily: highTower,
-                  ),
                 ),
               )
             : ElevatedButton.icon(
@@ -132,11 +121,10 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
                 },
                 label: Text(
                   'Save',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: secondaryFontSize,
-                    fontFamily: highTower,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: Colors.black),
                 ),
               ),
         // RaisedButton(
@@ -151,7 +139,6 @@ class _EnvelopeXDialogState extends State<EnvelopeXDialog> {
         //     'Yes!',
         //     style: TextStyle(
         //       fontSize: secondaryFontSize,
-        //       fontFamily: highTower,
         //       color: Colors.black,
         //     ),
         //   ),
