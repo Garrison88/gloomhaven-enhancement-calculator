@@ -206,8 +206,6 @@ List<PlayerClass> playerClassList = [
 List<int> levelXpList = [45, 95, 150, 210, 275, 345, 420, 500];
 
 List<DropdownMenuItem<PlayerClass>> generatePlayerClassList(bool envelopeX) {
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // bool envelopeX = prefs.getBool('envelope_x') ?? false;
   List<DropdownMenuItem<PlayerClass>> _list = [];
   for (int x = 0; x < playerClassList.length; x++) {
     if (playerClassList[x].classCode == 'BS' && !envelopeX) {
@@ -273,7 +271,7 @@ List<Perk> perkList = [
   Perk('SW', 1, 'Add one +1 IMMOBILIZE card'),
   Perk('SW', 1, 'Add one +1 CURSE card'),
   Perk('SW', 2, 'Add one +2 FIRE card'),
-  Perk('SW', 2, 'Add one +2 FROST card'),
+  Perk('SW', 2, 'Add one +2 ICE card'),
   Perk('SW', 1, 'Add one Rolling EARTH and one Rolling AIR card'),
   Perk('SW', 1, 'Add one Rolling LIGHT and one Rolling DARK card'),
   // SCOUNDREL
@@ -304,7 +302,7 @@ List<Perk> perkList = [
   Perk('MT', 1, 'Remove four +0 cards'),
   Perk('MT', 1, 'Replace two +1 cards with two +2 cards'),
   Perk('MT', 1, 'Replace one -2 card with one +0 card'),
-  Perk('MT', 2, 'Add one +2 FROST card'),
+  Perk('MT', 2, 'Add one +2 ICE card'),
   Perk('MT', 2, 'Add two Rolling +1 cards'),
   Perk('MT', 1, 'Add three Rolling PULL 1 cards'),
   Perk('MT', 1, 'Add three Rolling MUDDLE cards'),
@@ -397,7 +395,7 @@ List<Perk> perkList = [
   Perk('DS', 3, 'Replace two +0 cards with two +1 cards'),
   Perk('DS', 2, 'Add two Rolling +1 cards'),
   Perk('DS', 1, 'Add one +2 MUDDLE card'),
-  Perk('DS', 1, 'Add one +1 POSION card'),
+  Perk('DS', 1, 'Add one +1 POISON card'),
   Perk('DS', 1, 'Add one +1 WOUND card'),
   Perk('DS', 1, 'Add one +1 IMMOBILIZE card'),
   Perk('DS', 1, 'Add one +0 STUN card'),
@@ -418,13 +416,13 @@ List<Perk> perkList = [
   Perk('EL', 1, 'Replace one -1 card with one +1 card'),
   Perk('EL', 2, 'Replace one +0 card with one +2 card'),
   Perk('EL', 1, 'Add three +0 FIRE cards'),
-  Perk('EL', 1, 'Add three +0 FROST cards'),
+  Perk('EL', 1, 'Add three +0 ICE cards'),
   Perk('EL', 1, 'Add three +0 AIR cards'),
   Perk('EL', 1, 'Add three +0 EARTH cards'),
   Perk('EL', 1,
       'Replace two +0 cards with one +0 FIRE card and one +0 EARTH card'),
-  Perk('EL', 1,
-      'Replace two +0 cards with one +0 FROST card and one +0 AIR card'),
+  Perk(
+      'EL', 1, 'Replace two +0 cards with one +0 ICE card and one +0 AIR card'),
   Perk('EL', 1, 'Add two +1 PUSH 1 cards'),
   Perk('EL', 1, 'Add one +1 WOUND card'),
   Perk('EL', 1, 'Add one +0 STUN card'),
@@ -445,7 +443,7 @@ List<Perk> perkList = [
   Perk('BS', 1, 'Replace one -1 card with one +1 EARTH card'),
   Perk('BS', 1, 'Replace one -1 card with one +1 LIGHT card'),
   Perk('BS', 1, 'Replace one -1 card with one +1 DARK card'),
-  Perk('BS', 2, 'Add two Rolling Heal 1 cards'),
+  Perk('BS', 2, 'Add two Rolling HEAL 1 cards'),
   Perk('BS', 2, 'Add one +1 WOUND card'),
   Perk('BS', 2, 'Add one +1 POISON card'),
   Perk('BS', 1, 'Add one +2 MUDDLE card'),
@@ -455,7 +453,8 @@ List<Perk> perkList = [
   Perk('DV', 2, 'Remove two -1 cards'),
   Perk('DV', 1, 'Remove one -2 card'),
   Perk('DV', 2, 'Replace two +1 cards with one +3 SHIELD 1, Self card'),
-  Perk('DV', 1, 'Replace one +0 card with one +1 Shield, Affect any ally card'),
+  Perk('DV', 1,
+      'Replace one +0 card with one +1 SHIELD 1, Affect any ally card'),
   Perk('DV', 1, 'Replace one +0 card with one +2 DARK card'),
   Perk('DV', 1, 'Replace one +0 card with one +2 LIGHT card'),
   Perk('DV', 1, 'Replace one +0 card with one +3 MUDDLE card'),
@@ -506,7 +505,7 @@ List<Perk> perkList = [
   Perk('VW', 3, 'Add one +1 HEAL 1, Ally card'),
   Perk('VW', 1, 'Add one +1 POISON card'),
   Perk('VW', 1, 'Add one +3 card'),
-  Perk('VW', 2, 'Add one +1 CURSE card')
+  Perk('VW', 2, 'Add one +1 CURSE card'),
 ];
 
 /*
@@ -548,7 +547,7 @@ List<Perk> _swPerkList = [
   Perk('SW', 1, 'Add one +1 IMMOBILIZE card'),
   Perk('SW', 1, 'Add one +1 CURSE card'),
   Perk('SW', 2, 'Add one +2 FIRE card'),
-  Perk('SW', 2, 'Add one +2 FROST card'),
+  Perk('SW', 2, 'Add one +2 ICE card'),
   Perk('SW', 1, 'Add one Rolling EARTH and one Rolling AIR card'),
   Perk('SW', 1, 'Add one Rolling LIGHT and one Rolling DARK card')
 ];
@@ -585,7 +584,7 @@ List<Perk> _mtPerkList = [
   Perk('MT', 1, 'Remove four +0 cards'),
   Perk('MT', 1, 'Replace two +1 cards with two +2 cards'),
   Perk('MT', 1, 'Replace one -2 card with one +0 card'),
-  Perk('MT', 2, 'Add one +2 FROST card'),
+  Perk('MT', 2, 'Add one +2 ICE card'),
   Perk('MT', 2, 'Add two Rolling +1 cards'),
   Perk('MT', 1, 'Add three Rolling PULL 1 cards'),
   Perk('MT', 1, 'Add three Rolling MUDDLE cards'),
@@ -719,13 +718,13 @@ List<Perk> _elPerkList = [
   Perk('EL', 1, 'Replace one -1 card with one +1 card'),
   Perk('EL', 2, 'Replace one +0 card with one +2 card'),
   Perk('EL', 1, 'Add three +0 FIRE cards'),
-  Perk('EL', 1, 'Add three +0 FROST cards'),
+  Perk('EL', 1, 'Add three +0 ICE cards'),
   Perk('EL', 1, 'Add three +0 AIR cards'),
   Perk('EL', 1, 'Add three +0 EARTH cards'),
   Perk('EL', 1,
       'Replace two +0 cards with one +0 FIRE card and one +0 EARTH card'),
   Perk('EL', 1,
-      'Replace two +0 cards with one +0 FROST card and one +0 AIR card'),
+      'Replace two +0 cards with one +0 ICE card and one +0 AIR card'),
   Perk('EL', 1, 'Add two +1 PUSH 1 cards'),
   Perk('EL', 1, 'Add one +1 WOUND card'),
   Perk('EL', 1, 'Add one +0 STUN card'),
@@ -750,7 +749,7 @@ List<Perk> _bsPerkList = [
   Perk('BS', 1, 'Replace one -1 card with one +1 EARTH card'),
   Perk('BS', 1, 'Replace one -1 card with one +1 LIGHT card'),
   Perk('BS', 1, 'Replace one -1 card with one +1 DARK card'),
-  Perk('BS', 2, 'Add two Rolling Heal 1 cards'),
+  Perk('BS', 2, 'Add two Rolling HEAL 1 cards'),
   Perk('BS', 2, 'Add one +1 WOUND card'),
   Perk('BS', 2, 'Add one +1 POISON card'),
   Perk('BS', 1, 'Add one +2 MUDDLE card'),

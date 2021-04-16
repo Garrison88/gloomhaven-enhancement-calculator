@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/addSubtract_button.dart';
@@ -109,7 +110,7 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
               onPressed: () => showInfoDialog(
                 context,
                 Strings.previousRetirementsInfoTitle,
-                Strings.previousRetirementsInfoBody,
+                Strings.previousRetirementsInfoBody(context),
                 null,
               ),
             ),
@@ -194,9 +195,13 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
             //         })
             //     : Container(),
             IconButton(
-                icon: Icon(widget.characterModel.isEditable
-                    ? FontAwesomeIcons.lockOpen
-                    : FontAwesomeIcons.lock),
+                icon: Icon(
+                  widget.characterModel.isEditable
+                      ? FontAwesomeIcons.lockOpen
+                      : FontAwesomeIcons.lock,
+                  color:
+                      SharedPrefs().darkTheme ? Colors.white : Colors.black87,
+                ),
                 tooltip: widget.characterModel.isEditable ? 'Lock' : 'Unlock',
                 onPressed: widget.characterModel.isEditable
                     ? () {
@@ -282,11 +287,14 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
                 Image.asset(
                   'images/xp.png',
                   width: iconWidth * 1.75,
+                  color:
+                      SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                 ),
                 Text(
                   '${widget.characterModel.currentLevel}',
                   style: TextStyle(
-                    color: Colors.white,
+                    color:
+                        SharedPrefs().darkTheme ? Colors.black87 : Colors.white,
                     fontSize: titleFontSize,
                     fontFamily: pirataOne,
                   ),
@@ -334,6 +342,8 @@ class _StatsSectionState extends State<StatsSection> {
                   Image.asset(
                     'images/xp.png',
                     width: iconWidth,
+                    color:
+                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
                   widget.characterModel.isEditable
                       ? Column(
@@ -347,9 +357,7 @@ class _StatsSectionState extends State<StatsSection> {
                                       ..xp =
                                           value == '' ? 0 : int.parse(value)),
                                 textAlignVertical: TextAlignVertical.center,
-                                style: TextStyle(
-                                  fontSize: titleFontSize,
-                                ),
+                                style: Theme.of(context).textTheme.bodyText2,
                                 textAlign: TextAlign.center,
                                 controller: widget.characterModel.xpController,
                                 inputFormatters: [
@@ -379,11 +387,14 @@ class _StatsSectionState extends State<StatsSection> {
                         )
                       : Text(
                           ' ${widget.characterModel.character.xp}',
-                          style: TextStyle(fontSize: titleFontSize),
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                   Text(
                     ' / ${widget.characterModel.nextLevelXp}',
-                    style: TextStyle(fontSize: titleFontSize / 2),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        .copyWith(fontSize: 15),
                   ),
                 ],
               ),
@@ -396,6 +407,8 @@ class _StatsSectionState extends State<StatsSection> {
                   Image.asset(
                     'images/loot.png',
                     width: iconWidth,
+                    color:
+                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
                   widget.characterModel.isEditable
                       ? Column(
@@ -409,7 +422,7 @@ class _StatsSectionState extends State<StatsSection> {
                                       ..gold =
                                           value == '' ? 0 : int.parse(value)),
                                 textAlignVertical: TextAlignVertical.center,
-                                style: TextStyle(fontSize: titleFontSize),
+                                style: Theme.of(context).textTheme.bodyText2,
                                 textAlign: TextAlign.center,
                                 controller:
                                     widget.characterModel.goldController,
@@ -441,7 +454,7 @@ class _StatsSectionState extends State<StatsSection> {
                         )
                       : Text(
                           ' ${widget.characterModel.character.gold}',
-                          style: TextStyle(fontSize: titleFontSize),
+                          style: Theme.of(context).textTheme.bodyText2,
                         )
                 ],
               ),
@@ -454,10 +467,12 @@ class _StatsSectionState extends State<StatsSection> {
                   Image.asset(
                     'images/goal.png',
                     width: iconWidth,
+                    color:
+                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
                   Text(
                     '${widget.characterModel.checkMarkProgress} / 3',
-                    style: TextStyle(fontSize: titleFontSize),
+                    style: Theme.of(context).textTheme.bodyText2,
                   )
                 ],
               ),
@@ -472,10 +487,13 @@ class _StatsSectionState extends State<StatsSection> {
                         Image.asset(
                           'images/equipment_slots/pocket.png',
                           width: iconWidth,
+                          color: SharedPrefs().darkTheme
+                              ? Colors.white
+                              : Colors.black87,
                         ),
                         Text(
                           ' ${widget.characterModel.numOfPocketItems}',
-                          style: TextStyle(fontSize: titleFontSize),
+                          style: Theme.of(context).textTheme.bodyText2,
                         )
                       ],
                     ),

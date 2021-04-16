@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
@@ -18,16 +19,53 @@ class CharactersScreen extends StatefulWidget {
   _CharactersScreenState createState() => _CharactersScreenState();
 }
 
-class _CharactersScreenState extends State<CharactersScreen> {
-  int timesRan = 0;
+class _CharactersScreenState extends State<CharactersScreen>
+    with TickerProviderStateMixin {
+  AnimationController _hideFabAnimation;
   PageController _pageController =
       PageController(initialPage: SharedPrefs().initialPage);
   Future<List<Character>> _runFuture;
+
   @override
   void initState() {
     super.initState();
     _runFuture =
         Provider.of<CharactersModel>(context, listen: false).loadCharacters();
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration)
+          ..forward();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _hideFabAnimation.dispose();
+    super.dispose();
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth == 0) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.forward();
+            }
+            break;
+          case ScrollDirection.reverse:
+            if (userScroll.metrics.maxScrollExtent !=
+                userScroll.metrics.minScrollExtent) {
+              _hideFabAnimation.reverse();
+            }
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
   }
 
   @override
@@ -58,7 +96,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                                 right: smallPadding * 2,
                               ),
                               child: Text(
-                                'Create a new character using the menu below',
+                                'Create your first character using the button below',
                                 style:
                                     TextStyle(fontFamily: nyala, fontSize: 24),
                                 textAlign: TextAlign.center,
@@ -67,11 +105,39 @@ class _CharactersScreenState extends State<CharactersScreen> {
                             Padding(
                               padding: EdgeInsets.all(smallPadding),
                             ),
-                            Transform.rotate(
-                              angle: 45 * pi / 180,
-                              child: Icon(FontAwesomeIcons.arrowCircleRight,
-                                  size: MediaQuery.of(context).size.width / 2,
-                                  color: Colors.grey.withOpacity(0.5)),
+                            IconButton(
+                              iconSize: MediaQuery.of(context).size.width / 2,
+                              icon: Icon(FontAwesomeIcons.plusCircle,
+                                  size: MediaQuery.of(context).size.width / 2),
+                              onPressed: () async {
+                                await showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (_) {
+                                    return CreateCharacterDialog(
+                                      charactersModel: charactersModel,
+                                    );
+                                  },
+                                ).then((result) {
+                                  if (result) {
+                                    CharactersModel charactersModel =
+                                        Provider.of<CharactersModel>(context,
+                                            listen: false);
+                                    setState(() {});
+                                    if (charactersModel.characters.length ==
+                                        1) {
+                                      updateCurrentCharacter(context, 0);
+                                    } else {
+                                      _pageController.animateToPage(
+                                        charactersModel.characters.length - 1,
+                                        duration: Duration(milliseconds: 500),
+                                        curve: Curves.easeIn,
+                                      );
+                                    }
+                                  }
+                                });
+                              },
+                              color: Colors.grey.withOpacity(0.5),
                             ),
                           ])),
                 );
@@ -80,8 +146,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   child: PageView.builder(
                     controller: _pageController,
                     onPageChanged: (index) {
-                      timesRan++;
-                      print("TIMES RAN NUMBER IS :::: $timesRan");
+                      _hideFabAnimation.forward();
                       return updateCurrentCharacter(
                         context,
                         index,
@@ -105,13 +170,16 @@ class _CharactersScreenState extends State<CharactersScreen> {
                                       Color(int.parse(SharedPrefs().themeColor))
                                           .withOpacity(0.1)),
                             ),
-                            SingleChildScrollView(
-                              child: ChangeNotifierProvider.value(
-                                  value: cm,
-                                  child: Container(
-                                    padding: EdgeInsets.all(smallPadding),
-                                    child: CharacterScreen(),
-                                  )),
+                            NotificationListener<ScrollNotification>(
+                              onNotification: _handleScrollNotification,
+                              child: SingleChildScrollView(
+                                child: ChangeNotifierProvider.value(
+                                    value: cm,
+                                    child: Container(
+                                      padding: EdgeInsets.all(smallPadding),
+                                      child: CharacterScreen(),
+                                    )),
+                              ),
                             )
                           ],
                         ),
@@ -146,89 +214,39 @@ class _CharactersScreenState extends State<CharactersScreen> {
               );
             }
           }),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async {
-          await showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (_) {
-              return CreateCharacterDialog(
-                charactersModel: charactersModel,
-              );
-            },
-          ).then((result) {
-            if (result) {
-              CharactersModel charactersModel =
-                  Provider.of<CharactersModel>(context, listen: false);
-              setState(() {});
-              if (charactersModel.characters.length == 1) {
-                updateCurrentCharacter(context, 0);
-              } else {
-                _pageController.animateToPage(
-                  charactersModel.characters.length - 1,
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
+      floatingActionButton: ScaleTransition(
+        scale: _hideFabAnimation,
+        alignment: Alignment.bottomCenter,
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async {
+            await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) {
+                return CreateCharacterDialog(
+                  charactersModel: charactersModel,
                 );
+              },
+            ).then((result) {
+              if (result) {
+                CharactersModel charactersModel =
+                    Provider.of<CharactersModel>(context, listen: false);
+                setState(() {});
+                if (charactersModel.characters.length == 1) {
+                  updateCurrentCharacter(context, 0);
+                } else {
+                  _pageController.animateToPage(
+                    charactersModel.characters.length - 1,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn,
+                  );
+                }
               }
-            }
-          });
-        },
+            });
+          },
+        ),
       ),
-      // floatingActionButton: SpeedDial(
-      //   animatedIcon: AnimatedIcons.menu_close,
-      //   animatedIconTheme: IconThemeData(size: 22.0),
-      //   closeManually: false,
-      //   curve: Curves.bounceIn,
-      //   overlayColor: Colors.black,
-      //   overlayOpacity: 0.5,
-      //   elevation: 8.0,
-      //   shape: CircleBorder(),
-      //   children: [
-      //     SpeedDialChild(
-      //       child: Icon(Icons.add),
-      //       backgroundColor: Colors.green,
-      //       label: 'New Character',
-      //       labelStyle: TextStyle(fontSize: 18.0),
-      //       onTap: () async {
-      //         await showDialog(
-      //           barrierDismissible: false,
-      //           context: context,
-      //           builder: (_) {
-      //             return CreateCharacterDialog(
-      //               charactersModel: charactersModel,
-      //             );
-      //           },
-      //         ).then((result) {
-      //           if (result) {
-      //             CharactersModel charactersModel =
-      //                 Provider.of<CharactersModel>(context, listen: false);
-      //             setState(() {});
-      //             if (charactersModel.characters.length == 1) {
-      //               updateCurrentCharacter(context, 0);
-      //             } else {
-      //               _pageController.animateToPage(
-      //                 charactersModel.characters.length - 1,
-      //                 duration: Duration(milliseconds: 500),
-      //                 curve: Curves.easeIn,
-      //               );
-      //             }
-      //           }
-      //         });
-      //       },
-      //     ),
-      // SpeedDialChild(
-      //     child: Icon(Icons.save_alt),
-      //     backgroundColor: Colors.blue,
-      //     label: 'Import Character',
-      //     labelStyle: TextStyle(fontSize: 18.0),
-      //     onTap: () => charactersModel.addLegacyCharacter().whenComplete(
-      //         () => _pageController.animateToPage(
-      //             charactersModel.characters.length,
-      //             duration: Duration(milliseconds: 600),
-      //             curve: Curves.decelerate))),
-      // ],
-      // ),
     );
   }
 }

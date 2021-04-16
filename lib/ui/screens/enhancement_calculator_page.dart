@@ -23,7 +23,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   void initState() {
     super.initState();
     _selectedEnhancement = SharedPrefs().enhancementType != 0
-        ? enhancementList[SharedPrefs().enhancementType]
+        ? enhancementsList[SharedPrefs().enhancementType]
         : null;
     _updateEnhancementCost();
   }
@@ -58,7 +58,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
         _selectedEnhancement = value;
         break;
     }
-    SharedPrefs().enhancementType = enhancementList.indexOf(value);
+    SharedPrefs().enhancementType = enhancementsList.indexOf(value);
     _updateEnhancementCost();
   }
 
@@ -68,9 +68,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             ? _selectedEnhancement.baseCost
             : 0;
     SharedPrefs().enhancementCost =
-        // add 25g for each card level beyond 1
+        // add 25g for each card level beyond 1 (20 is 'Party Boon' is enabled)
         (SharedPrefs().targetCardLvl != null && SharedPrefs().targetCardLvl > 0
-                ? SharedPrefs().targetCardLvl * 25
+                ? SharedPrefs().targetCardLvl *
+                    (SharedPrefs().partyBoon ? 20 : 25)
                 : 0) +
             // add 75g for each previous enhancement on target action
             (SharedPrefs().previousEnhancements != null
@@ -83,6 +84,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: this ensures that enabling Party Boon recalculates the current cost
+    _updateEnhancementCost();
     return Scaffold(
       body: Center(
         child: Container(
@@ -122,7 +125,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           onPressed: () => showInfoDialog(
                               context,
                               Strings.generalInfoTitle,
-                              Strings.generalInfoBody,
+                              Strings.generalInfoBody(context),
                               null),
                         ),
                       ],
@@ -139,17 +142,14 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 showInfoDialog(
                                     context,
                                     Strings.cardLevelInfoTitle,
-                                    Strings.cardLevelInfoBody,
+                                    Strings.cardLevelInfoBody(context),
                                     null);
                               }),
                           Text('Card Level:'),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<int>(
-                              hint: Text(
-                                '1 / x',
-                              ),
                               value: SharedPrefs().targetCardLvl,
-                              items: cardLevelList,
+                              items: cardLevelList(SharedPrefs().partyBoon),
                               onChanged: (int value) {
                                 SharedPrefs().targetCardLvl = value;
                                 _updateEnhancementCost();
@@ -173,7 +173,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 showInfoDialog(
                                   context,
                                   Strings.previousEnhancementsInfoTitle,
-                                  Strings.previousEnhancementsInfoBody,
+                                  Strings.previousEnhancementsInfoBody(context),
                                   null,
                                 );
                               }),
@@ -192,7 +192,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 'None',
                               ),
                               value: SharedPrefs().previousEnhancements,
-                              items: previousEnhancementsList,
+                              items: previousEnhancementsList(),
                               onChanged: (int value) {
                                 SharedPrefs().previousEnhancements = value;
                                 _updateEnhancementCost();
@@ -243,7 +243,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 'Type',
                               ),
                               value: _selectedEnhancement,
-                              items: enhancementTypeList,
+                              items: enhancementTypeList(),
                               onChanged: (Enhancement enhancement) {
                                 _handleTypeSelection(enhancement);
                               },
@@ -264,7 +264,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 showInfoDialog(
                                     context,
                                     Strings.multipleTargetsInfoTitle,
-                                    Strings.multipleTargetsInfoBody,
+                                    Strings.multipleTargetsInfoBody(context),
                                     null);
                               }),
                           AutoSizeText('Multiple Targets?'),

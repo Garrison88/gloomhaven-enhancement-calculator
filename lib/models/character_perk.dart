@@ -17,7 +17,8 @@ class CharacterPerk {
   CharacterPerk.fromMap(Map<String, dynamic> map) {
     associatedCharacterId = map[columnAssociatedCharacterId];
     associatedPerkId = map[columnAssociatedPerkId];
-    characterPerkIsSelected = map[columnCharacterPerkIsSelected] == 1 ? true : false;
+    characterPerkIsSelected =
+        map[columnCharacterPerkIsSelected] == 1 ? true : false;
   }
 
   // convenience method to create a Map from this CharacterPerk object

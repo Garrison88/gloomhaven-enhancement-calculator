@@ -39,7 +39,9 @@ class CharacterModel with ChangeNotifier {
   //
   // int get numOfSelectedPerks => _numOfSelectedPerks;
 
-  // set numOfSelectedPerks(int num) => _numOfSelectedPerks = num;
+  // set numOfSelectedPerks(int num) {
+  //   _numOfSelectedPerks = num;
+  // }
 
   // setNumOfSelectedPerks() {
   //   int tempNum = 0;
@@ -65,11 +67,12 @@ class CharacterModel with ChangeNotifier {
   //   // notifyListeners();
   // }
 
-  int getMaximumPerks() =>
-      currentLevel -
-      1 +
-      ((character.checkMarks - 1) / 3).round() +
-      character.previousRetirements;
+  int get maximumPerks {
+    return currentLevel -
+        1 +
+        ((character.checkMarks - 1) / 3).round() +
+        character.previousRetirements;
+  }
 
   bool get isEditable {
     return _isEditable;
@@ -87,12 +90,12 @@ class CharacterModel with ChangeNotifier {
       : 9;
 
   int get nextLevelXp => character.xp < levelXpList.last
-      ? levelXpList.firstWhere((_threshold) => _threshold > character.xp)
+      ? levelXpList.firstWhere((threshold) => threshold > character.xp)
       : levelXpList.last;
 
-  Future<void> updateCharacter(Character _updatedCharacter) async {
-    character = _updatedCharacter;
-    await db.updateCharacter(_updatedCharacter);
+  Future<void> updateCharacter(Character updatedCharacter) async {
+    character = updatedCharacter;
+    await db.updateCharacter(updatedCharacter);
     notifyListeners();
   }
 
@@ -128,11 +131,7 @@ class CharacterModel with ChangeNotifier {
     CharacterPerk perk,
     bool value,
   ) async {
-    if (value) {
-      numOfSelectedPerks++;
-    } else {
-      numOfSelectedPerks--;
-    }
+    value ? numOfSelectedPerks++ : numOfSelectedPerks--;
     for (CharacterPerk characterPerk in characterPerks) {
       if (characterPerk.associatedPerkId == perk.associatedPerkId) {
         characterPerk.characterPerkIsSelected = value;
@@ -143,8 +142,8 @@ class CharacterModel with ChangeNotifier {
     return value;
   }
 
-  Future<String> getPerkDetails(int perkId) async {
+  Future<Perk> loadPerkDetails(int perkId) async {
     Perk perk = await db.queryPerk(perkId);
-    return perk.perkDetails;
+    return perk;
   }
 }

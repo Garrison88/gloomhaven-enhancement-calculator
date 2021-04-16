@@ -41,15 +41,13 @@ class CharactersModel with ChangeNotifier {
       ..previousRetirements = previousRetirements
       ..xp = initialLevel > 1 ? levelXpList[initialLevel - 2] : 0
       ..gold = 0
-      ..notes = 'Add notes here'
+      ..notes = 'Items, reminders, wishlist...'
       ..checkMarks = 0
       ..isRetired = false
       ..id = await databaseHelper.insertCharacter(character, perks);
-    // print('inserted row: $id');
     print(character.name);
     print(character.classCode);
     characters.add(character);
-    // characterModels[character.id] = CharacterModel();
     notifyListeners();
     // return character;
   }

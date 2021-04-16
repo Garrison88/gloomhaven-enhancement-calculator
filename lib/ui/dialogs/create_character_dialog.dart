@@ -26,7 +26,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     super.dispose();
   }
 
-  PlayerClass _selectedClass;
+  PlayerClass _selectedClass = playerClassList[0];
   int _initialXp = 1;
   int _previousRetirements = 0;
 
@@ -132,8 +132,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
           ),
           onPressed: () async {
-            if (_newCharacterFormKey.currentState.validate() &&
-                _selectedClass != null) {
+            if (_newCharacterFormKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
                 _nameTextFieldController.text,
                 _selectedClass,

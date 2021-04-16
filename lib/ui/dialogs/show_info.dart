@@ -1,87 +1,214 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_list_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
+import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
-_createIconsListForDialog(List<String> _list) {
-  List<Widget> _icons = [];
-  _list.forEach(
-    (icon) => _icons.add(
+_createIconsListForDialog(List<Enhancement> list) {
+  List<Widget> icons = [];
+  if (list == null) {
+    icons.add(
       Padding(
         child: Image.asset(
-          'images/$icon',
-          height: icon == 'plus_one.png' ? plusOneWidth : iconWidth,
-          width: icon == 'plus_one.png' ? plusOneHeight : iconHeight,
+          'images/plus_one.png',
+          height: iconHeight,
+          width: iconWidth,
         ),
         padding: EdgeInsets.only(
           right: (smallPadding / 2),
         ),
       ),
-    ),
-  );
-  return _icons;
+    );
+  } else {
+    list.forEach(
+      (icon) => icons.add(
+        Padding(
+          child: SharedPrefs().darkTheme && icon.invertColor
+              ? Image.asset(
+                  'images/${icon.icon}',
+                  height: iconWidth,
+                  width: iconHeight,
+                  color: Colors.white,
+                )
+              : Image.asset(
+                  'images/${icon.icon}',
+                  height: iconWidth,
+                  width: iconHeight,
+                ),
+          padding: EdgeInsets.only(
+            right: (smallPadding / 2),
+          ),
+        ),
+      ),
+    );
+  }
+  return icons;
 }
 
 void showInfoDialog(
-  BuildContext _context,
-  String _dialogTitle,
-  RichText _dialogMessage,
-  EnhancementCategory _category,
+  BuildContext context,
+  String dialogTitle,
+  RichText dialogMessage,
+  EnhancementCategory category,
 ) {
-  RichText _bodyText;
-  List<String> _titleIcons;
-  List<String> _eligibleForIcons;
+  RichText bodyText;
+  List<Enhancement> titleIcons;
+  List<Enhancement> eligibleForIcons;
   // info about enhancement category requested
-  if (_category != null) {
-    switch (_category) {
+  if (category != null) {
+    switch (category) {
       // plus one for character enhancement selected
       case EnhancementCategory.charPlusOne:
       case EnhancementCategory.target:
-        _bodyText = Strings.plusOneCharacterInfoBody;
-        _titleIcons = Strings.plusOneIcon;
-        _eligibleForIcons = Strings.plusOneCharacterEligibleIcons;
+        bodyText = Strings.plusOneCharacterInfoBody(context);
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.charPlusOne ||
+                  element.category == EnhancementCategory.target,
+            )
+            .toList();
         break;
       // plus one for summon enhancement selected
       case EnhancementCategory.summonPlusOne:
-        _bodyText = Strings.plusOneSummonInfoBody;
-        _titleIcons = Strings.plusOneIcon;
-        _eligibleForIcons = Strings.plusOneSummonEligibleIcons;
+        bodyText = Strings.plusOneSummonInfoBody(context);
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.summonPlusOne,
+            )
+            .toList();
         break;
       // negative enhancement selected
       case EnhancementCategory.negEffect:
-        _bodyText = Strings.negEffectInfoBody;
-        _titleIcons = Strings.negEffectIcons;
-        _eligibleForIcons = Strings.negEffectEligibleIcons;
+        bodyText = Strings.negEffectInfoBody(context);
+        titleIcons = enhancementsList
+            .where(
+              (element) => element.category == EnhancementCategory.negEffect,
+            )
+            .toList();
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.negEffect ||
+                  ['Attack', 'Push', 'Pull'].contains(element.name) &&
+                      element.category != EnhancementCategory.summonPlusOne,
+            )
+            .toList();
         break;
       // positive enhancement selected
       case EnhancementCategory.posEffect:
-        _bodyText = Strings.posEffectInfoBody;
-        _titleIcons = Strings.posEffectIcons;
-        _eligibleForIcons = Strings.posEffectEligibleIcons;
+        bodyText = Strings.posEffectInfoBody(context);
+        titleIcons = enhancementsList
+            .where(
+              (element) => element.category == EnhancementCategory.posEffect,
+            )
+            .toList();
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.posEffect ||
+                  [
+                    'Heal',
+                    'Retaliate',
+                    'Shield',
+                  ].contains(element.name),
+            )
+            .toList();
+        eligibleForIcons.add(
+          Enhancement(EnhancementCategory.posEffect, 0, 'invisible.png', false,
+              'Invisible'),
+        );
         break;
       // jump selected
       case EnhancementCategory.jump:
-        _bodyText = Strings.jumpInfoBody;
-        _titleIcons = Strings.jumpIcon;
-        _eligibleForIcons = Strings.jumpEligibleIcons;
+        bodyText = Strings.jumpInfoBody(context);
+        titleIcons = enhancementsList
+            .where(
+              (element) => element.category == EnhancementCategory.jump,
+            )
+            .toList();
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.name == 'Move' &&
+                  element.category != EnhancementCategory.summonPlusOne,
+            )
+            .toList();
         break;
       // specific element selected
       case EnhancementCategory.specElem:
-        _bodyText = Strings.specificElementInfoBody;
-        _titleIcons = Strings.specificElementIcons;
-        _eligibleForIcons = Strings.elementEligibleIcons;
+        bodyText = Strings.specificElementInfoBody(context);
+        titleIcons = enhancementsList
+            .where(
+              (element) => element.category == EnhancementCategory.specElem,
+            )
+            .toList();
+        eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.negEffect ||
+                  element.category == EnhancementCategory.posEffect ||
+                  [
+                        'Move',
+                        'Attack',
+                        'Shield',
+                        'Heal',
+                        'Retaliate',
+                        'Push',
+                        'Pull',
+                      ].contains(element.name) &&
+                      element.category != EnhancementCategory.summonPlusOne,
+            )
+            .toList();
+        eligibleForIcons.add(
+          Enhancement(EnhancementCategory.posEffect, 0, 'invisible.png', false,
+              'Invisible'),
+        );
         break;
       // any element selected
       case EnhancementCategory.anyElem:
-        _bodyText = Strings.anyElementInfoBody;
-        _titleIcons = Strings.anyElementIcon;
-        _eligibleForIcons = Strings.elementEligibleIcons;
+        bodyText = Strings.anyElementInfoBody(context);
+        titleIcons = enhancementsList
+            .where(
+              (element) => element.category == EnhancementCategory.anyElem,
+            )
+            .toList();
+        eligibleForIcons = eligibleForIcons = enhancementsList
+            .where(
+              (element) =>
+                  element.category == EnhancementCategory.negEffect ||
+                  element.category == EnhancementCategory.posEffect ||
+                  [
+                        'Move',
+                        'Attack',
+                        'Shield',
+                        'Heal',
+                        'Retaliate',
+                        'Push',
+                        'Pull',
+                      ].contains(element.name) &&
+                      element.category != EnhancementCategory.summonPlusOne,
+            )
+            .toList();
+        eligibleForIcons.add(
+          Enhancement(EnhancementCategory.posEffect, 0, 'invisible.png', false,
+              'Invisible'),
+        );
         break;
       // hex selected
       case EnhancementCategory.hex:
-        _bodyText = Strings.hexInfoBody;
-        _titleIcons = Strings.hexIcon;
-        _eligibleForIcons = Strings.hexEligibleIcons;
+        bodyText = Strings.hexInfoBody(context);
+        titleIcons = [
+          enhancementsList.firstWhere(
+              (element) => element.category == EnhancementCategory.hex)
+        ];
+        eligibleForIcons = [
+          enhancementsList.firstWhere(
+              (element) => element.category == EnhancementCategory.hex)
+        ];
         break;
       // title selected (do nothing)
       default:
@@ -89,22 +216,22 @@ void showInfoDialog(
     }
   }
   showDialog(
-      context: _context,
+      context: context,
       builder: (_) => AlertDialog(
             // no title provided - this will be an enhancement dialog with icons
-            title: _dialogTitle == null
+            title: dialogTitle == null
                 ? Center(
                     child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: _createIconsListForDialog(_titleIcons),
+                      children: _createIconsListForDialog(titleIcons),
                     ),
                   ))
                 // title provided - this will be an info dialog with a text title
                 : Center(
                     child: Text(
-                      _dialogTitle,
+                      dialogTitle,
                       style: TextStyle(fontSize: 28.0, fontFamily: pirataOne),
                     ),
                   ),
@@ -112,7 +239,7 @@ void showInfoDialog(
               child: Column(
                 children: <Widget>[
                   // if title isn't provided, display eligible enhancements
-                  _dialogTitle == null
+                  dialogTitle == null
                       ? Column(children: <Widget>[
                           Text(
                             'Eligible For:',
@@ -126,7 +253,7 @@ void showInfoDialog(
                             scrollDirection: Axis.horizontal,
                             child: Row(
                                 children: _createIconsListForDialog(
-                                    _eligibleForIcons)),
+                                    eligibleForIcons)),
                           ),
                           Padding(
                               padding: EdgeInsets.only(
@@ -134,17 +261,17 @@ void showInfoDialog(
                         ])
                       // if title isn't provided, display an empty container
                       : Container(),
-                  _dialogMessage == null ? _bodyText : _dialogMessage,
+                  dialogMessage == null ? bodyText : dialogMessage,
                 ],
               ),
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(_context).pop(),
+                onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   'Got it!',
                   style: TextStyle(
-                    color: Theme.of(_context).accentColor,
+                    color: Theme.of(context).accentColor,
                     fontSize: secondaryFontSize,
                   ),
                 ),

@@ -15,6 +15,37 @@ class SharedPrefs {
     _sharedPrefs.remove(key);
   }
 
+  bool get clearSharedPrefs {
+    if (_sharedPrefs.getBool('clearSharedPrefs') == null ||
+        _sharedPrefs.getBool('clearSharedPrefs') == true) {
+      _sharedPrefs.clear();
+      clearSharedPrefs = false;
+    }
+    return _sharedPrefs.getBool('clearSharedPrefs');
+  }
+
+  set clearSharedPrefs(bool value) {
+    _sharedPrefs.setBool('clearOldPrefs', value);
+  }
+
+  bool get showPerkImages => _sharedPrefs.getBool('showPerkImages') ?? true;
+
+  set showPerkImages(bool value) {
+    _sharedPrefs.setBool('showPerkImages', value);
+  }
+
+  bool get partyBoon => _sharedPrefs.getBool('partyBoon') ?? false;
+
+  set partyBoon(bool value) {
+    _sharedPrefs.setBool('partyBoon', value);
+  }
+
+  bool get darkTheme => _sharedPrefs.getBool('darkTheme') ?? false;
+
+  set darkTheme(bool value) {
+    _sharedPrefs.setBool('darkTheme', value);
+  }
+
   String get themeColor => _sharedPrefs.getString('themeColor') ?? '0xff4e7ec1';
 
   set themeColor(String value) {
@@ -33,37 +64,37 @@ class SharedPrefs {
     _sharedPrefs.setInt('initialPage', value);
   }
 
-  int get targetCardLvl => _sharedPrefs.getInt('targetCardLvlKey') ?? 0;
+  int get targetCardLvl => _sharedPrefs.getInt('targetCardLvl') ?? 0;
 
   set targetCardLvl(int value) {
-    _sharedPrefs.setInt('targetCardLvlKey', value);
+    _sharedPrefs.setInt('targetCardLvl', value);
   }
 
   int get previousEnhancements =>
-      _sharedPrefs.getInt('enhancementsOnTargetActionKey') ?? 0;
+      _sharedPrefs.getInt('enhancementsOnTargetAction') ?? 0;
 
   set previousEnhancements(int value) {
-    _sharedPrefs.setInt('enhancementsOnTargetActionKey', value);
+    _sharedPrefs.setInt('enhancementsOnTargetAction', value);
   }
 
-  int get enhancementType => _sharedPrefs.getInt('enhancementTypeKey') ?? 0;
+  int get enhancementType => _sharedPrefs.getInt('enhancementType') ?? 0;
 
   set enhancementType(int value) {
-    _sharedPrefs.setInt('enhancementTypeKey', value);
+    _sharedPrefs.setInt('enhancementType', value);
   }
 
   bool get disableMultiTargetSwitch =>
-      _sharedPrefs.getBool('disableMultiTargetsSwitchKey') ?? false;
+      _sharedPrefs.getBool('disableMultiTargetsSwitch') ?? false;
 
   set disableMultiTargetSwitch(bool value) {
-    _sharedPrefs.setBool('disableMultiTargetsSwitchKey', value);
+    _sharedPrefs.setBool('disableMultiTargetsSwitch', value);
   }
 
   bool get multipleTargetsSwitch =>
-      _sharedPrefs.getBool('multipleTargetsSelectedKey') ?? false;
+      _sharedPrefs.getBool('multipleTargetsSelected') ?? false;
 
   set multipleTargetsSwitch(bool value) {
-    _sharedPrefs.setBool('multipleTargetsSelectedKey', value);
+    _sharedPrefs.setBool('multipleTargetsSelected', value);
   }
 
   int get enhancementCost => _sharedPrefs.getInt('enhancementCost') ?? 0;

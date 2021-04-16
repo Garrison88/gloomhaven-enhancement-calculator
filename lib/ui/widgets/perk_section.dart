@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
@@ -68,18 +69,21 @@ class PerkSectionState extends State<PerkSection> {
                           style: TextStyle(
                               fontSize: titleFontSize, fontFamily: pirataOne),
                         ),
-                        Text('${widget.characterModel.numOfSelectedPerks}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: titleFontSize,
-                                fontFamily: pirataOne,
-                                color: widget.characterModel
-                                            .getMaximumPerks() >=
-                                        widget.characterModel.numOfSelectedPerks
-                                    ? Colors.black
-                                    : Colors.red)),
                         Text(
-                          ' / ${widget.characterModel.getMaximumPerks()})',
+                          '${widget.characterModel.numOfSelectedPerks}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: titleFontSize,
+                              fontFamily: pirataOne,
+                              color: widget.characterModel.maximumPerks >=
+                                      widget.characterModel.numOfSelectedPerks
+                                  ? SharedPrefs().darkTheme
+                                      ? Colors.white
+                                      : Colors.black87
+                                  : Colors.red),
+                        ),
+                        Text(
+                          ' / ${widget.characterModel.maximumPerks})',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: titleFontSize, fontFamily: pirataOne),
@@ -90,20 +94,20 @@ class PerkSectionState extends State<PerkSection> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: List.generate(
-                      widget.characterModel.characterPerks.length,
-                      (index) => PerkRow(
-                            perk: widget.characterModel.characterPerks[index],
-                            togglePerk: (value) {
-                              widget.characterModel.togglePerk(
-                                widget.characterModel.characterPerks[index],
-                                value,
-                              );
-                            },
-                          )),
+                    widget.characterModel.characterPerks.length,
+                    (index) {
+                      return PerkRow(
+                        perk: widget.characterModel.characterPerks[index],
+                        togglePerk: (value) {
+                          widget.characterModel.togglePerk(
+                            widget.characterModel.characterPerks[index],
+                            value,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-                Container(
-                  height: 58,
-                )
               ],
             );
           } else {
