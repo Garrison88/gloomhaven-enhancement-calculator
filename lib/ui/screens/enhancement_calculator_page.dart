@@ -1,13 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-
-import '../../data/constants.dart';
-import '../../data/enhancement_list_data.dart';
-import '../../data/strings.dart';
-import '../../enums/enhancement_category.dart';
-import '../../models/enhancement.dart';
-import '../dialogs/show_info.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
   @override
@@ -23,18 +21,18 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   void initState() {
     super.initState();
     _selectedEnhancement = SharedPrefs().enhancementType != 0
-        ? enhancementsList[SharedPrefs().enhancementType]
+        ? EnhancementData.enhancements[SharedPrefs().enhancementType]
         : null;
     _updateEnhancementCost();
   }
 
   void _resetAllFields() {
     _selectedEnhancement = null;
-    SharedPrefs().remove('targetCardLvlKey');
-    SharedPrefs().remove('enhancementsOnTargetActionKey');
-    SharedPrefs().remove('enhancementTypeKey');
-    SharedPrefs().remove('disableMultiTargetsSwitchKey');
-    SharedPrefs().remove('multipleTargetsSelectedKey');
+    SharedPrefs().remove('targetCardLvl');
+    SharedPrefs().remove('enhancementsOnTargetAction');
+    SharedPrefs().remove('enhancementType');
+    SharedPrefs().remove('disableMultiTargetsSwitch');
+    SharedPrefs().remove('multipleTargetsSelected');
     SharedPrefs().remove('enhancementCost');
     setState(() {});
   }
@@ -58,7 +56,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
         _selectedEnhancement = value;
         break;
     }
-    SharedPrefs().enhancementType = enhancementsList.indexOf(value);
+    SharedPrefs().enhancementType = EnhancementData.enhancements.indexOf(value);
     _updateEnhancementCost();
   }
 
@@ -111,7 +109,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             color: Colors.white,
                           ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
                           label: Text(
                             'General Guidelines',
                             style: TextStyle(
@@ -123,10 +122,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                     : Colors.black),
                           ),
                           onPressed: () => showInfoDialog(
-                              context,
-                              Strings.generalInfoTitle,
-                              Strings.generalInfoBody(context),
-                              null),
+                            context,
+                            Strings.generalInfoTitle,
+                            Strings.generalInfoBody(context),
+                            null,
+                          ),
                         ),
                       ],
                     ),
@@ -140,16 +140,18 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   color: Theme.of(context).accentColor),
                               onPressed: () {
                                 showInfoDialog(
-                                    context,
-                                    Strings.cardLevelInfoTitle,
-                                    Strings.cardLevelInfoBody(context),
-                                    null);
+                                  context,
+                                  Strings.cardLevelInfoTitle,
+                                  Strings.cardLevelInfoBody(context),
+                                  null,
+                                );
                               }),
                           Text('Card Level:'),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<int>(
                               value: SharedPrefs().targetCardLvl,
-                              items: cardLevelList(SharedPrefs().partyBoon),
+                              items: EnhancementData.cardLevels(
+                                  SharedPrefs().partyBoon),
                               onChanged: (int value) {
                                 SharedPrefs().targetCardLvl = value;
                                 _updateEnhancementCost();
@@ -192,7 +194,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 'None',
                               ),
                               value: SharedPrefs().previousEnhancements,
-                              items: previousEnhancementsList(),
+                              items: EnhancementData.previousEnhancements(),
                               onChanged: (int value) {
                                 SharedPrefs().previousEnhancements = value;
                                 _updateEnhancementCost();
@@ -243,7 +245,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 'Type',
                               ),
                               value: _selectedEnhancement,
-                              items: enhancementTypeList(),
+                              items: EnhancementData.enhancementTypes(),
                               onChanged: (Enhancement enhancement) {
                                 _handleTypeSelection(enhancement);
                               },
@@ -262,10 +264,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   color: Theme.of(context).accentColor),
                               onPressed: () {
                                 showInfoDialog(
-                                    context,
-                                    Strings.multipleTargetsInfoTitle,
-                                    Strings.multipleTargetsInfoBody(context),
-                                    null);
+                                  context,
+                                  Strings.multipleTargetsInfoTitle,
+                                  Strings.multipleTargetsInfoBody(context),
+                                  null,
+                                );
                               }),
                           AutoSizeText('Multiple Targets?'),
                           AbsorbPointer(

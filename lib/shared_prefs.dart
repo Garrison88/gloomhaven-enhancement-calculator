@@ -15,14 +15,9 @@ class SharedPrefs {
     _sharedPrefs.remove(key);
   }
 
-  bool get clearSharedPrefs {
-    if (_sharedPrefs.getBool('clearSharedPrefs') == null ||
-        _sharedPrefs.getBool('clearSharedPrefs') == true) {
-      _sharedPrefs.clear();
-      clearSharedPrefs = false;
-    }
-    return _sharedPrefs.getBool('clearSharedPrefs');
-  }
+  void removeAll() => _sharedPrefs.clear();
+
+  bool get clearSharedPrefs => _sharedPrefs.getBool('clearOldPrefs') ?? true;
 
   set clearSharedPrefs(bool value) {
     _sharedPrefs.setBool('clearOldPrefs', value);

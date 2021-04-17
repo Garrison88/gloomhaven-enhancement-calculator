@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -123,17 +121,18 @@ class _CharactersScreenState extends State<CharactersScreen>
                                     CharactersModel charactersModel =
                                         Provider.of<CharactersModel>(context,
                                             listen: false);
-                                    setState(() {});
-                                    if (charactersModel.characters.length ==
-                                        1) {
-                                      updateCurrentCharacter(context, 0);
-                                    } else {
-                                      _pageController.animateToPage(
-                                        charactersModel.characters.length - 1,
-                                        duration: Duration(milliseconds: 500),
-                                        curve: Curves.easeIn,
-                                      );
-                                    }
+                                    setState(() {
+                                      if (charactersModel.characters.length ==
+                                          1) {
+                                        updateCurrentCharacter(context, 0);
+                                      } else {
+                                        _pageController.animateToPage(
+                                          charactersModel.characters.length - 1,
+                                          duration: Duration(milliseconds: 500),
+                                          curve: Curves.easeIn,
+                                        );
+                                      }
+                                    });
                                   }
                                 });
                               },
@@ -147,7 +146,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                     controller: _pageController,
                     onPageChanged: (index) {
                       _hideFabAnimation.forward();
-                      return updateCurrentCharacter(
+                      updateCurrentCharacter(
                         context,
                         index,
                       );
@@ -165,7 +164,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
                                   'images/class_icons/${snapshot.data[index].classIcon}',
-                                  width: iconWidth,
+                                  width: iconSize,
                                   color:
                                       Color(int.parse(SharedPrefs().themeColor))
                                           .withOpacity(0.1)),
@@ -226,22 +225,24 @@ class _CharactersScreenState extends State<CharactersScreen>
               builder: (_) {
                 return CreateCharacterDialog(
                   charactersModel: charactersModel,
+                  envelopeX: SharedPrefs().envelopeX,
                 );
               },
             ).then((result) {
               if (result) {
                 CharactersModel charactersModel =
                     Provider.of<CharactersModel>(context, listen: false);
-                setState(() {});
-                if (charactersModel.characters.length == 1) {
-                  updateCurrentCharacter(context, 0);
-                } else {
-                  _pageController.animateToPage(
-                    charactersModel.characters.length - 1,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
-                }
+                setState(() {
+                  if (charactersModel.characters.length == 1) {
+                    updateCurrentCharacter(context, 0);
+                  } else {
+                    _pageController.animateToPage(
+                      charactersModel.characters.length - 1,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
+                  }
+                });
               }
             });
           },

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
@@ -26,7 +26,7 @@ class CharactersModel with ChangeNotifier {
   ) async {
     Character character = Character();
     List<bool> perks = [];
-    perkList.forEach((perk) {
+    CharacterData.perks.forEach((perk) {
       for (var x = 0; x < perk.numOfPerks; x++) {
         perks.add(false);
       }
@@ -39,7 +39,7 @@ class CharactersModel with ChangeNotifier {
       ..classRace = playerClass.race
       ..className = playerClass.className
       ..previousRetirements = previousRetirements
-      ..xp = initialLevel > 1 ? levelXpList[initialLevel - 2] : 0
+      ..xp = initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0
       ..gold = 0
       ..notes = 'Items, reminders, wishlist...'
       ..checkMarks = 0

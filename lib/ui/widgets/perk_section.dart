@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import 'package:provider/provider.dart';
 
 class PerkSection extends StatefulWidget {
   final CharacterModel characterModel;
@@ -21,9 +22,7 @@ class PerkSectionState extends State<PerkSection> {
   @override
   void initState() {
     super.initState();
-    print(
-        'HASHCODE BEFORE LOAD CHAR PERKS::::: ${widget.characterModel..hashCode}');
-    _runFuture = widget.characterModel
+    _runFuture = Provider.of<CharacterModel>(context, listen: false)
         .loadCharacterPerks(widget.characterModel.character.id);
   }
 
@@ -55,10 +54,11 @@ class PerkSectionState extends State<PerkSection> {
               }
             });
             widget.characterModel.numOfSelectedPerks = temp;
-            return Column(
-              children: <Widget>[
-                Padding(padding: EdgeInsets.only(bottom: smallPadding)),
-                Container(
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
                     padding: EdgeInsets.all(smallPadding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -89,26 +89,28 @@ class PerkSectionState extends State<PerkSection> {
                               fontSize: titleFontSize, fontFamily: pirataOne),
                         )
                       ],
-                    )),
-                ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: List.generate(
-                    widget.characterModel.characterPerks.length,
-                    (index) {
-                      return PerkRow(
-                        perk: widget.characterModel.characterPerks[index],
-                        togglePerk: (value) {
-                          widget.characterModel.togglePerk(
-                            widget.characterModel.characterPerks[index],
-                            value,
-                          );
-                        },
-                      );
-                    },
+                    ),
                   ),
-                ),
-              ],
+                  ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: List.generate(
+                      widget.characterModel.characterPerks.length,
+                      (index) {
+                        return PerkRow(
+                          perk: widget.characterModel.characterPerks[index],
+                          togglePerk: (value) {
+                            widget.characterModel.togglePerk(
+                              widget.characterModel.characterPerks[index],
+                              value,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             );
           } else {
             return Center(child: CircularProgressIndicator());

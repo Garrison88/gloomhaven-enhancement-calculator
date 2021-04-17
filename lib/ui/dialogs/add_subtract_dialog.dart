@@ -7,12 +7,12 @@ class AddSubtractDialog extends StatelessWidget {
   AddSubtractDialog(
     this.currentValue,
     this.hintText,
-    this.calculate,
+    // this.calculate,
   );
 
   final int currentValue;
   final String hintText;
-  final Function calculate;
+  // final Function calculate;
   final TextEditingController _addSubtractTextEditingController =
       TextEditingController();
 
@@ -26,13 +26,16 @@ class AddSubtractDialog extends StatelessWidget {
               Expanded(
                 child: IconButton(
                     icon: Icon(FontAwesomeIcons.minus),
-                    onPressed: () {
-                      calculate(
-                        currentValue -
-                            int.parse(_addSubtractTextEditingController.text),
-                      );
-                      Navigator.pop(context);
-                    }),
+                    onPressed: () =>
+                        // calculate(
+                        //   currentValue -
+                        //       int.parse(_addSubtractTextEditingController.text),
+                        // );
+                        Navigator.pop(
+                          context,
+                          currentValue -
+                              int.parse(_addSubtractTextEditingController.text),
+                        )),
               ),
               Expanded(
                 child: TextField(
@@ -44,18 +47,27 @@ class AddSubtractDialog extends StatelessWidget {
                   autofocus: true,
                   decoration: InputDecoration(hintText: hintText),
                   controller: _addSubtractTextEditingController,
-                  style: TextStyle(fontSize: titleFontSize * 1.5),
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        fontSize: titleFontSize,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),
               Expanded(
                 child: IconButton(
-                    icon: Icon(FontAwesomeIcons.plus),
-                    onPressed: () {
-                      calculate(currentValue +
-                          int.parse(_addSubtractTextEditingController.text));
-                      Navigator.pop(context);
-                    }),
+                  icon: Icon(FontAwesomeIcons.plus),
+                  onPressed: () =>
+                      // calculate(currentValue +
+                      //     int.parse(_addSubtractTextEditingController.text));
+                      //   Navigator.pop(
+                      // context,
+                      Navigator.pop(
+                    context,
+                    currentValue +
+                        int.parse(_addSubtractTextEditingController.text),
+                  ),
+                  // ),
+                ),
               )
             ],
           )),

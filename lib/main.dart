@@ -6,7 +6,10 @@ import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
-  SharedPrefs().clearSharedPrefs;
+  if (SharedPrefs().clearSharedPrefs) {
+    SharedPrefs().removeAll();
+    SharedPrefs().clearSharedPrefs = false;
+  }
   runApp(
     EasyDynamicThemeWidget(
       child: GloomhavenCompanion(),

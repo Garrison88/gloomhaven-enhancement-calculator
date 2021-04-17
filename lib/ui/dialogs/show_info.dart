@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/enhancement_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/enums/enhancement_category.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
@@ -13,8 +12,8 @@ _createIconsListForDialog(List<Enhancement> list) {
       Padding(
         child: Image.asset(
           'images/plus_one.png',
-          height: iconHeight,
-          width: iconWidth,
+          height: iconSize,
+          width: iconSize,
         ),
         padding: EdgeInsets.only(
           right: (smallPadding / 2),
@@ -28,14 +27,14 @@ _createIconsListForDialog(List<Enhancement> list) {
           child: SharedPrefs().darkTheme && icon.invertColor
               ? Image.asset(
                   'images/${icon.icon}',
-                  height: iconWidth,
-                  width: iconHeight,
+                  height: iconSize,
+                  width: iconSize,
                   color: Colors.white,
                 )
               : Image.asset(
                   'images/${icon.icon}',
-                  height: iconWidth,
-                  width: iconHeight,
+                  height: iconSize,
+                  width: iconSize,
                 ),
           padding: EdgeInsets.only(
             right: (smallPadding / 2),
@@ -63,7 +62,7 @@ void showInfoDialog(
       case EnhancementCategory.charPlusOne:
       case EnhancementCategory.target:
         bodyText = Strings.plusOneCharacterInfoBody(context);
-        eligibleForIcons = enhancementsList
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.charPlusOne ||
@@ -74,7 +73,7 @@ void showInfoDialog(
       // plus one for summon enhancement selected
       case EnhancementCategory.summonPlusOne:
         bodyText = Strings.plusOneSummonInfoBody(context);
-        eligibleForIcons = enhancementsList
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.summonPlusOne,
@@ -84,12 +83,12 @@ void showInfoDialog(
       // negative enhancement selected
       case EnhancementCategory.negEffect:
         bodyText = Strings.negEffectInfoBody(context);
-        titleIcons = enhancementsList
+        titleIcons = EnhancementData.enhancements
             .where(
               (element) => element.category == EnhancementCategory.negEffect,
             )
             .toList();
-        eligibleForIcons = enhancementsList
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.negEffect ||
@@ -101,12 +100,12 @@ void showInfoDialog(
       // positive enhancement selected
       case EnhancementCategory.posEffect:
         bodyText = Strings.posEffectInfoBody(context);
-        titleIcons = enhancementsList
+        titleIcons = EnhancementData.enhancements
             .where(
               (element) => element.category == EnhancementCategory.posEffect,
             )
             .toList();
-        eligibleForIcons = enhancementsList
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.posEffect ||
@@ -125,12 +124,12 @@ void showInfoDialog(
       // jump selected
       case EnhancementCategory.jump:
         bodyText = Strings.jumpInfoBody(context);
-        titleIcons = enhancementsList
+        titleIcons = EnhancementData.enhancements
             .where(
               (element) => element.category == EnhancementCategory.jump,
             )
             .toList();
-        eligibleForIcons = enhancementsList
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.name == 'Move' &&
@@ -141,12 +140,21 @@ void showInfoDialog(
       // specific element selected
       case EnhancementCategory.specElem:
         bodyText = Strings.specificElementInfoBody(context);
-        titleIcons = enhancementsList
-            .where(
-              (element) => element.category == EnhancementCategory.specElem,
-            )
-            .toList();
-        eligibleForIcons = enhancementsList
+        titleIcons = [
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_air.png', false,
+              'Specific Element'),
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_earth.png',
+              false, 'Specific Element'),
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_fire.png', false,
+              'Specific Element'),
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_ice.png', false,
+              'Specific Element'),
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_dark.png', false,
+              'Specific Element'),
+          Enhancement(EnhancementCategory.specElem, 100, 'elem_light.png',
+              false, 'Specific Element')
+        ];
+        eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.negEffect ||
@@ -171,12 +179,12 @@ void showInfoDialog(
       // any element selected
       case EnhancementCategory.anyElem:
         bodyText = Strings.anyElementInfoBody(context);
-        titleIcons = enhancementsList
+        titleIcons = EnhancementData.enhancements
             .where(
               (element) => element.category == EnhancementCategory.anyElem,
             )
             .toList();
-        eligibleForIcons = eligibleForIcons = enhancementsList
+        eligibleForIcons = eligibleForIcons = EnhancementData.enhancements
             .where(
               (element) =>
                   element.category == EnhancementCategory.negEffect ||
@@ -202,11 +210,11 @@ void showInfoDialog(
       case EnhancementCategory.hex:
         bodyText = Strings.hexInfoBody(context);
         titleIcons = [
-          enhancementsList.firstWhere(
+          EnhancementData.enhancements.firstWhere(
               (element) => element.category == EnhancementCategory.hex)
         ];
         eligibleForIcons = [
-          enhancementsList.firstWhere(
+          EnhancementData.enhancements.firstWhere(
               (element) => element.category == EnhancementCategory.hex)
         ];
         break;
@@ -266,8 +274,8 @@ void showInfoDialog(
               ),
             ),
             actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
                 child: Text(
                   'Got it!',
                   style: TextStyle(

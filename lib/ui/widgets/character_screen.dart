@@ -7,7 +7,7 @@ import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/addSubtract_button.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/add_subtract_button.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_section.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
@@ -17,58 +17,39 @@ import 'package:provider/provider.dart';
 class CharacterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
-    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Column(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(top: smallPadding * 3),
         ),
         // RETIREMENTS AND LOCK
-        RetirementsAndLockSection(
-          characterModel: characterModel,
-          deleteCharacter: charactersModel.deleteCharacter,
-        ),
+        RetirementsAndLockSection(),
         // NAME AND CLASS
-        NameAndClassSection(
-          characterModel: characterModel,
-        ),
+        NameAndClassSection(),
         // STATS
-        StatsSection(
-          characterModel: characterModel,
-        ),
+        StatsSection(),
         // NOTES
-        NotesSection(
-          characterModel: characterModel,
-        ),
+        NotesSection(),
         // BATTLE GOAL CHECKMARKS
-        BattleGoalCheckmarksSection(
-          characterModel: characterModel,
-        ),
+        BattleGoalCheckmarksSection(),
+        // PERKS
         PerkSection(
-          characterModel: characterModel,
+          characterModel: context.watch<CharacterModel>(),
         ),
       ],
     );
   }
 }
 
-class RetirementsAndLockSection extends StatefulWidget {
-  final CharacterModel characterModel;
+class RetirementsAndLockSection extends StatelessWidget {
   final DeleteCharacter deleteCharacter;
 
   const RetirementsAndLockSection({
-    this.characterModel,
     this.deleteCharacter,
   });
   @override
-  _RetirementsAndLockSectionState createState() =>
-      _RetirementsAndLockSectionState();
-}
-
-class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
-  @override
   Widget build(BuildContext context) {
+    CharacterModel characterModel = context.watch<CharacterModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -80,16 +61,15 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
             ),
             Container(
               width: MediaQuery.of(context).size.width / 4,
-              child: widget.characterModel.isEditable
+              child: characterModel.isEditable
                   ? TextField(
-                      onChanged: (String value) => widget.characterModel
-                          .updateCharacter(widget.characterModel.character
+                      onChanged: (String value) => characterModel
+                          .updateCharacter(characterModel.character
                             ..previousRetirements =
                                 value == '' ? 0 : int.parse(value)),
                       style: TextStyle(fontSize: titleFontSize / 2),
                       textAlign: TextAlign.center,
-                      controller:
-                          widget.characterModel.previousRetirementsController,
+                      controller: characterModel.previousRetirementsController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
                             RegExp('[\\.|\\,|\\ |\\-]'))
@@ -97,7 +77,7 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                       keyboardType: TextInputType.number,
                     )
                   : Text(
-                      'Retirements: ${widget.characterModel.character.previousRetirements}',
+                      'Retirements: ${characterModel.character.previousRetirements}',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: titleFontSize / 2),
                     ),
@@ -118,26 +98,24 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
         ),
         Row(
           children: <Widget>[
-            widget.characterModel.isEditable
+            characterModel.isEditable
                 ? IconButton(
                     color: Colors.red,
                     tooltip: 'Delete',
-                    icon: Icon(FontAwesomeIcons.trash),
-                    onPressed: () async => await showDialog<bool>(
-                        context: context,
-                        builder: (_) => AlertDialog(
+                    iconSize: iconSize,
+                    icon: Icon(Icons.delete),
+                    onPressed: () async {
+                      await showDialog<bool>(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
                               content: Text(
                                 'Are you sure? There\'s no going back!',
-                                style: TextStyle(fontSize: titleFontSize),
                               ),
                               actions: <Widget>[
                                 TextButton(
                                   child: Text(
                                     'Cancel',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: secondaryFontSize,
-                                    ),
                                   ),
                                   onPressed: () =>
                                       Navigator.pop(context, false),
@@ -153,85 +131,80 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
                                     'Delete',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: secondaryFontSize,
                                     ),
                                   ),
                                 )
                               ],
-                            )).then((result) async {
-                      CharactersModel charactersModel =
-                          Provider.of<CharactersModel>(context, listen: false);
-                      if (result) {
-                        int _position = charactersModel.characters.indexWhere(
-                            (element) =>
-                                element.id ==
-                                widget.characterModel.character.id);
-                        if (_position > charactersModel.characters.length - 2) {
-                          _position = _position - 1;
+                            );
+                          }).then((result) async {
+                        if (result) {
+                          CharactersModel charactersModel =
+                              Provider.of<CharactersModel>(context,
+                                  listen: false);
+                          int _position = charactersModel.characters.indexWhere(
+                              (element) =>
+                                  element.id == characterModel.character.id);
+                          if (_position >
+                              charactersModel.characters.length - 2) {
+                            _position = _position - 1;
+                          }
+                          if (_position.isNegative) {
+                            _position = 0;
+                          }
+                          await charactersModel
+                              .deleteCharacter(characterModel.character.id);
+                          updateCurrentCharacter(context, _position);
                         }
-                        if (_position.isNegative) {
-                          _position = 0;
-                        }
-                        await widget.deleteCharacter(
-                            widget.characterModel.character.id);
-                        updateCurrentCharacter(context, _position);
-                      }
-                    }),
+                      });
+                    },
                   )
                 : Container(),
             // TODO: add retire character functionality
-            // widget.characterModel.isEditable
+            // characterModel.isEditable
             //     ? IconButton(
             //         color: Colors.blue,
             //         tooltip: 'Retire',
             //         icon: Icon(FontAwesomeIcons.bed),
             //         onPressed: () {
-            //           widget.characterModel.updateCharacter(
-            //               widget.characterModel.character
-            //                 ..isRetired = widget.characterModel.character.isRetired
+            //           characterModel.updateCharacter(
+            //               characterModel.character
+            //                 ..isRetired = characterModel.character.isRetired
             //                     ? false
             //                     : true);
-            //           widget.characterModel.isEditable = false;
+            //           characterModel.isEditable = false;
             //         })
             //     : Container(),
             IconButton(
                 icon: Icon(
-                  widget.characterModel.isEditable
-                      ? FontAwesomeIcons.lockOpen
-                      : FontAwesomeIcons.lock,
+                  characterModel.isEditable ? Icons.check : Icons.edit,
                   color:
                       SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                 ),
-                tooltip: widget.characterModel.isEditable ? 'Lock' : 'Unlock',
-                onPressed: widget.characterModel.isEditable
+                iconSize: iconSize,
+                tooltip: characterModel.isEditable ? 'Lock' : 'Unlock',
+                onPressed: characterModel.isEditable
                     ? () {
-                        widget.characterModel.isEditable =
-                            !widget.characterModel.isEditable;
+                        characterModel.isEditable = false;
                       }
                     : () {
-                        widget.characterModel.isEditable =
-                            !widget.characterModel.isEditable;
-                        widget.characterModel.previousRetirementsController
-                            .text = widget.characterModel.character
-                                    .previousRetirements !=
-                                0
-                            ? widget
-                                .characterModel.character.previousRetirements
-                                .toString()
-                            : '';
-                        widget.characterModel.nameController.text =
-                            widget.characterModel.character.name;
-                        widget.characterModel.xpController.text =
-                            widget.characterModel.character.xp != 0
-                                ? widget.characterModel.character.xp.toString()
-                                : '';
-                        widget.characterModel.goldController.text =
-                            widget.characterModel.character.gold != 0
-                                ? widget.characterModel.character.gold
+                        characterModel.isEditable = true;
+                        characterModel.previousRetirementsController.text =
+                            characterModel.character.previousRetirements != 0
+                                ? characterModel.character.previousRetirements
                                     .toString()
                                 : '';
-                        widget.characterModel.notesController.text =
-                            widget.characterModel.character.notes;
+                        characterModel.nameController.text =
+                            characterModel.character.name;
+                        characterModel.xpController.text =
+                            characterModel.character.xp != 0
+                                ? characterModel.character.xp.toString()
+                                : '';
+                        characterModel.goldController.text =
+                            characterModel.character.gold != 0
+                                ? characterModel.character.gold.toString()
+                                : '';
+                        characterModel.notesController.text =
+                            characterModel.character.notes;
                       }),
           ],
         )
@@ -240,40 +213,27 @@ class _RetirementsAndLockSectionState extends State<RetirementsAndLockSection> {
   }
 }
 
-class NameAndClassSection extends StatefulWidget {
-  final CharacterModel characterModel;
-
-  const NameAndClassSection({
-    this.characterModel,
-  });
-
-  @override
-  _NameAndClassSectionState createState() => _NameAndClassSectionState();
-}
-
-class _NameAndClassSectionState extends State<NameAndClassSection> {
+class NameAndClassSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CharacterModel characterModel = context.watch<CharacterModel>();
     return Column(
       children: <Widget>[
-        widget.characterModel.isEditable
+        characterModel.isEditable
             ? TextField(
-                onChanged: (String value) => widget.characterModel
-                    .updateCharacter(
-                        widget.characterModel.character..name = value),
+                onChanged: (String value) {
+                  characterModel
+                      .updateCharacter(characterModel.character..name = value);
+                },
                 minLines: 1,
                 maxLines: 2,
-                controller: widget.characterModel.nameController,
+                controller: characterModel.nameController,
                 style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                    hintStyle: TextStyle(
-                  fontSize: titleFontSize * 1.5,
-                )),
               )
             : AutoSizeText(
-                widget.characterModel.character.name,
+                characterModel.character.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
@@ -286,12 +246,12 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
               children: <Widget>[
                 Image.asset(
                   'images/xp.png',
-                  width: iconWidth * 1.75,
+                  width: iconSize * 1.75,
                   color:
                       SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                 ),
                 Text(
-                  '${widget.characterModel.currentLevel}',
+                  '${characterModel.currentLevel}',
                   style: TextStyle(
                     color:
                         SharedPrefs().darkTheme ? Colors.black87 : Colors.white,
@@ -303,7 +263,7 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
             ),
             Flexible(
               child: AutoSizeText(
-                '${widget.characterModel.character.classRace} ${widget.characterModel.character.className}',
+                '${characterModel.character.classRace} ${characterModel.character.className}',
                 maxLines: 1,
                 style: TextStyle(fontSize: titleFontSize),
               ),
@@ -315,19 +275,10 @@ class _NameAndClassSectionState extends State<NameAndClassSection> {
   }
 }
 
-class StatsSection extends StatefulWidget {
-  final CharacterModel characterModel;
-
-  const StatsSection({
-    this.characterModel,
-  });
-  @override
-  _StatsSectionState createState() => _StatsSectionState();
-}
-
-class _StatsSectionState extends State<StatsSection> {
+class StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CharacterModel characterModel = context.watch<CharacterModel>();
     return Center(
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -341,25 +292,26 @@ class _StatsSectionState extends State<StatsSection> {
                 children: <Widget>[
                   Image.asset(
                     'images/xp.png',
-                    width: iconWidth,
+                    width: iconSize + 5,
                     color:
                         SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
-                  widget.characterModel.isEditable
+                  characterModel.isEditable
                       ? Column(
                           children: <Widget>[
                             Container(
                               width: MediaQuery.of(context).size.width / 6,
                               child: TextField(
-                                onChanged: (String value) =>
-                                    widget.characterModel.updateCharacter(widget
-                                        .characterModel.character
-                                      ..xp =
-                                          value == '' ? 0 : int.parse(value)),
+                                onChanged: (String value) {
+                                  characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..xp = value == '' ? 0 : int.parse(value),
+                                  );
+                                },
                                 textAlignVertical: TextAlignVertical.center,
                                 style: Theme.of(context).textTheme.bodyText2,
                                 textAlign: TextAlign.center,
-                                controller: widget.characterModel.xpController,
+                                controller: characterModel.xpController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                       RegExp('[\\.|\\,|\\ |\\-]'))
@@ -371,26 +323,33 @@ class _StatsSectionState extends State<StatsSection> {
                               padding: EdgeInsets.only(top: smallPadding),
                             ),
                             AddSubtractButton(
-                                onTap: () => showDialog(
+                              onTap: () async {
+                                return await showDialog<int>(
                                     context: context,
-                                    builder: (BuildContext context) =>
-                                        AddSubtractDialog(
-                                            widget.characterModel.character.xp,
-                                            'XP', (value) {
-                                          widget.characterModel.xpController
-                                              .text = value.toString();
-                                          widget.characterModel.updateCharacter(
-                                              widget.characterModel.character
-                                                ..xp = value);
-                                        }))),
+                                    builder: (BuildContext context) {
+                                      return AddSubtractDialog(
+                                        characterModel.character.xp,
+                                        'XP',
+                                      );
+                                    }).then((value) {
+                                  if (value != null) {
+                                    characterModel.xpController.text =
+                                        value.toString();
+                                    characterModel.updateCharacter(
+                                      characterModel.character..xp = value,
+                                    );
+                                  }
+                                });
+                              },
+                            ),
                           ],
                         )
                       : Text(
-                          ' ${widget.characterModel.character.xp}',
+                          ' ${characterModel.character.xp}',
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                   Text(
-                    ' / ${widget.characterModel.nextLevelXp}',
+                    ' / ${characterModel.nextLevelXp}',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText2
@@ -406,26 +365,24 @@ class _StatsSectionState extends State<StatsSection> {
                 children: <Widget>[
                   Image.asset(
                     'images/loot.png',
-                    width: iconWidth,
+                    width: iconSize,
                     color:
                         SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
-                  widget.characterModel.isEditable
+                  characterModel.isEditable
                       ? Column(
                           children: <Widget>[
                             Container(
                               width: MediaQuery.of(context).size.width / 6,
                               child: TextField(
-                                onChanged: (String value) =>
-                                    widget.characterModel.updateCharacter(widget
-                                        .characterModel.character
+                                onChanged: (String value) => characterModel
+                                    .updateCharacter(characterModel.character
                                       ..gold =
                                           value == '' ? 0 : int.parse(value)),
                                 textAlignVertical: TextAlignVertical.center,
                                 style: Theme.of(context).textTheme.bodyText2,
                                 textAlign: TextAlign.center,
-                                controller:
-                                    widget.characterModel.goldController,
+                                controller: characterModel.goldController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                       RegExp('[\\.|\\,|\\ |\\-]'))
@@ -437,23 +394,29 @@ class _StatsSectionState extends State<StatsSection> {
                               padding: EdgeInsets.only(top: smallPadding),
                             ),
                             AddSubtractButton(
-                                onTap: () => showDialog(
+                              onTap: () async {
+                                return await showDialog<int>(
                                     context: context,
-                                    builder: (BuildContext context) =>
-                                        AddSubtractDialog(
-                                            widget
-                                                .characterModel.character.gold,
-                                            'Gold', (value) {
-                                          widget.characterModel.goldController
-                                              .text = value.toString();
-                                          widget.characterModel.updateCharacter(
-                                              widget.characterModel.character
-                                                ..gold = value);
-                                        }))),
+                                    builder: (BuildContext context) {
+                                      return AddSubtractDialog(
+                                        characterModel.character.gold,
+                                        'Gold',
+                                      );
+                                    }).then((value) {
+                                  if (value != null) {
+                                    characterModel.goldController.text =
+                                        value.toString();
+                                    characterModel.updateCharacter(
+                                      characterModel.character..gold = value,
+                                    );
+                                  }
+                                });
+                              },
+                            ),
                           ],
                         )
                       : Text(
-                          ' ${widget.characterModel.character.gold}',
+                          ' ${characterModel.character.gold}',
                           style: Theme.of(context).textTheme.bodyText2,
                         )
                 ],
@@ -466,18 +429,18 @@ class _StatsSectionState extends State<StatsSection> {
                 children: <Widget>[
                   Image.asset(
                     'images/goal.png',
-                    width: iconWidth,
+                    width: iconSize,
                     color:
                         SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                   ),
                   Text(
-                    '${widget.characterModel.checkMarkProgress} / 3',
+                    '${characterModel.checkMarkProgress} / 3',
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 ],
               ),
             ),
-            widget.characterModel.isEditable
+            characterModel.isEditable
                 ? Container()
                 : Container(
                     padding: EdgeInsets.all(smallPadding),
@@ -486,13 +449,13 @@ class _StatsSectionState extends State<StatsSection> {
                       children: <Widget>[
                         Image.asset(
                           'images/equipment_slots/pocket.png',
-                          width: iconWidth,
+                          width: iconSize,
                           color: SharedPrefs().darkTheme
                               ? Colors.white
                               : Colors.black87,
                         ),
                         Text(
-                          ' ${widget.characterModel.numOfPocketItems}',
+                          ' ${characterModel.numOfPocketItems}',
                           style: Theme.of(context).textTheme.bodyText2,
                         )
                       ],
@@ -505,20 +468,11 @@ class _StatsSectionState extends State<StatsSection> {
   }
 }
 
-class NotesSection extends StatefulWidget {
-  final CharacterModel characterModel;
-
-  const NotesSection({
-    this.characterModel,
-  });
-  @override
-  _NotesSectionState createState() => _NotesSectionState();
-}
-
-class _NotesSectionState extends State<NotesSection> {
+class NotesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return widget.characterModel.isEditable
+    CharacterModel characterModel = context.watch<CharacterModel>();
+    return characterModel.isEditable
         ? Column(
             children: <Widget>[
               Padding(
@@ -540,18 +494,19 @@ class _NotesSectionState extends State<NotesSection> {
                   child: TextField(
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
-                    onChanged: (String value) => widget.characterModel
-                        .updateCharacter(
-                            widget.characterModel.character..notes = value),
+                    onChanged: (String value) {
+                      characterModel.updateCharacter(
+                          characterModel.character..notes = value);
+                    },
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       hintText: 'Notes',
                     ),
-                    controller: widget.characterModel.notesController,
+                    controller: characterModel.notesController,
                   )),
             ],
           )
-        : widget.characterModel.character.notes != ''
+        : characterModel.character.notes != ''
             ? Column(
                 children: <Widget>[
                   Padding(
@@ -572,7 +527,7 @@ class _NotesSectionState extends State<NotesSection> {
                     width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(smallPadding),
                     child: Text(
-                      widget.characterModel.character.notes,
+                      characterModel.character.notes,
                     ),
                   ),
                 ],
@@ -581,22 +536,11 @@ class _NotesSectionState extends State<NotesSection> {
   }
 }
 
-class BattleGoalCheckmarksSection extends StatefulWidget {
-  final CharacterModel characterModel;
-
-  const BattleGoalCheckmarksSection({
-    this.characterModel,
-  });
-  @override
-  _BattleGoalCheckmarksSectionState createState() =>
-      _BattleGoalCheckmarksSectionState();
-}
-
-class _BattleGoalCheckmarksSectionState
-    extends State<BattleGoalCheckmarksSection> {
+class BattleGoalCheckmarksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return widget.characterModel.isEditable
+    CharacterModel characterModel = context.watch<CharacterModel>();
+    return characterModel.isEditable
         ? Column(
             children: <Widget>[
               Container(
@@ -611,7 +555,7 @@ class _BattleGoalCheckmarksSectionState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Visibility(
-                    visible: widget.characterModel.character.checkMarks > 0,
+                    visible: characterModel.character.checkMarks > 0,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
@@ -619,16 +563,15 @@ class _BattleGoalCheckmarksSectionState
                       color: Theme.of(context).accentColor,
                       iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                       icon: Icon(FontAwesomeIcons.minus),
-                      onPressed: () =>
-                          widget.characterModel.decreaseCheckmark(),
+                      onPressed: () => characterModel.decreaseCheckmark(),
                     ),
                   ),
                   Text(
-                    '${widget.characterModel.character.checkMarks} / 18',
+                    '${characterModel.character.checkMarks} / 18',
                     style: TextStyle(fontSize: titleFontSize),
                   ),
                   Visibility(
-                    visible: widget.characterModel.character.checkMarks < 18,
+                    visible: characterModel.character.checkMarks < 18,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
@@ -636,8 +579,7 @@ class _BattleGoalCheckmarksSectionState
                       color: Theme.of(context).accentColor,
                       iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                       icon: Icon(FontAwesomeIcons.plus),
-                      onPressed: () =>
-                          widget.characterModel.increaseCheckmark(),
+                      onPressed: () => characterModel.increaseCheckmark(),
                     ),
                   ),
                 ],

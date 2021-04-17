@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
@@ -15,7 +15,7 @@ class DatabaseHelper {
   static final _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 3;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -66,7 +66,7 @@ class DatabaseHelper {
                 $columnPerkClass TEXT NOT NULL,
                 $columnPerkDetails TEXT NOT NULL
               )''').then((_) async {
-        for (Perk perk in perkList) {
+        for (Perk perk in CharacterData.perks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
             int id = await txn.insert(tablePerks, perk.toMap());
             print("ID: " +
@@ -117,7 +117,7 @@ class DatabaseHelper {
                 $columnPerkClass TEXT NOT NULL,
                 $columnPerkDetails TEXT NOT NULL
               )''').then((_) async {
-        for (Perk perk in perkList) {
+        for (Perk perk in CharacterData.perks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
             int id = await txn.insert(tablePerks, perk.toMap());
             print("ID: " +

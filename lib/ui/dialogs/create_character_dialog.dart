@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
+  final bool envelopeX;
 
   CreateCharacterDialog({
     this.charactersModel,
+    this.envelopeX,
   });
 
   @override
@@ -21,12 +23,18 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedClass = CharacterData.playerClasses[0];
+  }
+
   void dispose() {
     _nameTextFieldController.dispose();
     super.dispose();
   }
 
-  PlayerClass _selectedClass = playerClassList[0];
+  PlayerClass _selectedClass;
   int _initialXp = 1;
   int _previousRetirements = 0;
 
@@ -43,45 +51,56 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               child: TextFormField(
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(hintText: 'Name'),
-                style: TextStyle(fontSize: titleFontSize),
                 validator: (value) =>
                     value.isNotEmpty ? null : 'Please enter a name',
                 controller: _nameTextFieldController,
               ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<PlayerClass>(
-                      value: _selectedClass,
-                      hint: Text(
-                        'Class',
-                        style: TextStyle(fontSize: titleFontSize),
-                      ),
-                      onChanged: (PlayerClass _value) =>
-                          setState(() => _selectedClass = _value),
-                      items: generatePlayerClassList(SharedPrefs().envelopeX),
-                    ),
+            SizedBox(
+              height: smallPadding,
+            ),
+            Card(
+              child: TextButton.icon(
+                label: Text(_selectedClass.className),
+                onPressed: () async => await showSearch<PlayerClass>(
+                  context: context,
+                  delegate: CustomSearchDelegate(
+                    CharacterData.playerClasses,
+                  ),
+                ).then((value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedClass = value;
+                    });
+                  }
+                }),
+                icon: Container(
+                  width: iconSize + 5,
+                  height: iconSize + 5,
+                  child: Image.asset(
+                    'images/class_icons/${_selectedClass.classIconUrl}',
+                    color: Color(int.parse(_selectedClass.classColor)),
                   ),
                 ),
-              ],
+              ),
             ),
             Row(
               children: <Widget>[
                 Expanded(
-                  child: DropdownButtonHideUnderline(
+                  child: Center(
                     child: DropdownButton<int>(
                       value: _initialXp,
                       onChanged: (int value) =>
                           setState(() => _initialXp = value),
                       items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9].map((int _value) {
                         return DropdownMenuItem<int>(
-                            value: _value,
-                            child: Center(
-                              child: Text('Level:  ${_value.toString()}',
-                                  style: TextStyle(fontSize: titleFontSize)),
-                            ));
+                          value: _value,
+                          child: Center(
+                            child: Text(
+                              'Level:  ${_value.toString()}',
+                            ),
+                          ),
+                        );
                       }).toList(),
                     ),
                   ),
@@ -92,24 +111,22 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               children: <Widget>[
                 Text(
                   'Previous\nRetirements:',
-                  // style: TextStyle(fontSize: titleFontSize),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: smallPadding),
+                SizedBox(
+                  width: smallPadding,
                 ),
                 Expanded(
                   child: TextField(
-                    style: TextStyle(fontSize: titleFontSize),
                     textAlign: TextAlign.center,
                     inputFormatters: [
                       FilteringTextInputFormatter.deny(
                           RegExp('[\\.|\\,|\\ |\\-]'))
                     ],
-                    // decoration: InputDecoration(hintText: 'Previous Retirements'),
                     keyboardType: TextInputType.number,
-                    onChanged: (String value) => setState(() {
-                      _previousRetirements = int.parse(value);
-                    }),
+                    onChanged: (String value) => setState(() =>
+                        _previousRetirements = value == null || value == ''
+                            ? 0
+                            : int.parse(value)),
                   ),
                 ),
               ],

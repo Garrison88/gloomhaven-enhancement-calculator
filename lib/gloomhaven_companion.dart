@@ -88,44 +88,9 @@ class GloomhavenCompanion extends StatelessWidget {
           trackColor: MaterialStateProperty.resolveWith(getSwitchTrackColor),
           thumbColor: MaterialStateProperty.resolveWith(getSwitchThumbColor),
         ),
-        // floatingActionButtonTheme: FloatingActionButtonThemeData(),
         brightness:
             SharedPrefs().darkTheme ? Brightness.dark : Brightness.light,
       ),
-      // darkTheme: ThemeData(
-      //   primaryColor: Color(
-      //     int.parse(
-      //       SharedPrefs().themeColor,
-      //     ),
-      //   ).withOpacity(0.5),
-      //   accentColor: Color(
-      //     int.parse(
-      //       SharedPrefs().themeColor,
-      //     ),
-      //   ).withOpacity(0.5),
-      //   fontFamily: highTower,
-      //   textTheme: TextTheme(
-      //     subtitle1: TextStyle(
-      //       fontSize: 23.0,
-      //     ),
-      //     bodyText2: TextStyle(
-      //       fontSize: 23.0,
-      //       letterSpacing: 0.7,
-      //     ),
-      //     button: TextStyle(
-      //       fontSize: 23.0,
-      //     ),
-      //     headline1: TextStyle(
-      //       fontFamily: pirataOne,
-      //       color: Colors.white,
-      //     ),
-      //     headline3: TextStyle(
-      //       fontFamily: pirataOne,
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      //   brightness: Brightness.dark,
-      // ),
     );
   }
 }

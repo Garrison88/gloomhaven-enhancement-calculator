@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_sheet_list_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
@@ -85,13 +85,14 @@ class CharacterModel with ChangeNotifier {
 
   int get numOfPocketItems => (currentLevel / 2).round();
 
-  int get currentLevel => character.xp < levelXpList.last
-      ? levelXpList.indexWhere((_xp) => _xp > character.xp) + 1
+  int get currentLevel => character.xp < CharacterData.levelXp.last
+      ? CharacterData.levelXp.indexWhere((_xp) => _xp > character.xp) + 1
       : 9;
 
-  int get nextLevelXp => character.xp < levelXpList.last
-      ? levelXpList.firstWhere((threshold) => threshold > character.xp)
-      : levelXpList.last;
+  int get nextLevelXp => character.xp < CharacterData.levelXp.last
+      ? CharacterData.levelXp
+          .firstWhere((threshold) => threshold > character.xp)
+      : CharacterData.levelXp.last;
 
   Future<void> updateCharacter(Character updatedCharacter) async {
     character = updatedCharacter;
@@ -142,7 +143,7 @@ class CharacterModel with ChangeNotifier {
     return value;
   }
 
-  Future<Perk> loadPerkDetails(int perkId) async {
+  Future<Perk> loadPerk(int perkId) async {
     Perk perk = await db.queryPerk(perkId);
     return perk;
   }

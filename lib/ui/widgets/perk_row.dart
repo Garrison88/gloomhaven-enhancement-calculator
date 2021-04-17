@@ -26,14 +26,14 @@ class _PerkRowState extends State<PerkRow> {
   void initState() {
     super.initState();
     _runFuture = Provider.of<CharacterModel>(context, listen: false)
-        .loadPerkDetails(widget.perk.associatedPerkId);
+        .loadPerk(widget.perk.associatedPerkId);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Perk>(
         future: _runFuture,
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<Perk> snapshot) {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
             details = snapshot.data.perkDetails;
@@ -63,7 +63,7 @@ class _PerkRowState extends State<PerkRow> {
                               children: list,
                             ),
                           )
-                        : Text('${snapshot.data}'),
+                        : Text('${snapshot.data.perkDetails}'),
                   ),
                 ],
               ),
