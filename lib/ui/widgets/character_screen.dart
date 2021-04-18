@@ -285,180 +285,198 @@ class StatsSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(smallPadding),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'images/xp.png',
-                    width: iconSize + 5,
-                    color:
-                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
-                  ),
-                  characterModel.isEditable
-                      ? Column(
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width / 6,
-                              child: TextField(
-                                onChanged: (String value) {
-                                  characterModel.updateCharacter(
-                                    characterModel.character
-                                      ..xp = value == '' ? 0 : int.parse(value),
-                                  );
+            Tooltip(
+              message: 'XP',
+              child: Container(
+                padding: EdgeInsets.all(smallPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'images/xp.png',
+                      width: iconSize + 5,
+                      color: SharedPrefs().darkTheme
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    characterModel.isEditable
+                        ? Column(
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width / 6,
+                                child: TextField(
+                                  onChanged: (String value) {
+                                    characterModel.updateCharacter(
+                                      characterModel.character
+                                        ..xp =
+                                            value == '' ? 0 : int.parse(value),
+                                    );
+                                  },
+                                  textAlignVertical: TextAlignVertical.center,
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  textAlign: TextAlign.center,
+                                  controller: characterModel.xpController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp('[\\.|\\,|\\ |\\-]'))
+                                  ],
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: smallPadding),
+                              ),
+                              AddSubtractButton(
+                                onTap: () async {
+                                  return await showDialog<int>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AddSubtractDialog(
+                                          characterModel.character.xp,
+                                          'XP',
+                                        );
+                                      }).then((value) {
+                                    if (value != null) {
+                                      characterModel.xpController.text =
+                                          value.toString();
+                                      characterModel.updateCharacter(
+                                        characterModel.character..xp = value,
+                                      );
+                                    }
+                                  });
                                 },
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.bodyText2,
-                                textAlign: TextAlign.center,
-                                controller: characterModel.xpController,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.deny(
-                                      RegExp('[\\.|\\,|\\ |\\-]'))
-                                ],
-                                keyboardType: TextInputType.number,
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: smallPadding),
-                            ),
-                            AddSubtractButton(
-                              onTap: () async {
-                                return await showDialog<int>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AddSubtractDialog(
-                                        characterModel.character.xp,
-                                        'XP',
-                                      );
-                                    }).then((value) {
-                                  if (value != null) {
-                                    characterModel.xpController.text =
-                                        value.toString();
-                                    characterModel.updateCharacter(
-                                      characterModel.character..xp = value,
-                                    );
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        )
-                      : Text(
-                          ' ${characterModel.character.xp}',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                  Text(
-                    ' / ${characterModel.nextLevelXp}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2
-                        .copyWith(fontSize: 15),
-                  ),
-                ],
+                            ],
+                          )
+                        : Text(
+                            ' ${characterModel.character.xp}',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                    Text(
+                      ' / ${characterModel.nextLevelXp}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(fontSize: 15),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(smallPadding),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'images/loot.png',
-                    width: iconSize,
-                    color:
-                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
-                  ),
-                  characterModel.isEditable
-                      ? Column(
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width / 6,
-                              child: TextField(
-                                onChanged: (String value) => characterModel
-                                    .updateCharacter(characterModel.character
+            Tooltip(
+              message: 'Gold',
+              child: Container(
+                padding: EdgeInsets.all(smallPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'images/loot.png',
+                      width: iconSize,
+                      color: SharedPrefs().darkTheme
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    characterModel.isEditable
+                        ? Column(
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width / 6,
+                                child: TextField(
+                                  onChanged: (String value) =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
                                       ..gold =
-                                          value == '' ? 0 : int.parse(value)),
-                                textAlignVertical: TextAlignVertical.center,
-                                style: Theme.of(context).textTheme.bodyText2,
-                                textAlign: TextAlign.center,
-                                controller: characterModel.goldController,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.deny(
-                                      RegExp('[\\.|\\,|\\ |\\-]'))
-                                ],
-                                keyboardType: TextInputType.number,
+                                          value == '' ? 0 : int.parse(value),
+                                  ),
+                                  textAlignVertical: TextAlignVertical.center,
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  textAlign: TextAlign.center,
+                                  controller: characterModel.goldController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(
+                                        RegExp('[\\.|\\,|\\ |\\-]'))
+                                  ],
+                                  keyboardType: TextInputType.number,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: smallPadding),
-                            ),
-                            AddSubtractButton(
-                              onTap: () async {
-                                return await showDialog<int>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AddSubtractDialog(
-                                        characterModel.character.gold,
-                                        'Gold',
+                              Padding(
+                                padding: EdgeInsets.only(top: smallPadding),
+                              ),
+                              AddSubtractButton(
+                                onTap: () async {
+                                  return await showDialog<int>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AddSubtractDialog(
+                                          characterModel.character.gold,
+                                          'Gold',
+                                        );
+                                      }).then((value) {
+                                    if (value != null) {
+                                      characterModel.goldController.text =
+                                          value.toString();
+                                      characterModel.updateCharacter(
+                                        characterModel.character..gold = value,
                                       );
-                                    }).then((value) {
-                                  if (value != null) {
-                                    characterModel.goldController.text =
-                                        value.toString();
-                                    characterModel.updateCharacter(
-                                      characterModel.character..gold = value,
-                                    );
-                                  }
-                                });
-                              },
-                            ),
-                          ],
-                        )
-                      : Text(
-                          ' ${characterModel.character.gold}',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        )
-                ],
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
+                          )
+                        : Text(
+                            ' ${characterModel.character.gold}',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          )
+                  ],
+                ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(smallPadding),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'images/goal.png',
-                    width: iconSize,
-                    color:
-                        SharedPrefs().darkTheme ? Colors.white : Colors.black87,
-                  ),
-                  Text(
-                    '${characterModel.checkMarkProgress} / 3',
-                    style: Theme.of(context).textTheme.bodyText2,
-                  )
-                ],
+            Tooltip(
+              message: 'Battle Goal Checkmarks',
+              child: Container(
+                padding: EdgeInsets.all(smallPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'images/goal.png',
+                      width: iconSize,
+                      color: SharedPrefs().darkTheme
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                    Text(
+                      '${characterModel.checkMarkProgress} / 3',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    )
+                  ],
+                ),
               ),
             ),
             characterModel.isEditable
                 ? Container()
-                : Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          'images/equipment_slots/pocket.png',
-                          width: iconSize,
-                          color: SharedPrefs().darkTheme
-                              ? Colors.white
-                              : Colors.black87,
-                        ),
-                        Text(
-                          ' ${characterModel.numOfPocketItems}',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        )
-                      ],
+                : Tooltip(
+                    message: 'Number of Pocket Items Allowed',
+                    child: Container(
+                      padding: EdgeInsets.all(smallPadding),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/equipment_slots/pocket.png',
+                            width: iconSize,
+                            color: SharedPrefs().darkTheme
+                                ? Colors.white
+                                : Colors.black87,
+                          ),
+                          Text(
+                            ' ${characterModel.numOfPocketItems}',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          )
+                        ],
+                      ),
                     ),
                   )
           ],

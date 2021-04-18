@@ -8,11 +8,9 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
-  final bool envelopeX;
 
   CreateCharacterDialog({
     this.charactersModel,
-    this.envelopeX,
   });
 
   @override
@@ -22,115 +20,176 @@ class CreateCharacterDialog extends StatefulWidget {
 class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
+  final TextEditingController _classTextFieldController =
+      TextEditingController();
+  final TextEditingController _levelTextFieldController =
+      TextEditingController();
+  final TextEditingController _previousRetirementsTextFieldController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _selectedClass = CharacterData.playerClasses[0];
+    _classTextFieldController.text = _selectedClass.className;
+    _levelTextFieldController.text = '${levels[0]}';
+    _previousRetirementsTextFieldController.text = '0';
   }
 
   void dispose() {
     _nameTextFieldController.dispose();
+    _classTextFieldController.dispose();
+    _levelTextFieldController.dispose();
+    _previousRetirementsTextFieldController.dispose();
     super.dispose();
   }
 
-  PlayerClass _selectedClass;
-  int _initialXp = 1;
-  int _previousRetirements = 0;
+  List<int> levels = List.generate(9, (index) => index + 1);
 
-  final _newCharacterFormKey = GlobalKey<FormState>();
+  OverlayEntry _overlayEntryBuilder() {
+    return OverlayEntry(
+      builder: (context) {
+        return Stack(
+          children: <Widget>[
+            Positioned.fill(
+                child: GestureDetector(
+              onTap: () => closeMenu(),
+              child: Container(
+                color: Colors.transparent,
+              ),
+            )),
+            Positioned(
+              top: buttonPosition.dy - 100,
+              left: buttonPosition.dx,
+              width: buttonSize.width / 2,
+              child: Material(
+                color: Colors.transparent,
+                child: Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(
+                      levels.length,
+                      (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _levelTextFieldController.text =
+                                '${levels[index].toString()}';
+                            closeMenu();
+                          },
+                          child: Container(
+                            width: buttonSize.width / 2,
+                            padding: EdgeInsets.all(smallPadding),
+                            child: Text(
+                              '${levels[index].toString()}',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void openMenu() {
+    findButton();
+    _overlayEntry = _overlayEntryBuilder();
+    Overlay.of(context).insert(_overlayEntry);
+    isMenuOpen = !isMenuOpen;
+  }
+
+  void closeMenu() {
+    _overlayEntry.remove();
+    isMenuOpen = !isMenuOpen;
+  }
+
+  PlayerClass _selectedClass;
+
+  final _formKey = GlobalKey<FormState>();
+  GlobalKey _levelKey = LabeledGlobalKey("button_icon");
+
+  OverlayEntry _overlayEntry;
+  Size buttonSize;
+  Offset buttonPosition;
+  bool isMenuOpen = false;
+
+  findButton() {
+    RenderBox renderBox = _levelKey.currentContext.findRenderObject();
+    buttonSize = renderBox.size;
+    buttonPosition = renderBox.localToGlobal(Offset.zero);
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: SingleChildScrollView(
+      content: Form(
+        key: _formKey,
         child: Column(
-          children: <Widget>[
-            Form(
-              key: _newCharacterFormKey,
-              child: TextFormField(
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(hintText: 'Name'),
-                validator: (value) =>
-                    value.isNotEmpty ? null : 'Please enter a name',
-                controller: _nameTextFieldController,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(
+                labelText: 'Name',
               ),
+              validator: (value) =>
+                  value.isNotEmpty ? null : 'Please enter a name',
+              controller: _nameTextFieldController,
             ),
-            SizedBox(
-              height: smallPadding,
-            ),
-            Card(
-              child: TextButton.icon(
-                label: Text(_selectedClass.className),
-                onPressed: () async => await showSearch<PlayerClass>(
-                  context: context,
-                  delegate: CustomSearchDelegate(
-                    CharacterData.playerClasses,
-                  ),
-                ).then((value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedClass = value;
-                    });
-                  }
-                }),
-                icon: Container(
-                  width: iconSize + 5,
-                  height: iconSize + 5,
+            TextFormField(
+              readOnly: true,
+              controller: _classTextFieldController,
+              decoration: InputDecoration(
+                labelText: 'Class',
+                suffixIcon: Container(
+                  height: iconSize,
+                  width: iconSize,
                   child: Image.asset(
                     'images/class_icons/${_selectedClass.classIconUrl}',
                     color: Color(int.parse(_selectedClass.classColor)),
                   ),
                 ),
               ),
+              onTap: () async => await showSearch<PlayerClass>(
+                context: context,
+                delegate: CustomSearchDelegate(
+                  CharacterData.playerClasses,
+                ),
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedClass = value;
+                    _classTextFieldController.text = value.className;
+                  });
+                }
+              }),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Center(
-                    child: DropdownButton<int>(
-                      value: _initialXp,
-                      onChanged: (int value) =>
-                          setState(() => _initialXp = value),
-                      items: <int>[1, 2, 3, 4, 5, 6, 7, 8, 9].map((int _value) {
-                        return DropdownMenuItem<int>(
-                          value: _value,
-                          child: Center(
-                            child: Text(
-                              'Level:  ${_value.toString()}',
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
+            TextFormField(
+              enableInteractiveSelection: false,
+              key: _levelKey,
+              controller: _levelTextFieldController,
+              readOnly: true,
+              onTap: () => isMenuOpen ? closeMenu() : openMenu(),
+              decoration: InputDecoration(
+                labelText: 'Starting Level',
+              ),
             ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'Previous\nRetirements:',
-                ),
-                SizedBox(
-                  width: smallPadding,
-                ),
-                Expanded(
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(
-                          RegExp('[\\.|\\,|\\ |\\-]'))
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (String value) => setState(() =>
-                        _previousRetirements = value == null || value == ''
-                            ? 0
-                            : int.parse(value)),
-                  ),
-                ),
+            TextFormField(
+              enableInteractiveSelection: false,
+              controller: _previousRetirementsTextFieldController,
+              decoration: InputDecoration(
+                labelText: 'Previous Retirements',
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]'))
               ],
-            )
+              keyboardType: TextInputType.number,
+            ),
           ],
         ),
       ),
@@ -149,12 +208,15 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
           ),
           onPressed: () async {
-            if (_newCharacterFormKey.currentState.validate()) {
+            print('${_previousRetirementsTextFieldController.text}');
+            if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
                 _nameTextFieldController.text,
                 _selectedClass,
-                _initialXp,
-                _previousRetirements,
+                int.parse(_levelTextFieldController.text),
+                _previousRetirementsTextFieldController.text.isEmpty
+                    ? 0
+                    : int.parse(_previousRetirementsTextFieldController.text),
               );
               Navigator.pop(context, true);
             }

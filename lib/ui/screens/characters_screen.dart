@@ -225,7 +225,6 @@ class _CharactersScreenState extends State<CharactersScreen>
               builder: (_) {
                 return CreateCharacterDialog(
                   charactersModel: charactersModel,
-                  envelopeX: SharedPrefs().envelopeX,
                 );
               },
             ).then((result) {

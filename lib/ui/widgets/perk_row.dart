@@ -248,17 +248,20 @@ List<InlineSpan> generateList(List<String> list) {
       inlineList.add(
         WidgetSpan(
           alignment: PlaceholderAlignment.middle,
-          child: Container(
-            height: 35,
-            width: 35,
-            child: invertColor && SharedPrefs().darkTheme
-                ? Image.asset(
-                    'images/$assetPath',
-                    color: Colors.white70,
-                  )
-                : Image.asset(
-                    'images/$assetPath',
-                  ),
+          child: Tooltip(
+            message: '${element.toLowerCase()}',
+            child: Container(
+              height: 35,
+              width: 35,
+              child: invertColor && SharedPrefs().darkTheme
+                  ? Image.asset(
+                      'images/$assetPath',
+                      color: Colors.white70,
+                    )
+                  : Image.asset(
+                      'images/$assetPath',
+                    ),
+            ),
           ),
         ),
       );

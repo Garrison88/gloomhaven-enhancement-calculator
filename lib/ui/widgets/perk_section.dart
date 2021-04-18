@@ -91,23 +91,47 @@ class PerkSectionState extends State<PerkSection> {
                       ],
                     ),
                   ),
-                  ListView(
+                  ListView.builder(
+                    itemBuilder: (_, int index) {
+                      // List.generate(
+                      //   widget.characterModel.characterPerks.length,
+                      //   (index) {
+                      return PerkRow(
+                        perk: widget.characterModel.characterPerks[index],
+                        togglePerk: (value) {
+                          widget.characterModel.togglePerk(
+                            widget.characterModel.characterPerks[index],
+                            value,
+                          );
+                        },
+                      );
+                      // },
+                      // );
+                    },
+                    // separatorBuilder: (BuildContext context, int index) {
+                    //   return Divider(
+                    //     indent: MediaQuery.of(context).size.width / 4,
+                    //     endIndent: MediaQuery.of(context).size.width / 4,
+                    //     height: 3,
+                    //   );
+                    // },
+                    itemCount: widget.characterModel.characterPerks.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    children: List.generate(
-                      widget.characterModel.characterPerks.length,
-                      (index) {
-                        return PerkRow(
-                          perk: widget.characterModel.characterPerks[index],
-                          togglePerk: (value) {
-                            widget.characterModel.togglePerk(
-                              widget.characterModel.characterPerks[index],
-                              value,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    // children: List.generate(
+                    //   widget.characterModel.characterPerks.length,
+                    //   (index) {
+                    //     return PerkRow(
+                    //       perk: widget.characterModel.characterPerks[index],
+                    //       togglePerk: (value) {
+                    //         widget.characterModel.togglePerk(
+                    //           widget.characterModel.characterPerks[index],
+                    //           value,
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                   ),
                 ],
               ),
