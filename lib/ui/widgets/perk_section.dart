@@ -1,59 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
 class PerkSection extends StatefulWidget {
-  final CharacterModel characterModel;
-
-  const PerkSection({
-    this.characterModel,
-  });
   @override
   State<StatefulWidget> createState() => PerkSectionState();
 }
 
 class PerkSectionState extends State<PerkSection> {
-  Future<List<CharacterPerk>> _runFuture;
+  Future<List<List<dynamic>>> _futures;
 
   @override
   void initState() {
     super.initState();
-    _runFuture = Provider.of<CharacterModel>(context, listen: false)
-        .loadCharacterPerks(widget.characterModel.character.id);
-  }
-
-  @override
-  void didUpdateWidget(covariant PerkSection oldWidget) {
-    if (oldWidget.characterModel.character.id !=
-        widget.characterModel.character.id) {
-      _runFuture = widget.characterModel
-          .loadCharacterPerks(widget.characterModel.character.id);
-    }
-    super.didUpdateWidget(oldWidget);
+    _futures = Future.wait([
+      Provider.of<CharacterModel>(context, listen: false).loadCharacterPerks(
+          Provider.of<CharacterModel>(context, listen: false).character.id),
+      Provider.of<CharacterModel>(context, listen: false).loadPerks(
+          Provider.of<CharacterModel>(context, listen: false)
+              .character
+              .classCode),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CharacterPerk>>(
-        future: _runFuture,
-        builder: (context, AsyncSnapshot<List<CharacterPerk>> snapshot) {
+    CharacterModel _characterModel =
+        Provider.of<CharacterModel>(context, listen: false);
+    return FutureBuilder(
+        future: _futures,
+        builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
           if (snapshot.hasError) {
             return Container(child: Text(snapshot.error.toString()));
           }
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            widget.characterModel.characterPerks = snapshot.data;
+            _characterModel.characterPerks = snapshot.data[0];
             int temp = 0;
-            snapshot.data.forEach((element) {
+            snapshot.data[0].forEach((element) {
               if (element.characterPerkIsSelected) {
                 temp++;
               }
             });
-            widget.characterModel.numOfSelectedPerks = temp;
+            _characterModel.numOfSelectedPerks = temp;
+
+            List<PerkRow> _perkRows = [];
+            List<Perk> _perkRowPerks = [];
+            List<Perk> _perks = [];
+            for (var perkMap in snapshot.data[1]) {
+              _perks.add(Perk.fromMap(perkMap));
+            }
+            String _details = '';
+            for (Perk _perk in _perks) {
+              if (_details.isEmpty) {
+                _details = _perk.perkDetails;
+                _perkRowPerks.add(_perk);
+                continue;
+              }
+              if (_details == _perk.perkDetails) {
+                _perkRowPerks.add(_perk);
+                continue;
+              }
+              if (_details != _perk.perkDetails) {
+                _perkRows.add(PerkRow(
+                  perks: _perkRowPerks,
+                ));
+                _perkRowPerks = [_perk];
+                _details = _perk.perkDetails;
+              }
+            }
+            _perkRows.add(PerkRow(
+              perks: _perkRowPerks,
+            ));
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Column(
@@ -70,20 +93,20 @@ class PerkSectionState extends State<PerkSection> {
                               fontSize: titleFontSize, fontFamily: pirataOne),
                         ),
                         Text(
-                          '${widget.characterModel.numOfSelectedPerks}',
+                          '${Provider.of<CharacterModel>(context).numOfSelectedPerks}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: titleFontSize,
                               fontFamily: pirataOne,
-                              color: widget.characterModel.maximumPerks >=
-                                      widget.characterModel.numOfSelectedPerks
+                              color: _characterModel.maximumPerks >=
+                                      _characterModel.numOfSelectedPerks
                                   ? SharedPrefs().darkTheme
                                       ? Colors.white
                                       : Colors.black87
                                   : Colors.red),
                         ),
                         Text(
-                          ' / ${widget.characterModel.maximumPerks})',
+                          ' / ${_characterModel.maximumPerks})',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: titleFontSize, fontFamily: pirataOne),
@@ -91,47 +114,10 @@ class PerkSectionState extends State<PerkSection> {
                       ],
                     ),
                   ),
-                  ListView.builder(
-                    itemBuilder: (_, int index) {
-                      // List.generate(
-                      //   widget.characterModel.characterPerks.length,
-                      //   (index) {
-                      return PerkRow(
-                        perk: widget.characterModel.characterPerks[index],
-                        togglePerk: (value) {
-                          widget.characterModel.togglePerk(
-                            widget.characterModel.characterPerks[index],
-                            value,
-                          );
-                        },
-                      );
-                      // },
-                      // );
-                    },
-                    // separatorBuilder: (BuildContext context, int index) {
-                    //   return Divider(
-                    //     indent: MediaQuery.of(context).size.width / 4,
-                    //     endIndent: MediaQuery.of(context).size.width / 4,
-                    //     height: 3,
-                    //   );
-                    // },
-                    itemCount: widget.characterModel.characterPerks.length,
+                  ListView(
+                    children: _perkRows,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    // children: List.generate(
-                    //   widget.characterModel.characterPerks.length,
-                    //   (index) {
-                    //     return PerkRow(
-                    //       perk: widget.characterModel.characterPerks[index],
-                    //       togglePerk: (value) {
-                    //         widget.characterModel.togglePerk(
-                    //           widget.characterModel.characterPerks[index],
-                    //           value,
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    // ),
                   ),
                 ],
               ),

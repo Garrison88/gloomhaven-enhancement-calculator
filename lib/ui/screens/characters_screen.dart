@@ -68,7 +68,8 @@ class _CharactersScreenState extends State<CharactersScreen>
 
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = Provider.of<CharactersModel>(context);
+    CharactersModel charactersModel =
+        Provider.of<CharactersModel>(context, listen: false);
     return Scaffold(
       body: FutureBuilder<List<Character>>(
           future: _runFuture,
@@ -95,8 +96,6 @@ class _CharactersScreenState extends State<CharactersScreen>
                               ),
                               child: Text(
                                 'Create your first character using the button below',
-                                style:
-                                    TextStyle(fontFamily: nyala, fontSize: 24),
                                 textAlign: TextAlign.center,
                               ),
                             ),

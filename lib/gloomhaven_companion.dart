@@ -61,13 +61,14 @@ class GloomhavenCompanion extends StatelessWidget {
         textTheme: TextTheme(
           subtitle1: TextStyle(
             fontSize: 23.0,
-            color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
+          ),
+          subtitle2: TextStyle(
+            fontSize: 15.0,
           ),
           bodyText2: TextStyle(
             fontSize: 25.0,
             letterSpacing: 0.7,
             fontFamily: nyala,
-            color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
           ),
           button: TextStyle(
             fontSize: 23.0,

@@ -33,7 +33,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     _selectedClass = CharacterData.playerClasses[0];
     _classTextFieldController.text = _selectedClass.className;
     _levelTextFieldController.text = '${levels[0]}';
-    _previousRetirementsTextFieldController.text = '0';
+    // _previousRetirementsTextFieldController.text = '0';
   }
 
   void dispose() {
@@ -155,19 +155,21 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   ),
                 ),
               ),
-              onTap: () async => await showSearch<PlayerClass>(
-                context: context,
-                delegate: CustomSearchDelegate(
-                  CharacterData.playerClasses,
-                ),
-              ).then((value) {
-                if (value != null) {
-                  setState(() {
-                    _selectedClass = value;
-                    _classTextFieldController.text = value.className;
-                  });
-                }
-              }),
+              onTap: () async {
+                await showSearch<PlayerClass>(
+                  context: context,
+                  delegate: CustomSearchDelegate(
+                    CharacterData.playerClasses,
+                  ),
+                ).then((value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedClass = value;
+                      _classTextFieldController.text = value.className;
+                    });
+                  }
+                });
+              },
             ),
             TextFormField(
               enableInteractiveSelection: false,
@@ -176,6 +178,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               readOnly: true,
               onTap: () => isMenuOpen ? closeMenu() : openMenu(),
               decoration: InputDecoration(
+                suffixIcon: Icon(Icons.arrow_drop_down),
                 labelText: 'Starting Level',
               ),
             ),

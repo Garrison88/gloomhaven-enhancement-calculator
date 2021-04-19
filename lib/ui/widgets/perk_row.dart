@@ -1,280 +1,89 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:flutter/widgets.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
-class PerkRow extends StatefulWidget {
-  final CharacterPerk perk;
-  final TogglePerk togglePerk;
+class PerkRow extends StatelessWidget {
+  final List<Perk> perks;
 
   PerkRow({
-    this.perk,
-    this.togglePerk,
+    this.perks,
   });
+  final List<int> _perkIds = [];
 
-  @override
-  _PerkRowState createState() => _PerkRowState();
-}
+  // GlobalKey _key = GlobalKey();
 
-class _PerkRowState extends State<PerkRow> {
-  Future<Perk> _runFuture;
-  String details;
+  // double _dividerHeight = _getSizes();
 
-  @override
-  void initState() {
-    super.initState();
-    _runFuture = Provider.of<CharacterModel>(context, listen: false)
-        .loadPerk(widget.perk.associatedPerkId);
-  }
+  // double _getSizes() {
+  //   final RenderBox renderBoxRed = _key.currentContext.findRenderObject();
+  //   final sizeRed = renderBoxRed.size;
+  //   print("SIZE of Red: $sizeRed");
+  // }
+// @override
+//        WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Perk>(
-        future: _runFuture,
-        builder: (context, AsyncSnapshot<Perk> snapshot) {
-          if (snapshot.hasData &&
-              snapshot.connectionState == ConnectionState.done) {
-            details = snapshot.data.perkDetails;
-            List<InlineSpan> list = generateList(
-              snapshot.data.perkDetails.split(' '),
-            );
-            return Container(
-              child: Row(
-                children: <Widget>[
-                  Checkbox(
-                    value: widget.perk.characterPerkIsSelected,
-                    onChanged: widget.togglePerk,
-                  ),
-                  Container(
-                    height: 30.0,
-                    width: 1.0,
-                    color: widget.perk.characterPerkIsSelected
-                        ? Theme.of(context).accentColor
-                        : Colors.grey,
-                    margin: EdgeInsets.only(right: 10.0),
-                  ),
-                  Expanded(
-                    child: SharedPrefs().showPerkImages
-                        ? RichText(
-                            text: TextSpan(
-                              style: Theme.of(context).textTheme.bodyText2,
-                              children: list,
-                            ),
-                          )
-                        : Text('${snapshot.data.perkDetails}'),
-                  ),
-                ],
+    CharacterModel characterModel = Provider.of<CharacterModel>(context);
+    perks.forEach((element) {
+      _perkIds.add(element.perkId);
+    });
+    return Container(
+      // key: _key,
+      padding: EdgeInsets.symmetric(vertical: smallPadding / 2),
+      child: Row(
+        // crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: List.generate(
+              perks.length,
+              (index) => Checkbox(
+                visualDensity: VisualDensity.comfortable,
+                value: characterModel.characterPerks
+                    .firstWhere((element) =>
+                        element.associatedPerkId == perks[index].perkId)
+                    .characterPerkIsSelected,
+                onChanged: (value) => characterModel.togglePerk(
+                  characterModel.characterPerks.firstWhere((element) =>
+                      element.associatedPerkId == perks[index].perkId),
+                  value,
+                ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error.toString()}');
-          } else {
-            return Container();
-          }
-        });
-  }
-}
-
-// class _PerkRowState extends State<PerkRow> {
-//   Future<Perk> _runFuture;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _runFuture = Provider.of<CharacterModel>(context, listen: false)
-//         .loadPerkDetails(widget.perk.associatedPerkId);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<Perk>(
-//         future: _runFuture,
-//         builder: (context, AsyncSnapshot<Perk> snapshot) {
-//           if (snapshot.hasData &&
-//               snapshot.connectionState == ConnectionState.done) {
-//             List<InlineSpan> list = generateList(
-//               snapshot.data.perkDetails.split(' '),
-//             );
-//             return Container(
-//               child: Row(
-//                 children: <Widget>[
-//                   Row(
-//                     children: [
-//                       for (int i = 0; i < snapshot.data.numOfPerks; i++)
-//                         Checkbox(
-//                           value: widget.perk.characterPerkIsSelected,
-//                           onChanged: widget.togglePerk,
-//                         )
-//                     ],
-//                   ),
-//                   Container(
-//                     height: 30.0,
-//                     width: 1.0,
-//                     color: widget.perk.characterPerkIsSelected
-//                         ? Theme.of(context).accentColor
-//                         : Colors.grey,
-//                     margin: EdgeInsets.only(right: 10.0),
-//                   ),
-//                   Expanded(
-//                       // child: FutureBuilder<Perk>(
-//                       //     future: _runFuture,
-//                       //     builder: (context, AsyncSnapshot<Perk> snapshot) {
-//                       //       if (snapshot.hasData &&
-//                       //           snapshot.connectionState == ConnectionState.done) {
-//                       child: (SharedPrefs().showPerkImages)
-//                           ? RichText(
-//                               text: TextSpan(
-//                                 style: Theme.of(context).textTheme.bodyText2,
-//                                 children: list,
-//                               ),
-//                             )
-//                           : Text('${snapshot.data}')
-
-//                       // }),
-//                       )
-//                 ],
-//               ),
-//             );
-//           } else if (snapshot.hasError) {
-//             return Text('${snapshot.error.toString()}');
-//           } else {
-//             return Container();
-//           }
-//         });
-//   }
-// }
-
-List<InlineSpan> generateList(List<String> list) {
-  List<InlineSpan> inlineList = [];
-  list.forEach((element) {
-    String assetPath;
-    bool invertColor = false;
-    switch (element) {
-      case ('+0'):
-        assetPath = 'attack_modifiers/plus_0.png';
-        break;
-      case ('+1'):
-        assetPath = 'attack_modifiers/plus_1.png';
-        break;
-      case ('-1'):
-        assetPath = 'attack_modifiers/minus_1.png';
-        break;
-      case ('+2'):
-        assetPath = 'attack_modifiers/plus_2.png';
-        break;
-      case ('-2'):
-        assetPath = 'attack_modifiers/minus_2.png';
-        break;
-      case ('Rolling'):
-        assetPath = 'rolling.png';
-        break;
-      case ('HEAL'):
-        assetPath = 'heal.png';
-        invertColor = true;
-        break;
-      case ('SHIELD'):
-        assetPath = 'shield.png';
-        invertColor = true;
-        break;
-      case ('STUN'):
-        assetPath = 'stun.png';
-        break;
-      case ('WOUND'):
-        assetPath = 'wound.png';
-        break;
-      case ('CURSE'):
-        assetPath = 'curse.png';
-        break;
-      case ('PIERCE'):
-        assetPath = 'pierce.png';
-        break;
-      case ('REGENERATE,'):
-        assetPath = 'regenerate.png';
-        break;
-      case ('DISARM'):
-        assetPath = 'disarm.png';
-        break;
-      case ('BLESS'):
-        assetPath = 'bless.png';
-        break;
-      case ('TARGET'):
-        assetPath = 'target.png';
-        break;
-      case ('PUSH'):
-        assetPath = 'push.png';
-        break;
-      case ('PULL'):
-        assetPath = 'pull.png';
-        break;
-      case ('IMMOBILIZE'):
-        assetPath = 'immobilize.png';
-        break;
-      case ('POISON'):
-        assetPath = 'poison.png';
-        break;
-      case ('MUDDLE'):
-        assetPath = 'muddle.png';
-        break;
-      case ('INVISIBLE'):
-        assetPath = 'invisible.png';
-        break;
-      // ELEMENTS
-      case ('EARTH'):
-        assetPath = 'elem_earth.png';
-        break;
-      case ('AIR'):
-        assetPath = 'elem_air.png';
-        break;
-      case ('DARK'):
-        assetPath = 'elem_dark.png';
-        break;
-      case ('LIGHT'):
-        assetPath = 'elem_light.png';
-        break;
-      case ('ICE'):
-        assetPath = 'elem_ice.png';
-        break;
-      case ('FIRE'):
-        assetPath = 'elem_fire.png';
-        break;
-      case ('FIRE/LIGHT'):
-        assetPath = 'elem_fire_light.png';
-        break;
-      default:
-    }
-    if (assetPath != null) {
-      inlineList.add(
-        WidgetSpan(
-          alignment: PlaceholderAlignment.middle,
-          child: Tooltip(
-            message: '${element.toLowerCase()}',
-            child: Container(
-              height: 35,
-              width: 35,
-              child: invertColor && SharedPrefs().darkTheme
-                  ? Image.asset(
-                      'images/$assetPath',
-                      color: Colors.white70,
-                    )
-                  : Image.asset(
-                      'images/$assetPath',
-                    ),
             ),
           ),
-        ),
-      );
-    } else {
-      inlineList.add(
-        TextSpan(text: element),
-      );
-    }
-    inlineList.add(
-      TextSpan(text: ' '),
+          Container(
+            height: 30.0,
+            width: 1.0,
+            color: characterModel.characterPerks
+                    .where((element) =>
+                        _perkIds.contains(element.associatedPerkId))
+                    .every((element) => element.characterPerkIsSelected)
+                ? Theme.of(context).accentColor
+                : Colors.grey,
+            margin: EdgeInsets.only(right: 10.0),
+          ),
+          Expanded(
+            child: SharedPrefs().showPerkImages
+                ? RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.bodyText2,
+                      children: Utils.generatePerkDetailsWithInlineIcons(
+                        perks[0].perkDetails.split(' '),
+                        SharedPrefs().darkTheme,
+                      ),
+                    ),
+                  )
+                : Text('${perks[0].perkDetails}'),
+          ),
+        ],
+      ),
     );
-  });
-  return inlineList;
+  }
 }
 
 typedef TogglePerk = Function(bool value);

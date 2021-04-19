@@ -33,20 +33,13 @@ class CharacterScreen extends StatelessWidget {
         // BATTLE GOAL CHECKMARKS
         BattleGoalCheckmarksSection(),
         // PERKS
-        PerkSection(
-          characterModel: context.watch<CharacterModel>(),
-        ),
+        PerkSection(),
       ],
     );
   }
 }
 
 class RetirementsAndLockSection extends StatelessWidget {
-  final DeleteCharacter deleteCharacter;
-
-  const RetirementsAndLockSection({
-    this.deleteCharacter,
-  });
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -63,11 +56,12 @@ class RetirementsAndLockSection extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 4,
               child: characterModel.isEditable
                   ? TextField(
+                      enableInteractiveSelection: false,
                       onChanged: (String value) => characterModel
                           .updateCharacter(characterModel.character
                             ..previousRetirements =
-                                value == '' ? 0 : int.parse(value)),
-                      style: TextStyle(fontSize: titleFontSize / 2),
+                                value.isEmpty ? 0 : int.parse(value)),
+                      style: Theme.of(context).textTheme.subtitle2,
                       textAlign: TextAlign.center,
                       controller: characterModel.previousRetirementsController,
                       inputFormatters: [
@@ -79,7 +73,7 @@ class RetirementsAndLockSection extends StatelessWidget {
                   : Text(
                       'Retirements: ${characterModel.character.previousRetirements}',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: titleFontSize / 2),
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
             ),
             IconButton(
@@ -305,6 +299,7 @@ class StatsSection extends StatelessWidget {
                               Container(
                                 width: MediaQuery.of(context).size.width / 6,
                                 child: TextField(
+                                  enableInteractiveSelection: false,
                                   onChanged: (String value) {
                                     characterModel.updateCharacter(
                                       characterModel.character
@@ -383,6 +378,7 @@ class StatsSection extends StatelessWidget {
                               Container(
                                 width: MediaQuery.of(context).size.width / 6,
                                 child: TextField(
+                                  enableInteractiveSelection: false,
                                   onChanged: (String value) =>
                                       characterModel.updateCharacter(
                                     characterModel.character

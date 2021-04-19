@@ -120,7 +120,7 @@ class CharacterModel with ChangeNotifier {
     }
   }
 
-  Future<List<CharacterPerk>> loadCharacterPerks(int id) async {
+  Future<List> loadCharacterPerks(int id) async {
     print('LOAD CHARACTER PERKS');
     characterPerks =
         await DatabaseHelper.instance.queryCharacterPerks(character.id);
@@ -143,8 +143,8 @@ class CharacterModel with ChangeNotifier {
     return value;
   }
 
-  Future<Perk> loadPerk(int perkId) async {
-    Perk perk = await db.queryPerk(perkId);
-    return perk;
-  }
+  Future<Perk> loadPerk(int perkId) async => await db.queryPerk(perkId);
+
+  Future<List> loadPerks(String characterCode) async =>
+      await db.queryPerks(characterCode);
 }

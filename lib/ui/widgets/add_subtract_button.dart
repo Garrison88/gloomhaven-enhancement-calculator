@@ -7,30 +7,31 @@ class AddSubtractButton extends StatelessWidget {
   final Function onTap;
 
   @override
-  Widget build(BuildContext context) => InkWell(
-          child: Center(
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  FontAwesomeIcons.minus,
-                  color: Theme.of(context).accentColor,
-                  size: 15,
-                ),
-                Text(
-                  '/',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-                Icon(
-                  FontAwesomeIcons.plus,
-                  color: Theme.of(context).accentColor,
-                  size: 15,
-                ),
-              ],
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Center(
+        child: Row(
+          children: <Widget>[
+            Icon(
+              FontAwesomeIcons.minus,
+              color: Theme.of(context).accentColor,
+              size: 15,
             ),
-          ),
-          onTap: onTap,
-        
-      );
+            Text(
+              '/',
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+            Icon(
+              FontAwesomeIcons.plus,
+              color: Theme.of(context).accentColor,
+              size: 15,
+            ),
+          ],
+        ),
+      ),
+      onTap: onTap,
+    );
+  }
 }
