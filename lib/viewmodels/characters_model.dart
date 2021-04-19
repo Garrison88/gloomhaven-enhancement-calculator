@@ -6,14 +6,11 @@ import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class CharactersModel with ChangeNotifier {
   List<Character> _characters = [];
-  // List<bool> _legacyPerks = [];
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
-  // Map<int, CharacterModel> characterModels = {};
 
   List<Character> get characters => _characters;
 
   Future<List<Character>> loadCharacters() async {
-    print('LOAD CHARACTERS IN CHARACTERS MODEL');
     _characters = await databaseHelper.queryAllCharacters();
     return _characters;
   }
@@ -49,70 +46,10 @@ class CharactersModel with ChangeNotifier {
     print(character.classCode);
     characters.add(character);
     notifyListeners();
-    // return character;
   }
 
   Future<void> deleteCharacter(int characterId) async {
-    print('DELETE IN MODEL');
     await databaseHelper.deleteCharacter(characterId);
     characters.removeWhere((element) => element.id == characterId);
-    // notifyListeners();
   }
-
-  // Future<Character> compileLegacyCharacterDetails() async {
-  //   SharedPreferences _prefs = await SharedPreferences.getInstance();
-  //   Character _character = Character();
-  //   int _checkMarks = 0;
-  //   PlayerClass _playerClass =
-  //       _prefs.getInt('selectedClass') != null && playerClassList != null
-  //           ? playerClassList[_prefs.getInt('selectedClass')]
-  //           : playerClassList[0];
-  //   _character
-  //     ..name = _prefs.getString('characterName') ?? '[UNKNOWN]'
-  //     ..classCode = _playerClass.classCode
-  //     ..classColor = _playerClass.classColor
-  //     ..classIcon = _playerClass.classIconUrl
-  //     ..classRace = _playerClass.race
-  //     ..className = _playerClass.className
-  //     ..xp = int.parse(_prefs.getString('characterXP') ?? 0)
-  //     ..gold = int.parse(_prefs.getString('characterGold') ?? 0)
-  //     ..notes = _prefs.getString('notes') ?? 'Add notes here'
-  //     ..isRetired = false
-  //     ..previousRetirements =
-  //         int.parse(_prefs.getString('previousRetirements'));
-  //   if (_prefs.getBool('firstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('secondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('thirdCheck')) _checkMarks++;
-  //   if (_prefs.getBool('2FirstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('2SecondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('2ThirdCheck')) _checkMarks++;
-  //   if (_prefs.getBool('3FirstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('3SecondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('3ThirdCheck')) _checkMarks++;
-  //   if (_prefs.getBool('4FirstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('4SecondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('4ThirdCheck')) _checkMarks++;
-  //   if (_prefs.getBool('5FirstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('5SecondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('5ThirdCheck')) _checkMarks++;
-  //   if (_prefs.getBool('6FirstCheck')) _checkMarks++;
-  //   if (_prefs.getBool('6SecondCheck')) _checkMarks++;
-  //   if (_prefs.getBool('6ThirdCheck')) _checkMarks++;
-  //   _character.checkMarks = _checkMarks;
-  //   _playerClass.perks.forEach((perk) {
-  //     for (var i = 0; i < perk.numOfChecks; i++) {
-  //       _legacyPerks.add(_prefs.getBool(
-  //               '${_playerClass.classCode}${perk.details}${i.toString()}') ??
-  //           false);
-  //     }
-  //   });
-  //   return _character;
-  // }
-
-  // Future addLegacyCharacter() async {
-  //   await compileLegacyCharacterDetails().then((_character) => databaseHelper
-  //       .insertCharacter(_character, _legacyPerks)
-  //       .then((_id) => _character.id = _id)
-  //       .then((_) => notifyListeners()));
-  // }
 }

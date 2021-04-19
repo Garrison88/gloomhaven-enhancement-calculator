@@ -67,16 +67,13 @@ class CharacterModel with ChangeNotifier {
   //   // notifyListeners();
   // }
 
-  int get maximumPerks {
-    return currentLevel -
-        1 +
-        ((character.checkMarks - 1) / 3).round() +
-        character.previousRetirements;
-  }
+  int get maximumPerks =>
+      currentLevel -
+      1 +
+      ((character.checkMarks - 1) / 3).round() +
+      character.previousRetirements;
 
-  bool get isEditable {
-    return _isEditable;
-  }
+  bool get isEditable => _isEditable;
 
   set isEditable(bool value) {
     _isEditable = value;
@@ -128,7 +125,7 @@ class CharacterModel with ChangeNotifier {
     return characterPerks;
   }
 
-  Future<bool> togglePerk(
+  Future<void> togglePerk(
     CharacterPerk perk,
     bool value,
   ) async {

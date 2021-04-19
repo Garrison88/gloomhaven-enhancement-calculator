@@ -33,7 +33,9 @@ class CharacterScreen extends StatelessWidget {
         // BATTLE GOAL CHECKMARKS
         BattleGoalCheckmarksSection(),
         // PERKS
-        PerkSection(),
+        PerkSection(
+          characterModel: Provider.of<CharacterModel>(context, listen: false),
+        ),
       ],
     );
   }
@@ -349,10 +351,10 @@ class StatsSection extends StatelessWidget {
                           ),
                     Text(
                       ' / ${characterModel.nextLevelXp}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          .copyWith(fontSize: 15),
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText2.fontSize /
+                                  2),
                     ),
                   ],
                 ),
@@ -577,7 +579,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                       color: Theme.of(context).accentColor,
                       iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                       icon: Icon(FontAwesomeIcons.minus),
-                      onPressed: () => characterModel.decreaseCheckmark(),
+                      onPressed: characterModel.decreaseCheckmark,
                     ),
                   ),
                   Text(
@@ -593,7 +595,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                       color: Theme.of(context).accentColor,
                       iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                       icon: Icon(FontAwesomeIcons.plus),
-                      onPressed: () => characterModel.increaseCheckmark(),
+                      onPressed: characterModel.increaseCheckmark,
                     ),
                   ),
                 ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
 class Utils {
   static List<InlineSpan> generatePerkDetailsWithInlineIcons(
@@ -114,7 +116,7 @@ class Utils {
                 child: invertColor && darkTheme
                     ? Image.asset(
                         'images/$assetPath',
-                        color: Colors.white70,
+                        color: Colors.white,
                       )
                     : Image.asset(
                         'images/$assetPath',
@@ -133,5 +135,37 @@ class Utils {
       );
     });
     return inlineList;
+  }
+
+  static List<PerkRow> generatePerkRows(List<dynamic> perkMaps) {
+    List<PerkRow> perkRows = [];
+    List<Perk> perkRowPerks = [];
+    List<Perk> perks = [];
+    for (var perkMap in perkMaps) {
+      perks.add(Perk.fromMap(perkMap));
+    }
+    String details = '';
+    for (Perk perk in perks) {
+      if (details.isEmpty) {
+        details = perk.perkDetails;
+        perkRowPerks.add(perk);
+        continue;
+      }
+      if (details == perk.perkDetails) {
+        perkRowPerks.add(perk);
+        continue;
+      }
+      if (details != perk.perkDetails) {
+        perkRows.add(PerkRow(
+          perks: perkRowPerks,
+        ));
+        perkRowPerks = [perk];
+        details = perk.perkDetails;
+      }
+    }
+    perkRows.add(PerkRow(
+      perks: perkRowPerks,
+    ));
+    return perkRows;
   }
 }

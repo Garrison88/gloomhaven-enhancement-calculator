@@ -107,7 +107,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                               icon: Icon(FontAwesomeIcons.plusCircle,
                                   size: MediaQuery.of(context).size.width / 2),
                               onPressed: () async {
-                                await showDialog(
+                                await showDialog<bool>(
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (_) {
@@ -218,7 +218,7 @@ class _CharactersScreenState extends State<CharactersScreen>
         child: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () async {
-            await showDialog(
+            await showDialog<bool>(
               barrierDismissible: false,
               context: context,
               builder: (_) {

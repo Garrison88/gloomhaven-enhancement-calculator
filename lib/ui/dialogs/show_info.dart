@@ -223,7 +223,7 @@ void showInfoDialog(
         break;
     }
   }
-  showDialog(
+  showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
             // no title provided - this will be an enhancement dialog with icons
