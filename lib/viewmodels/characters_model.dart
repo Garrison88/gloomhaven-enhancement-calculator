@@ -1,12 +1,17 @@
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
   List<Character> _characters = [];
+  Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  PageController pageController;
+  bool _isEditMode = false;
 
   List<Character> get characters => _characters;
 
@@ -15,29 +20,45 @@ class CharactersModel with ChangeNotifier {
     return _characters;
   }
 
+  bool get isEditMode => _isEditMode;
+
+  set isEditMode(bool value) {
+    _isEditMode = value;
+    notifyListeners();
+  }
+
+  // Character get currentCharacter => _currentCharacter;
+
+  // setCurrentCharacter(int index) {
+
+  // }
+
   Future<void> createCharacter(
+    BuildContext context,
     String name,
-    PlayerClass playerClass,
+    PlayerClass selectedClass,
     int initialLevel,
     int previousRetirements,
   ) async {
     Character character = Character();
     List<bool> perks = [];
     CharacterData.perks.forEach((perk) {
-      for (var x = 0; x < perk.numOfPerks; x++) {
-        perks.add(false);
+      if (perk.perkClassCode == selectedClass.classCode) {
+        for (var x = 0; x < perk.numOfPerks; x++) {
+          perks.add(false);
+        }
       }
     });
     character
       ..name = name
-      ..classCode = playerClass.classCode
-      ..classColor = playerClass.classColor
-      ..classIcon = playerClass.classIconUrl
-      ..classRace = playerClass.race
-      ..className = playerClass.className
+      ..classCode = selectedClass.classCode
+      ..classColor = selectedClass.classColor
+      ..classIcon = selectedClass.classIconUrl
+      ..classRace = selectedClass.race
+      ..className = selectedClass.className
       ..previousRetirements = previousRetirements
       ..xp = initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0
-      ..gold = 0
+      ..gold = 15 * (initialLevel + 1)
       ..notes = 'Items, reminders, wishlist...'
       ..checkMarks = 0
       ..isRetired = false
@@ -45,11 +66,56 @@ class CharactersModel with ChangeNotifier {
     print(character.name);
     print(character.classCode);
     characters.add(character);
+    if (characters.length > 1) {
+      print('SHOULDN"T RUN WITH ONE');
+      pageController.animateToPage(
+        characters.indexOf(character),
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeIn,
+      );
+    }
+    updateCurrentCharacter(
+      context,
+      index: characters.indexOf(character),
+    );
     notifyListeners();
   }
 
-  Future<void> deleteCharacter(int characterId) async {
-    await databaseHelper.deleteCharacter(characterId);
-    characters.removeWhere((element) => element.id == characterId);
+  Future<void> deleteCharacter(
+    BuildContext context,
+    int id,
+  ) async {
+    int position = characters.indexOf(
+      characters.firstWhere((element) => element.id == id),
+    );
+    await databaseHelper.deleteCharacter(id);
+    characters.removeWhere((element) => element.id == id);
+    // print('POSITION IN DELETE IS::::: $position');
+    updateCurrentCharacter(
+      context,
+      index: position,
+    );
+    notifyListeners();
+  }
+
+  void updateCurrentCharacter(
+    BuildContext context, {
+    int index,
+  }) {
+    isEditMode = false;
+    if (characters.isEmpty) {
+      currentCharacter = null;
+      SharedPrefs().themeColor = '0xff4e7ec1';
+      SharedPrefs().initialPage = 0;
+    } else {
+      try {
+        currentCharacter = characters[index];
+      } on RangeError {
+        currentCharacter = characters.last;
+      }
+      SharedPrefs().themeColor = currentCharacter.classColor;
+      SharedPrefs().initialPage = characters.indexOf(currentCharacter);
+    }
+    EasyDynamicTheme.of(context).changeTheme(dynamic: true);
   }
 }

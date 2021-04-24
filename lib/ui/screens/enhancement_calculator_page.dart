@@ -23,7 +23,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     _selectedEnhancement = SharedPrefs().enhancementType != 0
         ? EnhancementData.enhancements[SharedPrefs().enhancementType]
         : null;
-    _updateEnhancementCost();
+    // _updateEnhancementCost();
   }
 
   void _resetAllFields() {
@@ -101,31 +101,35 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         Padding(
                           padding: EdgeInsets.only(left: smallPadding / 2),
                         ),
-                        RaisedButton.icon(
-                          elevation: 5.0,
-                          color: Theme.of(context).accentColor,
-                          icon: Icon(
-                            Icons.info,
-                            color: Colors.white,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          label: Text(
-                            'General Guidelines',
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                color: ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context).accentColor) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black),
-                          ),
+                        ElevatedButton.icon(
                           onPressed: () => showInfoDialog(
                             context,
                             Strings.generalInfoTitle,
                             Strings.generalInfoBody(context),
                             null,
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).accentColor),
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.info,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'General Guidelines',
+                            style: TextStyle(
+                              color: ThemeData.estimateBrightnessForColor(
+                                          Theme.of(context).accentColor) ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
                           ),
                         ),
                       ],

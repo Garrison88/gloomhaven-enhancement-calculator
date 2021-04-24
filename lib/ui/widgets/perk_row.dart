@@ -37,7 +37,6 @@ class PerkRow extends StatelessWidget {
       // key: _key,
       padding: EdgeInsets.symmetric(vertical: smallPadding / 2),
       child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Row(
             children: List.generate(
@@ -48,11 +47,13 @@ class PerkRow extends StatelessWidget {
                     .firstWhere((element) =>
                         element.associatedPerkId == perks[index].perkId)
                     .characterPerkIsSelected,
-                onChanged: (value) => characterModel.togglePerk(
-                  characterModel.characterPerks.firstWhere((element) =>
-                      element.associatedPerkId == perks[index].perkId),
-                  value,
-                ),
+                onChanged: characterModel.isEditable
+                    ? (value) => characterModel.togglePerk(
+                          characterModel.characterPerks.firstWhere((element) =>
+                              element.associatedPerkId == perks[index].perkId),
+                          value,
+                        )
+                    : null,
               ),
             ),
           ),
@@ -73,12 +74,12 @@ class PerkRow extends StatelessWidget {
                     text: TextSpan(
                       style: Theme.of(context).textTheme.bodyText2,
                       children: Utils.generatePerkDetailsWithInlineIcons(
-                        perks[0].perkDetails.split(' '),
+                        perks.first.perkDetails.split(' '),
                         SharedPrefs().darkTheme,
                       ),
                     ),
                   )
-                : Text('${perks[0].perkDetails}'),
+                : Text('${perks.first.perkDetails}'),
           ),
         ],
       ),

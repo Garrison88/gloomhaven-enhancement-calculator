@@ -15,57 +15,7 @@ class CharacterModel with ChangeNotifier {
   TextEditingController xpController = TextEditingController();
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
-  // CharacterModel({
-  //   this.character,
-  // });
   DatabaseHelper db = DatabaseHelper.instance;
-  // PlayerClass playerClass;
-
-  // PlayerClass get playerClass => playerClass;
-
-  // Future<bool> setPlayerClass() {
-  //   return db
-  //       .queryPlayerClass(character.classCode)
-  //       .then((_class) => playerClass = _class)
-  //       .then((_) => true);
-  //   // return true;
-  // }
-
-  // Future<bool> setCharacter() async {
-  //   character = await db.queryCharacter(_characterId);
-  //   // _playerClass = await db.queryPlayerClass(character.classCode);
-  //   return true;
-  // }
-  //
-  // int get numOfSelectedPerks => _numOfSelectedPerks;
-
-  // set numOfSelectedPerks(int num) {
-  //   _numOfSelectedPerks = num;
-  // }
-
-  // setNumOfSelectedPerks() {
-  //   int tempNum = 0;
-  //   characterPerks.forEach((element) {
-  //     if (element.characterPerkIsSelected) {
-  //       tempNum++;
-  //     } else {
-  //       tempNum--;
-  //     }
-  //   });
-  //   // notifyListeners();
-  // }
-  //
-  //
-
-// int get numOfSelected
-
-  // Character get character => _character;
-
-  // set character(Character character) {
-  //   _character = character;
-  //   // loadCharacterPerks();
-  //   // notifyListeners();
-  // }
 
   int get maximumPerks =>
       currentLevel -
@@ -76,6 +26,13 @@ class CharacterModel with ChangeNotifier {
   bool get isEditable => _isEditable;
 
   set isEditable(bool value) {
+    previousRetirementsController.text = character.previousRetirements != 0
+        ? character.previousRetirements.toString()
+        : '';
+    nameController.text = character.name;
+    xpController.text = character.xp != 0 ? character.xp.toString() : '';
+    goldController.text = character.gold != 0 ? character.gold.toString() : '';
+    notesController.text = character.notes;
     _isEditable = value;
     notifyListeners();
   }
@@ -121,7 +78,7 @@ class CharacterModel with ChangeNotifier {
     print('LOAD CHARACTER PERKS');
     characterPerks =
         await DatabaseHelper.instance.queryCharacterPerks(character.id);
-    notifyListeners();
+    // notifyListeners();
     return characterPerks;
   }
 

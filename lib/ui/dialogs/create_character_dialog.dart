@@ -32,8 +32,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     super.initState();
     _selectedClass = CharacterData.playerClasses[0];
     _classTextFieldController.text = _selectedClass.className;
-    _levelTextFieldController.text = '${levels[0]}';
-    // _previousRetirementsTextFieldController.text = '0';
+    _levelTextFieldController.text = '${_levels[0]}';
   }
 
   void dispose() {
@@ -44,7 +43,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     super.dispose();
   }
 
-  List<int> levels = List.generate(9, (index) => index + 1);
+  List<int> _levels = List.generate(9, (index) => index + 1);
 
   OverlayEntry _overlayEntryBuilder() {
     return OverlayEntry(
@@ -68,19 +67,18 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(
-                      levels.length,
+                      _levels.length,
                       (index) {
                         return GestureDetector(
                           onTap: () {
                             _levelTextFieldController.text =
-                                '${levels[index].toString()}';
+                                '${_levels[index].toString()}';
                             closeMenu();
                           },
                           child: Container(
-                            width: buttonSize.width / 2,
                             padding: EdgeInsets.all(smallPadding),
                             child: Text(
-                              '${levels[index].toString()}',
+                              'Level ${_levels[index].toString()}',
                             ),
                           ),
                         );
@@ -127,73 +125,79 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                labelText: 'Name',
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+                validator: (value) =>
+                    value.isNotEmpty ? null : 'Please enter a name',
+                controller: _nameTextFieldController,
               ),
-              validator: (value) =>
-                  value.isNotEmpty ? null : 'Please enter a name',
-              controller: _nameTextFieldController,
-            ),
-            TextFormField(
-              readOnly: true,
-              controller: _classTextFieldController,
-              decoration: InputDecoration(
-                labelText: 'Class',
-                suffixIcon: Container(
-                  height: iconSize,
-                  width: iconSize,
-                  child: Image.asset(
-                    'images/class_icons/${_selectedClass.classIconUrl}',
-                    color: Color(int.parse(_selectedClass.classColor)),
+              TextFormField(
+                readOnly: true,
+                controller: _classTextFieldController,
+                decoration: InputDecoration(
+                  labelText: 'Class',
+                  suffixIcon: Container(
+                    height: iconSize,
+                    width: iconSize,
+                    child: Image.asset(
+                      'images/class_icons/${_selectedClass.classIconUrl}',
+                      color: Color(int.parse(_selectedClass.classColor)),
+                    ),
                   ),
                 ),
+                onTap: () async {
+                  await showSearch<PlayerClass>(
+                    context: context,
+                    delegate: CustomSearchDelegate(
+                      CharacterData.playerClasses,
+                    ),
+                  ).then((value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedClass = value;
+                        _classTextFieldController.text = value.className;
+                      });
+                    }
+                  });
+                },
               ),
-              onTap: () async {
-                await showSearch<PlayerClass>(
-                  context: context,
-                  delegate: CustomSearchDelegate(
-                    CharacterData.playerClasses,
+              TextFormField(
+                enableInteractiveSelection: false,
+                key: _levelKey,
+                controller: _levelTextFieldController,
+                readOnly: true,
+                onTap: () => isMenuOpen ? closeMenu() : openMenu(),
+                decoration: InputDecoration(
+                  suffixIcon: Icon(Icons.arrow_drop_down),
+                  suffixIconConstraints: BoxConstraints(
+                    maxHeight: 0,
+                    minWidth: 48,
                   ),
-                ).then((value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedClass = value;
-                      _classTextFieldController.text = value.className;
-                    });
-                  }
-                });
-              },
-            ),
-            TextFormField(
-              enableInteractiveSelection: false,
-              key: _levelKey,
-              controller: _levelTextFieldController,
-              readOnly: true,
-              onTap: () => isMenuOpen ? closeMenu() : openMenu(),
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.arrow_drop_down),
-                labelText: 'Starting Level',
+                  labelText: 'Starting Level',
+                ),
               ),
-            ),
-            TextFormField(
-              enableInteractiveSelection: false,
-              controller: _previousRetirementsTextFieldController,
-              decoration: InputDecoration(
-                labelText: 'Previous Retirements',
+              TextFormField(
+                enableInteractiveSelection: false,
+                controller: _previousRetirementsTextFieldController,
+                decoration: InputDecoration(
+                  labelText: 'Previous Retirements',
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]'))
+                ],
+                keyboardType: TextInputType.number,
               ),
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]'))
-              ],
-              keyboardType: TextInputType.number,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
@@ -214,6 +218,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             print('${_previousRetirementsTextFieldController.text}');
             if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
+                context,
                 _nameTextFieldController.text,
                 _selectedClass,
                 int.parse(_levelTextFieldController.text),

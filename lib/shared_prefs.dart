@@ -59,6 +59,13 @@ class SharedPrefs {
     _sharedPrefs.setInt('initialPage', value);
   }
 
+  // int get bottomNavInitialPage =>
+  //     _sharedPrefs.getInt('bottomNavInitialPage') ?? 0;
+
+  // set bottomNavInitialPage(int value) {
+  //   _sharedPrefs.setInt('bottomNavInitialPage', value);
+  // }
+
   int get targetCardLvl => _sharedPrefs.getInt('targetCardLvl') ?? 0;
 
   set targetCardLvl(int value) {

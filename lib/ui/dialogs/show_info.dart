@@ -5,7 +5,7 @@ import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
-_createIconsListForDialog(List<Enhancement> list) {
+List<Widget> _createIconsListForDialog(List<Enhancement> list) {
   List<Widget> icons = [];
   if (list == null) {
     icons.add(
@@ -229,13 +229,11 @@ void showInfoDialog(
             // no title provided - this will be an enhancement dialog with icons
             title: dialogTitle == null
                 ? Center(
-                    child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
                       children: _createIconsListForDialog(titleIcons),
                     ),
-                  ))
+                  )
                 // title provided - this will be an info dialog with a text title
                 : Center(
                     child: Text(
@@ -255,17 +253,22 @@ void showInfoDialog(
                                 TextStyle(decoration: TextDecoration.underline),
                           ),
                           Padding(
-                              padding: EdgeInsets.only(
-                                  top: smallPadding, bottom: smallPadding)),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                                children: _createIconsListForDialog(
-                                    eligibleForIcons)),
+                            padding: EdgeInsets.only(
+                              top: smallPadding,
+                              bottom: smallPadding,
+                            ),
+                          ),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            children:
+                                _createIconsListForDialog(eligibleForIcons),
                           ),
                           Padding(
-                              padding: EdgeInsets.only(
-                                  top: smallPadding, bottom: smallPadding)),
+                            padding: EdgeInsets.only(
+                              top: smallPadding,
+                              bottom: smallPadding,
+                            ),
+                          ),
                         ])
                       // if title isn't provided, display an empty container
                       : Container(),

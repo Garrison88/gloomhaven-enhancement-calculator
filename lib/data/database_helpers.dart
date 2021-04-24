@@ -37,12 +37,19 @@ class DatabaseHelper {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _databaseName);
     // Open the database. Can also add an onUpdate callback parameter.
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return await openDatabase(
+      path,
+      version: _databaseVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   // SQL string to create the database
-  Future _onCreate(Database db, int version) async {
+  Future _onCreate(
+    Database db,
+    int version,
+  ) async {
     await db.transaction((txn) async {
       await txn.execute('''
               CREATE TABLE $tableCharacters (
@@ -108,7 +115,11 @@ class DatabaseHelper {
     });
   }
 
-  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  Future _onUpgrade(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
     await db.transaction((txn) async {
       await txn.execute('DROP TABLE IF EXISTS $tablePerks');
       await txn.execute('''
@@ -120,12 +131,12 @@ class DatabaseHelper {
         for (Perk perk in CharacterData.perks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
             int id = await txn.insert(tablePerks, perk.toMap());
-            print("ID: " +
-                id.toString() +
-                " : " +
-                perk.perkClassCode +
-                " : " +
-                perk.perkDetails);
+            // print("ID: " +
+            //     id.toString() +
+            //     " : " +
+            //     perk.perkClassCode +
+            //     " : " +
+            //     perk.perkDetails);
           }
         }
       });
@@ -134,32 +145,38 @@ class DatabaseHelper {
   }
 
   Future<int> insertCharacter(
-      Character _character, List<bool> _selectedPerks) async {
+    Character character,
+    List<bool> selectedPerks,
+  ) async {
     Database db = await database;
-    int id = await db.insert(tableCharacters, _character.toMap());
-    _character.id = id;
-    await queryPerks(_character.classCode).then((_perkList) {
+    int id = await db.insert(tableCharacters, character.toMap());
+    character.id = id;
+    await queryPerks(character.classCode).then((perkList) {
       db.transaction((txn) async {
-        _perkList.asMap().forEach((index, _perk) async {
-          if (_perk[columnPerkClass] == _character.classCode) {
+        perkList.asMap().forEach((index, perk) async {
+          if (perk[columnPerkClass] == character.classCode) {
             await txn.rawInsert(
-                'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${_character.id}, ${_perk[columnPerkId]}, ${_selectedPerks[index] ? 1 : 0})');
+                'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${character.id}, ${perk[columnPerkId]}, ${selectedPerks[index] ? 1 : 0})');
           }
         });
       });
     });
-    print("DB HELPER - INSERT CHARACTER: " + _character.toMap().toString());
+    // print("DB HELPER - INSERT CHARACTER: " + character.toMap().toString());
     return id;
   }
 
-  Future updateCharacter(Character _updatedCharacter) async {
+  Future updateCharacter(
+    Character updatedCharacter,
+  ) async {
     Database db = await database;
-    await db.update(tableCharacters, _updatedCharacter.toMap(),
-        where: '$columnCharacterId = ?', whereArgs: [_updatedCharacter.id]);
-    print("DB HELPER - UPDATE CHARACTER: " + _updatedCharacter.toString());
+    await db.update(tableCharacters, updatedCharacter.toMap(),
+        where: '$columnCharacterId = ?', whereArgs: [updatedCharacter.id]);
+    // print("DB HELPER - UPDATE CHARACTER: " + _updatedCharacter.toString());
   }
 
-  Future<Perk> queryPerk(int id) async {
+  Future<Perk> queryPerk(
+    int id,
+  ) async {
     Database db = await database;
     List<Map> maps = await db.query(tablePerks,
         columns: [columnPerkId, columnPerkClass, columnPerkDetails],
@@ -172,39 +189,48 @@ class DatabaseHelper {
     return null;
   }
 
-  Future updateCharacterPerk(CharacterPerk _perk, bool _value) async {
+  Future updateCharacterPerk(
+    CharacterPerk perk,
+    bool value,
+  ) async {
     Database db = await database;
     Map<String, dynamic> map = {
-      columnAssociatedCharacterId: _perk.associatedCharacterId,
-      columnAssociatedPerkId: _perk.associatedPerkId,
-      columnCharacterPerkIsSelected: _value ? 1 : 0
+      columnAssociatedCharacterId: perk.associatedCharacterId,
+      columnAssociatedPerkId: perk.associatedPerkId,
+      columnCharacterPerkIsSelected: value ? 1 : 0
     };
     await db.update(tableCharacterPerks, map,
         where:
             '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterId = ?',
-        whereArgs: [_perk.associatedPerkId, _perk.associatedCharacterId]);
-    print("DB HELPER - UPDATE CHARACTER PERK: " + map.toString());
+        whereArgs: [perk.associatedPerkId, perk.associatedCharacterId]);
+    // print("DB HELPER - UPDATE CHARACTER PERK: " + map.toString());
   }
 
-  Future<List<CharacterPerk>> queryCharacterPerks(int _characterId) async {
+  Future<List<CharacterPerk>> queryCharacterPerks(
+    int characterId,
+  ) async {
     Database db = await database;
-    List<CharacterPerk> _list = [];
+    List<CharacterPerk> list = [];
     List result = await db.query(tableCharacterPerks,
-        where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
-    result.forEach((perk) => _list.add(CharacterPerk.fromMap(perk)));
-    // print("DB HELPER - QUERY CHARACTER PERKS: " + _list.toString());
-    return _list;
+        where: '$columnAssociatedCharacterId = ?', whereArgs: [characterId]);
+    result.forEach((perk) => list.add(CharacterPerk.fromMap(perk)));
+    // print("DB HELPER - QUERY CHARACTER PERKS: " + list.toString());
+    return list;
   }
 
-  Future<List> queryPerks(String _classCode) async {
+  Future<List> queryPerks(
+    String classCode,
+  ) async {
     Database db = await database;
     var result = await db.query(tablePerks,
-        where: '$columnPerkClass = ?', whereArgs: [_classCode]);
-    print("DB HELPER - QUERY PERKS: " + result.toList().toString());
+        where: '$columnPerkClass = ?', whereArgs: [classCode]);
+    // print("DB HELPER - QUERY PERKS: " + result.toList().toString());
     return result.toList();
   }
 
-  Future<Character> queryCharacter(int id) async {
+  Future<Character> queryCharacter(
+    int id,
+  ) async {
     Database db = await database;
     List<Map> maps = await db.query(tableCharacters,
         columns: [
@@ -224,14 +250,16 @@ class DatabaseHelper {
         where: '$columnCharacterId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
-      print("DB HELPER - QUERY CHARACTER: " +
-          Character.fromMap(maps.first).toString());
+      // print("DB HELPER - QUERY CHARACTER: " +
+      //     Character.fromMap(maps.first).toString());
       return Character.fromMap(maps.first);
     }
     return null;
   }
 
-  Future<PlayerClass> queryPlayerClass(String _classCode) async {
+  Future<PlayerClass> queryPlayerClass(
+    String _classCode,
+  ) async {
     Database db = await database;
     List<Map> maps = await db.query(tablePlayerClass,
         columns: [
@@ -245,8 +273,8 @@ class DatabaseHelper {
         where: '$columnClassCode = ?',
         whereArgs: [_classCode]);
     if (maps.length > 0) {
-      print("DB HELPER - QUERY PLAYER CLASS: " +
-          PlayerClass.fromMap(maps.first).toString());
+      // print("DB HELPER - QUERY PLAYER CLASS: " +
+      //     PlayerClass.fromMap(maps.first).toString());
       return PlayerClass.fromMap(maps.first);
     }
     return null;
@@ -277,7 +305,7 @@ class DatabaseHelper {
           ),
         );
 
-    print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
+    // print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
     return _list;
   }
 

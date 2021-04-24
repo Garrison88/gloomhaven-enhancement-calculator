@@ -95,51 +95,45 @@ class PerkSectionState extends State<PerkSection> {
               perks: perkRowPerks,
             ));
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Perks (',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: titleFontSize, fontFamily: pirataOne),
-                        ),
-                        Text(
-                          '${Provider.of<CharacterModel>(context).numOfSelectedPerks}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: titleFontSize,
-                            fontFamily: pirataOne,
+            return Column(
+              children: <Widget>[
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Perks (',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      Text(
+                        '${Provider.of<CharacterModel>(context).numOfSelectedPerks}',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline4.copyWith(
                             color: widget.characterModel.maximumPerks >=
                                     widget.characterModel.numOfSelectedPerks
                                 ? SharedPrefs().darkTheme
                                     ? Colors.white
                                     : Colors.black87
-                                : Colors.red,
-                          ),
-                        ),
-                        Text(
-                          ' / ${widget.characterModel.maximumPerks})',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: titleFontSize, fontFamily: pirataOne),
-                        )
-                      ],
-                    ),
+                                : Colors.red),
+                      ),
+                      Text(
+                        ' / ${widget.characterModel.maximumPerks})',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline4,
+                      )
+                    ],
                   ),
-                  ListView(
-                    children: perkRows,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: smallPadding,
+                ),
+                ListView(
+                  children: perkRows,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ],
             );
           } else {
             return Center(child: CircularProgressIndicator());
