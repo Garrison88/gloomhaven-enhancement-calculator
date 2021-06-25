@@ -1,8 +1,8 @@
 // database table and column names
-final String tablePerks = 'PerksTable';
-final String columnPerkId = '_id';
-final String columnPerkClass = 'Class';
-final String columnPerkDetails = 'Details';
+const String tablePerks = 'PerksTable';
+const String columnPerkId = '_id';
+const String columnPerkClass = 'Class';
+const String columnPerkDetails = 'Details';
 
 // data model class
 class Perk {

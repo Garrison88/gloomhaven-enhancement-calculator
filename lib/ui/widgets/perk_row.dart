@@ -7,50 +7,46 @@ import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
-class PerkRow extends StatelessWidget {
+class PerkRow extends StatefulWidget {
   final List<Perk> perks;
 
   PerkRow({
     this.perks,
   });
+
+  @override
+  _PerkRowState createState() => _PerkRowState();
+}
+
+class _PerkRowState extends State<PerkRow> {
   final List<int> _perkIds = [];
 
-  // GlobalKey _key = GlobalKey();
-
-  // double _dividerHeight = _getSizes();
-
-  // double _getSizes() {
-  //   final RenderBox renderBoxRed = _key.currentContext.findRenderObject();
-  //   final sizeRed = renderBoxRed.size;
-  //   print("SIZE of Red: $sizeRed");
-  // }
-// @override
-//        WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+  double height = 0;
 
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = Provider.of<CharacterModel>(context);
-    perks.forEach((element) {
-      _perkIds.add(element.perkId);
-    });
+    for (final Perk perk in widget.perks) {
+      _perkIds.add(perk.perkId);
+    }
     return Container(
-      // key: _key,
-      padding: EdgeInsets.symmetric(vertical: smallPadding / 2),
+      padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
       child: Row(
         children: <Widget>[
           Row(
             children: List.generate(
-              perks.length,
+              widget.perks.length,
               (index) => Checkbox(
                 visualDensity: VisualDensity.comfortable,
                 value: characterModel.characterPerks
                     .firstWhere((element) =>
-                        element.associatedPerkId == perks[index].perkId)
+                        element.associatedPerkId == widget.perks[index].perkId)
                     .characterPerkIsSelected,
                 onChanged: characterModel.isEditable
                     ? (value) => characterModel.togglePerk(
                           characterModel.characterPerks.firstWhere((element) =>
-                              element.associatedPerkId == perks[index].perkId),
+                              element.associatedPerkId ==
+                              widget.perks[index].perkId),
                           value,
                         )
                     : null,
@@ -58,32 +54,66 @@ class PerkRow extends StatelessWidget {
             ),
           ),
           Container(
-            height: 30.0,
-            width: 1.0,
+            height: height,
+            width: 1,
             color: characterModel.characterPerks
                     .where((element) =>
                         _perkIds.contains(element.associatedPerkId))
                     .every((element) => element.characterPerkIsSelected)
                 ? Theme.of(context).accentColor
                 : Colors.grey,
-            margin: EdgeInsets.only(right: 10.0),
+            margin: const EdgeInsets.only(right: 10),
           ),
-          Expanded(
-            child: SharedPrefs().showPerkImages
-                ? RichText(
-                    text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyText2,
-                      children: Utils.generatePerkDetailsWithInlineIcons(
-                        perks.first.perkDetails.split(' '),
-                        SharedPrefs().darkTheme,
+          SizeProviderWidget(
+            onChildSize: (val) {
+              setState(() {
+                height = val.height * 0.9;
+              });
+            },
+            child: Expanded(
+              child: SharedPrefs().showPerkImages
+                  ? RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodyText2,
+                        children: Utils.generatePerkDetailsWithInlineIcons(
+                          widget.perks.first.perkDetails.split(' '),
+                          SharedPrefs().darkTheme,
+                        ),
                       ),
-                    ),
-                  )
-                : Text('${perks.first.perkDetails}'),
+                    )
+                  : Text(widget.perks.first.perkDetails
+                      .replaceAll(RegExp(r'_'), ' ')
+                      .replaceAll(RegExp(r'&'), '+')),
+            ),
           ),
         ],
       ),
     );
+  }
+}
+
+class SizeProviderWidget extends StatefulWidget {
+  final Widget child;
+  final Function(Size) onChildSize;
+
+  const SizeProviderWidget({Key key, this.onChildSize, this.child})
+      : super(key: key);
+  @override
+  _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
+}
+
+class _SizeProviderWidgetState extends State<SizeProviderWidget> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      widget.onChildSize(context.size);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
 

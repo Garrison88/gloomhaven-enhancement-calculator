@@ -11,7 +11,7 @@ class AddSubtractButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Padding(
-        padding: EdgeInsets.all(smallPadding),
+        padding: const EdgeInsets.all(smallPadding),
         child: Center(
           child: Row(
             children: <Widget>[

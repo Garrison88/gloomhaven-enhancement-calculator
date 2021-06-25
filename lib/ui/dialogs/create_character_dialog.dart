@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+// import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
-  CreateCharacterDialog({
+  const CreateCharacterDialog({
     this.charactersModel,
   });
 
@@ -21,6 +23,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
   final TextEditingController _classTextFieldController =
+      TextEditingController();
+  final TextEditingController _personalGoalTextFieldController =
       TextEditingController();
   final TextEditingController _levelTextFieldController =
       TextEditingController();
@@ -35,15 +39,19 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     _levelTextFieldController.text = '${_levels[0]}';
   }
 
+  @override
   void dispose() {
     _nameTextFieldController.dispose();
     _classTextFieldController.dispose();
+    _personalGoalTextFieldController.dispose();
     _levelTextFieldController.dispose();
     _previousRetirementsTextFieldController.dispose();
     super.dispose();
   }
 
-  List<int> _levels = List.generate(9, (index) => index + 1);
+  final List<int> _levels = List.generate(9, (index) => index + 1);
+
+  // PersonalGoal _personalGoal;
 
   OverlayEntry _overlayEntryBuilder() {
     return OverlayEntry(
@@ -72,11 +80,11 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         return GestureDetector(
                           onTap: () {
                             _levelTextFieldController.text =
-                                '${_levels[index].toString()}';
+                                _levels[index].toString();
                             closeMenu();
                           },
                           child: Container(
-                            padding: EdgeInsets.all(smallPadding),
+                            padding: const EdgeInsets.all(smallPadding),
                             child: Text(
                               'Level ${_levels[index].toString()}',
                             ),
@@ -98,23 +106,24 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     findButton();
     _overlayEntry = _overlayEntryBuilder();
     Overlay.of(context).insert(_overlayEntry);
-    isMenuOpen = !isMenuOpen;
+    isLevelMenuOpen = !isLevelMenuOpen;
   }
 
   void closeMenu() {
     _overlayEntry.remove();
-    isMenuOpen = !isMenuOpen;
+    isLevelMenuOpen = !isLevelMenuOpen;
   }
 
   PlayerClass _selectedClass;
 
   final _formKey = GlobalKey<FormState>();
-  GlobalKey _levelKey = LabeledGlobalKey("button_icon");
+  final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
 
   OverlayEntry _overlayEntry;
   Size buttonSize;
   Offset buttonPosition;
-  bool isMenuOpen = false;
+  bool isLevelMenuOpen = false;
+  bool isPersonalGoalMenuOpen = false;
 
   findButton() {
     RenderBox renderBox = _levelKey.currentContext.findRenderObject();
@@ -133,7 +142,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             children: [
               TextFormField(
                 textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
                 validator: (value) =>
@@ -145,10 +154,10 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 controller: _classTextFieldController,
                 decoration: InputDecoration(
                   labelText: 'Class',
-                  suffixIcon: Container(
-                    height: iconSize,
-                    width: iconSize,
-                    child: Image.asset(
+                  suffixIcon: SizedBox(
+                    height: iconSize + 5,
+                    width: iconSize + 5,
+                    child: SvgPicture.asset(
                       'images/class_icons/${_selectedClass.classIconUrl}',
                       color: Color(int.parse(_selectedClass.classColor)),
                     ),
@@ -175,8 +184,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 key: _levelKey,
                 controller: _levelTextFieldController,
                 readOnly: true,
-                onTap: () => isMenuOpen ? closeMenu() : openMenu(),
-                decoration: InputDecoration(
+                onTap: () => isLevelMenuOpen ? closeMenu() : openMenu(),
+                decoration: const InputDecoration(
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   suffixIconConstraints: BoxConstraints(
                     maxHeight: 0,
@@ -185,10 +194,46 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   labelText: 'Starting Level',
                 ),
               ),
+              // DropdownButton<PersonalGoal>(
+              //   value: _personalGoal,
+              //   selectedItemBuilder: (BuildContext context) {
+              //     return CharacterData.personalGoals
+              //         .map<Widget>((PersonalGoal personalGoal) {
+              //       return Text('PG ${personalGoal.id}');
+              //     }).toList();
+              //   },
+              //   items: CharacterData.personalGoals
+              //       .map((PersonalGoal personalGoal) {
+              //     return DropdownMenuItem<PersonalGoal>(
+              //       child: Text('PG ${personalGoal.id}'),
+              //       value: personalGoal,
+              //     );
+              //   }).toList(),
+              //   onChanged: (personalGoal) {
+              //     setState(() {
+              //       _personalGoal = personalGoal;
+              //     });
+              //   },
+              // ),
+              // TextFormField(
+              //   enableInteractiveSelection: false,
+              //   key: _levelKey,
+              //   controller: _previousRetirementsTextFieldController,
+              //   readOnly: true,
+              //   onTap: () => isPersonalGoalMenuOpen ? closeMenu() : openMenu(),
+              //   decoration: InputDecoration(
+              //     suffixIcon: Icon(Icons.arrow_drop_down),
+              //     suffixIconConstraints: BoxConstraints(
+              //       maxHeight: 0,
+              //       minWidth: 48,
+              //     ),
+              //     labelText: 'Personal Goal',
+              //   ),
+              // ),
               TextFormField(
                 enableInteractiveSelection: false,
                 controller: _previousRetirementsTextFieldController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Previous Retirements',
                 ),
                 inputFormatters: [
@@ -203,7 +248,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       actions: <Widget>[
         MaterialButton(
           onPressed: () => Navigator.pop(context, false),
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(
               fontSize: secondaryFontSize,
@@ -215,7 +260,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
           ),
           onPressed: () async {
-            print('${_previousRetirementsTextFieldController.text}');
             if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
                 context,
@@ -225,11 +269,12 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 _previousRetirementsTextFieldController.text.isEmpty
                     ? 0
                     : int.parse(_previousRetirementsTextFieldController.text),
+                // _personalGoal,
               );
               Navigator.pop(context, true);
             }
           },
-          child: Text(
+          child: const Text(
             'Create',
             style: TextStyle(
               fontSize: secondaryFontSize,

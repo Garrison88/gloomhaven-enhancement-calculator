@@ -73,18 +73,18 @@ class GloomhavenCompanion extends StatelessWidget {
         //   ).withOpacity(SharedPrefs().darkTheme ? 0.75 : 1),
         // ),
         textTheme: TextTheme(
-          subtitle1: TextStyle(
+          subtitle1: const TextStyle(
             fontSize: 23.0,
           ),
-          subtitle2: TextStyle(
+          subtitle2: const TextStyle(
             fontSize: 15.0,
           ),
-          bodyText2: TextStyle(
+          bodyText2: const TextStyle(
             fontSize: 25.0,
             letterSpacing: 0.7,
             fontFamily: nyala,
           ),
-          button: TextStyle(
+          button: const TextStyle(
             fontSize: 23.0,
           ),
           headline1: TextStyle(
@@ -109,7 +109,7 @@ class GloomhavenCompanion extends StatelessWidget {
           trackColor: MaterialStateProperty.resolveWith(getSwitchTrackColor),
           thumbColor: MaterialStateProperty.resolveWith(getSwitchThumbColor),
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
           unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         ),

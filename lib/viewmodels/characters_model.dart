@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+// import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
@@ -39,6 +40,7 @@ class CharactersModel with ChangeNotifier {
     PlayerClass selectedClass,
     int initialLevel,
     int previousRetirements,
+    // PersonalGoal personalGoal,
   ) async {
     Character character = Character();
     List<bool> perks = [];
@@ -62,15 +64,16 @@ class CharactersModel with ChangeNotifier {
       ..notes = 'Items, reminders, wishlist...'
       ..checkMarks = 0
       ..isRetired = false
-      ..id = await databaseHelper.insertCharacter(character, perks);
-    print(character.name);
-    print(character.classCode);
+      ..id = await databaseHelper.insertCharacter(
+        character,
+        perks,
+        // personalGoal,
+      );
     characters.add(character);
     if (characters.length > 1) {
-      print('SHOULDN"T RUN WITH ONE');
       pageController.animateToPage(
         characters.indexOf(character),
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeIn,
       );
     }

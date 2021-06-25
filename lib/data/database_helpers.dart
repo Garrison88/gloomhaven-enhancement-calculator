@@ -4,6 +4,7 @@ import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+// import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,7 +16,7 @@ class DatabaseHelper {
   static final _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 3;
+  static final _databaseVersion = 4;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -92,6 +93,13 @@ class DatabaseHelper {
                 $columnAssociatedPerkId INTEGER,
                 $columnCharacterPerkIsSelected BOOLEAN
               )''');
+      // await txn.execute('''
+      //         CREATE TABLE $tablePersonalGoals (
+      //           $columnPersonalGoalId INTEGER,
+      //           $columnSubGoals TEXT NOT NULL,
+      //           $columnPersonalGoalTitle TEXT NOT NULL,
+      //           $columnRewardClassCode TEXT NOT NULL
+      //         )''');
       // });
       // await txn.execute('''
       //         CREATE TABLE $tablePlayerClass (
@@ -130,7 +138,11 @@ class DatabaseHelper {
               )''').then((_) async {
         for (Perk perk in CharacterData.perks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
-            int id = await txn.insert(tablePerks, perk.toMap());
+            // int id =
+            await txn.insert(
+              tablePerks,
+              perk.toMap(),
+            );
             // print("ID: " +
             //     id.toString() +
             //     " : " +
@@ -147,6 +159,7 @@ class DatabaseHelper {
   Future<int> insertCharacter(
     Character character,
     List<bool> selectedPerks,
+    // PersonalGoal personalGoal,
   ) async {
     Database db = await database;
     int id = await db.insert(tableCharacters, character.toMap());
@@ -161,9 +174,36 @@ class DatabaseHelper {
         });
       });
     });
+    // db.transaction((txn) async {
+    //   await insertPersonalGoal(personalGoal, character.id);
+    // });
     // print("DB HELPER - INSERT CHARACTER: " + character.toMap().toString());
     return id;
   }
+
+  // Future<void> insertPersonalGoal(
+  //   PersonalGoal personalGoal,
+  //   int characterId,
+  //   // List<Map<String, int>> goals,
+  // ) async {
+  //   Database db = await database;
+  //   // int id = await db.insert(tableCharacters, character.toMap());
+  //   // character.id = id;
+  //   // await queryCharacter(characterId).then((character) {
+  //   db.transaction((txn) async {
+  //     await txn.rawInsert(
+  //         'INSERT INTO $tablePersonalGoals ($columnPersonalGoalId, $columnSubGoals, $columnPersonalGoalTitle, $columnRewardClassCode) VALUES (${personalGoal.id}, ${personalGoal.subGoals}, ${personalGoal.title}, ${personalGoal.rewardClassCode})');
+  //     // .asMap().forEach((index, perk) async {
+  //     //   if (perk[columnPerkClass] == character.classCode) {
+  //     //     await txn.rawInsert(
+  //     //         'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${character.id}, ${perk[columnPerkId]}, ${selectedPerks[index] ? 1 : 0})');
+  //     //   }
+  //     // });
+  //   });
+  //   // });
+  //   // print("DB HELPER - INSERT CHARACTER: " + character.toMap().toString());
+  //   // return id;
+  // }
 
   Future updateCharacter(
     Character updatedCharacter,

@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/show_info.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
   @override
@@ -28,12 +29,14 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   void _resetAllFields() {
     _selectedEnhancement = null;
+    _disableMultiTargetSwitch = false;
     SharedPrefs().remove('targetCardLvl');
     SharedPrefs().remove('enhancementsOnTargetAction');
     SharedPrefs().remove('enhancementType');
     SharedPrefs().remove('disableMultiTargetsSwitch');
     SharedPrefs().remove('multipleTargetsSelected');
     SharedPrefs().remove('enhancementCost');
+    SharedPrefs().remove('disableMultiTargetsSwitch');
     setState(() {});
   }
 
@@ -43,16 +46,18 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
         return;
       case EnhancementCategory.target:
         SharedPrefs().multipleTargetsSwitch = true;
-        _disableMultiTargetSwitch = true;
+        SharedPrefs().disableMultiTargetSwitch = true;
+        // _disableMultiTargetSwitch = true;
         _selectedEnhancement = value;
         break;
       case EnhancementCategory.hex:
         SharedPrefs().multipleTargetsSwitch = false;
-        _disableMultiTargetSwitch = true;
+        SharedPrefs().disableMultiTargetSwitch = true;
+        // _disableMultiTargetSwitch = true;
         _selectedEnhancement = value;
         break;
       default:
-        _disableMultiTargetSwitch = false;
+        SharedPrefs().disableMultiTargetSwitch = false;
         _selectedEnhancement = value;
         break;
     }
@@ -77,6 +82,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 : 0) +
             // multiply base cost x2 if multiple targets switch is true
             (SharedPrefs().multipleTargetsSwitch ? _baseCost * 2 : _baseCost);
+    _disableMultiTargetSwitch = SharedPrefs().disableMultiTargetSwitch;
     setState(() {});
   }
 
@@ -87,7 +93,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     return Scaffold(
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(smallPadding),
+          padding: const EdgeInsets.all(smallPadding),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -98,15 +104,18 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.only(left: smallPadding / 2),
                         ),
                         ElevatedButton.icon(
-                          onPressed: () => showInfoDialog(
-                            context,
-                            Strings.generalInfoTitle,
-                            Strings.generalInfoBody(context),
-                            null,
+                          onPressed: () => showDialog<void>(
+                            context: context,
+                            builder: (_) {
+                              return InfoDialog(
+                                title: Strings.generalInfoTitle,
+                                message: Strings.generalInfoBody(context),
+                              );
+                            },
                           ),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -117,7 +126,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               ),
                             ),
                           ),
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.info,
                             color: Colors.white,
                           ),
@@ -140,17 +149,19 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                              icon: Icon(Icons.info_outline,
-                                  color: Theme.of(context).accentColor),
-                              onPressed: () {
-                                showInfoDialog(
-                                  context,
-                                  Strings.cardLevelInfoTitle,
-                                  Strings.cardLevelInfoBody(context),
-                                  null,
+                            icon: Icon(Icons.info_outline,
+                                color: Theme.of(context).accentColor),
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return InfoDialog(
+                                  title: Strings.cardLevelInfoTitle,
+                                  message: Strings.cardLevelInfoBody(context),
                                 );
-                              }),
-                          Text('Card Level:'),
+                              },
+                            ),
+                          ),
+                          const Text('Card Level:'),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<int>(
                               value: SharedPrefs().targetCardLvl,
@@ -171,30 +182,36 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                              icon: Icon(
-                                Icons.info_outline,
-                                color: Theme.of(context).accentColor,
-                              ),
-                              onPressed: () {
-                                showInfoDialog(
-                                  context,
-                                  Strings.previousEnhancementsInfoTitle,
-                                  Strings.previousEnhancementsInfoBody(context),
-                                  null,
+                            icon: Icon(
+                              Icons.info_outline,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return InfoDialog(
+                                  title: Strings.previousEnhancementsInfoTitle,
+                                  message: Strings.previousEnhancementsInfoBody(
+                                      context),
                                 );
-                              }),
-                          Expanded(
+                              },
+                            ),
+                          ),
+                          const Expanded(
                             child: AutoSizeText(
                               'Previous Enhancements:',
                               maxLines: 2,
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Padding(
-                              padding: EdgeInsets.only(right: smallPadding)),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              right: smallPadding,
+                            ),
+                          ),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<int>(
-                              hint: Text(
+                              hint: const Text(
                                 'None',
                               ),
                               value: SharedPrefs().previousEnhancements,
@@ -209,33 +226,33 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       ),
                     ),
                     Card(
-                      elevation: 5.0,
+                      elevation: 5,
                       child: Column(
                         children: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Opacity(
-                                opacity:
-                                    _selectedEnhancement != null ? 1.0 : 0.5,
+                                opacity: _selectedEnhancement != null ? 1 : 0.5,
                                 child: IconButton(
                                     icon: Icon(Icons.info_outline,
                                         color: Theme.of(context).accentColor),
                                     onPressed: _selectedEnhancement != null
-                                        ? () {
-                                            showInfoDialog(
-                                              context,
-                                              null,
-                                              null,
-                                              _selectedEnhancement.category,
-                                            );
-                                          }
+                                        ? () => showDialog<void>(
+                                              context: context,
+                                              builder: (_) {
+                                                return InfoDialog(
+                                                  category: _selectedEnhancement
+                                                      .category,
+                                                );
+                                              },
+                                            )
                                         : null),
                               ),
-                              Text(
+                              const Text(
                                 'Enhancement Type:',
                               ),
-                              IconButton(
+                              const IconButton(
                                   icon: Icon(
                                     Icons.info_outline,
                                     color: Colors.transparent,
@@ -245,7 +262,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                           DropdownButtonHideUnderline(
                             child: DropdownButton<Enhancement>(
-                              hint: Text(
+                              hint: const Text(
                                 'Type',
                               ),
                               value: _selectedEnhancement,
@@ -264,17 +281,20 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                              icon: Icon(Icons.info_outline,
-                                  color: Theme.of(context).accentColor),
-                              onPressed: () {
-                                showInfoDialog(
-                                  context,
-                                  Strings.multipleTargetsInfoTitle,
-                                  Strings.multipleTargetsInfoBody(context),
-                                  null,
+                            icon: Icon(Icons.info_outline,
+                                color: Theme.of(context).accentColor),
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return InfoDialog(
+                                  title: Strings.multipleTargetsInfoTitle,
+                                  message:
+                                      Strings.multipleTargetsInfoBody(context),
                                 );
-                              }),
-                          AutoSizeText('Multiple Targets?'),
+                              },
+                            ),
+                          ),
+                          const AutoSizeText('Multiple Targets?'),
                           AbsorbPointer(
                             absorbing: _disableMultiTargetSwitch,
                             child: Opacity(
@@ -287,7 +307,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   }),
                             ),
                           ),
-                          IconButton(
+                          const IconButton(
                               icon: Icon(
                                 Icons.info_outline,
                                 color: Colors.transparent,
@@ -298,22 +318,20 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     ),
                   ],
                 ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      AutoSizeText(
-                        'Enhancement Cost:',
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline1,
-                      ),
-                      Text(
-                        '${SharedPrefs().enhancementCost}' + 'g',
-                        style: Theme.of(context).textTheme.headline1,
-                      )
-                    ],
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    AutoSizeText(
+                      'Enhancement Cost:',
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                    Text(
+                      '${SharedPrefs().enhancementCost} g',
+                      style: Theme.of(context).textTheme.headline1,
+                    )
+                  ],
                 ),
               ],
             ),
@@ -322,7 +340,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _resetAllFields,
-        child: Image.asset('images/shuffle_white.png'),
+        child: SvgPicture.asset('images/shuffle.svg'),
       ),
     );
   }

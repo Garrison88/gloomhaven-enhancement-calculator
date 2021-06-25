@@ -12,14 +12,15 @@ class Strings {
       text: TextSpan(
         style: Theme.of(context).textTheme.bodyText2,
         children: <TextSpan>[
-          TextSpan(text: "Congratulations! Now that your company has earned"),
+          const TextSpan(
+              text: "Congratulations! Now that your company has earned"),
           TextSpan(
             text: " 'The Power of Enhancement' ",
             style: Theme.of(context).textTheme.bodyText2.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          TextSpan(
+          const TextSpan(
               text: "global achievement, its members can purchase enhancements "
                   "to permanently augment their class's cards. This is done by paying the associated "
                   "cost (determined by card level, previous enhancements, type of enhancement, and number of targets) "
@@ -30,7 +31,7 @@ class Strings {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          TextSpan(
+          const TextSpan(
               text: "the Prosperity level of Gloomhaven. Only abilities with a "
                   "small translucent circle beside them can be enhanced, and only one "
                   "enhancement per circle can be added. Once an enhancement is placed,"),
@@ -40,13 +41,13 @@ class Strings {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          TextSpan(text: "with that class. A "),
+          const TextSpan(text: "with that class. A "),
           TextSpan(
               text: "main ",
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          TextSpan(
+          const TextSpan(
               text: "ability is an ability that is written in larger font, "
                   "whereas a"),
           TextSpan(
@@ -54,19 +55,19 @@ class Strings {
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          TextSpan(text: "ability is written in a smaller font below a"),
+          const TextSpan(text: "ability is written in a smaller font below a"),
           TextSpan(
               text: " main ",
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          TextSpan(text: "ability. A summon's stats can"),
+          const TextSpan(text: "ability. A summon's stats can"),
           TextSpan(
               text: " only ",
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          TextSpan(text: "be augmented with +1 enhancements.")
+          const TextSpan(text: "be augmented with +1 enhancements.")
         ],
       ),
     );
@@ -78,7 +79,7 @@ class Strings {
     return RichText(
         text: TextSpan(
             style: Theme.of(context).textTheme.bodyText2,
-            children: <TextSpan>[
+            children: const <TextSpan>[
           TextSpan(
               text: "25g is added to the cost of an enhancement "
                   "for each card level beyond 1 or x.")
@@ -92,7 +93,7 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "75g is added to the cost of an enhancement for each previous "
                     "enhancement on the"),
@@ -102,7 +103,7 @@ class Strings {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            TextSpan(
+            const TextSpan(
                 text: "An action is defined as the top "
                     "or bottom half of a card. This fee"),
             TextSpan(
@@ -111,7 +112,7 @@ class Strings {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            TextSpan(
+            const TextSpan(
                 text: "apply to an enhancement on a top action where a bottom "
                     "action enhancement already exists, or vice versa.")
           ]),
@@ -124,7 +125,7 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "This enhancement can be placed on any ability line with a"),
             TextSpan(
@@ -134,7 +135,7 @@ class Strings {
                   .bodyText2
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            TextSpan(
+            const TextSpan(
                 text:
                     "That value is increased by 1. Increasing a Target by 1 is"),
             TextSpan(
@@ -144,7 +145,7 @@ class Strings {
                   .bodyText2
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            TextSpan(text: "subject to the multiple target fee.")
+            const TextSpan(text: "subject to the multiple target fee.")
           ]),
     );
   }
@@ -155,7 +156,7 @@ class Strings {
         text: TextSpan(
             style: Theme.of(context).textTheme.bodyText2,
             children: <TextSpan>[
-          TextSpan(
+          const TextSpan(
               text: "This enhancement can be placed on any summon ability"
                   " with a"),
           TextSpan(
@@ -163,7 +164,7 @@ class Strings {
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          TextSpan(text: "That value is increased by 1.")
+          const TextSpan(text: "That value is increased by 1.")
         ]));
   }
 
@@ -173,13 +174,13 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(text: "These enhancements can be placed on any"),
+            const TextSpan(text: "These enhancements can be placed on any"),
             TextSpan(
                 text: " main ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(
+            const TextSpan(
                 text:
                     "ability line that targets enemies. The specified condition is applied to all "
                     "targets of that ability unless they are immune. Curse can be "
@@ -189,7 +190,7 @@ class Strings {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(text: "be enhanced with effects.")
+            const TextSpan(text: "be enhanced with effects.")
           ]),
     );
   }
@@ -200,13 +201,13 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(text: "These enhancements can be placed on any"),
+            const TextSpan(text: "These enhancements can be placed on any"),
             TextSpan(
                 text: " main ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(
+            const TextSpan(
                 text: "ability line that targets allies or yourself. "
                     "The specified condition is applied to all targets of that ability. "
                     "Bless can be added multiple times to the same ability line. Summon abilities"),
@@ -215,7 +216,7 @@ class Strings {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(text: "be enhanced with effects.")
+            const TextSpan(text: "be enhanced with effects.")
           ]),
     );
   }
@@ -226,7 +227,7 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "This enhancement can be placed on any move ability line. "
                     "The movement is now considered a Jump. A summon's Move"),
@@ -235,7 +236,7 @@ class Strings {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(text: "be enhanced with Jump.")
+            const TextSpan(text: "be enhanced with Jump.")
           ]),
     );
   }
@@ -246,13 +247,13 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(text: "These enhancements can be placed on any"),
+            const TextSpan(text: "These enhancements can be placed on any"),
             TextSpan(
                 text: " main ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(
+            const TextSpan(
                 text: "ability line. The specific element is created when the "
                     "ability is used.")
           ]),
@@ -265,13 +266,13 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(text: "This enhancement can be placed on any"),
+            const TextSpan(text: "This enhancement can be placed on any"),
             TextSpan(
                 text: " main ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(
+            const TextSpan(
                 text:
                     "ability line. The player chooses the element that is created "
                     "when the ability is used."),
@@ -279,7 +280,7 @@ class Strings {
     );
   }
 
-  static List<String> anyElementIcon = ['elem_any.png'];
+  static List<String> anyElementIcon = ['elem_any.svg'];
 
   // hex
   static RichText hexInfoBody(BuildContext context) {
@@ -287,30 +288,32 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "This enhancement can be placed to increase the graphical "
                     "depiction of an"),
             TextSpan(
-                text: " area attack. ",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            TextSpan(
+              text: " area attack. ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(
                 text: "The new Hex becomes an additional target of "
                     "the attack. Adding a Hex is"),
             TextSpan(
-                text: " not ",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            TextSpan(text: "subject to the multiple target fee.")
+              text: " not ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(text: "subject to the multiple target fee.")
           ]),
     );
   }
 
-  static List<String> hexIcon = ['hex.png'];
-  static List<String> hexEligibleIcons = ['hex.png'];
+  static List<String> hexIcon = ['hex.svg'];
+  static List<String> hexEligibleIcons = ['hex.svg'];
 
   // multiple targets
   static RichText multipleTargetsInfoBody(BuildContext context) {
@@ -318,7 +321,7 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "If an ability targets multiple enemies or allies, the enhancement base cost "
                     "is"),
@@ -327,7 +330,7 @@ class Strings {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(
+            const TextSpan(
                 text:
                     "This includes abilities that target 'All adjacent enemies' or "
                     "'All allies within range 3', for example. Adding +1 Target will"),
@@ -336,13 +339,14 @@ class Strings {
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(text: "be double base cost, while adding a Hex will"),
+            const TextSpan(
+                text: "be double base cost, while adding a Hex will"),
             TextSpan(
                 text: " never ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            TextSpan(text: "be.")
+            const TextSpan(text: "be.")
           ]),
     );
   }
@@ -355,16 +359,17 @@ class Strings {
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
                 text:
                     "When starting a new character, you are alloted an amount of gold"
                     " equal to"),
             TextSpan(
-                text: " 15x(L+1)",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            TextSpan(
+              text: " 15x(L+1)",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(
                 text: ", where L is your character's level. For instance, "
                     "a level 3 character would start with 60 gold.\nYou are "
                     "also awarded 1 bonus perk for each previously retired character"

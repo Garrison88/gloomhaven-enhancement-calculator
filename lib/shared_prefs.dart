@@ -35,6 +35,12 @@ class SharedPrefs {
     _sharedPrefs.setBool('partyBoon', value);
   }
 
+  bool get customClasses => _sharedPrefs.getBool('customClasses') ?? false;
+
+  set customClasses(bool value) {
+    _sharedPrefs.setBool('customClasses', value);
+  }
+
   bool get darkTheme => _sharedPrefs.getBool('darkTheme') ?? false;
 
   set darkTheme(bool value) {

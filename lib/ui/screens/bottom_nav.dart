@@ -21,13 +21,13 @@ class BottomNavState extends State<BottomNav> {
 
   void _navigationTapped(int page) {
     _pageController.animateToPage(page,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+        duration: const Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   void _onPageChanged(int page) {
     setState(() {
       Provider.of<CharactersModel>(context, listen: false).isEditMode = false;
-      this._page = page;
+      _page = page;
     });
   }
 
@@ -43,75 +43,77 @@ class BottomNavState extends State<BottomNav> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Gloomhaven Companion',
           style: TextStyle(
             fontSize: 25.0,
           ),
         ),
         actions: <Widget>[
-          Provider.of<CharactersModel>(context).isEditMode
-              ? IconButton(
-                  icon: Icon(
-                    Icons.delete,
-                  ),
-                  onPressed: () async {
-                    await showDialog<bool>(
+          if (_page == 0)
+            Provider.of<CharactersModel>(context).isEditMode
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                    ),
+                    onPressed: () async {
+                      await showDialog<bool>(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              content: const Text(
+                                'Are you sure? There\'s no going back!',
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text(
+                                    'Cancel',
+                                  ),
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                ),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red),
+                                  ),
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          }).then((result) async {
+                        if (result) {
+                          await charactersModel.deleteCharacter(
+                            context,
+                            charactersModel.currentCharacter.id,
+                          );
+                        }
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.person_add),
+                    onPressed: () async {
+                      await showDialog<bool>(
+                        barrierDismissible: false,
                         context: context,
                         builder: (_) {
-                          return AlertDialog(
-                            content: Text(
-                              'Are you sure? There\'s no going back!',
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text(
-                                  'Cancel',
-                                ),
-                                onPressed: () => Navigator.pop(context, false),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.red),
-                                ),
-                                onPressed: () => Navigator.pop(context, true),
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
+                          return CreateCharacterDialog(
+                            charactersModel: charactersModel,
                           );
-                        }).then((result) async {
-                      if (result) {
-                        await charactersModel.deleteCharacter(
-                          context,
-                          charactersModel.currentCharacter.id,
-                        );
-                      }
-                    });
-                  },
-                )
-              : IconButton(
-                  icon: Icon(Icons.person_add),
-                  onPressed: () async {
-                    await showDialog<bool>(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (_) {
-                        return CreateCharacterDialog(
-                          charactersModel: charactersModel,
-                        );
-                      },
-                    );
-                  },
-                ),
+                        },
+                      );
+                    },
+                  ),
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SettingsScreen()),
@@ -128,21 +130,14 @@ class BottomNavState extends State<BottomNav> {
         onPageChanged: _onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
-              icon: Padding(
-                padding: EdgeInsets.only(bottom: smallPadding),
-                child: Icon(FontAwesomeIcons.scroll),
-              ),
-              label: 'CHARACTERS'
-              // title: Text(
-              //   'CHARACTERS',
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
-              ),
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: smallPadding),
+              child: Icon(FontAwesomeIcons.scroll),
+            ),
+            label: 'CHARACTERS',
+          ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.only(bottom: smallPadding),
@@ -150,13 +145,6 @@ class BottomNavState extends State<BottomNav> {
             ),
             label: 'CALCULATOR',
           ),
-          // title: Text(
-          //   'CALCULATOR',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // )),
         ],
         onTap: _navigationTapped,
         currentIndex: _page,

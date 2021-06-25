@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -12,7 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Settings',
           style: TextStyle(
             fontSize: 25.0,
@@ -21,14 +24,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(children: <Widget>[
         SwitchListTile(
-            title: Text('Theme'),
-            subtitle: SharedPrefs().darkTheme ? Text('Dark') : Text('Light'),
-            activeThumbImage: AssetImage('images/elem_dark.png'),
-            activeColor: Color(0xff1f272e),
-            inactiveThumbColor: Color(0xffeda50b),
-            inactiveTrackColor: Color(0xffeda50b).withOpacity(0.75),
+            title: const Text('Theme'),
+            subtitle: SharedPrefs().darkTheme
+                ? const Text('Dark')
+                : const Text('Light'),
+            // activeThumbImage: AssetImage('images/elem_dark.svg'),
+            activeThumbImage: const Svg('images/elem_dark.svg'),
+            activeColor: const Color(0xff1f272e),
+            inactiveThumbColor: const Color(0xffeda50b),
+            inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
             activeTrackColor: Colors.white30,
-            inactiveThumbImage: AssetImage('images/elem_light.png'),
+            inactiveThumbImage: const Svg('images/elem_light.svg'),
             value: SharedPrefs().darkTheme,
             onChanged: (val) {
               SharedPrefs().darkTheme = val;
@@ -36,8 +42,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             }),
         SettingsDivider(),
         SwitchListTile(
-            title: Text('Inline Icons'),
-            subtitle: Text('Show icons in perk rows'),
+            title: const Text('Inline Icons'),
+            subtitle: const Text('Show icons in perk rows'),
             value: SharedPrefs().showPerkImages,
             onChanged: (val) {
               setState(() {
@@ -46,8 +52,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             }),
         SettingsDivider(),
         SwitchListTile(
-            subtitle: Text('Gloomhaven'),
-            title: Text("Open 'Envelope X'"),
+            subtitle: const Text('Gloomhaven'),
+            title: const Text("Open 'Envelope X'"),
             value: SharedPrefs().envelopeX,
             onChanged: (val) {
               setState(() {
@@ -56,12 +62,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             }),
         SettingsDivider(),
         SwitchListTile(
-            subtitle: Text('Forgotten Circles'),
-            title: Text('Scenario 114 Reward'),
+            subtitle: const Text('Forgotten Circles'),
+            title: const Text('Scenario 114 Reward'),
             value: SharedPrefs().partyBoon,
             onChanged: (val) {
               setState(() {
                 SharedPrefs().partyBoon = val;
+              });
+            }),
+        SettingsDivider(),
+        SwitchListTile(
+            subtitle: const Text(
+                "Include 'released' classes created by the community"),
+            title: const Text('Custom Classes'),
+            value: SharedPrefs().customClasses,
+            onChanged: (val) {
+              setState(() {
+                SharedPrefs().customClasses = val;
               });
             }),
       ]),
@@ -72,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 class SettingsDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
       child: Divider(
         endIndent: 16,

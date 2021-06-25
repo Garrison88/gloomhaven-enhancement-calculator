@@ -1,16 +1,19 @@
-final String tablePlayerClass = 'PlayerClassTable';
-final String columnClassCode = '_Code';
-final String columnClassRace = 'Race';
-final String columnClassName = 'Name';
-final String columnClassIconUrl = 'IconUrl';
-final String columnClassIsLocked = 'IsLocked';
-final String columnClassColor = 'Color';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+
+const String tablePlayerClass = 'PlayerClassTable';
+const String columnClassCode = '_Code';
+const String columnClassRace = 'Race';
+const String columnClassName = 'Name';
+const String columnClassIconUrl = 'IconUrl';
+const String columnClassIsLocked = 'IsLocked';
+const String columnClassColor = 'Color';
 
 class PlayerClass {
   String race;
   String className;
   String classCode;
   String classIconUrl;
+  ClassCategory classCategory;
   bool locked;
   String classColor;
 
@@ -19,6 +22,7 @@ class PlayerClass {
     this.className,
     this.classCode,
     this.classIconUrl,
+    this.classCategory,
     this.locked,
     this.classColor,
   );

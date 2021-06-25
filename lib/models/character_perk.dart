@@ -1,8 +1,8 @@
 // database table and column names
-final String tableCharacterPerks = 'CharacterPerks';
-final String columnAssociatedCharacterId = 'CharacterID';
-final String columnAssociatedPerkId = 'PerkID';
-final String columnCharacterPerkIsSelected = 'IsSelected';
+const String tableCharacterPerks = 'CharacterPerks';
+const String columnAssociatedCharacterId = 'CharacterID';
+const String columnAssociatedPerkId = 'PerkID';
+const String columnCharacterPerkIsSelected = 'IsSelected';
 
 // data model class
 class CharacterPerk {

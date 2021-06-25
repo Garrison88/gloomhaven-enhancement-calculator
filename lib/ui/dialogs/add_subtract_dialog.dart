@@ -18,12 +18,15 @@ class AddSubtractDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-          padding: EdgeInsets.only(top: smallPadding, bottom: smallPadding),
+          padding:
+              const EdgeInsets.only(top: smallPadding, bottom: smallPadding),
           child: Row(
             children: <Widget>[
               Expanded(
                 child: IconButton(
-                    icon: Icon(FontAwesomeIcons.minus),
+                    icon: const Icon(
+                      FontAwesomeIcons.minus,
+                    ),
                     onPressed: () => Navigator.pop(
                           context,
                           currentValue -
@@ -49,7 +52,9 @@ class AddSubtractDialog extends StatelessWidget {
               ),
               Expanded(
                 child: IconButton(
-                  icon: Icon(FontAwesomeIcons.plus),
+                  icon: const Icon(
+                    FontAwesomeIcons.plus,
+                  ),
                   onPressed: () => Navigator.pop(
                     context,
                     currentValue +

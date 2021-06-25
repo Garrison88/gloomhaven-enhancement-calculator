@@ -1,20 +1,20 @@
 // database table and column names
 // import 'package:gloomhaven_enhancement_calc/ui/widgets/perk.dart';
 
-final String tableCharacters = 'Characters';
-final String columnCharacterId = '_id';
-final String columnCharacterName = 'Name';
-final String columnCharacterClassCode = 'ClassCode';
-final String columnCharacterClassColor = 'ClassColor';
-final String columnCharacterClassIcon = 'ClassIcon';
-final String columnCharacterClassRace = 'ClassRace';
-final String columnCharacterClassName = 'ClassName';
-final String columnPreviousRetirements = 'PreviousRetirements';
-final String columnCharacterXp = 'XP';
-final String columnCharacterGold = 'Gold';
-final String columnCharacterNotes = 'Notes';
-final String columnCharacterCheckMarks = 'CheckMarks';
-final String columnIsRetired = 'IsRetired';
+const String tableCharacters = 'Characters';
+const String columnCharacterId = '_id';
+const String columnCharacterName = 'Name';
+const String columnCharacterClassCode = 'ClassCode';
+const String columnCharacterClassColor = 'ClassColor';
+const String columnCharacterClassIcon = 'ClassIcon';
+const String columnCharacterClassRace = 'ClassRace';
+const String columnCharacterClassName = 'ClassName';
+const String columnPreviousRetirements = 'PreviousRetirements';
+const String columnCharacterXp = 'XP';
+const String columnCharacterGold = 'Gold';
+const String columnCharacterNotes = 'Notes';
+const String columnCharacterCheckMarks = 'CheckMarks';
+const String columnIsRetired = 'IsRetired';
 
 // data model class
 class Character {
