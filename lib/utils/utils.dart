@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import '../data/constants.dart';
+import '../models/perk.dart';
+import '../ui/widgets/perk_row.dart';
 
 class Utils {
   static List<InlineSpan> generatePerkDetailsWithInlineIcons(
@@ -46,152 +46,198 @@ class Utils {
             ),
           ),
         );
-      }
-      // TODO: create half-and-half element icon
-      // else if (element.contains('/')) {}
-      else {
+      } else {
         switch (
             element.replaceAll(RegExp(r'"'), '').replaceAll(RegExp(r','), '')) {
-          case ('-2'):
+          case '-2':
             assetPath = 'attack_modifiers/minus_2.png';
             break;
-          case ('-1'):
+          case '-1':
             assetPath = 'attack_modifiers/minus_1.png';
             break;
-          case ('+0'):
+          case '+0':
             assetPath = 'attack_modifiers/plus_0.png';
             break;
-          case ('+X'):
+          case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
-          case ('+1'):
+          case '+1':
             assetPath = 'attack_modifiers/plus_1.png';
             break;
-          case ('+2'):
+          case '+2':
             assetPath = 'attack_modifiers/plus_2.png';
             break;
-          case ('+3'):
+          case '+3':
             assetPath = 'attack_modifiers/plus_3.png';
             break;
-          case ('+4'):
+          case '+4':
             assetPath = 'attack_modifiers/plus_4.png';
             break;
-          case ('Rolling'):
+          case 'Rolling':
             assetPath = 'rolling.svg';
             break;
-          case ('HEAL'):
+          case 'HEAL':
             assetPath = 'heal.svg';
             invertColor = true;
             break;
-          case ('SHIELD'):
+          case 'SHIELD':
             assetPath = 'shield.svg';
             invertColor = true;
             break;
-          case ('STUN'):
+          case 'STUN':
             assetPath = 'stun.svg';
             break;
-          case ('WOUND'):
+          case 'WOUND':
             assetPath = 'wound.svg';
             break;
-          case ('CURSE'):
+          case 'CURSE':
             assetPath = 'curse.svg';
             break;
-          case ('PIERCE'):
+          case 'PIERCE':
             assetPath = 'pierce.svg';
             break;
-          case ('REGENERATE'):
+          case 'REGENERATE':
             assetPath = 'regenerate.svg';
             break;
-          case ('DISARM'):
+          case 'DISARM':
             assetPath = 'disarm.svg';
             break;
-          case ('BLESS'):
+          case 'BLESS':
             assetPath = 'bless.svg';
             break;
-          case ('TARGET'):
+          case 'TARGET':
             assetPath = 'target.svg';
             break;
-          case ('Range'):
+          case 'Range':
             assetPath = 'range.svg';
             invertColor = true;
             break;
-          case ('RETALIATE'):
+          case 'Move':
+            assetPath = 'move.svg';
+            invertColor = true;
+            break;
+          case 'Loot':
+            assetPath = 'loot.svg';
+            invertColor = true;
+            break;
+          case 'RETALIATE':
             assetPath = 'retaliate.svg';
             invertColor = true;
             break;
-          case ('PUSH'):
+          case 'ATTACK':
+            assetPath = 'attack.svg';
+            invertColor = true;
+            break;
+          case 'Recover':
+            assetPath =
+                darkTheme ? 'recover_card.svg' : 'recover_card_light.svg';
+            break;
+          case 'Refresh':
+            assetPath =
+                darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg';
+            break;
+          case 'PUSH':
             assetPath = 'push.svg';
             break;
-          case ('PULL'):
+          case 'PULL':
             assetPath = 'pull.svg';
             break;
-          case ('IMMOBILIZE'):
+          case 'IMMOBILIZE':
             assetPath = 'immobilize.svg';
             break;
-          case ('POISON'):
+          case 'POISON':
             assetPath = 'poison.svg';
             break;
-          case ('MUDDLE'):
+          case 'MUDDLE':
             assetPath = 'muddle.svg';
             break;
-          case ('INVISIBLE'):
+          case 'INVISIBLE':
             assetPath = 'invisible.svg';
             break;
-          case ('STRENGTHEN'):
+          case 'STRENGTHEN':
             assetPath = 'strengthen.svg';
             break;
-          case ('CHILL'):
+          case 'CHILL':
             assetPath = 'chill.svg';
             break;
-          case ('PROVOKE'):
+          case 'PROVOKE':
             assetPath = 'provoke.svg';
             break;
-          case ('BRITTLE'):
+          case 'BRITTLE':
             assetPath = 'brittle.svg';
             break;
-          case ('WARD'):
+          case 'WARD':
             assetPath = 'ward.svg';
             break;
-          case ('Shrug_Off'):
+          case 'HEX':
+            assetPath = 'luminary_hexes.svg';
+            break;
+          case 'Shackle':
+          case 'Shackled':
+            assetPath = 'class_icons/chainguard.svg';
+            invertColor = true;
+            break;
+          case 'Chieftain':
+            assetPath = 'class_icons/chieftain.svg';
+            invertColor = true;
+            break;
+          case 'Glow':
+            assetPath = 'class_icons/luminary.svg';
+            invertColor = true;
+            break;
+          case 'Spirit':
+            assetPath = 'class_icons/spirit_caller.svg';
+            invertColor = true;
+            break;
+          case 'SWING':
+            assetPath = 'swing.svg';
+            break;
+          case 'Ladder':
+            assetPath = 'ladder.svg';
+            invertColor = true;
+            break;
+          case 'Shrug_Off':
             assetPath = 'shrug_off.svg';
             invertColor = true;
             break;
-          case ('Projectile'):
-            assetPath = 'projectile.svg';
+          case 'Projectile':
+            assetPath = 'class_icons/bombard.svg';
             invertColor = true;
             break;
-          case ('VOID'):
+          case 'VOID':
             assetPath = 'void.svg';
             break;
-          case ('VOIDSIGHT'):
+          case 'VOIDSIGHT':
             assetPath = 'voidsight.svg';
             invertColor = true;
             break;
           // ELEMENTS
-          case ('EARTH'):
+          case 'EARTH':
             assetPath = 'elem_earth.svg';
             break;
-          case ('AIR'):
+          case 'AIR':
             assetPath = 'elem_air.svg';
             break;
-          case ('DARK'):
+          case 'DARK':
             assetPath = 'elem_dark.svg';
             break;
-          case ('LIGHT'):
+          case 'LIGHT':
             assetPath = 'elem_light.svg';
             break;
-          case ('ICE'):
+          case 'ICE':
             assetPath = 'elem_ice.svg';
             break;
-          case ('FIRE'):
+          case 'FIRE':
             assetPath = 'elem_fire.svg';
             break;
-          // TODO: remove this once first TODO is done
-          case ('EARTH/FIRE'):
+          case 'EARTH/FIRE':
             assetPath = 'elem_earth_or_fire.svg';
             break;
-          case ('ANY_ELEMENT'):
+          case 'Any_Element':
             assetPath = 'elem_any.svg';
+            break;
+          case 'Consume_Any_Element':
+            assetPath = 'elem_any_consume.svg';
             break;
         }
       }
@@ -271,16 +317,20 @@ class Utils {
         continue;
       }
       if (details != perk.perkDetails) {
-        perkRows.add(PerkRow(
-          perks: perkRowPerks,
-        ));
+        perkRows.add(
+          PerkRow(
+            perks: perkRowPerks,
+          ),
+        );
         perkRowPerks = [perk];
         details = perk.perkDetails;
       }
     }
-    perkRows.add(PerkRow(
-      perks: perkRowPerks,
-    ));
+    perkRows.add(
+      PerkRow(
+        perks: perkRowPerks,
+      ),
+    );
     return perkRows;
   }
 }

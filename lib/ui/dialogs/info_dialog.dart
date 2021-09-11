@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import '../../data/constants.dart';
+import '../../data/enhancement_data.dart';
+import '../../data/strings.dart';
+import '../../models/enhancement.dart';
+import '../../shared_prefs.dart';
 
 class InfoDialog extends StatelessWidget {
   final String title;
@@ -297,7 +297,7 @@ class InfoDialog extends StatelessWidget {
           child: Text(
             'Got it!',
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
               fontSize: secondaryFontSize,
             ),
           ),

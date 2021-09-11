@@ -1,39 +1,37 @@
-// database table and column names
 const String tablePerks = 'PerksTable';
 const String columnPerkId = '_id';
 const String columnPerkClass = 'Class';
 const String columnPerkDetails = 'Details';
+const String columnPerkIsGrouped = 'IsGrouped';
 
-// data model class
 class Perk {
   int perkId;
   String perkClassCode;
   int numOfPerks;
   String perkDetails;
+  bool perkIsGrouped;
 
   Perk(
-      // this.id,
-      this.perkClassCode,
-      this.numOfPerks,
-      this.perkDetails);
+    this.perkClassCode,
+    this.numOfPerks,
+    this.perkDetails, {
+    this.perkIsGrouped = false,
+  });
 
-  // convenience constructor to create a Perk object
   Perk.fromMap(Map<String, dynamic> map) {
     perkId = map[columnPerkId];
     perkClassCode = map[columnPerkClass];
     perkDetails = map[columnPerkDetails];
+    perkIsGrouped = map[columnPerkIsGrouped] == 1 ? true : false;
   }
 
-  // convenience method to create a Map from this Perk object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnPerkId: perkId,
       columnPerkClass: perkClassCode,
-      columnPerkDetails: perkDetails
+      columnPerkDetails: perkDetails,
+      columnPerkIsGrouped: perkIsGrouped ? 1 : 0
     };
-    // if (perkId != null) {
-    //   map[columnPerkId] = perkId;
-    // }
     return map;
   }
 }

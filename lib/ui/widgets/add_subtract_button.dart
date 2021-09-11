@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import '../../data/constants.dart';
 
 class AddSubtractButton extends StatelessWidget {
   AddSubtractButton({this.onTap});
@@ -17,18 +17,18 @@ class AddSubtractButton extends StatelessWidget {
             children: <Widget>[
               Icon(
                 FontAwesomeIcons.minus,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 size: 15,
               ),
               Text(
                 '/',
                 style: TextStyle(
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
               Icon(
                 FontAwesomeIcons.plus,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 size: 15,
               ),
             ],

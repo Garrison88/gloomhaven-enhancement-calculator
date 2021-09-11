@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
+import '../../data/constants.dart';
+import '../../data/enhancement_data.dart';
+import '../../data/strings.dart';
+import '../../models/enhancement.dart';
+import '../../shared_prefs.dart';
+import '../dialogs/info_dialog.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
   @override
@@ -47,13 +47,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
       case EnhancementCategory.target:
         SharedPrefs().multipleTargetsSwitch = true;
         SharedPrefs().disableMultiTargetSwitch = true;
-        // _disableMultiTargetSwitch = true;
         _selectedEnhancement = value;
         break;
       case EnhancementCategory.hex:
         SharedPrefs().multipleTargetsSwitch = false;
         SharedPrefs().disableMultiTargetSwitch = true;
-        // _disableMultiTargetSwitch = true;
         _selectedEnhancement = value;
         break;
       default:
@@ -88,7 +86,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: this ensures that enabling Party Boon recalculates the current cost
+    // This ensures that enabling Party Boon recalculates the current cost
     _updateEnhancementCost();
     return Scaffold(
       body: Center(
@@ -119,22 +117,30 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).accentColor),
+                                Theme.of(context).colorScheme.secondary),
                             shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                             ),
                           ),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.info,
-                            color: Colors.white,
+                            color: ThemeData.estimateBrightnessForColor(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary) ==
+                                    Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                           label: Text(
                             'General Guidelines',
                             style: TextStyle(
                               color: ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context).accentColor) ==
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .secondary) ==
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black,
@@ -150,7 +156,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         children: <Widget>[
                           IconButton(
                             icon: Icon(Icons.info_outline,
-                                color: Theme.of(context).accentColor),
+                                color: Theme.of(context).colorScheme.secondary),
                             onPressed: () => showDialog<void>(
                               context: context,
                               builder: (_) {
@@ -184,7 +190,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           IconButton(
                             icon: Icon(
                               Icons.info_outline,
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                             onPressed: () => showDialog<void>(
                               context: context,
@@ -236,7 +242,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 opacity: _selectedEnhancement != null ? 1 : 0.5,
                                 child: IconButton(
                                     icon: Icon(Icons.info_outline,
-                                        color: Theme.of(context).accentColor),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     onPressed: _selectedEnhancement != null
                                         ? () => showDialog<void>(
                                               context: context,
@@ -282,7 +290,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         children: <Widget>[
                           IconButton(
                             icon: Icon(Icons.info_outline,
-                                color: Theme.of(context).accentColor),
+                                color: Theme.of(context).colorScheme.secondary),
                             onPressed: () => showDialog<void>(
                               context: context,
                               builder: (_) {
@@ -340,7 +348,15 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _resetAllFields,
-        child: SvgPicture.asset('images/shuffle.svg'),
+        child: SvgPicture.asset(
+          'images/shuffle.svg',
+          width: 40,
+          color: ThemeData.estimateBrightnessForColor(
+                      Theme.of(context).colorScheme.secondary) ==
+                  Brightness.dark
+              ? Colors.white
+              : Colors.black,
+        ),
       ),
     );
   }

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/character_screen.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
-import 'package:page_indicator/page_indicator.dart';
+import '../../data/constants.dart';
+import '../../models/character.dart';
+import '../../shared_prefs.dart';
+import 'character_screen.dart';
+import '../../viewmodels/characters_model.dart';
+import '../../viewmodels/character_model.dart';
+import '../dialogs/create_character_dialog.dart';
 import 'package:provider/provider.dart';
 
 class CharactersScreen extends StatefulWidget {
+  const CharactersScreen({
+    Key key,
+  }) : super(key: key);
+
   @override
   _CharactersScreenState createState() => _CharactersScreenState();
 }
@@ -59,7 +63,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                             right: smallPadding * 2,
                           ),
                           child: const Text(
-                            'Create your first character using the button below',
+                            'Create your first character using the button below, or restore a backup from the Settings menu',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -86,54 +90,86 @@ class _CharactersScreenState extends State<CharactersScreen> {
                       ])),
             );
           } else {
-            charactersModel.currentCharacter =
-                snapshot.data[SharedPrefs().initialPage];
-            return PageIndicatorContainer(
-              child: PageView.builder(
-                controller: charactersModel.pageController,
-                onPageChanged: (index) {
-                  charactersModel.updateCurrentCharacter(
-                    context,
-                    index: index,
-                  );
-                },
-                itemCount: snapshot.data.length,
-                itemBuilder: (_, int index) {
-                  cm = CharacterModel()
-                    ..character = charactersModel.characters[index]
-                    ..isEditable = charactersModel.isEditMode;
-                  return Stack(
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: SvgPicture.asset(
-                            'images/class_icons/${cm.character.classIcon.replaceFirst(RegExp(r'.png'), '.svg')}',
-                            color: Color(
-                              int.parse(SharedPrefs().themeColor),
-                            ).withOpacity(0.1),
+            try {
+              charactersModel.currentCharacter =
+                  snapshot.data[SharedPrefs().initialPage];
+            } catch (e) {
+              charactersModel.currentCharacter = snapshot.data[0];
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                snapshot.data.length > 1
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          bottom: 6,
+                        ),
+                        child: SmoothPageIndicator(
+                          controller: charactersModel.pageController,
+                          count: charactersModel.characters.length,
+                          effect: ScrollingDotsEffect(
+                            dotColor: Colors.grey.withOpacity(0.5),
+                            dotHeight: 12,
+                            dotWidth: 12,
+                            activeDotColor: Color(
+                              int.parse(
+                                charactersModel
+                                    .currentCharacter.playerClass.classColor,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      ChangeNotifierProvider.value(
-                        value: cm,
-                        child: CharacterScreen(),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              align: IndicatorAlign.top,
-              length: snapshot.data.length,
-              indicatorSpace: smallPadding,
-              padding: const EdgeInsets.only(top: 20),
-              indicatorColor: snapshot.data.length < 2
-                  ? Colors.transparent
-                  : Colors.grey.withOpacity(0.25),
-              indicatorSelectorColor: snapshot.data.length < 2
-                  ? Colors.transparent
-                  : Theme.of(context).accentColor,
-              shape: IndicatorShape.circle(size: 12),
+                      )
+                    : Container(),
+                Expanded(
+                  child: PageView.builder(
+                    controller: charactersModel.pageController,
+                    onPageChanged: (index) {
+                      charactersModel.updateCurrentCharacter(
+                        context,
+                        index: index,
+                      );
+                    },
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (_, int index) {
+                      try {
+                        cm = CharacterModel()
+                          ..character = charactersModel.characters[index]
+                          ..isEditable = charactersModel.isEditMode;
+                      } catch (e) {
+                        if (e.runtimeType == RangeError) {
+                          cm = CharacterModel()
+                            ..character = charactersModel.characters[0]
+                            ..isEditable = charactersModel.isEditMode;
+                        }
+                      }
+                      return Stack(
+                        children: <Widget>[
+                          Center(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: SvgPicture.asset(
+                                'images/class_icons/${cm.character.playerClass.classIconUrl}',
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.1),
+                              ),
+                            ),
+                          ),
+                          ChangeNotifierProvider.value(
+                            value: cm,
+                            // ignore: prefer_const_constructors
+                            child: CharacterScreen(),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           }
         } else {

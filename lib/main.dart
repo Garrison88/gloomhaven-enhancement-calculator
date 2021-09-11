@@ -1,7 +1,10 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/gloomhaven_companion.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'viewmodels/characters_model.dart';
+import 'package:provider/provider.dart';
+import 'gloomhaven_companion.dart';
+import 'shared_prefs.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,8 +14,13 @@ main() async {
     SharedPrefs().clearSharedPrefs = false;
   }
   runApp(
-    EasyDynamicThemeWidget(
-      child: GloomhavenCompanion(),
+    Phoenix(
+      child: EasyDynamicThemeWidget(
+        child: ChangeNotifierProvider(
+          child: GloomhavenCompanion(),
+          create: (context) => CharactersModel(),
+        ),
+      ),
     ),
   );
 }

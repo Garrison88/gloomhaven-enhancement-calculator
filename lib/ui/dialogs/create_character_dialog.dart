@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import '../../custom_search_delegate.dart';
+import '../../data/character_data.dart';
+import '../../data/constants.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
@@ -142,6 +142,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             children: [
               TextFormField(
                 textCapitalization: TextCapitalization.words,
+                autocorrect: false,
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
@@ -159,7 +160,11 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     width: iconSize + 5,
                     child: SvgPicture.asset(
                       'images/class_icons/${_selectedClass.classIconUrl}',
-                      color: Color(int.parse(_selectedClass.classColor)),
+                      color: Color(
+                        int.parse(
+                          _selectedClass.classColor,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -265,11 +270,11 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 context,
                 _nameTextFieldController.text,
                 _selectedClass,
-                int.parse(_levelTextFieldController.text),
-                _previousRetirementsTextFieldController.text.isEmpty
+                initialLevel: int.parse(_levelTextFieldController.text),
+                previousRetirements: _previousRetirementsTextFieldController
+                        .text.isEmpty
                     ? 0
                     : int.parse(_previousRetirementsTextFieldController.text),
-                // _personalGoal,
               );
               Navigator.pop(context, true);
             }

@@ -1,22 +1,23 @@
+import 'dart:convert' as convert;
 import 'dart:io';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-// import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'database_migrations.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/character.dart';
+import '../models/character_perk.dart';
+import '../models/perk.dart';
+import 'character_data.dart';
+
 // singleton class to manage the database
 class DatabaseHelper {
   // This is the actual database filename that is saved in the docs directory.
-  static final _databaseName = "GloomhavenCompanion.db";
+  static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 4;
+  static const _databaseVersion = 5;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -25,26 +26,36 @@ class DatabaseHelper {
 
   // Only allow a single open connection to the database.
   static Database _database;
+  String databasePath;
+  List<String> tables = [
+    tableCharacters,
+    tableCharacterPerks,
+  ];
 
-  Future<Database> get database async {
-    if (_database != null) return _database;
-    _database = await _initDatabase();
-    return _database;
-  }
+  Future<Database> get database async => _database ??= await _initDatabase();
 
   // open the database
   _initDatabase() async {
     // The path_provider plugin gets the right directory for Android or iOS.
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    // Open the database. Can also add an onUpdate callback parameter.
+    databasePath = join(
+      documentsDirectory.path,
+      _databaseName,
+    );
+    // Open the database. Can also add an onUpgrade callback parameter.
     return await openDatabase(
-      path,
+      databasePath,
       version: _databaseVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
   }
+
+  static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String textType = 'TEXT NOT NULL';
+  static const String boolType = 'BOOL NOT NULL';
+  static const String integerType = 'INTEGER NOT NULL';
+  static const String createTable = 'CREATE TABLE';
 
   // SQL string to create the database
   Future _onCreate(
@@ -53,73 +64,48 @@ class DatabaseHelper {
   ) async {
     await db.transaction((txn) async {
       await txn.execute('''
-              CREATE TABLE $tableCharacters (
-                $columnCharacterId INTEGER PRIMARY KEY,
-                $columnCharacterName TEXT NOT NULL,
-                $columnCharacterClassCode TEXT NOT NULL,
-                $columnCharacterClassColor TEXT NOT NULL,
-                $columnCharacterClassIcon TEXT NOT NULL,
-                $columnCharacterClassRace TEXT NOT NULL,
-                $columnCharacterClassName TEXT NOT NULL,
-                $columnPreviousRetirements INTEGER NOT NULL,
-                $columnCharacterXp INTEGER NOT NULL,
-                $columnCharacterGold INTEGER NOT NULL,
-                $columnCharacterNotes TEXT NOT NULL,
-                $columnCharacterCheckMarks INTEGER NOT NULL,
-                $columnIsRetired BOOL NOT NULL
-              )''');
+        $createTable $tableCharacters (
+          $columnCharacterId $idType,
+          $columnCharacterUuid $textType,
+          $columnCharacterName $textType,
+          $columnCharacterClassCode $textType,
+          $columnPreviousRetirements $integerType,
+          $columnCharacterXp $integerType,
+          $columnCharacterGold $integerType,
+          $columnCharacterNotes $textType,
+          $columnCharacterCheckMarks $integerType,
+          $columnIsRetired $boolType
+        )''');
+      // $columnResourceHide $integerType,
+      // $columnResourceMetal $integerType,
+      // $columnResourceWood $integerType,
+      // $columnResourceArrowVine $integerType,
+      // $columnResourceAxeNut $integerType,
+      // $columnResourceRockRoot $integerType,
+      // $columnResourceFlameFruit $integerType,
+      // $columnResourceCorpseCap $integerType,
+      // $columnResourceSnowThistle $integerType,
       await txn.execute('''
-              CREATE TABLE $tablePerks (
-                $columnPerkId INTEGER PRIMARY KEY,
-                $columnPerkClass TEXT NOT NULL,
-                $columnPerkDetails TEXT NOT NULL
-              )''').then((_) async {
-        for (Perk perk in CharacterData.perks) {
-          for (int i = 0; i < perk.numOfPerks; i++) {
-            int id = await txn.insert(tablePerks, perk.toMap());
-            print("ID: " +
-                id.toString() +
-                " : " +
-                perk.perkClassCode +
-                " : " +
-                perk.perkDetails);
+        $createTable $tablePerks (
+          $columnPerkId $idType,
+          $columnPerkClass $textType,
+          $columnPerkDetails $textType,
+          $columnPerkIsGrouped $boolType
+        )''').then(
+        (_) async {
+          for (Perk perk in CharacterData.perks) {
+            for (int i = 0; i < perk.numOfPerks; i++) {
+              await txn.insert(tablePerks, perk.toMap());
+            }
           }
-        }
-      });
-      // .then((_) {
+        },
+      );
       await txn.execute('''
-              CREATE TABLE $tableCharacterPerks (
-                $columnAssociatedCharacterId INTEGER,
-                $columnAssociatedPerkId INTEGER,
-                $columnCharacterPerkIsSelected BOOLEAN
-              )''');
-      // await txn.execute('''
-      //         CREATE TABLE $tablePersonalGoals (
-      //           $columnPersonalGoalId INTEGER,
-      //           $columnSubGoals TEXT NOT NULL,
-      //           $columnPersonalGoalTitle TEXT NOT NULL,
-      //           $columnRewardClassCode TEXT NOT NULL
-      //         )''');
-      // });
-      // await txn.execute('''
-      //         CREATE TABLE $tablePlayerClass (
-      //           $columnClassCode TEXT PRIMARY KEY,
-      //           $columnClassRace TEXT NOT NULL,
-      //           $columnClassName TEXT NOT NULL,
-      //           $columnClassIconUrl TEXT NOT NULL,
-      //           $columnClassIsLocked BOOLEAN,
-      //           $columnClassColor TEXT NOT NULL
-      //         )''').then((_) async {
-      //   for (PlayerClass _playerClass in classList) {
-      //     await txn.insert(tablePlayerClass, _playerClass.toMap());
-      //     print("CLASS CODE: " +
-      //         _playerClass.classCode +
-      //         " : " +
-      //         _playerClass.classColor +
-      //         " : " +
-      //         _playerClass.race);
-      //   }
-      // });
+        $createTable $tableCharacterPerks (
+          $columnAssociatedCharacterUuid $textType,
+          $columnAssociatedPerkId $integerType,
+          $columnCharacterPerkIsSelected $boolType
+        )''');
     });
   }
 
@@ -128,105 +114,141 @@ class DatabaseHelper {
     int oldVersion,
     int newVersion,
   ) async {
-    await db.transaction((txn) async {
-      await txn.execute('DROP TABLE IF EXISTS $tablePerks');
-      await txn.execute('''
-              CREATE TABLE $tablePerks (
-                $columnPerkId INTEGER PRIMARY KEY,
-                $columnPerkClass TEXT NOT NULL,
-                $columnPerkDetails TEXT NOT NULL
-              )''').then((_) async {
-        for (Perk perk in CharacterData.perks) {
-          for (int i = 0; i < perk.numOfPerks; i++) {
-            // int id =
-            await txn.insert(
-              tablePerks,
-              perk.toMap(),
-            );
-            // print("ID: " +
-            //     id.toString() +
-            //     " : " +
-            //     perk.perkClassCode +
-            //     " : " +
-            //     perk.perkDetails);
-          }
+    await db.transaction(
+      (txn) async {
+        if (oldVersion <= 4) {
+          // Add perks for Crimson Scales classes
+          await DatabaseMigrations.regeneratePerksTable(txn);
+          // Add Uuid column to CharactersTable and CharacterPerks table,
+          // and change schema for both
+          await DatabaseMigrations.migrateToUuids(txn);
         }
-      });
-    });
-    print("DB HELPER - DATABASE INITIALIZED");
+        // if (oldVersion <= 5) {
+        // INSERT RESOURCES ROWS
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceMetal $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceWood $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceArrowVine $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceAxeNut $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceRockRoot $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceFlameFruit $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpseCap $integerType DEFAULT 0');
+        // await txn.rawInsert(
+        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowThistle $integerType DEFAULT 0');
+        // }
+      },
+    );
+  }
+
+  // Future<String> _databasePath() async {
+  //   String databasesPath = await getDatabasesPath();
+  //   return join(
+  //     databasesPath,
+  //     "database.db",
+  //   );
+  // }
+
+  // Future deleteDB() async {
+  //   String path = await _databasePath();
+  //   await deleteDatabase(path);
+  // }
+
+  Future<String> generateBackup() async {
+    Database dbs = await database;
+    List data = [];
+    List<Map<String, dynamic>> listMaps = [];
+
+    for (final String table in tables) {
+      listMaps = await dbs.query(table);
+      data.add(listMaps);
+    }
+
+    List backups = [
+      tables,
+      data,
+    ];
+
+    return convert.jsonEncode(backups);
+  }
+
+  Future<void> restoreBackup(
+    String backup,
+  ) async {
+    var dbs = await database;
+
+    await clearAllTables();
+
+    Batch batch = dbs.batch();
+
+    List json = convert.jsonDecode(backup);
+
+    for (var i = 0; i < json[0].length; i++) {
+      for (var k = 0; k < json[1][i].length; k++) {
+        batch.insert(
+          json[0][i],
+          json[1][i][k],
+        );
+      }
+    }
+
+    await batch.commit(
+      continueOnError: false,
+      noResult: true,
+    );
+  }
+
+  Future clearAllTables() async {
+    try {
+      Database dbs = await database;
+      for (String table in tables) {
+        await dbs.delete(table);
+        await dbs.rawQuery('DELETE FROM sqlite_sequence where name="$table"');
+      }
+    } catch (e) {}
   }
 
   Future<int> insertCharacter(
     Character character,
-    List<bool> selectedPerks,
-    // PersonalGoal personalGoal,
   ) async {
     Database db = await database;
-    int id = await db.insert(tableCharacters, character.toMap());
-    character.id = id;
-    await queryPerks(character.classCode).then((perkList) {
-      db.transaction((txn) async {
-        perkList.asMap().forEach((index, perk) async {
-          if (perk[columnPerkClass] == character.classCode) {
-            await txn.rawInsert(
-                'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${character.id}, ${perk[columnPerkId]}, ${selectedPerks[index] ? 1 : 0})');
-          }
-        });
-      });
-    });
-    // db.transaction((txn) async {
-    //   await insertPersonalGoal(personalGoal, character.id);
-    // });
-    // print("DB HELPER - INSERT CHARACTER: " + character.toMap().toString());
+    int id = await db.insert(
+      tableCharacters,
+      character.toMap(),
+    );
+    final perks = await queryPerks(character.playerClass.classCode);
+    perks.asMap().forEach(
+      (key, perk) async {
+        await db.insert(
+          tableCharacterPerks,
+          {
+            columnAssociatedCharacterUuid: character.uuid,
+            columnAssociatedPerkId: perk[columnPerkId],
+            columnCharacterPerkIsSelected: 0,
+          },
+        );
+      },
+    );
     return id;
   }
-
-  // Future<void> insertPersonalGoal(
-  //   PersonalGoal personalGoal,
-  //   int characterId,
-  //   // List<Map<String, int>> goals,
-  // ) async {
-  //   Database db = await database;
-  //   // int id = await db.insert(tableCharacters, character.toMap());
-  //   // character.id = id;
-  //   // await queryCharacter(characterId).then((character) {
-  //   db.transaction((txn) async {
-  //     await txn.rawInsert(
-  //         'INSERT INTO $tablePersonalGoals ($columnPersonalGoalId, $columnSubGoals, $columnPersonalGoalTitle, $columnRewardClassCode) VALUES (${personalGoal.id}, ${personalGoal.subGoals}, ${personalGoal.title}, ${personalGoal.rewardClassCode})');
-  //     // .asMap().forEach((index, perk) async {
-  //     //   if (perk[columnPerkClass] == character.classCode) {
-  //     //     await txn.rawInsert(
-  //     //         'INSERT INTO $tableCharacterPerks ($columnAssociatedCharacterId, $columnAssociatedPerkId, $columnCharacterPerkIsSelected) VALUES (${character.id}, ${perk[columnPerkId]}, ${selectedPerks[index] ? 1 : 0})');
-  //     //   }
-  //     // });
-  //   });
-  //   // });
-  //   // print("DB HELPER - INSERT CHARACTER: " + character.toMap().toString());
-  //   // return id;
-  // }
 
   Future updateCharacter(
     Character updatedCharacter,
   ) async {
     Database db = await database;
-    await db.update(tableCharacters, updatedCharacter.toMap(),
-        where: '$columnCharacterId = ?', whereArgs: [updatedCharacter.id]);
-    // print("DB HELPER - UPDATE CHARACTER: " + _updatedCharacter.toString());
-  }
-
-  Future<Perk> queryPerk(
-    int id,
-  ) async {
-    Database db = await database;
-    List<Map> maps = await db.query(tablePerks,
-        columns: [columnPerkId, columnPerkClass, columnPerkDetails],
-        where: '$columnPerkId = ?',
-        whereArgs: [id]);
-    if (maps.length > 0) {
-      // print("DB HELPER - QUERY PERK: " + maps.toString());
-      return Perk.fromMap(maps.first);
-    }
-    return null;
+    await db.update(
+      tableCharacters,
+      updatedCharacter.toMap(),
+      where: '$columnCharacterUuid = ?',
+      whereArgs: [updatedCharacter.uuid],
+    );
   }
 
   Future updateCharacterPerk(
@@ -235,26 +257,34 @@ class DatabaseHelper {
   ) async {
     Database db = await database;
     Map<String, dynamic> map = {
-      columnAssociatedCharacterId: perk.associatedCharacterId,
+      columnAssociatedCharacterUuid: perk.associatedCharacterUuid,
       columnAssociatedPerkId: perk.associatedPerkId,
       columnCharacterPerkIsSelected: value ? 1 : 0
     };
-    await db.update(tableCharacterPerks, map,
-        where:
-            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterId = ?',
-        whereArgs: [perk.associatedPerkId, perk.associatedCharacterId]);
-    // print("DB HELPER - UPDATE CHARACTER PERK: " + map.toString());
+    await db.update(
+      tableCharacterPerks,
+      map,
+      where:
+          '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
+      whereArgs: [perk.associatedPerkId, perk.associatedCharacterUuid],
+    );
   }
 
   Future<List<CharacterPerk>> queryCharacterPerks(
-    int characterId,
+    String characterUuid,
   ) async {
     Database db = await database;
     List<CharacterPerk> list = [];
-    List result = await db.query(tableCharacterPerks,
-        where: '$columnAssociatedCharacterId = ?', whereArgs: [characterId]);
-    result.forEach((perk) => list.add(CharacterPerk.fromMap(perk)));
-    // print("DB HELPER - QUERY CHARACTER PERKS: " + list.toString());
+    List result = await db.query(
+      tableCharacterPerks,
+      where: '$columnAssociatedCharacterUuid = ?',
+      whereArgs: [characterUuid],
+    );
+    for (final perk in result) {
+      list.add(
+        CharacterPerk.fromMap(perk),
+      );
+    }
     return list;
   }
 
@@ -262,100 +292,42 @@ class DatabaseHelper {
     String classCode,
   ) async {
     Database db = await database;
-    var result = await db.query(tablePerks,
-        where: '$columnPerkClass = ?', whereArgs: [classCode]);
-    // print("DB HELPER - QUERY PERKS: " + result.toList().toString());
+    var result = await db.query(
+      tablePerks,
+      where: '$columnPerkClass = ?',
+      whereArgs: [classCode],
+    );
     return result.toList();
-  }
-
-  Future<Character> queryCharacter(
-    int id,
-  ) async {
-    Database db = await database;
-    List<Map> maps = await db.query(tableCharacters,
-        columns: [
-          columnCharacterId,
-          columnCharacterName,
-          columnCharacterClassCode,
-          columnCharacterClassColor,
-          columnCharacterClassIcon,
-          columnCharacterClassRace,
-          columnCharacterClassName,
-          columnCharacterXp,
-          columnCharacterGold,
-          columnCharacterNotes,
-          columnCharacterCheckMarks,
-          columnIsRetired
-        ],
-        where: '$columnCharacterId = ?',
-        whereArgs: [id]);
-    if (maps.length > 0) {
-      // print("DB HELPER - QUERY CHARACTER: " +
-      //     Character.fromMap(maps.first).toString());
-      return Character.fromMap(maps.first);
-    }
-    return null;
-  }
-
-  Future<PlayerClass> queryPlayerClass(
-    String _classCode,
-  ) async {
-    Database db = await database;
-    List<Map> maps = await db.query(tablePlayerClass,
-        columns: [
-          columnClassCode,
-          columnClassRace,
-          columnClassName,
-          columnClassIconUrl,
-          columnClassIsLocked,
-          columnClassColor
-        ],
-        where: '$columnClassCode = ?',
-        whereArgs: [_classCode]);
-    if (maps.length > 0) {
-      // print("DB HELPER - QUERY PLAYER CLASS: " +
-      //     PlayerClass.fromMap(maps.first).toString());
-      return PlayerClass.fromMap(maps.first);
-    }
-    return null;
   }
 
   Future<List> queryAllCharacters() async {
     Database db = await database;
-    List<Character> _list = [];
-    // await db.transaction((txn) async {
-    //   await txn.query(tableCharacters);
-    //   await txn.query(tablePlayerClass,
-    //     columns: [
-    //       columnClassCode,
-    //       columnClassRace,
-    //       columnClassName,
-    //       columnClassIconUrl,
-    //       columnClassIsLocked,
-    //       columnClassColor
-    //     ],
-    //     where: '$columnClassCode = ?',
-    //     whereArgs: [_classCode]);
-    // });
+    List<Character> list = [];
     await db.query(tableCharacters).then(
-          (result) => result.forEach(
-            (_character) => _list.add(
-              Character.fromMap(_character),
-            ),
-          ),
-        );
-
-    // print("DB HELPER - QUERY ALL CHARACTERS: " + _list.toString());
-    return _list;
+      (charactersMap) {
+        for (final character in charactersMap) {
+          list.add(
+            Character.fromMap(character),
+          );
+        }
+      },
+    );
+    return list;
   }
 
-  Future deleteCharacter(int _characterId) async {
+  Future deleteCharacter(String characterUuid) async {
     Database db = await database;
     return await db.transaction((txn) async {
-      txn.delete(tableCharacters,
-          where: '$columnCharacterId = ?', whereArgs: [_characterId]);
-      txn.delete(tableCharacterPerks,
-          where: '$columnAssociatedCharacterId = ?', whereArgs: [_characterId]);
+      await txn.delete(
+        tableCharacters,
+        where: '$columnCharacterUuid = ?',
+        whereArgs: [characterUuid],
+      );
+      await txn.delete(
+        tableCharacterPerks,
+        where: '$columnAssociatedCharacterUuid = ?',
+        whereArgs: [characterUuid],
+      );
     });
   }
 }

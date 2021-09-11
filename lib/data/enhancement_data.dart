@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+
+import '../models/enhancement.dart';
+import '../shared_prefs.dart';
 import 'constants.dart';
 
 enum EnhancementCategory {

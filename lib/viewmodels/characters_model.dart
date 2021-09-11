@@ -1,11 +1,11 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-// import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:uuid/uuid.dart';
+import '../data/character_data.dart';
+import '../data/database_helpers.dart';
+import '../models/character.dart';
+import '../models/player_class.dart';
+import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
   List<Character> _characters = [];
@@ -28,47 +28,24 @@ class CharactersModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Character get currentCharacter => _currentCharacter;
-
-  // setCurrentCharacter(int index) {
-
-  // }
-
   Future<void> createCharacter(
     BuildContext context,
     String name,
-    PlayerClass selectedClass,
-    int initialLevel,
-    int previousRetirements,
-    // PersonalGoal personalGoal,
-  ) async {
-    Character character = Character();
-    List<bool> perks = [];
-    CharacterData.perks.forEach((perk) {
-      if (perk.perkClassCode == selectedClass.classCode) {
-        for (var x = 0; x < perk.numOfPerks; x++) {
-          perks.add(false);
-        }
-      }
-    });
-    character
-      ..name = name
-      ..classCode = selectedClass.classCode
-      ..classColor = selectedClass.classColor
-      ..classIcon = selectedClass.classIconUrl
-      ..classRace = selectedClass.race
-      ..className = selectedClass.className
-      ..previousRetirements = previousRetirements
-      ..xp = initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0
-      ..gold = 15 * (initialLevel + 1)
-      ..notes = 'Items, reminders, wishlist...'
-      ..checkMarks = 0
-      ..isRetired = false
-      ..id = await databaseHelper.insertCharacter(
-        character,
-        perks,
-        // personalGoal,
-      );
+    PlayerClass selectedClass, {
+    int initialLevel = 1,
+    int previousRetirements = 0,
+  }) async {
+    Character character = Character(
+      uuid: Uuid().v1(),
+      name: name,
+      playerClass: selectedClass,
+      previousRetirements: previousRetirements,
+      xp: initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0,
+      gold: 15 * (initialLevel + 1),
+    );
+    character.id = await databaseHelper.insertCharacter(
+      character,
+    );
     characters.add(character);
     if (characters.length > 1) {
       pageController.animateToPage(
@@ -86,14 +63,13 @@ class CharactersModel with ChangeNotifier {
 
   Future<void> deleteCharacter(
     BuildContext context,
-    int id,
+    String uuid,
   ) async {
     int position = characters.indexOf(
-      characters.firstWhere((element) => element.id == id),
+      characters.firstWhere((element) => element.uuid == uuid),
     );
-    await databaseHelper.deleteCharacter(id);
-    characters.removeWhere((element) => element.id == id);
-    // print('POSITION IN DELETE IS::::: $position');
+    await databaseHelper.deleteCharacter(uuid);
+    characters.removeWhere((element) => element.uuid == uuid);
     updateCurrentCharacter(
       context,
       index: position,
@@ -116,7 +92,7 @@ class CharactersModel with ChangeNotifier {
       } on RangeError {
         currentCharacter = characters.last;
       }
-      SharedPrefs().themeColor = currentCharacter.classColor;
+      SharedPrefs().themeColor = currentCharacter.playerClass.classColor;
       SharedPrefs().initialPage = characters.indexOf(currentCharacter);
     }
     EasyDynamicTheme.of(context).changeTheme(dynamic: true);

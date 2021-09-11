@@ -4,18 +4,22 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/add_subtract_button.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_section.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import '../../data/constants.dart';
+import '../../data/strings.dart';
+import '../../shared_prefs.dart';
+import '../dialogs/add_subtract_dialog.dart';
+import '../widgets/add_subtract_button.dart';
+import '../widgets/perk_section.dart';
+import '../../viewmodels/character_model.dart';
+import '../dialogs/info_dialog.dart';
+import '../../viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 class CharacterScreen extends StatefulWidget {
+  const CharacterScreen({
+    Key key,
+  }) : super(key: key);
+
   @override
   _CharacterScreenState createState() => _CharacterScreenState();
 }
@@ -73,37 +77,263 @@ class _CharacterScreenState extends State<CharacterScreen>
             padding: const EdgeInsets.symmetric(horizontal: smallPadding),
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: charactersModel.characters.length > 1
-                        ? smallPadding * 2
-                        : smallPadding,
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(
+                //     vertical: charactersModel.characters.length > 1
+                //         ? smallPadding * 2
+                //         : smallPadding,
+                //   ),
+                // ),
                 // RETIREMENTS and POCKET ITEMS
-                RetirementsAndPocketItemsSection(),
+                const RetirementsAndPocketItemsSection(),
                 // NAME and CLASS
-                Padding(
-                  padding: const EdgeInsets.all(smallPadding),
+                const Padding(
+                  padding: EdgeInsets.all(smallPadding),
                   child: NameAndClassSection(),
                 ),
                 // STATS
-                Padding(
-                  padding: const EdgeInsets.all(smallPadding),
+                const Padding(
+                  padding: EdgeInsets.all(smallPadding),
                   child: StatsSection(),
                 ),
+                // RESOURCES
+                /* Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: SharedPrefs().darkTheme
+                          ? Colors.white54
+                          : Colors.black54,
+                    ),
+                    // Make rounded corners
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      onExpansionChanged: (value) =>
+                          SharedPrefs().resourcesExpanded = value,
+                      initiallyExpanded: SharedPrefs().resourcesExpanded,
+                      title: const Text(
+                        'Resources',
+                      ),
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: smallPadding),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Wrap(
+                              runSpacing: smallPadding,
+                              spacing: smallPadding,
+                              alignment: WrapAlignment.spaceEvenly,
+                              children: <Widget>[
+                                ResourceCard(
+                                  resource: CharacterData.resources[0],
+                                  // name: 'Hide',
+                                  // icon: 'images/class_icons/voidwarden.svg',
+                                  count: characterModel.character.resourceHide,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceHide = characterModel
+                                              .character.resourceHide +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceHide = characterModel
+                                              .character.resourceHide -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[1],
+                                  // name: 'Metal',
+                                  // icon: 'images/class_icons/doomstalker.svg',
+                                  count: characterModel.character.resourceMetal,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceMetal = characterModel
+                                              .character.resourceMetal +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceMetal = characterModel
+                                              .character.resourceMetal -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[2],
+                                  // name: 'Wood',
+                                  // icon: 'images/class_icons/soothsinger.svg',
+                                  count: characterModel.character.resourceWood,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceWood = characterModel
+                                              .character.resourceWood +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceWood = characterModel
+                                              .character.resourceWood -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[3],
+                                  // name: 'Arrow Vine',
+                                  // icon: 'images/class_icons/beast_tyrant.svg',
+                                  count: characterModel
+                                      .character.resourceArrowVine,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceArrowVine = characterModel
+                                              .character.resourceArrowVine +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceArrowVine = characterModel
+                                              .character.resourceArrowVine -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[4],
+                                  // name: 'Axe Nut',
+                                  // icon: 'images/class_icons/red_guard.svg',
+                                  count:
+                                      characterModel.character.resourceAxeNut,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceAxeNut = characterModel
+                                              .character.resourceAxeNut +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceAxeNut = characterModel
+                                              .character.resourceAxeNut -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[5],
+                                  // name: 'Rock Root',
+                                  // icon: 'images/class_icons/mirefoot.svg',
+                                  count:
+                                      characterModel.character.resourceRockRoot,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceRockRoot = characterModel
+                                              .character.resourceRockRoot +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceRockRoot = characterModel
+                                              .character.resourceRockRoot -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[6],
+                                  // name: 'Flame Fruit',
+                                  // icon: 'images/class_icons/mirefoot.svg',
+                                  count: characterModel
+                                      .character.resourceFlameFruit,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceFlameFruit = characterModel
+                                              .character.resourceFlameFruit +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceFlameFruit = characterModel
+                                              .character.resourceFlameFruit -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[7],
+                                  // name: 'Corpse Cap',
+                                  // icon: 'images/class_icons/mirefoot.svg',
+                                  count: characterModel
+                                      .character.resourceCorpseCap,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceCorpseCap = characterModel
+                                              .character.resourceCorpseCap +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceCorpseCap = characterModel
+                                              .character.resourceCorpseCap -
+                                          1,
+                                  ),
+                                ),
+                                ResourceCard(
+                                  resource: CharacterData.resources[8],
+                                  // name: 'Snow Thistle',
+                                  // icon: 'images/class_icons/mirefoot.svg',
+                                  count: characterModel
+                                      .character.resourceSnowThistle,
+                                  increaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceSnowThistle = characterModel
+                                              .character.resourceSnowThistle +
+                                          1,
+                                  ),
+                                  decreaseCount: () =>
+                                      characterModel.updateCharacter(
+                                    characterModel.character
+                                      ..resourceSnowThistle = characterModel
+                                              .character.resourceSnowThistle -
+                                          1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ), */
                 // NOTES
                 characterModel.character.notes.isEmpty &&
                         !characterModel.isEditable
                     ? Container()
-                    : Padding(
-                        padding: const EdgeInsets.all(smallPadding),
+                    : const Padding(
+                        padding: EdgeInsets.all(smallPadding),
                         child: NotesSection(),
                       ),
                 // BATTLE GOAL CHECKMARKS
                 characterModel.isEditable
-                    ? Padding(
-                        padding: const EdgeInsets.all(smallPadding),
+                    ? const Padding(
+                        padding: EdgeInsets.all(smallPadding),
                         child: BattleGoalCheckmarksSection(),
                       )
                     : Container(),
@@ -123,6 +353,11 @@ class _CharacterScreenState extends State<CharacterScreen>
         child: FloatingActionButton(
           child: Icon(
             characterModel.isEditable ? Icons.check_rounded : Icons.edit,
+            color: ThemeData.estimateBrightnessForColor(
+                        Theme.of(context).colorScheme.secondary) ==
+                    Brightness.dark
+                ? Colors.white
+                : Colors.black,
           ),
           onPressed: () {
             characterModel.isEditable = !characterModel.isEditable;
@@ -135,6 +370,10 @@ class _CharacterScreenState extends State<CharacterScreen>
 }
 
 class RetirementsAndPocketItemsSection extends StatelessWidget {
+  const RetirementsAndPocketItemsSection({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -172,7 +411,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
             IconButton(
               icon: Icon(
                 Icons.info_outline,
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               onPressed: () => showDialog<void>(
                 context: context,
@@ -187,7 +426,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
           ],
         ),
         Tooltip(
-          message: 'Number of Pocket Items Allowed',
+          message: 'Number of pocket items allowed',
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
@@ -228,6 +467,10 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
 }
 
 class NameAndClassSection extends StatelessWidget {
+  const NameAndClassSection({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -235,6 +478,7 @@ class NameAndClassSection extends StatelessWidget {
       children: <Widget>[
         characterModel.isEditable
             ? TextField(
+                autocorrect: false,
                 onChanged: (String value) {
                   characterModel
                       .updateCharacter(characterModel.character..name = value);
@@ -246,64 +490,24 @@ class NameAndClassSection extends StatelessWidget {
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
               )
-            :
-            // Row(
-            //     mainAxisSize: MainAxisSize.min,
-            //     children: [
-            // GestureDetector(
-            //   onTap: () => showDialog(
-            //       context: context,
-            //       builder: (_) {
-            //         return
-            //         SimpleDialog(
-            //           contentPadding: EdgeInsets.all(0),
-            //           children: [
-            //             Image.asset(
-            //                 'images/class_mats/front/${characterModel.character.classCode.toLowerCase()}.png'),
-            //             // SizedBox(
-            //             //   height: smallPadding,
-            //             // ),
-            //             Image.asset(
-            //                 'images/class_mats/back/${characterModel.character.classCode.toLowerCase()}.png'),
-            //           ],
-            //         );
-            //       }),
-            //   child:
-            // CircleAvatar(
-            //   child: Image.asset(
-            //       'images/class_images/${characterModel.character.classCode.toLowerCase()}.png'),
-            // ),
-            // ),
-            // SizedBox(
-            //   width: smallPadding,
-            // ),
-            AutoSizeText(
+            : AutoSizeText(
                 characterModel.character.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.headline3,
                 textAlign: TextAlign.center,
               ),
-        //   ],
-        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Stack(
               alignment: const Alignment(0, 0.75),
               children: <Widget>[
-                // Positioned(
-                //   // bottom: smallPadding + 3,
-                //   child:
                 SvgPicture.asset(
                   'images/level.svg',
                   width: iconSize * 1.5,
                   color:
                       SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                 ),
-                // ),
-                // Positioned(
-                //   // top: smallPadding + 3,
-                //   child:
                 Text(
                   '${characterModel.currentLevel}',
                   style: TextStyle(
@@ -312,7 +516,6 @@ class NameAndClassSection extends StatelessWidget {
                     fontSize: titleFontSize - 5,
                     fontFamily: pirataOne,
                   ),
-                  // ),
                 )
               ],
             ),
@@ -321,7 +524,7 @@ class NameAndClassSection extends StatelessWidget {
             ),
             Flexible(
               child: AutoSizeText(
-                '${characterModel.character.classRace} ${characterModel.character.className}',
+                '${characterModel.character.playerClass.race} ${characterModel.character.playerClass.className}',
                 maxLines: 1,
                 style: const TextStyle(fontSize: titleFontSize),
               ),
@@ -334,6 +537,10 @@ class NameAndClassSection extends StatelessWidget {
 }
 
 class StatsSection extends StatelessWidget {
+  const StatsSection({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -486,6 +693,10 @@ class StatsSection extends StatelessWidget {
 }
 
 class NotesSection extends StatelessWidget {
+  const NotesSection({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -524,6 +735,10 @@ class NotesSection extends StatelessWidget {
 }
 
 class BattleGoalCheckmarksSection extends StatelessWidget {
+  const BattleGoalCheckmarksSection({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
@@ -543,7 +758,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: IconButton(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                 icon: const Icon(
                   FontAwesomeIcons.minus,
@@ -561,7 +776,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
               maintainAnimation: true,
               maintainState: true,
               child: IconButton(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                 icon: const Icon(
                   FontAwesomeIcons.plus,

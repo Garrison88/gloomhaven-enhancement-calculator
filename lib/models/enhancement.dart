@@ -1,4 +1,4 @@
-import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
+import '../data/enhancement_data.dart';
 
 class Enhancement {
   final EnhancementCategory category;

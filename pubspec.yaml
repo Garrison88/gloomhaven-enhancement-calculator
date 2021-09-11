@@ -7,7 +7,7 @@ description: Character sheet and enhancement calculator
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 3.2.1+69
+version: 3.2.5+76
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -15,18 +15,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.5
+  shared_preferences: ^2.0.7
   url_launcher: ^6.0.2
   easy_dynamic_theme: ^2.0.0
   auto_size_text: ^2.1.0
   sqflite: ^2.0.0
   path_provider: ^2.0.1
   provider: ^5.0.0
-  page_indicator: ^0.4.1
-  font_awesome_flutter: ^9.0.0
+  font_awesome_flutter: ^9.1.0
   flutter_svg: ^0.21.0-nullsafety.0
   flutter_svg_provider: 0.1.9-nullsafety.0
   image: ^3.0.2
+  share_plus: ^2.1.4
+  file_picker: ^4.0.1
+  intl: ^0.17.0
+  flutter_phoenix: ^0.1.0
+  smooth_page_indicator: ^1.0.0+2
+  permission_handler: ^8.1.4+2
+  uuid: ^3.0.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,12 +66,11 @@ flutter:
   assets:
     # - icons/
     - images/
-    - images/class_icons/
-    # - images/class_images/
-    # - images/class_mats/back/
-    # - images/class_mats/front/
-    - images/equipment_slots/
     - images/attack_modifiers/
+    - images/class_icons/
+    # - images/elements/
+    - images/equipment_slots/
+    # - images/status_effects/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

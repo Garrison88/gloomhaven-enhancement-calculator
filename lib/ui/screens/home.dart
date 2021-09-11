@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
 import 'package:provider/provider.dart';
 
-class BottomNav extends StatefulWidget {
+import '../../data/constants.dart';
+import '../../viewmodels/characters_model.dart';
+import '../dialogs/create_character_dialog.dart';
+import 'characters_screen.dart';
+import 'enhancement_calculator_page.dart';
+import 'settings_screen.dart';
+
+class Home extends StatefulWidget {
+  const Home({
+    Key key,
+  }) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => BottomNavState();
+  State<StatefulWidget> createState() => HomeState();
 }
 
-class BottomNavState extends State<BottomNav> {
+class HomeState extends State<Home> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageController _pageController = PageController();
   int _page = 0;
@@ -43,18 +48,32 @@ class BottomNavState extends State<BottomNav> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Gloomhaven Companion',
           style: TextStyle(
             fontSize: 25.0,
+            color: ThemeData.estimateBrightnessForColor(
+                            Theme.of(context).colorScheme.secondary) ==
+                        Brightness.dark ||
+                    Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
           ),
         ),
         actions: <Widget>[
           if (_page == 0)
             Provider.of<CharactersModel>(context).isEditMode
                 ? IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete,
+                      color: ThemeData.estimateBrightnessForColor(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .secondary) ==
+                                  Brightness.dark ||
+                              Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
                     ),
                     onPressed: () async {
                       await showDialog<bool>(
@@ -92,14 +111,24 @@ class BottomNavState extends State<BottomNav> {
                         if (result) {
                           await charactersModel.deleteCharacter(
                             context,
-                            charactersModel.currentCharacter.id,
+                            charactersModel.currentCharacter.uuid,
                           );
                         }
                       });
                     },
                   )
                 : IconButton(
-                    icon: const Icon(Icons.person_add),
+                    icon: Icon(
+                      Icons.person_add,
+                      color: ThemeData.estimateBrightnessForColor(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .secondary) ==
+                                  Brightness.dark ||
+                              Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                     onPressed: () async {
                       await showDialog<bool>(
                         barrierDismissible: false,
@@ -113,11 +142,22 @@ class BottomNavState extends State<BottomNav> {
                     },
                   ),
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingsScreen()),
-            ).then((_) => setState(() {})),
+            icon: Icon(
+              Icons.settings,
+              color: ThemeData.estimateBrightnessForColor(
+                              Theme.of(context).colorScheme.secondary) ==
+                          Brightness.dark ||
+                      Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+              setState(() {});
+            },
           ),
         ],
       ),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
+import '../../data/constants.dart';
+import '../../models/perk.dart';
+import 'perk_row.dart';
+import '../../viewmodels/character_model.dart';
 
 class PerkSection extends StatefulWidget {
   final CharacterModel characterModel;
@@ -29,20 +27,24 @@ class PerkSectionState extends State<PerkSection> {
 
   @override
   void didUpdateWidget(covariant PerkSection oldWidget) {
-    if (oldWidget.characterModel.character.id !=
-        widget.characterModel.character.id) {
+    if (oldWidget.characterModel.character.uuid !=
+        widget.characterModel.character.uuid) {
       _loadData();
     }
     super.didUpdateWidget(oldWidget);
   }
 
   void _loadData() {
-    _futures = Future.wait([
-      widget.characterModel
-          .loadCharacterPerks(widget.characterModel.character.id),
-      widget.characterModel
-          .loadPerks(widget.characterModel.character.classCode.toLowerCase()),
-    ]);
+    _futures = Future.wait(
+      [
+        widget.characterModel.loadCharacterPerks(
+          widget.characterModel.character.uuid,
+        ),
+        widget.characterModel.loadPerks(
+          widget.characterModel.character.playerClass.classCode.toLowerCase(),
+        ),
+      ],
+    );
   }
 
   @override
@@ -59,13 +61,12 @@ class PerkSectionState extends State<PerkSection> {
             snapshot.hasData) {
           widget.characterModel.characterPerks = snapshot.data[0];
           int temp = 0;
-          snapshot.data[0].forEach((element) {
-            if (element.characterPerkIsSelected) {
+          for (final perk in snapshot.data[0]) {
+            if (perk.characterPerkIsSelected) {
               temp++;
             }
-          });
+          }
           widget.characterModel.numOfSelectedPerks = temp;
-
           List<PerkRow> perkRows = [];
           List<Perk> perkRowPerks = [];
           List<Perk> perks = [];
@@ -95,9 +96,11 @@ class PerkSectionState extends State<PerkSection> {
               details = perk.perkDetails;
             }
           }
-          perkRows.add(PerkRow(
-            perks: perkRowPerks,
-          ));
+          perkRows.add(
+            PerkRow(
+              perks: perkRowPerks,
+            ),
+          );
 
           return Column(
             children: <Widget>[
@@ -110,15 +113,11 @@ class PerkSectionState extends State<PerkSection> {
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Text(
-                    '${Provider.of<CharacterModel>(context).numOfSelectedPerks}',
+                    '${widget.characterModel.numOfSelectedPerks}',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headline4.copyWith(
-                        color: widget.characterModel.maximumPerks >=
-                                widget.characterModel.numOfSelectedPerks
-                            ? SharedPrefs().darkTheme
-                                ? Colors.white
-                                : Colors.black87
-                            : Colors.red),
+                          color: widget.characterModel.numOfSelectedPerksColor,
+                        ),
                   ),
                   Text(
                     ' / ${widget.characterModel.maximumPerks})',

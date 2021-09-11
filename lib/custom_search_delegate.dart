@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'data/constants.dart';
+import 'models/player_class.dart';
+import 'shared_prefs.dart';
+import 'data/character_data.dart';
 
 class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   CustomSearchDelegate(
@@ -82,8 +82,10 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         if ((!SharedPrefs().envelopeX &&
                 widget.suggestions[index].classCode == 'bs') ||
             !SharedPrefs().customClasses &&
-                widget.suggestions[index].classCategory ==
-                    ClassCategory.custom) {
+                (widget.suggestions[index].classCategory ==
+                        ClassCategory.custom ||
+                    widget.suggestions[index].classCategory ==
+                        ClassCategory.crimsonScales)) {
           return Container();
         } else {
           return const Divider(
@@ -98,12 +100,16 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         final String suggestion = widget.suggestions[index].locked
             ? '???'
             : widget.suggestions[index].className;
-        if (!SharedPrefs().envelopeX &&
-            widget.suggestions[index].classCode == 'bs') {
+        if ((!SharedPrefs().envelopeX &&
+                widget.suggestions[index].classCode == 'bs') ||
+            !SharedPrefs().customClasses &&
+                (widget.suggestions[index].classCategory ==
+                        ClassCategory.custom ||
+                    widget.suggestions[index].classCategory ==
+                        ClassCategory.crimsonScales)) {
           return Container();
-        } else if (!SharedPrefs().customClasses &&
-            widget.suggestions[index].classCategory == ClassCategory.custom) {
-          return Container();
+          // } else if () {
+          //   return Container();
         } else {
           return ListTile(
             // TODO: show visibility icon to show name?

@@ -1,30 +1,29 @@
-// database table and column names
 const String tableCharacterPerks = 'CharacterPerks';
-const String columnAssociatedCharacterId = 'CharacterID';
+const String columnAssociatedCharacterUuid = 'CharacterUuid';
 const String columnAssociatedPerkId = 'PerkID';
 const String columnCharacterPerkIsSelected = 'IsSelected';
 
-// data model class
 class CharacterPerk {
-  int associatedCharacterId;
+  String associatedCharacterUuid;
   int associatedPerkId;
   bool characterPerkIsSelected = false;
 
-  CharacterPerk(this.associatedCharacterId, this.associatedPerkId,
-      this.characterPerkIsSelected);
+  CharacterPerk(
+    this.associatedCharacterUuid,
+    this.associatedPerkId,
+    this.characterPerkIsSelected,
+  );
 
-  // convenience constructor to create a CharacterPerk object
   CharacterPerk.fromMap(Map<String, dynamic> map) {
-    associatedCharacterId = map[columnAssociatedCharacterId];
+    associatedCharacterUuid = map[columnAssociatedCharacterUuid];
     associatedPerkId = map[columnAssociatedPerkId];
     characterPerkIsSelected =
         map[columnCharacterPerkIsSelected] == 1 ? true : false;
   }
 
-  // convenience method to create a Map from this CharacterPerk object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      columnAssociatedCharacterId: associatedCharacterId,
+      columnAssociatedCharacterUuid: associatedCharacterUuid,
       columnAssociatedPerkId: associatedPerkId,
       columnCharacterPerkIsSelected: characterPerkIsSelected ? 1 : 0
     };

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import '../data/character_data.dart';
+import '../data/database_helpers.dart';
+import '../models/character.dart';
+import '../models/character_perk.dart';
+import '../shared_prefs.dart';
 
 class CharacterModel with ChangeNotifier {
   bool _isEditable = false;
@@ -60,6 +60,14 @@ class CharacterModel with ChangeNotifier {
           : character.checkMarks % 3
       : 0;
 
+  Color get numOfSelectedPerksColor {
+    return maximumPerks >= numOfSelectedPerks
+        ? SharedPrefs().darkTheme
+            ? Colors.white
+            : Colors.black87
+        : Colors.red;
+  }
+
   increaseCheckmark() {
     if (character.checkMarks < 18) {
       updateCharacter(character..checkMarks = character.checkMarks + 1);
@@ -74,11 +82,9 @@ class CharacterModel with ChangeNotifier {
     }
   }
 
-  Future<List> loadCharacterPerks(int id) async {
-    print('LOAD CHARACTER PERKS');
+  Future<List<CharacterPerk>> loadCharacterPerks(String id) async {
     characterPerks =
-        await DatabaseHelper.instance.queryCharacterPerks(character.id);
-    // notifyListeners();
+        await DatabaseHelper.instance.queryCharacterPerks(character.uuid);
     return characterPerks;
   }
 
@@ -96,8 +102,6 @@ class CharacterModel with ChangeNotifier {
     notifyListeners();
     return value;
   }
-
-  Future<Perk> loadPerk(int perkId) async => await db.queryPerk(perkId);
 
   Future<List> loadPerks(String characterCode) async =>
       await db.queryPerks(characterCode);

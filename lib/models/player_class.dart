@@ -1,6 +1,7 @@
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import '../data/character_data.dart';
 
 const String tablePlayerClass = 'PlayerClassTable';
+
 const String columnClassCode = '_Code';
 const String columnClassRace = 'Race';
 const String columnClassName = 'Name';
@@ -17,15 +18,15 @@ class PlayerClass {
   bool locked;
   String classColor;
 
-  PlayerClass(
+  PlayerClass({
     this.race,
     this.className,
     this.classCode,
     this.classIconUrl,
-    this.classCategory,
-    this.locked,
+    this.classCategory = ClassCategory.gloomhaven,
+    this.locked = true,
     this.classColor,
-  );
+  });
 
   // convenience constructor to create a PlayerClass object
   PlayerClass.fromMap(Map<String, dynamic> map) {

@@ -65,6 +65,13 @@ class SharedPrefs {
     _sharedPrefs.setInt('initialPage', value);
   }
 
+  bool get resourcesExpanded =>
+      _sharedPrefs.getBool('resourcesExpanded') ?? false;
+
+  set resourcesExpanded(bool value) {
+    _sharedPrefs.setBool('resourcesExpanded', value);
+  }
+
   // int get bottomNavInitialPage =>
   //     _sharedPrefs.getInt('bottomNavInitialPage') ?? 0;
 
@@ -109,5 +116,11 @@ class SharedPrefs {
 
   set enhancementCost(int value) {
     _sharedPrefs.setInt('enhancementCost', value);
+  }
+
+  String get backup => _sharedPrefs.getString('backup') ?? '';
+
+  set backup(String value) {
+    _sharedPrefs.setString('backup', value);
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:gloomhaven_enhancement_calc/models/goal.dart';
+import 'goal.dart';
 
 const String tablePersonalGoals = 'PersonalGoals';
 const String columnPersonalGoalId = 'ID';

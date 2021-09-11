@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
+
+import '../../data/constants.dart';
+import '../../models/perk.dart';
+import '../../shared_prefs.dart';
+import '../../utils/utils.dart';
+import '../../viewmodels/character_model.dart';
 
 class PerkRow extends StatefulWidget {
   final List<Perk> perks;
 
-  PerkRow({
-    this.perks,
-  });
+  const PerkRow({
+    Key key,
+    @required this.perks,
+  }) : super(key: key);
 
   @override
   _PerkRowState createState() => _PerkRowState();
@@ -33,37 +35,79 @@ class _PerkRowState extends State<PerkRow> {
       padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
       child: Row(
         children: <Widget>[
-          Row(
-            children: List.generate(
-              widget.perks.length,
-              (index) => Checkbox(
-                visualDensity: VisualDensity.comfortable,
-                value: characterModel.characterPerks
-                    .firstWhere((element) =>
-                        element.associatedPerkId == widget.perks[index].perkId)
-                    .characterPerkIsSelected,
-                onChanged: characterModel.isEditable
-                    ? (value) => characterModel.togglePerk(
-                          characterModel.characterPerks.firstWhere((element) =>
+          widget.perks[0].perkIsGrouped
+              ? Card(
+                  color: allPerksSelected(characterModel)
+                      ? Theme.of(context).colorScheme.secondary.withOpacity(0.5)
+                      : null,
+                  child: Column(
+                    children: List.generate(
+                      widget.perks.length,
+                      (index) => Checkbox(
+                        visualDensity: VisualDensity.comfortable,
+                        value: characterModel.characterPerks
+                            .firstWhere(
+                              (element) =>
+                                  element.associatedPerkId ==
+                                  widget.perks[index].perkId,
+                            )
+                            .characterPerkIsSelected,
+                        onChanged: characterModel.isEditable
+                            ? (value) => characterModel.togglePerk(
+                                  characterModel.characterPerks.firstWhere(
+                                    (element) =>
+                                        element.associatedPerkId ==
+                                        widget.perks[index].perkId,
+                                  ),
+                                  value,
+                                )
+                            : null,
+                      ),
+                    ),
+                  ),
+                )
+              : Row(
+                  children: List.generate(
+                    widget.perks.length,
+                    (index) => Checkbox(
+                      visualDensity: VisualDensity.comfortable,
+                      value: characterModel.characterPerks
+                          .firstWhere((element) =>
                               element.associatedPerkId ==
-                              widget.perks[index].perkId),
-                          value,
-                        )
-                    : null,
-              ),
-            ),
-          ),
-          Container(
-            height: height,
-            width: 1,
-            color: characterModel.characterPerks
-                    .where((element) =>
-                        _perkIds.contains(element.associatedPerkId))
-                    .every((element) => element.characterPerkIsSelected)
-                ? Theme.of(context).accentColor
-                : Colors.grey,
-            margin: const EdgeInsets.only(right: 10),
-          ),
+                              widget.perks[index].perkId)
+                          .characterPerkIsSelected,
+                      onChanged: characterModel.isEditable
+                          ? (value) => characterModel.togglePerk(
+                                characterModel.characterPerks.firstWhere(
+                                    (element) =>
+                                        element.associatedPerkId ==
+                                        widget.perks[index].perkId),
+                                value,
+                              )
+                          : null,
+                    ),
+                  ),
+                ),
+          widget.perks[0].perkIsGrouped
+              ? const SizedBox(
+                  width: smallPadding,
+                )
+              // : Container(
+              //     height: height,
+              //     child: VerticalDivider(
+              //       color: allPerksSelected(characterModel)
+              //           ? Theme.of(context).colorScheme.secondary
+              //           : null,
+              //     ),
+              //   ),
+              : Container(
+                  height: height,
+                  width: 1,
+                  color: allPerksSelected(characterModel)
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).dividerColor,
+                  margin: const EdgeInsets.only(right: 12),
+                ),
           SizeProviderWidget(
             onChildSize: (val) {
               setState(() {
@@ -89,6 +133,14 @@ class _PerkRowState extends State<PerkRow> {
         ],
       ),
     );
+  }
+
+  bool allPerksSelected(
+    CharacterModel characterModel,
+  ) {
+    return characterModel.characterPerks
+        .where((element) => _perkIds.contains(element.associatedPerkId))
+        .every((element) => element.characterPerkIsSelected);
   }
 }
 
