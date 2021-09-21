@@ -30,6 +30,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       TextEditingController();
   final TextEditingController _previousRetirementsTextFieldController =
       TextEditingController();
+  final List<int> _levels = List.generate(9, (index) => index + 1);
 
   @override
   void initState() {
@@ -48,8 +49,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     _previousRetirementsTextFieldController.dispose();
     super.dispose();
   }
-
-  final List<int> _levels = List.generate(9, (index) => index + 1);
 
   // PersonalGoal _personalGoal;
 

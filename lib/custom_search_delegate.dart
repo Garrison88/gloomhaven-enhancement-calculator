@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
@@ -73,8 +74,6 @@ class _WordSuggestionList extends StatefulWidget {
 }
 
 class __WordSuggestionListState extends State<_WordSuggestionList> {
-  // bool showHidden = false;
-
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -108,28 +107,37 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                     widget.suggestions[index].classCategory ==
                         ClassCategory.crimsonScales)) {
           return Container();
-          // } else if () {
-          //   return Container();
         } else {
-          return ListTile(
-            // TODO: show visibility icon to show name?
-            // trailing: widget.suggestions[i].locked
-            //     ? IconButton(
-            //         onPressed: () => setState(() => showHidden = !showHidden),
-            //         icon: Icon(
-            //             showHidden ? Icons.visibility : Icons.visibility_off))
-            //     : null,
-            leading: SvgPicture.asset(
-              'images/class_icons/${widget.suggestions[index].classIconUrl}',
-              width: iconSize + 5,
-              height: iconSize + 5,
-              color: Color(int.parse(widget.suggestions[index].classColor)),
-            ),
-            title: Text(suggestion),
-            onTap: () {
-              Navigator.pop<PlayerClass>(context, widget.suggestions[index]);
-            },
-          );
+          bool showHidden = false;
+          return StatefulBuilder(builder: (thisLowerContext, innerSetState) {
+            return ListTile(
+              trailing: widget.suggestions[index].locked
+                  ? IconButton(
+                      onPressed: () {
+                        innerSetState(() {
+                          showHidden = !showHidden;
+                        });
+                      },
+                      icon: Icon(
+                        showHidden ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : null,
+              leading: SvgPicture.asset(
+                'images/class_icons/${widget.suggestions[index].classIconUrl}',
+                width: iconSize + 5,
+                height: iconSize + 5,
+                color: Color(int.parse(widget.suggestions[index].classColor)),
+              ),
+              title: Text(showHidden
+                  ? widget.suggestions[index].className
+                  : suggestion),
+              onTap: () {
+                Navigator.pop<PlayerClass>(context, widget.suggestions[index]);
+              },
+            );
+          });
         }
       },
     );

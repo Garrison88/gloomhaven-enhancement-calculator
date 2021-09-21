@@ -92,9 +92,9 @@ class SharedPrefs {
     _sharedPrefs.setInt('enhancementsOnTargetAction', value);
   }
 
-  int get enhancementType => _sharedPrefs.getInt('enhancementType') ?? 0;
+  int get enhancementTypeIndex => _sharedPrefs.getInt('enhancementType') ?? 0;
 
-  set enhancementType(int value) {
+  set enhancementTypeIndex(int value) {
     _sharedPrefs.setInt('enhancementType', value);
   }
 

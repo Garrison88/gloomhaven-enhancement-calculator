@@ -251,10 +251,11 @@ class Utils {
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child: Tooltip(
-              message: element.toLowerCase(),
+              message:
+                  element.toLowerCase().replaceAll(RegExp('[\\"|\\,]'), ''),
               child: SizedBox(
-                height: iconSize - 5,
-                width: iconSize - 5,
+                height: iconSize - 2.5,
+                width: iconSize - 2.5,
                 child: invertColor && darkTheme
                     ? assetPath.contains('.svg')
                         ? SvgPicture.asset(

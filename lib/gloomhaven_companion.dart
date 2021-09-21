@@ -78,17 +78,24 @@ class GloomhavenCompanion extends StatelessWidget {
       home: Home(),
       themeMode: EasyDynamicTheme.of(context).themeMode,
       theme: theme.copyWith(
+        iconTheme: IconThemeData(
+          color: Color(
+            int.parse(
+              SharedPrefs().themeColor,
+            ),
+          ),
+        ),
         colorScheme: theme.colorScheme.copyWith(
           primary: Color(
             int.parse(
               SharedPrefs().themeColor,
             ),
-          ).withOpacity(SharedPrefs().darkTheme ? 0.75 : 1.0),
+          ),
           secondary: Color(
             int.parse(
               SharedPrefs().themeColor,
             ),
-          ).withOpacity(SharedPrefs().darkTheme ? 0.75 : 1.0),
+          ),
         ),
         checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.resolveWith(getCheckboxColor),

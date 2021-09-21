@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/constants.dart';
 import '../../viewmodels/characters_model.dart';
 import '../dialogs/create_character_dialog.dart';
 import 'characters_screen.dart';
@@ -48,19 +47,22 @@ class HomeState extends State<Home> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(
-          'Gloomhaven Companion',
-          style: TextStyle(
-            fontSize: 25.0,
-            color: ThemeData.estimateBrightnessForColor(
-                            Theme.of(context).colorScheme.secondary) ==
-                        Brightness.dark ||
-                    Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Text(
+            'Gloomhaven Companion',
+            style: TextStyle(
+              fontSize: 25.0,
+              color: ThemeData.estimateBrightnessForColor(
+                              Theme.of(context).colorScheme.secondary) ==
+                          Brightness.dark ||
+                      Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
           ),
         ),
-        actions: <Widget>[
+        actions: <IconButton>[
           if (_page == 0)
             Provider.of<CharactersModel>(context).isEditMode
                 ? IconButton(
@@ -142,8 +144,10 @@ class HomeState extends State<Home> {
                     },
                   ),
           IconButton(
-            icon: Icon(
-              Icons.settings,
+            icon: SvgPicture.asset(
+              'images/class_icons/tinkerer.svg',
+              width: 20,
+              height: 20,
               color: ThemeData.estimateBrightnessForColor(
                               Theme.of(context).colorScheme.secondary) ==
                           Brightness.dark ||
@@ -172,19 +176,24 @@ class HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(bottom: smallPadding),
-              child: Icon(FontAwesomeIcons.scroll),
+            icon: Icon(
+              Icons.history_edu_rounded,
             ),
             label: 'CHARACTERS',
+            activeIcon: Icon(
+              Icons.history_edu_rounded,
+              size: 30,
+            ),
           ),
           BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(bottom: smallPadding),
-              child: Icon(FontAwesomeIcons.calculator),
-            ),
-            label: 'CALCULATOR',
-          ),
+              icon: Icon(
+                Icons.auto_awesome_outlined,
+              ),
+              label: 'ENHANCEMENTS',
+              activeIcon: Icon(
+                Icons.auto_awesome,
+                size: 30,
+              )),
         ],
         onTap: _navigationTapped,
         currentIndex: _page,

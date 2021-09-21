@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../data/constants.dart';
 import '../../models/character.dart';
 import '../../shared_prefs.dart';
@@ -72,8 +71,10 @@ class _CharactersScreenState extends State<CharactersScreen> {
                         ),
                         IconButton(
                           iconSize: MediaQuery.of(context).size.width / 2,
-                          icon: Icon(FontAwesomeIcons.plusCircle,
-                              size: MediaQuery.of(context).size.width / 2),
+                          icon: Icon(
+                            Icons.add_circle,
+                            size: MediaQuery.of(context).size.width / 2,
+                          ),
                           onPressed: () async {
                             await showDialog<bool>(
                               barrierDismissible: false,
@@ -102,16 +103,16 @@ class _CharactersScreenState extends State<CharactersScreen> {
                 snapshot.data.length > 1
                     ? Padding(
                         padding: const EdgeInsets.only(
-                          top: 16,
-                          bottom: 6,
+                          top: 10,
+                          bottom: 8,
                         ),
                         child: SmoothPageIndicator(
                           controller: charactersModel.pageController,
                           count: charactersModel.characters.length,
                           effect: ScrollingDotsEffect(
                             dotColor: Colors.grey.withOpacity(0.5),
-                            dotHeight: 12,
-                            dotWidth: 12,
+                            dotHeight: 10,
+                            dotWidth: 10,
                             activeDotColor: Color(
                               int.parse(
                                 charactersModel

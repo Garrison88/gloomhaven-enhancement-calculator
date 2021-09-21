@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../data/constants.dart';
 
 class AddSubtractDialog extends StatefulWidget {
@@ -29,7 +28,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.all(smallPadding),
+              padding: const EdgeInsets.all(smallPadding),
               child: Text(
                   'Enter a value, then tap the minus button to subtract it from your current ${widget.hintText}, or the plus button to add it to your current ${widget.hintText}'),
             ),
@@ -38,7 +37,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                 Expanded(
                   child: IconButton(
                     icon: const Icon(
-                      FontAwesomeIcons.minus,
+                      Icons.remove_circle,
                     ),
                     onPressed: _addSubtractTextEditingController.text.isNotEmpty
                         ? () => Navigator.pop(
@@ -68,13 +67,12 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                     style: Theme.of(context).textTheme.bodyText2.copyWith(
                           fontSize: titleFontSize,
                         ),
-                    // textAlign: TextAlign.center,
                   ),
                 ),
                 Expanded(
                   child: IconButton(
                     icon: const Icon(
-                      FontAwesomeIcons.plus,
+                      Icons.add_circle,
                     ),
                     onPressed: _addSubtractTextEditingController.text.isNotEmpty
                         ? () => Navigator.pop(

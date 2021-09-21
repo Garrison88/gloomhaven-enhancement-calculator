@@ -13,7 +13,7 @@ enum ClassCategory {
   custom,
 }
 
-class CharacterData {
+abstract class CharacterData {
   static final List<PlayerClass> playerClasses = [
     PlayerClass(
       race: 'Inox',
@@ -661,7 +661,7 @@ class CharacterData {
     Perk('bp', 3,
         'Replace one -1 card with one +0 "Consume_Any_Element to add +2 ATTACK" card'),
     Perk('bp', 1,
-        'Replace one -2 card with one +2 "Recover one random card from your discard pile" card'),
+        'Replace one -2 card with one -2 "Recover one random card from your discard pile" card'),
     Perk('bp', 2,
         'Replace two +0 cards with one +1 "HEAL 1, Affect one ally within Range 2" card'),
     Perk('bp', 1,
@@ -732,7 +732,7 @@ class CharacterData {
         'Replace one -1 card with one Rolling +1 VOID card and one Rolling -1 CURSE card'),
     Perk('hp', 2, 'Replace two +1 cards with one +3 "REGENERATE, Self" card'),
     Perk('hp', 2,
-        'Replace one +0 card with one +1 "Create a VOID pit in an empty hex within Range 2" card'),
+        'Replace one +0 card with one +1 "Create a Void pit in an empty hex within Range 2" card'),
     Perk('hp', 1,
         'Ignore negative SCENARIO effects and add one +0 "WARD, Self" card'),
     // MIREFOOT

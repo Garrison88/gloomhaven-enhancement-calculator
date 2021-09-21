@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../data/constants.dart';
 import '../../data/strings.dart';
 import '../../shared_prefs.dart';
@@ -352,7 +351,7 @@ class _CharacterScreenState extends State<CharacterScreen>
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           child: Icon(
-            characterModel.isEditable ? Icons.check_rounded : Icons.edit,
+            characterModel.isEditable ? Icons.check : Icons.edit,
             color: ThemeData.estimateBrightnessForColor(
                         Theme.of(context).colorScheme.secondary) ==
                     Brightness.dark
@@ -409,9 +408,8 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                     ),
             ),
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.info_outline,
-                color: Theme.of(context).colorScheme.secondary,
               ),
               onPressed: () => showDialog<void>(
                 context: context,
@@ -580,8 +578,9 @@ class StatsSection extends StatelessWidget {
                             keyboardType: TextInputType.number,
                           ),
                         ),
-                        AddSubtractButton(
-                          onTap: () async => await showDialog<int>(
+                        IconButton(
+                          icon: const Icon(Icons.exposure),
+                          onPressed: () async => await showDialog<int>(
                               context: context,
                               builder: (_) => AddSubtractDialog(
                                     characterModel.character.xp,
@@ -596,6 +595,22 @@ class StatsSection extends StatelessWidget {
                             }
                           }),
                         ),
+                        // AddSubtractButton(
+                        //   onTap: () async => await showDialog<int>(
+                        //       context: context,
+                        //       builder: (_) => AddSubtractDialog(
+                        //             characterModel.character.xp,
+                        //             'XP',
+                        //           )).then((value) {
+                        //     if (value != null) {
+                        //       characterModel.xpController.text =
+                        //           value.toString();
+                        //       characterModel.updateCharacter(
+                        //         characterModel.character..xp = value,
+                        //       );
+                        //     }
+                        //   }),
+                        // ),
                       ],
                     )
                   : Text(
@@ -643,8 +658,9 @@ class StatsSection extends StatelessWidget {
                             keyboardType: TextInputType.number,
                           ),
                         ),
-                        AddSubtractButton(
-                          onTap: () async => await showDialog<int>(
+                        IconButton(
+                          icon: const Icon(Icons.exposure),
+                          onPressed: () async => await showDialog<int>(
                               context: context,
                               builder: (_) => AddSubtractDialog(
                                     characterModel.character.gold,
@@ -659,6 +675,22 @@ class StatsSection extends StatelessWidget {
                             }
                           }),
                         ),
+                        // AddSubtractButton(
+                        //   onTap: () async => await showDialog<int>(
+                        //       context: context,
+                        //       builder: (_) => AddSubtractDialog(
+                        //             characterModel.character.gold,
+                        //             'Gold',
+                        //           )).then((value) {
+                        //     if (value != null) {
+                        //       characterModel.goldController.text =
+                        //           value.toString();
+                        //       characterModel.updateCharacter(
+                        //         characterModel.character..gold = value,
+                        //       );
+                        //     }
+                        //   }),
+                        // ),
                       ],
                     )
                   : Text(
@@ -761,7 +793,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                 color: Theme.of(context).colorScheme.secondary,
                 iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                 icon: const Icon(
-                  FontAwesomeIcons.minus,
+                  Icons.remove_circle,
                 ),
                 onPressed: characterModel.decreaseCheckmark,
               ),
@@ -779,7 +811,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                 color: Theme.of(context).colorScheme.secondary,
                 iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
                 icon: const Icon(
-                  FontAwesomeIcons.plus,
+                  Icons.add_circle,
                 ),
                 onPressed: characterModel.increaseCheckmark,
               ),

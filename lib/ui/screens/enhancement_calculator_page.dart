@@ -15,16 +15,16 @@ class EnhancementCalculatorPage extends StatefulWidget {
 
 class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   bool _disableMultiTargetSwitch = false;
-
+  bool _fabIsVisible = true;
+  bool _costIsVisible = true;
   Enhancement _selectedEnhancement;
 
   @override
   void initState() {
     super.initState();
-    _selectedEnhancement = SharedPrefs().enhancementType != 0
-        ? EnhancementData.enhancements[SharedPrefs().enhancementType]
+    _selectedEnhancement = SharedPrefs().enhancementTypeIndex != 0
+        ? EnhancementData.enhancements[SharedPrefs().enhancementTypeIndex]
         : null;
-    // _updateEnhancementCost();
   }
 
   void _resetAllFields() {
@@ -59,7 +59,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
         _selectedEnhancement = value;
         break;
     }
-    SharedPrefs().enhancementType = EnhancementData.enhancements.indexOf(value);
+    SharedPrefs().enhancementTypeIndex =
+        EnhancementData.enhancements.indexOf(value);
     _updateEnhancementCost();
   }
 
@@ -81,6 +82,21 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             // multiply base cost x2 if multiple targets switch is true
             (SharedPrefs().multipleTargetsSwitch ? _baseCost * 2 : _baseCost);
     _disableMultiTargetSwitch = SharedPrefs().disableMultiTargetSwitch;
+    if (SharedPrefs().targetCardLvl > 0 ||
+        SharedPrefs().previousEnhancements != 0 ||
+        _selectedEnhancement != null ||
+        SharedPrefs().multipleTargetsSwitch == true) {
+      _fabIsVisible = true;
+    } else {
+      _fabIsVisible = false;
+    }
+    if (SharedPrefs().targetCardLvl > 0 ||
+        SharedPrefs().previousEnhancements != 0 ||
+        _selectedEnhancement != null) {
+      _costIsVisible = true;
+    } else {
+      _costIsVisible = false;
+    }
     setState(() {});
   }
 
@@ -91,7 +107,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     return Scaffold(
       body: Center(
         child: Container(
-          padding: const EdgeInsets.all(smallPadding),
+          padding: const EdgeInsets.symmetric(horizontal: smallPadding),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +141,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.info,
+                            Icons.info_outlined,
                             color: ThemeData.estimateBrightnessForColor(
                                         Theme.of(context)
                                             .colorScheme
@@ -150,13 +166,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       ],
                     ),
                     Card(
-                      elevation: 5.0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.info_outline,
-                                color: Theme.of(context).colorScheme.secondary),
+                            icon: const Icon(
+                              Icons.info_outline,
+                            ),
                             onPressed: () => showDialog<void>(
                               context: context,
                               builder: (_) {
@@ -183,14 +199,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       ),
                     ),
                     Card(
-                      elevation: 5.0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.info_outline,
-                              color: Theme.of(context).colorScheme.secondary,
                             ),
                             onPressed: () => showDialog<void>(
                               context: context,
@@ -232,31 +246,30 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       ),
                     ),
                     Card(
-                      elevation: 5,
                       child: Column(
                         children: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Opacity(
-                                opacity: _selectedEnhancement != null ? 1 : 0.5,
-                                child: IconButton(
-                                    icon: Icon(Icons.info_outline,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary),
-                                    onPressed: _selectedEnhancement != null
-                                        ? () => showDialog<void>(
-                                              context: context,
-                                              builder: (_) {
-                                                return InfoDialog(
-                                                  category: _selectedEnhancement
-                                                      .category,
-                                                );
-                                              },
-                                            )
-                                        : null),
-                              ),
+                              IconButton(
+                                  disabledColor: Theme.of(context)
+                                      .colorScheme
+                                      .secondary
+                                      .withOpacity(0.5),
+                                  icon: const Icon(
+                                    Icons.info_outline,
+                                  ),
+                                  onPressed: _selectedEnhancement != null
+                                      ? () => showDialog<void>(
+                                            context: context,
+                                            builder: (_) {
+                                              return InfoDialog(
+                                                category: _selectedEnhancement
+                                                    .category,
+                                              );
+                                            },
+                                          )
+                                      : null),
                               const Text(
                                 'Enhancement Type:',
                               ),
@@ -284,13 +297,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       ),
                     ),
                     Card(
-                      elevation: 5.0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.info_outline,
-                                color: Theme.of(context).colorScheme.secondary),
+                            icon: const Icon(
+                              Icons.info_outline,
+                            ),
                             onPressed: () => showDialog<void>(
                               context: context,
                               builder: (_) {
@@ -303,17 +316,14 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             ),
                           ),
                           const AutoSizeText('Multiple Targets?'),
-                          AbsorbPointer(
-                            absorbing: _disableMultiTargetSwitch,
-                            child: Opacity(
-                              opacity: _disableMultiTargetSwitch ? 0.5 : 1.0,
-                              child: Switch(
-                                  value: SharedPrefs().multipleTargetsSwitch,
-                                  onChanged: (bool value) {
+                          Switch(
+                            value: SharedPrefs().multipleTargetsSwitch,
+                            onChanged: !_disableMultiTargetSwitch
+                                ? (bool value) {
                                     SharedPrefs().multipleTargetsSwitch = value;
                                     _updateEnhancementCost();
-                                  }),
-                            ),
+                                  }
+                                : null,
                           ),
                           const IconButton(
                               icon: Icon(
@@ -326,36 +336,42 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    AutoSizeText(
-                      'Enhancement Cost:',
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Text(
-                      '${SharedPrefs().enhancementCost} g',
-                      style: Theme.of(context).textTheme.headline1,
-                    )
-                  ],
+                Opacity(
+                  opacity: _costIsVisible ? 1 : 0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      AutoSizeText(
+                        'Enhancement Cost:',
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                      Text(
+                        '${SharedPrefs().enhancementCost} g',
+                        style: Theme.of(context).textTheme.headline1,
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _resetAllFields,
-        child: SvgPicture.asset(
-          'images/shuffle.svg',
-          width: 40,
-          color: ThemeData.estimateBrightnessForColor(
-                      Theme.of(context).colorScheme.secondary) ==
-                  Brightness.dark
-              ? Colors.white
-              : Colors.black,
+      floatingActionButton: Visibility(
+        visible: _fabIsVisible,
+        child: FloatingActionButton(
+          onPressed: _resetAllFields,
+          child: SvgPicture.asset(
+            'images/shuffle.svg',
+            width: 40,
+            color: ThemeData.estimateBrightnessForColor(
+                        Theme.of(context).colorScheme.secondary) ==
+                    Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
         ),
       ),
     );

@@ -103,7 +103,7 @@ class ResourceDetails extends StatelessWidget {
                 child: IconButton(
                   onPressed: () => decreaseCount(),
                   icon: const Icon(
-                    Icons.remove,
+                    Icons.remove_circle,
                   ),
                 ),
               ),
@@ -114,7 +114,7 @@ class ResourceDetails extends StatelessWidget {
                 child: IconButton(
                   onPressed: () => increaseCount(),
                   icon: const Icon(
-                    Icons.add,
+                    Icons.add_circle,
                   ),
                 ),
               ),

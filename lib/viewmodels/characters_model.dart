@@ -12,6 +12,7 @@ class CharactersModel with ChangeNotifier {
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   PageController pageController;
+  AnimationController animationController;
   bool _isEditMode = false;
 
   List<Character> get characters => _characters;
