@@ -1,4 +1,3 @@
-// database table and column names
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
@@ -71,7 +70,7 @@ class Character {
     uuid = map[columnCharacterUuid] ?? map[columnCharacterId].toString();
     name = map[columnCharacterName];
     playerClass = CharacterData.playerClassByClassCode(
-      map[columnCharacterClassCode],
+      map[columnCharacterClassCode].toLowerCase(),
     );
     previousRetirements = map[columnPreviousRetirements];
     xp = map[columnCharacterXp];
@@ -94,7 +93,7 @@ class Character {
         columnCharacterId: id,
         columnCharacterUuid: uuid ?? id,
         columnCharacterName: name,
-        columnCharacterClassCode: playerClass.classCode,
+        columnCharacterClassCode: playerClass.classCode.toLowerCase(),
         columnPreviousRetirements: previousRetirements,
         columnCharacterXp: xp,
         columnCharacterGold: gold,

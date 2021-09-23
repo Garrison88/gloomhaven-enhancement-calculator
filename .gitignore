@@ -79,3 +79,5 @@ ios/Flutter/flutter_export_environment.sh
 
 # Ignore Gradle build output directory
 build
+.flutter-plugins-dependencies
+ios/Flutter/flutter_export_environment.sh

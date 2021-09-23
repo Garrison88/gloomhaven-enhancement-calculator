@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -228,13 +227,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             'ghc_backup_${DateFormat('yyyy-MM-dd_HH:mm').format(DateTime.now())}'
                                 .replaceAll(RegExp(':'), '-');
                   return AlertDialog(
-                    content: TextField(
-                      controller: titleController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(
-                          RegExp(
-                              '[\\#|\\<|\\>|\\+|\\\$|\\%|\\!|\\`|\\&|\\*|\\\'|\\||\\}|\\{|\\?|\\"|\\=|\\/|\\:|\\\\|\\ |\\@]'),
-                        )
+                    title:
+                        Platform.isAndroid ? const Icon(Icons.warning) : null,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (Platform.isAndroid)
+                          const Text(
+                              'If another backup file already exists in the Downloads folder with the same name, it will be overwritten'),
+                        TextField(
+                          decoration:
+                              const InputDecoration(labelText: 'filename'),
+                          controller: titleController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(
+                              RegExp(
+                                  '[\\#|\\<|\\>|\\+|\\\$|\\%|\\!|\\`|\\&|\\*|\\\'|\\||\\}|\\{|\\?|\\"|\\=|\\/|\\:|\\\\|\\ |\\@]'),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                     actions: <Widget>[
@@ -417,17 +428,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         child: Text(
                           'v${snapshot.data.version}+${snapshot.data.buildNumber}',
-                          style: GoogleFonts.shareTechMono(
-                            textStyle: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
                           ),
-                          // const TextStyle(
-                          //     color: Colors.grey,
-                          //     fontFamily: GoogleFonts.,
-                          //     fontSize: 16,
-                          //     ),
                         ),
                       ),
                     ],
