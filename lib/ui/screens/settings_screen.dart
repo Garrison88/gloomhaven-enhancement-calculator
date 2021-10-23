@@ -5,13 +5,14 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,8 +21,13 @@ import '../../data/database_helpers.dart';
 import '../../shared_prefs.dart';
 
 class SettingsScreen extends StatefulWidget {
+  final void Function() updateTheme;
+  final CharactersModel charactersModel;
+
   const SettingsScreen({
     Key key,
+    this.updateTheme,
+    this.charactersModel,
   }) : super(key: key);
 
   @override
@@ -29,7 +35,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String downloadPath;
 
@@ -44,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      // key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -205,12 +211,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SwitchListTile(
             subtitle: const Text(
                 "Include Crimson Scales classes and 'released' classes created by the community"),
-            title: const Text('Custom Classes'),
+            title: const Text('Custom Content'),
             value: SharedPrefs().customClasses,
             onChanged: (val) {
               setState(() {
                 SharedPrefs().customClasses = val;
               });
+            },
+          ),
+          const SettingsDivider(),
+          SwitchListTile(
+            // subtitle: const Text('Show retired characters in the list view'),
+            title: const Text('Show Retired Characters'),
+            value: widget.charactersModel.showRetired,
+            onChanged: (val) {
+              // SharedPrefs().showRetiredCharacters = val;
+              widget.charactersModel.showRetired = val;
+              SharedPrefs().showRetiredCharacters = val;
+              // try {
+              widget.updateTheme();
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+              // widget.loadCharacters(val);
+              // setState(() {
+              // });
             },
           ),
           const SettingsDivider(),
@@ -353,8 +378,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     if (contents != null) {
                       _showLoaderDialog(context);
                       await DatabaseHelper.instance.restoreBackup(contents);
+                      await widget.charactersModel.loadCharacters();
+                      widget.charactersModel.setCurrentCharacter(index: 0);
+                      widget.charactersModel.animateToIndex(0);
                       Navigator.of(context).pop();
-                      Phoenix.rebirth(context);
+                      Navigator.of(context).pop();
                     }
                   }
                 },

@@ -6,6 +6,7 @@ import '../models/character_perk.dart';
 import '../shared_prefs.dart';
 
 class CharacterModel with ChangeNotifier {
+  CharacterModel({this.character});
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> characterPerks = [];
@@ -16,6 +17,7 @@ class CharacterModel with ChangeNotifier {
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
   DatabaseHelper db = DatabaseHelper.instance;
+  // ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
   int get maximumPerks =>
       currentLevel -
@@ -23,7 +25,7 @@ class CharacterModel with ChangeNotifier {
       ((character.checkMarks - 1) / 3).round() +
       character.previousRetirements;
 
-  bool get isEditable => _isEditable;
+  bool get isEditable => _isEditable && !character.isRetired;
 
   set isEditable(bool value) {
     previousRetirementsController.text = character.previousRetirements != 0

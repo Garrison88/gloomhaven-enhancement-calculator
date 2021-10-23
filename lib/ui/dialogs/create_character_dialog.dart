@@ -12,8 +12,9 @@ class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
   const CreateCharacterDialog({
+    Key key,
     this.charactersModel,
-  });
+  }) : super(key: key);
 
   @override
   _CreateCharacterDialogState createState() => _CreateCharacterDialogState();
@@ -266,7 +267,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
-                context,
+                // context,
                 _nameTextFieldController.text,
                 _selectedClass,
                 initialLevel: int.parse(_levelTextFieldController.text),

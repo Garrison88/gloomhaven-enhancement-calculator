@@ -202,10 +202,69 @@ class EnhancementData {
                                 width: iconSize,
                                 color: Colors.white,
                               )
-                            : SvgPicture.asset(
-                                'images/${enhancement.icon}',
-                                width: iconSize,
-                              ),
+                            : enhancement.name == 'Specific Element'
+                                ? SizedBox(
+                                    width: iconSize,
+                                    height: iconSize,
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          bottom: 5,
+                                          top: 5,
+                                          left: 5,
+                                          child: SvgPicture.asset(
+                                            'images/elem_dark.svg',
+                                            width: 10,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 4,
+                                          left: 7,
+                                          child: SvgPicture.asset(
+                                            'images/elem_air.svg',
+                                            width: 11,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 3,
+                                          right: 6,
+                                          child: SvgPicture.asset(
+                                            'images/elem_ice.svg',
+                                            width: 12,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 2,
+                                          bottom: 2,
+                                          child: SvgPicture.asset(
+                                            'images/elem_fire.svg',
+                                            width: 13,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 1,
+                                          right: 4,
+                                          child: SvgPicture.asset(
+                                            'images/elem_earth.svg',
+                                            width: 14,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 0,
+                                          left: 3,
+                                          child: SvgPicture.asset(
+                                            'images/elem_light.svg',
+                                            width: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'images/${enhancement.icon}',
+                                    width: iconSize,
+                                  ),
                     Text(
                       ' ${enhancement.name} (${enhancement.baseCost}g)',
                     )

@@ -148,19 +148,6 @@ class DatabaseHelper {
     );
   }
 
-  // Future<String> _databasePath() async {
-  //   String databasesPath = await getDatabasesPath();
-  //   return join(
-  //     databasesPath,
-  //     "database.db",
-  //   );
-  // }
-
-  // Future deleteDB() async {
-  //   String path = await _databasePath();
-  //   await deleteDatabase(path);
-  // }
-
   Future<String> generateBackup() async {
     Database dbs = await database;
     List data = [];
@@ -239,7 +226,7 @@ class DatabaseHelper {
     return id;
   }
 
-  Future updateCharacter(
+  Future<void> updateCharacter(
     Character updatedCharacter,
   ) async {
     Database db = await database;
@@ -251,7 +238,7 @@ class DatabaseHelper {
     );
   }
 
-  Future updateCharacterPerk(
+  Future<void> updateCharacterPerk(
     CharacterPerk perk,
     bool value,
   ) async {
@@ -315,18 +302,18 @@ class DatabaseHelper {
     return list;
   }
 
-  Future deleteCharacter(String characterUuid) async {
+  Future<void> deleteCharacter(Character character) async {
     Database db = await database;
     return await db.transaction((txn) async {
       await txn.delete(
         tableCharacters,
         where: '$columnCharacterUuid = ?',
-        whereArgs: [characterUuid],
+        whereArgs: [character.uuid],
       );
       await txn.delete(
         tableCharacterPerks,
         where: '$columnAssociatedCharacterUuid = ?',
-        whereArgs: [characterUuid],
+        whereArgs: [character.uuid],
       );
     });
   }

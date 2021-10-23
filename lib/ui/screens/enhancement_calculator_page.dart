@@ -9,6 +9,10 @@ import '../../shared_prefs.dart';
 import '../dialogs/info_dialog.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
+  const EnhancementCalculatorPage({
+    Key key,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _EnhancementCalculatorPageState();
 }

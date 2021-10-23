@@ -105,6 +105,13 @@ class SharedPrefs {
     _sharedPrefs.setBool('disableMultiTargetsSwitch', value);
   }
 
+  bool get showRetiredCharacters =>
+      _sharedPrefs.getBool('showRetiredCharacters') ?? true;
+
+  set showRetiredCharacters(bool value) {
+    _sharedPrefs.setBool('showRetiredCharacters', value);
+  }
+
   bool get multipleTargetsSwitch =>
       _sharedPrefs.getBool('multipleTargetsSelected') ?? false;
 

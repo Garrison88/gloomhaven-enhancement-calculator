@@ -73,6 +73,14 @@ class Utils {
           case '+4':
             assetPath = 'attack_modifiers/plus_4.png';
             break;
+          case 'One_Hand':
+            assetPath = 'equipment_slots/one_handed.svg';
+            invertColor = true;
+            break;
+          case 'Move':
+            assetPath = 'move.svg';
+            invertColor = true;
+            break;
           case 'Rolling':
             assetPath = 'rolling.svg';
             break;
@@ -110,10 +118,6 @@ class Utils {
             break;
           case 'Range':
             assetPath = 'range.svg';
-            invertColor = true;
-            break;
-          case 'Move':
-            assetPath = 'move.svg';
             invertColor = true;
             break;
           case 'Loot':
@@ -169,6 +173,12 @@ class Utils {
           case 'WARD':
             assetPath = 'ward.svg';
             break;
+          case 'RUPTURE':
+            assetPath = 'rupture.svg';
+            break;
+          case 'EMPOWER':
+            assetPath = 'empower.svg';
+            break;
           case 'HEX':
             assetPath = 'luminary_hexes.svg';
             break;
@@ -191,6 +201,10 @@ class Utils {
             break;
           case 'SWING':
             assetPath = 'swing.svg';
+            break;
+          case 'SATED':
+            assetPath = 'sated.svg';
+            invertColor = true;
             break;
           case 'Ladder':
             assetPath = 'ladder.svg';
@@ -333,5 +347,28 @@ class Utils {
       ),
     );
     return perkRows;
+  }
+
+  /// Darken a color by [percent] amount (100 = black)
+// ........................................................
+  static Color darken(Color c, [int percent = 10]) {
+    assert(1 <= percent && percent <= 100);
+    var f = 1 - percent / 100;
+    return Color.fromARGB(c.alpha, (c.red * f).round(), (c.green * f).round(),
+        (c.blue * f).round());
+    // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
+  }
+
+  /// Lighten a color by [percent] amount (100 = white)
+// ........................................................
+  static Color lighten(Color c, [int percent = 10]) {
+    assert(1 <= percent && percent <= 100);
+    var p = percent / 100;
+    return Color.fromARGB(
+        c.alpha,
+        c.red + ((255 - c.red) * p).round(),
+        c.green + ((255 - c.green) * p).round(),
+        c.blue + ((255 - c.blue) * p).round());
+    // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
   }
 }

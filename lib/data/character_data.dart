@@ -6,7 +6,6 @@ import '../models/resource.dart';
 
 enum ClassCategory {
   gloomhaven,
-  forgottenCircles,
   jawsOfTheLion,
   frostHaven,
   crimsonScales,
@@ -14,9 +13,20 @@ enum ClassCategory {
 }
 
 abstract class CharacterData {
+  static const aesther = 'Aesther';
+  static const harrower = 'Harrower';
+  static const human = 'Human';
+  static const inox = 'Inox';
+  static const lurker = 'Lurker';
+  static const orchid = 'Orchid';
+  static const quatryl = 'Quatryl';
+  static const savvas = 'Savvas';
+  static const valrath = 'Valrath';
+  static const vermling = 'Vermling';
+
   static final List<PlayerClass> playerClasses = [
     PlayerClass(
-      race: 'Inox',
+      race: inox,
       className: 'Brute',
       classCode: 'br',
       classIconUrl: 'brute.svg',
@@ -24,7 +34,7 @@ abstract class CharacterData {
       classColor: '0xff4e7ec1',
     ),
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Tinkerer',
       classCode: 'ti',
       classIconUrl: 'tinkerer.svg',
@@ -32,7 +42,7 @@ abstract class CharacterData {
       classColor: '0xffc5b58d',
     ),
     PlayerClass(
-      race: 'Orchid',
+      race: orchid,
       className: 'Spellweaver',
       classCode: 'sw',
       classIconUrl: 'spellweaver.svg',
@@ -40,7 +50,7 @@ abstract class CharacterData {
       classColor: '0xffb578b3',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Scoundrel',
       classCode: 'sc',
       classIconUrl: 'scoundrel.svg',
@@ -48,7 +58,7 @@ abstract class CharacterData {
       classColor: '0xffa5d166',
     ),
     PlayerClass(
-      race: 'Savvas',
+      race: savvas,
       className: 'Cragheart',
       classCode: 'ch',
       classIconUrl: 'cragheart.svg',
@@ -56,7 +66,7 @@ abstract class CharacterData {
       classColor: '0xff899538',
     ),
     PlayerClass(
-      race: 'Vermling',
+      race: vermling,
       className: 'Mindthief',
       classCode: 'mt',
       classIconUrl: 'mindthief.svg',
@@ -64,77 +74,77 @@ abstract class CharacterData {
       classColor: '0xff647c9d',
     ),
     PlayerClass(
-      race: 'Valrath',
+      race: valrath,
       className: 'Sunkeeper',
       classCode: 'sk',
       classIconUrl: 'sunkeeper.svg',
       classColor: '0xfff3c338',
     ),
     PlayerClass(
-      race: 'Valrath',
+      race: valrath,
       className: 'Quartermaster',
       classCode: 'qm',
       classIconUrl: 'quartermaster.svg',
       classColor: '0xffd98926',
     ),
     PlayerClass(
-      race: 'Aesther',
+      race: aesther,
       className: 'Summoner',
       classCode: 'su',
       classIconUrl: 'summoner.svg',
       classColor: '0xffeb6ea3',
     ),
     PlayerClass(
-      race: 'Aesther',
+      race: aesther,
       className: 'Nightshroud',
       classCode: 'ns',
       classIconUrl: 'nightshroud.svg',
       classColor: '0xff9f9fcf',
     ),
     PlayerClass(
-      race: 'Harrower',
+      race: harrower,
       className: 'Plagueherald',
       classCode: 'ph',
       classIconUrl: 'plagueherald.svg',
       classColor: '0xff74c7bb',
     ),
     PlayerClass(
-      race: 'Inox',
+      race: inox,
       className: 'Berserker',
       classCode: 'be',
       classIconUrl: 'berserker.svg',
       classColor: '0xffd14e4e',
     ),
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Soothsinger',
       classCode: 'ss',
       classIconUrl: 'soothsinger.svg',
       classColor: '0xffdf7e7a',
     ),
     PlayerClass(
-      race: 'Orchid',
+      race: orchid,
       className: 'Doomstalker',
       classCode: 'ds',
       classIconUrl: 'doomstalker.svg',
       classColor: '0xff38c3f1',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Sawbones',
       classCode: 'sb',
       classIconUrl: 'sawbones.svg',
       classColor: '0xffdfddcb',
     ),
     PlayerClass(
-      race: 'Savvas',
+      race: savvas,
       className: 'Elementalist',
       classCode: 'el',
       classIconUrl: 'elementalist.svg',
       classColor: '0xff9e9d9d',
     ),
     PlayerClass(
-      race: 'Vermling',
+      race: vermling,
       className: 'Beast Tyrant',
       classCode: 'bt',
       classIconUrl: 'beast_tyrant.svg',
@@ -142,7 +152,7 @@ abstract class CharacterData {
     ),
     // ENVELOPE X
     PlayerClass(
-      race: 'Harrower',
+      race: harrower,
       className: 'Bladeswarm',
       classCode: 'bs',
       classIconUrl: 'bladeswarm.svg',
@@ -151,17 +161,17 @@ abstract class CharacterData {
     ),
     // FORGOTTEN CIRCLES
     PlayerClass(
-      race: 'Aesther',
+      race: aesther,
       className: 'Diviner',
       classCode: 'dv',
       classIconUrl: 'diviner.svg',
-      classCategory: ClassCategory.forgottenCircles,
+      classCategory: ClassCategory.gloomhaven,
       locked: false,
       classColor: '0xff8bc5d3',
     ),
     // JAWS OF THE LION
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Demolitionist',
       classCode: 'dl',
       classIconUrl: 'demolitionist.svg',
@@ -170,7 +180,7 @@ abstract class CharacterData {
       classColor: '0xffe65c18',
     ),
     PlayerClass(
-      race: 'Inox',
+      race: inox,
       className: 'Hatchet',
       classCode: 'hc',
       classIconUrl: 'hatchet.svg',
@@ -179,7 +189,7 @@ abstract class CharacterData {
       classColor: '0xff78a1ad',
     ),
     PlayerClass(
-      race: 'Valrath',
+      race: valrath,
       className: 'Red Guard',
       classCode: 'rg',
       classIconUrl: 'red_guard.svg',
@@ -188,7 +198,7 @@ abstract class CharacterData {
       classColor: '0xffe3393b',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Voidwarden',
       classCode: 'vw',
       classIconUrl: 'voidwarden.svg',
@@ -196,9 +206,9 @@ abstract class CharacterData {
       locked: false,
       classColor: '0xffd9d9d9',
     ),
-    // CUSTOM
+    // CRIMSON SCALES
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Bombard',
       classCode: 'bb',
       classIconUrl: 'bombard.svg',
@@ -206,7 +216,7 @@ abstract class CharacterData {
       classColor: '0xff948572',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Brightspark',
       classCode: 'bp',
       classIconUrl: 'brightspark.svg',
@@ -214,7 +224,7 @@ abstract class CharacterData {
       classColor: '0xffcaad2e',
     ),
     PlayerClass(
-      race: 'Inox',
+      race: inox,
       className: 'Chainguard',
       classCode: 'cg',
       classIconUrl: 'chainguard.svg',
@@ -222,7 +232,7 @@ abstract class CharacterData {
       classColor: '0xffce6d30',
     ),
     PlayerClass(
-      race: 'Orchid',
+      race: orchid,
       className: 'Chieftain',
       classCode: 'ct',
       classIconUrl: 'chieftain.svg',
@@ -230,7 +240,7 @@ abstract class CharacterData {
       classColor: '0xff76c6c3',
     ),
     PlayerClass(
-      race: 'Valrath',
+      race: valrath,
       className: 'Fire Knight',
       classCode: 'fk',
       classIconUrl: 'fire_knight.svg',
@@ -238,7 +248,7 @@ abstract class CharacterData {
       classColor: '0xffd52229',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Hierophant',
       classCode: 'hf',
       classIconUrl: 'hierophant.svg',
@@ -246,7 +256,7 @@ abstract class CharacterData {
       classColor: '0xffddde8a',
     ),
     PlayerClass(
-      race: 'Savvas',
+      race: savvas,
       className: 'Hollowpact',
       classCode: 'hp',
       classIconUrl: 'hollowpact.svg',
@@ -254,7 +264,7 @@ abstract class CharacterData {
       classColor: '0xffa765a9',
     ),
     PlayerClass(
-      race: 'Lurker',
+      race: lurker,
       className: 'Luminary',
       classCode: 'ln',
       classIconUrl: 'luminary.svg',
@@ -262,7 +272,7 @@ abstract class CharacterData {
       classColor: '0xffb28abf',
     ),
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Mirefoot',
       classCode: 'mf',
       classIconUrl: 'mirefoot.svg',
@@ -270,7 +280,7 @@ abstract class CharacterData {
       classColor: '0xffef6b26',
     ),
     PlayerClass(
-      race: 'Vermling',
+      race: vermling,
       className: 'Spirit Caller',
       classCode: 'scr',
       classIconUrl: 'spirit_caller.svg',
@@ -278,23 +288,16 @@ abstract class CharacterData {
       classColor: '0xff63bd57',
     ),
     PlayerClass(
-      race: 'Aesther',
+      race: aesther,
       className: 'Starslinger',
       classCode: 'ssl',
       classIconUrl: 'starslinger.svg',
       classCategory: ClassCategory.crimsonScales,
       classColor: '0xff4f57a6',
     ),
+    //CUSTOM
     PlayerClass(
-      race: 'Orchid',
-      className: 'Brewmaster',
-      classCode: 'bm',
-      classIconUrl: 'brewmaster.svg',
-      classCategory: ClassCategory.custom,
-      classColor: '0xffe2c22b',
-    ),
-    PlayerClass(
-      race: 'Harrower',
+      race: harrower,
       className: 'Amber Aegis',
       classCode: 'aa',
       classIconUrl: 'amber_aegis.svg',
@@ -302,7 +305,7 @@ abstract class CharacterData {
       classColor: '0xfff6831f',
     ),
     PlayerClass(
-      race: 'Quatryl',
+      race: quatryl,
       className: 'Artificer',
       classCode: 'af',
       classIconUrl: 'artificer.svg',
@@ -310,7 +313,15 @@ abstract class CharacterData {
       classColor: '0xff317da7',
     ),
     PlayerClass(
-      race: 'Orchid',
+      race: orchid,
+      className: 'Brewmaster',
+      classCode: 'bm',
+      classIconUrl: 'brewmaster.svg',
+      classCategory: ClassCategory.custom,
+      classColor: '0xffe2c22b',
+    ),
+    PlayerClass(
+      race: orchid,
       className: 'Frostborn',
       classCode: 'fb',
       classIconUrl: 'frostborn.svg',
@@ -318,12 +329,20 @@ abstract class CharacterData {
       classColor: '0xffb0e0ea',
     ),
     PlayerClass(
-      race: 'Human',
+      race: human,
       className: 'Rootwhisperer',
       classCode: 'rw',
       classIconUrl: 'rootwhisperer.svg',
       classCategory: ClassCategory.custom,
       classColor: '0xff7bd071',
+    ),
+    PlayerClass(
+      race: vermling,
+      className: 'Ruinmaw',
+      classCode: 'rm',
+      classIconUrl: 'ruinmaw.svg',
+      classCategory: ClassCategory.custom,
+      classColor: '0xffdb332d',
     ),
   ];
 
@@ -697,7 +716,7 @@ abstract class CharacterData {
     Perk('fk', 1, 'Remove two -1 cards'),
     Perk('fk', 2, 'Replace one -1 card with one +0 "STRENGTHEN, Ally" card'),
     Perk('fk', 2,
-        'Replace one -1 card with two +0 "+2 if you are on Ladder" cards'),
+        'Replace two +0 cards with two +0 "+2 if you are on Ladder" cards'),
     Perk('fk', 1, 'Replace one +0 card with one +1 FIRE card'),
     Perk('fk', 1, 'Replace one +0 card with one +1 WOUND card'),
     Perk('fk', 1, 'Replace two +1 cards with one +2 FIRE card'),
@@ -749,7 +768,7 @@ abstract class CharacterData {
     Perk('mf', 1,
         'Add two Rolling "INVISIBLE, Self, if you occupy difficult terrain" cards'),
     Perk('mf', 1,
-        'You may equip one additional item. This item must be a "Dagger"'),
+        'Gain "Poison Dagger" (Item 011). You may carry one additional One_Hand item with "Dagger" in its name'),
     Perk('mf', 1,
         'Ignore damage, negative conditions, and modifiers from Events, and remove one -1 card'),
     Perk('mf', 1, 'Ignore negative SCENARIO effects and remove one -1 card'),
@@ -834,6 +853,21 @@ abstract class CharacterData {
         'Add two Rolling "Force the target to perform a Move 1 ability" card'),
     Perk('ssl', 1, 'Add two Rolling "HEAL 1, Range 1" cards'),
     Perk('ssl', 1, 'Ignore negative SCENARIO effects and remove one +0 card'),
+    // RUINMAW
+    Perk('rm', 1, 'Replace one -2 card with one -1 RUPTURE and WOUND card'),
+    Perk('rm', 2, 'Replace one -1 card with one +0 WOUND card'),
+    Perk('rm', 2, 'Replace one -1 card with one +0 RUPTURE card'),
+    Perk('rm', 3,
+        'Replace one +0 card with one +1 "Add +3 instead if the target has RUPTURE or WOUND" card'),
+    Perk('rm', 3,
+        'Replace one +0 card with one Rolling "HEAL 1, Self, EMPOWER" card'),
+    Perk('rm', 1,
+        'Once each scenario, become SATED after collecting your 5th loot token'),
+    Perk('rm', 1,
+        'Become SATED each time you lose a card to negate suffering damage'),
+    Perk('rm', 1,
+        'Whenever one of your abilities causes at least one enemy to gain RUPTURE, immediately after that ability perform "Move 1"'),
+    Perk('rm', 1, 'Ignore negative SCENARIO effects, and remove one -1 card'),
   ];
 
   static final List<Resource> resources = [

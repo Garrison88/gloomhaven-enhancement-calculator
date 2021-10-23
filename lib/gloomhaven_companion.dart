@@ -5,6 +5,10 @@ import 'shared_prefs.dart';
 import 'ui/screens/home.dart';
 
 class GloomhavenCompanion extends StatelessWidget {
+  const GloomhavenCompanion({
+    Key key,
+  }) : super(key: key);
+
   Color getSwitchThumbColor(Set<MaterialState> states) =>
       states.contains(MaterialState.selected)
           ? Color(

@@ -8,18 +8,32 @@ import '../models/player_class.dart';
 import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
+  CharactersModel(this.context);
+
+  BuildContext context;
   List<Character> _characters = [];
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   PageController pageController;
   AnimationController animationController;
+  bool showRetired = SharedPrefs().showRetiredCharacters;
   bool _isEditMode = false;
+  ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
-  List<Character> get characters => _characters;
+  List<Character> get characters => showRetired
+      ? _characters
+      : _characters.where((character) => !character.isRetired).toList();
+
+  set characters(List<Character> characters) {
+    _characters = characters;
+    notifyListeners();
+  }
 
   Future<List<Character>> loadCharacters() async {
     _characters = await databaseHelper.queryAllCharacters();
-    return _characters;
+    setCurrentCharacter(
+      index: SharedPrefs().initialPage,
+    );
   }
 
   bool get isEditMode => _isEditMode;
@@ -29,8 +43,17 @@ class CharactersModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void onPageChanged(
+    int index,
+  ) {
+    isDialOpen.value = false;
+    setCurrentCharacter(
+      index: index,
+    );
+    isEditMode = false;
+  }
+
   Future<void> createCharacter(
-    BuildContext context,
     String name,
     PlayerClass selectedClass, {
     int initialLevel = 1,
@@ -47,55 +70,86 @@ class CharactersModel with ChangeNotifier {
     character.id = await databaseHelper.insertCharacter(
       character,
     );
-    characters.add(character);
+    _characters.add(character);
     if (characters.length > 1) {
-      pageController.animateToPage(
+      animateToIndex(
         characters.indexOf(character),
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeIn,
       );
     }
-    updateCurrentCharacter(
-      context,
+    setCurrentCharacter(
       index: characters.indexOf(character),
     );
     notifyListeners();
   }
 
-  Future<void> deleteCharacter(
-    BuildContext context,
-    String uuid,
-  ) async {
-    int position = characters.indexOf(
-      characters.firstWhere((element) => element.uuid == uuid),
-    );
-    await databaseHelper.deleteCharacter(uuid);
-    characters.removeWhere((element) => element.uuid == uuid);
-    updateCurrentCharacter(
-      context,
-      index: position,
+  Future<void> deleteCurrentCharacter() async {
+    isEditMode = false;
+    int index = characters.indexOf(currentCharacter);
+    await databaseHelper.deleteCharacter(currentCharacter);
+    _characters.remove(currentCharacter);
+    setCurrentCharacter(
+      index: index,
     );
     notifyListeners();
   }
 
-  void updateCurrentCharacter(
-    BuildContext context, {
+  void setCurrentCharacter({
     int index,
   }) {
-    isEditMode = false;
+    // isDialOpen.value = false;
     if (characters.isEmpty) {
       currentCharacter = null;
+      SharedPrefs().initialPage = 0;
+    } else if (index > characters.length - 1 || index == -1) {
+      currentCharacter = characters.last;
+      SharedPrefs().initialPage = characters.indexOf(characters.last);
+    } else {
+      currentCharacter = characters[index];
+
+      SharedPrefs().initialPage = index;
+    }
+    _updateTheme();
+  }
+
+  void _updateTheme() {
+    if (characters.isEmpty) {
       SharedPrefs().themeColor = '0xff4e7ec1';
       SharedPrefs().initialPage = 0;
     } else {
-      try {
-        currentCharacter = characters[index];
-      } on RangeError {
-        currentCharacter = characters.last;
-      }
-      SharedPrefs().themeColor = currentCharacter.playerClass.classColor;
-      SharedPrefs().initialPage = characters.indexOf(currentCharacter);
+      SharedPrefs().themeColor = currentCharacter.isRetired
+          ? '0xff111111'
+          : currentCharacter.playerClass.classColor;
     }
     EasyDynamicTheme.of(context).changeTheme(dynamic: true);
+  }
+
+  void animateToIndex(
+    int index,
+  ) {
+    if (pageController.hasClients) {
+      pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeIn,
+      );
+    }
+  }
+
+  Future<void> retireCurrentCharacter() async {
+    if (!showRetired) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      isDialOpen.value = false;
+    }
+    isEditMode = false;
+    int index = characters.indexOf(currentCharacter);
+    currentCharacter.isRetired = !currentCharacter.isRetired;
+    await DatabaseHelper.instance.updateCharacter(currentCharacter);
+    if (!showRetired) {
+      characters.remove(currentCharacter);
+    }
+    setCurrentCharacter(
+      index: index,
+    );
+    notifyListeners();
   }
 }
