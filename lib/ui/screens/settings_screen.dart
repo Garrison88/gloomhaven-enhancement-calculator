@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -380,7 +379,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       await DatabaseHelper.instance.restoreBackup(contents);
                       await widget.charactersModel.loadCharacters();
                       widget.charactersModel.setCurrentCharacter(index: 0);
-                      widget.charactersModel.animateToIndex(0);
+                      widget.charactersModel.jumpToPage(0);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }

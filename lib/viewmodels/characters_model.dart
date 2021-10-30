@@ -8,17 +8,20 @@ import '../models/player_class.dart';
 import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
-  CharactersModel(this.context);
+  CharactersModel(
+    this.context, {
+    this.hideAddCharacterAnimationController,
+    this.pageController,
+  });
 
   BuildContext context;
   List<Character> _characters = [];
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
-  PageController pageController;
-  AnimationController animationController;
+  PageController pageController = PageController();
+  AnimationController hideAddCharacterAnimationController;
   bool showRetired = SharedPrefs().showRetiredCharacters;
   bool _isEditMode = false;
-  ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
   List<Character> get characters => showRetired
       ? _characters
@@ -39,6 +42,11 @@ class CharactersModel with ChangeNotifier {
   bool get isEditMode => _isEditMode;
 
   set isEditMode(bool value) {
+    if (value) {
+      hideAddCharacterAnimationController.reverse();
+    } else {
+      hideAddCharacterAnimationController.forward();
+    }
     _isEditMode = value;
     notifyListeners();
   }
@@ -46,7 +54,7 @@ class CharactersModel with ChangeNotifier {
   void onPageChanged(
     int index,
   ) {
-    isDialOpen.value = false;
+    SharedPrefs().initialPage = index;
     setCurrentCharacter(
       index: index,
     );
@@ -72,7 +80,7 @@ class CharactersModel with ChangeNotifier {
     );
     _characters.add(character);
     if (characters.length > 1) {
-      animateToIndex(
+      animateToPage(
         characters.indexOf(character),
       );
     }
@@ -123,7 +131,7 @@ class CharactersModel with ChangeNotifier {
     EasyDynamicTheme.of(context).changeTheme(dynamic: true);
   }
 
-  void animateToIndex(
+  void animateToPage(
     int index,
   ) {
     if (pageController.hasClients) {
@@ -135,11 +143,17 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  Future<void> retireCurrentCharacter() async {
-    if (!showRetired) {
-      await Future.delayed(const Duration(milliseconds: 100));
-      isDialOpen.value = false;
+  void jumpToPage(
+    int index,
+  ) {
+    if (pageController.hasClients) {
+      pageController.jumpToPage(
+        index,
+      );
     }
+  }
+
+  Future<void> retireCurrentCharacter() async {
     isEditMode = false;
     int index = characters.indexOf(currentCharacter);
     currentCharacter.isRetired = !currentCharacter.isRetired;

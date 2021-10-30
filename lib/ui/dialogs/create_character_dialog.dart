@@ -262,12 +262,12 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         ),
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.green[400]),
           ),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
-                // context,
                 _nameTextFieldController.text,
                 _selectedClass,
                 initialLevel: int.parse(_levelTextFieldController.text),

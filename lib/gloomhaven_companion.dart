@@ -5,7 +5,7 @@ import 'shared_prefs.dart';
 import 'ui/screens/home.dart';
 
 class GloomhavenCompanion extends StatelessWidget {
-  const GloomhavenCompanion({
+  GloomhavenCompanion({
     Key key,
   }) : super(key: key);
 

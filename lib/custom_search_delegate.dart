@@ -4,6 +4,7 @@ import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
 import 'data/character_data.dart';
+import 'main.dart';
 
 class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   CustomSearchDelegate(
@@ -12,7 +13,8 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   final List<PlayerClass> _playerClasses;
 
   bool gh = false;
-  bool jl = false;
+  bool jotl = false;
+  bool fh = false;
   bool cs = false;
   bool rc = false;
 
@@ -54,7 +56,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       ) {
         final Iterable<PlayerClass> playerClass =
             _playerClasses.where((playerClass) {
-          if (!gh && !jl && !cs && !rc) {
+          if (!gh && !jotl && !fh && !cs && !rc) {
             return playerClass.className
                 .toLowerCase()
                 .contains(query.toLowerCase());
@@ -64,16 +66,16 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       .contains(query.toLowerCase()) &&
                   playerClass.classCategory == ClassCategory.gloomhaven &&
                   gh) ||
-              // (playerClass.className
-              //         .toLowerCase()
-              //         .contains(query.toLowerCase()) &&
-              //     playerClass.classCategory == ClassCategory.forgottenCircles &&
-              //     fc) ||
               (playerClass.className
                       .toLowerCase()
                       .contains(query.toLowerCase()) &&
                   playerClass.classCategory == ClassCategory.jawsOfTheLion &&
-                  jl) ||
+                  jotl) ||
+              (playerClass.className
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) &&
+                  playerClass.classCategory == ClassCategory.frostHaven &&
+                  fh) ||
               (playerClass.className
                       .toLowerCase()
                       .contains(query.toLowerCase()) &&
@@ -100,20 +102,21 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     }),
                     label: const Text('Gloomhaven'),
                   ),
-                  // FilterChip(
-                  //   selected: fc,
-                  //   onSelected: (value) => stateSetter(() {
-                  //     fc = value;
-                  //   }),
-                  //   label: const Text('Forgotten Circles'),
-                  // ),
                   FilterChip(
-                    selected: jl,
+                    selected: jotl,
                     onSelected: (value) => stateSetter(() {
-                      jl = value;
+                      jotl = value;
                     }),
                     label: const Text('Jaws of the Lion'),
                   ),
+                  if (includeFrosthaven)
+                    FilterChip(
+                      selected: fh,
+                      onSelected: (value) => stateSetter(() {
+                        fh = value;
+                      }),
+                      label: const Text('Frosthaven'),
+                    ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
                       selected: cs,

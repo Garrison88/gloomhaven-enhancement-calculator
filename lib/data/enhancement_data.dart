@@ -38,8 +38,14 @@ class EnhancementData {
         EnhancementCategory.charPlusOne, 30, 'pierce.svg', false, 'Pierce'),
     Enhancement(EnhancementCategory.charPlusOne, 100, 'retaliate.svg', true,
         'Retaliate'),
-    Enhancement(EnhancementCategory.charPlusOne, 30, 'heal.svg', true, 'Heal'),
-    Enhancement(EnhancementCategory.target, 50, 'target.svg', false, 'Target'),
+    Enhancement(EnhancementCategory.charPlusOne, 30,
+        SharedPrefs().darkTheme ? 'heal.svg' : 'heal_light.svg', false, 'Heal'),
+    Enhancement(
+        EnhancementCategory.target,
+        50,
+        SharedPrefs().darkTheme ? 'target_alt.svg' : 'target_alt_light.svg',
+        false,
+        'Target'),
     Enhancement(
         EnhancementCategory.title, null, 'plus_one.svg', false, ' For Summon'),
     Enhancement(
@@ -48,7 +54,7 @@ class EnhancementData {
         EnhancementCategory.summonPlusOne, 100, 'attack.svg', true, 'Attack'),
     Enhancement(
         EnhancementCategory.summonPlusOne, 50, 'range.svg', true, 'Range'),
-    Enhancement(EnhancementCategory.summonPlusOne, 50, 'heal.svg', true, 'HP'),
+    Enhancement(EnhancementCategory.summonPlusOne, 50, 'hp.svg', true, 'HP'),
     // negative effects
     Enhancement(EnhancementCategory.title, null, null, false, 'Effect'),
     Enhancement(

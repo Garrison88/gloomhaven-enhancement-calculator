@@ -6,7 +6,9 @@ import '../models/character_perk.dart';
 import '../shared_prefs.dart';
 
 class CharacterModel with ChangeNotifier {
-  CharacterModel({this.character});
+  CharacterModel({
+    this.character,
+  });
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> characterPerks = [];
@@ -17,7 +19,6 @@ class CharacterModel with ChangeNotifier {
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
   DatabaseHelper db = DatabaseHelper.instance;
-  // ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
   int get maximumPerks =>
       currentLevel -

@@ -26,10 +26,8 @@ class CharacterScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharacterScreen>
     with TickerProviderStateMixin {
   AnimationController _hideFabAnimation;
-  // final ValueNotifier<bool> _isDialOpen = ValueNotifier<bool>(false);
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
-// final ScaffoldMessenger scaffoldMessenger = ScaffoldMessenger();
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (notification.depth == 0) {
@@ -62,18 +60,9 @@ class _CharacterScreenState extends State<CharacterScreen>
 
   @override
   void dispose() {
-    // print('****ON DISPOSE');
-    // Provider.of<CharactersModel>(context, listen: false).isDialOpen.value =
-    //     false;
     _hideFabAnimation.dispose();
     super.dispose();
   }
-
-  // @override
-  // void didUpdateWidget(covariant CharacterScreen oldWidget) {
-  //   print('****DID UPDATE WIDGET');
-  //   super.didUpdateWidget(oldWidget);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -364,19 +353,15 @@ class _CharacterScreenState extends State<CharacterScreen>
         ),
         floatingActionButton: ScaleTransition(
           scale: _hideFabAnimation,
-          alignment: Alignment.bottomCenter,
           child: SpeedDial(
             onOpen: () {
-              // charactersModel.isDialOpen.value = true;
               characterModel.isEditable = true;
               charactersModel.isEditMode = true;
             },
             onClose: () {
-              // charactersModel.isDialOpen.value = false;
               characterModel.isEditable = false;
               charactersModel.isEditMode = false;
             },
-            // openCloseDial: charactersModel.isDialOpen,
             renderOverlay: false,
             heroTag: null,
             foregroundColor: ThemeData.estimateBrightnessForColor(
@@ -385,7 +370,6 @@ class _CharacterScreenState extends State<CharacterScreen>
                 ? Colors.white
                 : Colors.black,
             icon: Icons.edit,
-            // backgroundColor: Color(int.parse('0xff3868F3')),
             activeIcon: Icons.check,
             children: [
               SpeedDialChild(
@@ -394,64 +378,68 @@ class _CharacterScreenState extends State<CharacterScreen>
                       ? Icons.directions_walk
                       : Icons.elderly,
                 ),
-                backgroundColor: Colors.blue[300],
+                backgroundColor: Colors.blue[400],
                 foregroundColor: Colors.white,
                 onTap: () async {
                   final String retiredCharactersName =
                       charactersModel.currentCharacter.name;
                   final bool retiredCharacterIsRetired =
                       charactersModel.currentCharacter.isRetired;
-                  await charactersModel.retireCurrentCharacter(
-                      // context,
-                      );
-                  scaffoldMessengerKey.currentState != null
-                      ? scaffoldMessengerKey.currentState.showSnackBar(
-                          SnackBar(
-                            duration: const Duration(seconds: 2),
-                            content: Text(
-                                '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-                            // action: charactersModel.showRetired
-                            //     ? null
-                            //     : SnackBarAction(
-                            //         label: 'Show',
-                            //         onPressed: () {
-                            // int index =
-                            //     charactersModel.indexOfCurrentCharacter;
-                            // setState(() {
-                            //   charactersModel.showRetired = true;
-                            //   charactersModel.setCurrentCharacter(context,
-                            //       index: index);
-                            //   // ..updateTheme(context);
-                            // });
-                            //         }),
-                          ),
-                        )
-                      : ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            duration: const Duration(seconds: 2),
-                            content: Text(
-                                '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-                            // action: charactersModel.showRetired
-                            //     ? null
-                            //     : SnackBarAction(
-                            //         label: 'Show',
-                            //         onPressed: () {
-                            // int index =
-                            //     charactersModel.indexOfCurrentCharacter;
-                            // setState(() {
-                            //   charactersModel.showRetired = true;
-                            //   charactersModel.setCurrentCharacter(context,
-                            //       index: index);
-                            //   // ..updateTheme(context);
-                            // });
-                            //         }),
-                          ),
-                        );
+                  final int currentCharacterIndex = charactersModel.characters
+                      .indexOf(charactersModel.currentCharacter);
+                  await charactersModel.retireCurrentCharacter();
+                  try {
+                    scaffoldMessengerKey.currentState.showSnackBar(
+                      SnackBar(
+                        duration: const Duration(seconds: 2),
+                        content: Text(
+                            '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
+                        action: charactersModel.showRetired
+                            ? null
+                            : SnackBarAction(
+                                label: 'Show',
+                                onPressed: () {
+                                  // int index = charactersModel.characters.indexOf(
+                                  //         charactersModel.currentCharacter) +
+                                  //     1;
+                                  setState(() {
+                                    charactersModel.showRetired = true;
+                                    charactersModel.setCurrentCharacter(
+                                      index: currentCharacterIndex,
+                                    );
+                                  });
+                                }),
+                      ),
+                    );
+                  } catch (e) {
+                    // ScaffoldMessenger.maybeOf(context).showSnackBar(
+                    //   SnackBar(
+                    //     duration: const Duration(seconds: 2),
+                    //     content: Text(
+                    //         '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
+                    //     action: charactersModel.showRetired
+                    //         ? null
+                    //         : SnackBarAction(
+                    //             label: 'Show',
+                    //             onPressed: () {
+                    //               // int index = charactersModel.characters.indexOf(
+                    //               //         charactersModel.currentCharacter) +
+                    //               //     1;
+                    //               setState(() {
+                    //                 charactersModel.showRetired = true;
+                    //                 charactersModel.setCurrentCharacter(
+                    //                   index: currentCharacterIndex,
+                    //                 );
+                    //               });
+                    //             }),
+                    //   ),
+                    // );
+                  }
                 },
               ),
               SpeedDialChild(
                 child: const Icon(Icons.delete),
-                backgroundColor: Colors.red[300],
+                backgroundColor: Colors.red[400],
                 foregroundColor: Colors.white,
                 onTap: () async {
                   showDialog<bool>(
@@ -470,8 +458,8 @@ class _CharacterScreenState extends State<CharacterScreen>
                           ),
                           ElevatedButton(
                             style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(Colors.red),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.red[400]),
                             ),
                             onPressed: () => Navigator.pop(context, true),
                             child: const Text(
@@ -487,9 +475,7 @@ class _CharacterScreenState extends State<CharacterScreen>
                   ).then(
                     (result) async {
                       if (result) {
-                        await charactersModel.deleteCurrentCharacter(
-                            // context,
-                            );
+                        await charactersModel.deleteCurrentCharacter();
                       }
                     },
                   );
@@ -497,21 +483,6 @@ class _CharacterScreenState extends State<CharacterScreen>
               ),
             ],
           ),
-          // FloatingActionButton(
-          //   heroTag: null,
-          //   child: Icon(
-          //     characterModel.isEditable ? Icons.check : Icons.edit,
-          //     color: ThemeData.estimateBrightnessForColor(
-          //                 Theme.of(context).colorScheme.secondary) ==
-          //             Brightness.dark
-          //         ? Colors.white
-          //         : Colors.black,
-          //   ),
-          //   onPressed: () {
-          //     characterModel.isEditable = !characterModel.isEditable;
-          //     charactersModel.isEditMode = !charactersModel.isEditMode;
-          //   },
-          // ),
         ),
       ),
     );
@@ -574,30 +545,38 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
           ],
         ),
         Tooltip(
-          message: 'Number of pocket items allowed',
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: <Widget>[
-              SvgPicture.asset(
-                'images/equipment_slots/pocket.svg',
-                width: iconSize,
-                color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 3.5),
-                child: Text(
-                  characterModel.numOfPocketItems.toString(),
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontSize: 20,
-                      color: SharedPrefs().darkTheme
-                          ? Colors.black
-                          : Colors.white),
+          message:
+              '${characterModel.numOfPocketItems} pocket item${characterModel.numOfPocketItems > 1 ? 's' : ''} allowed',
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: smallPadding,
+              top: smallPadding,
+            ),
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: <Widget>[
+                SvgPicture.asset(
+                  'images/equipment_slots/pocket.svg',
+                  width: iconSize,
+                  color:
+                      SharedPrefs().darkTheme ? Colors.white : Colors.black87,
                 ),
-              ),
-              const SizedBox(
-                width: smallPadding,
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 3.5),
+                  child: Text(
+                    characterModel.numOfPocketItems.toString(),
+                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        fontSize: 20,
+                        color: SharedPrefs().darkTheme
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                ),
+                const SizedBox(
+                  width: smallPadding,
+                )
+              ],
+            ),
           ),
         ),
       ],
@@ -741,22 +720,6 @@ class StatsSection extends StatelessWidget {
                             }
                           }),
                         ),
-                        // AddSubtractButton(
-                        //   onTap: () async => await showDialog<int>(
-                        //       context: context,
-                        //       builder: (_) => AddSubtractDialog(
-                        //             characterModel.character.xp,
-                        //             'XP',
-                        //           )).then((value) {
-                        //     if (value != null) {
-                        //       characterModel.xpController.text =
-                        //           value.toString();
-                        //       characterModel.updateCharacter(
-                        //         characterModel.character..xp = value,
-                        //       );
-                        //     }
-                        //   }),
-                        // ),
                       ],
                     )
                   : Text(
@@ -821,22 +784,6 @@ class StatsSection extends StatelessWidget {
                             }
                           }),
                         ),
-                        // AddSubtractButton(
-                        //   onTap: () async => await showDialog<int>(
-                        //       context: context,
-                        //       builder: (_) => AddSubtractDialog(
-                        //             characterModel.character.gold,
-                        //             'Gold',
-                        //           )).then((value) {
-                        //     if (value != null) {
-                        //       characterModel.goldController.text =
-                        //           value.toString();
-                        //       characterModel.updateCharacter(
-                        //         characterModel.character..gold = value,
-                        //       );
-                        //     }
-                        //   }),
-                        // ),
                       ],
                     )
                   : Text(
@@ -968,5 +915,3 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
     );
   }
 }
-
-typedef DeleteCharacter = Future<void> Function(int id);

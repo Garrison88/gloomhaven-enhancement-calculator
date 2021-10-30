@@ -17,18 +17,28 @@ class EnhancementCalculatorPage extends StatefulWidget {
   State<StatefulWidget> createState() => _EnhancementCalculatorPageState();
 }
 
-class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
+class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage>
+    with TickerProviderStateMixin {
   bool _disableMultiTargetSwitch = false;
-  bool _fabIsVisible = true;
   bool _costIsVisible = true;
   Enhancement _selectedEnhancement;
+  AnimationController _hideFabAnimation;
 
   @override
   void initState() {
     super.initState();
+    _hideFabAnimation =
+        AnimationController(vsync: this, duration: kThemeAnimationDuration)
+          ..forward();
     _selectedEnhancement = SharedPrefs().enhancementTypeIndex != 0
         ? EnhancementData.enhancements[SharedPrefs().enhancementTypeIndex]
         : null;
+  }
+
+  @override
+  void dispose() {
+    _hideFabAnimation.dispose();
+    super.dispose();
   }
 
   void _resetAllFields() {
@@ -90,9 +100,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
         SharedPrefs().previousEnhancements != 0 ||
         _selectedEnhancement != null ||
         SharedPrefs().multipleTargetsSwitch == true) {
-      _fabIsVisible = true;
+      _hideFabAnimation.forward();
     } else {
-      _fabIsVisible = false;
+      _hideFabAnimation.reverse();
     }
     if (SharedPrefs().targetCardLvl > 0 ||
         SharedPrefs().previousEnhancements != 0 ||
@@ -363,8 +373,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
           ),
         ),
       ),
-      floatingActionButton: Visibility(
-        visible: _fabIsVisible,
+      floatingActionButton: ScaleTransition(
+        scale: _hideFabAnimation,
+        // alignment: Alignment.bottomRight,
         child: FloatingActionButton(
           onPressed: _resetAllFields,
           child: SvgPicture.asset(

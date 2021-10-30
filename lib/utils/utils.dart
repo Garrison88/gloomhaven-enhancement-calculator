@@ -85,8 +85,7 @@ class Utils {
             assetPath = 'rolling.svg';
             break;
           case 'HEAL':
-            assetPath = 'heal.svg';
-            invertColor = true;
+            assetPath = darkTheme ? 'heal.svg' : 'heal_light.svg';
             break;
           case 'SHIELD':
             assetPath = 'shield.svg';
@@ -116,6 +115,9 @@ class Utils {
           case 'TARGET':
             assetPath = 'target.svg';
             break;
+          case 'Target':
+            assetPath = darkTheme ? 'target_alt.svg' : 'target_alt_light.svg';
+            break;
           case 'Range':
             assetPath = 'range.svg';
             invertColor = true;
@@ -128,7 +130,7 @@ class Utils {
             assetPath = 'retaliate.svg';
             invertColor = true;
             break;
-          case 'ATTACK':
+          case 'Attack':
             assetPath = 'attack.svg';
             invertColor = true;
             break;
@@ -182,6 +184,9 @@ class Utils {
           case 'HEX':
             assetPath = 'luminary_hexes.svg';
             break;
+          case 'DAMAGE':
+            assetPath = darkTheme ? 'damage.svg' : 'damage_light.svg';
+            break;
           case 'Shackle':
           case 'Shackled':
             assetPath = 'class_icons/chainguard.svg';
@@ -189,6 +194,10 @@ class Utils {
             break;
           case 'Chieftain':
             assetPath = 'class_icons/chieftain.svg';
+            invertColor = true;
+            break;
+          case 'Boneshaper':
+            assetPath = 'class_icons/boneshaper.svg';
             invertColor = true;
             break;
           case 'Glow':
@@ -246,6 +255,9 @@ class Utils {
             break;
           case 'EARTH/FIRE':
             assetPath = 'elem_earth_or_fire.svg';
+            break;
+          case 'EARTH/DARK':
+            assetPath = 'elem_earth_or_dark.svg';
             break;
           case 'Any_Element':
             assetPath = 'elem_any.svg';

@@ -36,33 +36,41 @@ class _PerkRowState extends State<PerkRow> {
       child: Row(
         children: <Widget>[
           widget.perks[0].perkIsGrouped
-              ? Card(
-                  color: allPerksSelected(characterModel)
-                      ? Theme.of(context).colorScheme.secondary.withOpacity(0.5)
-                      : null,
+              ? Container(
+                  margin: const EdgeInsets.only(right: 6, left: 1),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: allPerksSelected(characterModel)
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).dividerColor,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                   child: Column(
                     children: List.generate(
                       widget.perks.length,
-                      (index) => Checkbox(
-                        visualDensity: VisualDensity.comfortable,
-                        value: characterModel.characterPerks
-                            .firstWhere(
-                              (element) =>
-                                  element.associatedPerkId ==
-                                  widget.perks[index].perkId,
-                            )
-                            .characterPerkIsSelected,
-                        onChanged: characterModel.isEditable
-                            ? (value) => characterModel.togglePerk(
-                                  characterModel.characterPerks.firstWhere(
-                                    (element) =>
-                                        element.associatedPerkId ==
-                                        widget.perks[index].perkId,
-                                  ),
-                                  value,
-                                )
-                            : null,
-                      ),
+                      (index) {
+                        return Checkbox(
+                          visualDensity: VisualDensity.compact,
+                          value: characterModel.characterPerks
+                              .firstWhere(
+                                (element) =>
+                                    element.associatedPerkId ==
+                                    widget.perks[index].perkId,
+                              )
+                              .characterPerkIsSelected,
+                          onChanged: characterModel.isEditable
+                              ? (value) => characterModel.togglePerk(
+                                    characterModel.characterPerks.firstWhere(
+                                      (element) =>
+                                          element.associatedPerkId ==
+                                          widget.perks[index].perkId,
+                                    ),
+                                    value,
+                                  )
+                              : null,
+                        );
+                      },
                     ),
                   ),
                 )
@@ -103,9 +111,11 @@ class _PerkRowState extends State<PerkRow> {
               : Container(
                   height: height,
                   width: 1,
-                  color: allPerksSelected(characterModel)
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).dividerColor,
+                  color:
+                      // allPerksSelected(characterModel)
+                      //     ? Theme.of(context).colorScheme.secondary
+                      // :
+                      Theme.of(context).dividerColor,
                   margin: const EdgeInsets.only(right: 12),
                 ),
           SizeProviderWidget(

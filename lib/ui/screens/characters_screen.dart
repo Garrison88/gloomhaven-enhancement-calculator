@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../data/constants.dart';
 import '../../shared_prefs.dart';
 import 'character_screen.dart';
@@ -29,8 +28,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
     super.initState();
     CharactersModel charactersModel =
         Provider.of<CharactersModel>(context, listen: false);
-    charactersModel.pageController =
-        PageController(initialPage: SharedPrefs().initialPage);
+    charactersModel.pageController = PageController(
+      initialPage: SharedPrefs().initialPage,
+    );
     _runFuture =
         Provider.of<CharactersModel>(context, listen: false).loadCharacters();
   }
@@ -44,9 +44,6 @@ class _CharactersScreenState extends State<CharactersScreen> {
       builder: (context, AsyncSnapshot<List<Character>> snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
-          // } else if (snapshot.hasData &&
-          //     snapshot.connectionState == ConnectionState.done) {
-          //   if (snapshot.data.isEmpty) {
         } else if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) charactersModel.characters = snapshot.data;
           if (charactersModel.characters.isEmpty) {
@@ -104,36 +101,31 @@ class _CharactersScreenState extends State<CharactersScreen> {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                charactersModel.characters.length > 1
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 8,
-                        ),
-                        child: SmoothPageIndicator(
-                          controller: charactersModel.pageController,
-                          count: charactersModel.characters.length,
-                          effect: ScrollingDotsEffect(
-                            dotColor: Colors.grey.withOpacity(0.5),
-                            dotHeight: 10,
-                            dotWidth: 10,
-                            activeDotColor: Color(
-                              int.parse(SharedPrefs().themeColor),
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
+                // charactersModel.characters.length > 1
+                //     ? Padding(
+                //         padding: const EdgeInsets.only(
+                //           top: 10,
+                //           bottom: 8,
+                //         ),
+                //         child: SmoothPageIndicator(
+                //           controller: charactersModel.pageController,
+                //           count: charactersModel.characters.length,
+                //           effect: ScrollingDotsEffect(
+                //             dotColor: Colors.grey.withOpacity(0.5),
+                //             dotHeight: 10,
+                //             dotWidth: 10,
+                //             activeDotColor: Color(
+                //               int.parse(SharedPrefs().themeColor),
+                //             ),
+                //           ),
+                //         ),
+                //       )
+                //     : Container(),
                 Expanded(
                   child: PageView.builder(
-                    // physics: charactersModel.isEditMode
-                    //     ? const NeverScrollableScrollPhysics()
-                    //     : null,
                     controller: charactersModel.pageController,
                     onPageChanged: (index) {
-                      print('PAGE CHANGED');
                       charactersModel.onPageChanged(
-                        // context,
                         index,
                       );
                     },
@@ -142,12 +134,10 @@ class _CharactersScreenState extends State<CharactersScreen> {
                       try {
                         _characterModel = CharacterModel(
                             character: charactersModel.characters[index])
-                          // ..character = charactersModel.characters[index]
                           ..isEditable = charactersModel.isEditMode;
                       } on RangeError {
                         _characterModel = CharacterModel(
                             character: charactersModel.characters[0])
-                          // ..character = charactersModel.characters[0]
                           ..isEditable = charactersModel.isEditMode;
                       }
                       return Stack(
