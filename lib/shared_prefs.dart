@@ -119,12 +119,6 @@ class SharedPrefs {
     _sharedPrefs.setBool('multipleTargetsSelected', value);
   }
 
-  int get enhancementCost => _sharedPrefs.getInt('enhancementCost') ?? 0;
-
-  set enhancementCost(int value) {
-    _sharedPrefs.setInt('enhancementCost', value);
-  }
-
   String get backup => _sharedPrefs.getString('backup') ?? '';
 
   set backup(String value) {

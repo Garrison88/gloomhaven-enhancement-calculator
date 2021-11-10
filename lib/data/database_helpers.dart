@@ -17,7 +17,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 5;
+  static const _databaseVersion = 6;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -123,7 +123,10 @@ class DatabaseHelper {
           // and change schema for both
           await DatabaseMigrations.migrateToUuids(txn);
         }
-        // if (oldVersion <= 5) {
+        if (oldVersion <= 5) {
+          // Cleanup perks and add Ruinmaw
+          await DatabaseMigrations.regeneratePerksTable(txn);
+        }
         // INSERT RESOURCES ROWS
         // await txn.rawInsert(
         //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide $integerType DEFAULT 0');
@@ -143,7 +146,6 @@ class DatabaseHelper {
         //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpseCap $integerType DEFAULT 0');
         // await txn.rawInsert(
         //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowThistle $integerType DEFAULT 0');
-        // }
       },
     );
   }

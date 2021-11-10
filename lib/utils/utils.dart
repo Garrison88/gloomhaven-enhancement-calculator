@@ -61,6 +61,9 @@ class Utils {
           case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
+          case '2x':
+            assetPath = 'attack_modifiers/2_x.svg';
+            break;
           case '+1':
             assetPath = 'attack_modifiers/plus_1.png';
             break;
@@ -277,8 +280,11 @@ class Utils {
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child: Tooltip(
-              message:
-                  element.toLowerCase().replaceAll(RegExp('[\\"|\\,]'), ''),
+              message: element
+                  .toLowerCase()
+                  .replaceAll(RegExp('[\\"|\\,]'), '')
+                  .replaceAll(RegExp('[\\_]'), ' ')
+                  .toTitleCase,
               child: SizedBox(
                 height: iconSize - 2.5,
                 width: iconSize - 2.5,
@@ -383,4 +389,13 @@ class Utils {
         c.blue + ((255 - c.blue) * p).round());
     // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
   }
+}
+
+extension StringCasingExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
+  String get toTitleCase => replaceAll(RegExp(' +'), ' ')
+      .split(" ")
+      .map((str) => str.toCapitalized())
+      .join(" ");
 }

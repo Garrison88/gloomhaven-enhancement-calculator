@@ -102,11 +102,17 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
         ),
         checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.resolveWith(getCheckboxColor),
+          fillColor: MaterialStateProperty.resolveWith(
+            getCheckboxColor,
+          ),
         ),
         switchTheme: SwitchThemeData(
-          trackColor: MaterialStateProperty.resolveWith(getSwitchTrackColor),
-          thumbColor: MaterialStateProperty.resolveWith(getSwitchThumbColor),
+          trackColor: MaterialStateProperty.resolveWith(
+            getSwitchTrackColor,
+          ),
+          thumbColor: MaterialStateProperty.resolveWith(
+            getSwitchThumbColor,
+          ),
         ),
       ),
     );

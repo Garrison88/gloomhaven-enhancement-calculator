@@ -8,6 +8,7 @@ import '../shared_prefs.dart';
 class CharacterModel with ChangeNotifier {
   CharacterModel({
     this.character,
+    this.modelNumber,
   });
   bool _isEditable = false;
   Character character;
@@ -19,6 +20,14 @@ class CharacterModel with ChangeNotifier {
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
   DatabaseHelper db = DatabaseHelper.instance;
+
+  int modelNumber;
+
+  // MyModel(this.modelNumber);
+
+  void edit(int newModelNumber) {
+    modelNumber = newModelNumber;
+  }
 
   int get maximumPerks =>
       currentLevel -

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,11 +23,13 @@ import '../../shared_prefs.dart';
 class SettingsScreen extends StatefulWidget {
   final void Function() updateTheme;
   final CharactersModel charactersModel;
+  final EnhancementCalculatorModel enhancementCalculatorModel;
 
   const SettingsScreen({
     Key key,
     this.updateTheme,
     this.charactersModel,
+    this.enhancementCalculatorModel,
   }) : super(key: key);
 
   @override
@@ -81,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: <Widget>[
           SwitchListTile(
               title: const Text('Theme'),
-              subtitle: SharedPrefs().darkTheme
+              subtitle: Theme.of(context).brightness == Brightness.dark
                   ? const Text('Dark')
                   : const Text('Light'),
               activeThumbImage: const Svg('images/elem_dark.svg'),
@@ -90,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
               activeTrackColor: Colors.white30,
               inactiveThumbImage: const Svg('images/elem_light.svg'),
-              value: SharedPrefs().darkTheme,
+              value: Theme.of(context).brightness == Brightness.dark,
               onChanged: (val) {
                 SharedPrefs().darkTheme = val;
                 EasyDynamicTheme.of(context).changeTheme(dynamic: true);
@@ -203,6 +206,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 setState(
                   () {
                     SharedPrefs().partyBoon = val;
+                    widget.enhancementCalculatorModel.calculateCost();
                   },
                 );
               }),

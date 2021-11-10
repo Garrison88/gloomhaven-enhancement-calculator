@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import '../../data/constants.dart';
@@ -7,7 +6,6 @@ import '../../shared_prefs.dart';
 import 'character_screen.dart';
 import '../../viewmodels/characters_model.dart';
 import '../../viewmodels/character_model.dart';
-import '../dialogs/create_character_dialog.dart';
 import 'package:provider/provider.dart';
 
 class CharactersScreen extends StatefulWidget {
@@ -16,46 +14,54 @@ class CharactersScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CharactersScreenState createState() => _CharactersScreenState();
+  State<CharactersScreen> createState() => _CharactersScreenState();
 }
 
 class _CharactersScreenState extends State<CharactersScreen> {
-  Future<List<Character>> _runFuture;
-  CharacterModel _characterModel;
-
+  Future<List<Character>> _future;
   @override
   void initState() {
     super.initState();
-    CharactersModel charactersModel =
-        Provider.of<CharactersModel>(context, listen: false);
-    charactersModel.pageController = PageController(
-      initialPage: SharedPrefs().initialPage,
-    );
-    _runFuture =
+    _future =
         Provider.of<CharactersModel>(context, listen: false).loadCharacters();
   }
 
+  // final CharacterModel _characterModel;
   @override
   Widget build(BuildContext context) {
     CharactersModel charactersModel =
-        Provider.of<CharactersModel>(context, listen: false);
-    return FutureBuilder<List<Character>>(
-      future: _runFuture,
-      builder: (context, AsyncSnapshot<List<Character>> snapshot) {
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) charactersModel.characters = snapshot.data;
-          if (charactersModel.characters.isEmpty) {
-            return Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
+        Provider.of<CharactersModel>(context, listen: false)
+          ..pageController = PageController(
+            initialPage: SharedPrefs().initialPage,
+          );
+    return FutureProvider<List<Character>>(
+        // updateShouldNotify: (first, second) => first == second,
+        initialData: const [],
+        create: (_) => _future,
+        child: Consumer<List<Character>>(
+          builder: (_, value, __) {
+            print("FUTURE RAN");
+            // charactersModel.characters = value;
+            if (value == null) {
+              return SizedBox(
                 width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
+                  children: const <Widget>[
+                    Text('Building database. Please wait...'),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            } else {
+              if (charactersModel.characters.isEmpty) {
+                print('IS EMPTY');
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: Center(
+                    child: Container(
                       padding: const EdgeInsets.only(
                         left: smallPadding * 2,
                         right: smallPadding * 2,
@@ -65,84 +71,42 @@ class _CharactersScreenState extends State<CharactersScreen> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(smallPadding),
-                    ),
-                    IconButton(
-                      iconSize: MediaQuery.of(context).size.width / 2,
-                      icon: Icon(
-                        Icons.add_circle,
-                        size: MediaQuery.of(context).size.width / 2,
-                      ),
-                      onPressed: () async {
-                        await showDialog<bool>(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) {
-                            return CreateCharacterDialog(
-                              charactersModel: charactersModel,
-                            );
-                          },
-                        );
-                      },
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            try {
-              charactersModel.currentCharacter =
-                  charactersModel.characters[SharedPrefs().initialPage];
-            } catch (e) {
-              charactersModel.currentCharacter = charactersModel.characters[0];
-            }
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // charactersModel.characters.length > 1
-                //     ? Padding(
-                //         padding: const EdgeInsets.only(
-                //           top: 10,
-                //           bottom: 8,
-                //         ),
-                //         child: SmoothPageIndicator(
-                //           controller: charactersModel.pageController,
-                //           count: charactersModel.characters.length,
-                //           effect: ScrollingDotsEffect(
-                //             dotColor: Colors.grey.withOpacity(0.5),
-                //             dotHeight: 10,
-                //             dotWidth: 10,
-                //             activeDotColor: Color(
-                //               int.parse(SharedPrefs().themeColor),
-                //             ),
-                //           ),
-                //         ),
-                //       )
-                //     : Container(),
-                Expanded(
-                  child: PageView.builder(
-                    controller: charactersModel.pageController,
-                    onPageChanged: (index) {
-                      charactersModel.onPageChanged(
-                        index,
-                      );
-                    },
-                    itemCount: charactersModel.characters.length,
-                    itemBuilder: (_, int index) {
-                      try {
-                        _characterModel = CharacterModel(
-                            character: charactersModel.characters[index])
-                          ..isEditable = charactersModel.isEditMode;
-                      } on RangeError {
-                        _characterModel = CharacterModel(
-                            character: charactersModel.characters[0])
-                          ..isEditable = charactersModel.isEditMode;
-                      }
-                      return Stack(
-                        children: <Widget>[
-                          Center(
+                  ),
+                );
+              } else {
+                print('IS NOT EMPTY');
+                try {
+                  charactersModel.currentCharacter =
+                      charactersModel.characters[SharedPrefs().initialPage];
+                } catch (e) {
+                  charactersModel.currentCharacter =
+                      charactersModel.characters[0];
+                }
+                return PageView.builder(
+                  controller: charactersModel.pageController,
+                  onPageChanged: (index) {
+                    charactersModel.onPageChanged(
+                      index,
+                    );
+                  },
+                  itemCount: charactersModel.characters.length,
+                  itemBuilder: (context, int index) {
+                    CharacterModel _characterModel;
+                    print('ITEM BUILDER CALLED');
+                    try {
+                      _characterModel = CharacterModel(
+                        character: charactersModel.characters[index],
+                      )..isEditable = charactersModel.isEditMode;
+                    } on RangeError {
+                      _characterModel = CharacterModel(
+                        character: charactersModel.characters[0],
+                      )..isEditable = charactersModel.isEditMode;
+                    }
+                    return Stack(
+                      children: <Widget>[
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 80),
                             child: Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16),
@@ -155,34 +119,19 @@ class _CharactersScreenState extends State<CharactersScreen> {
                               ),
                             ),
                           ),
-                          ChangeNotifierProvider.value(
-                            value: _characterModel,
-                            // ignore: prefer_const_constructors
-                            child: CharacterScreen(),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }
-        } else {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const <Widget>[
-                Text('Building database. Please wait...'),
-                CircularProgressIndicator(),
-              ],
-            ),
-          );
-        }
-      },
-    );
+                        ),
+                        ChangeNotifierProvider.value(
+                          value: _characterModel,
+                          // ignore: prefer_const_constructors
+                          child: CharacterScreen(),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            }
+          },
+        ));
   }
 }
