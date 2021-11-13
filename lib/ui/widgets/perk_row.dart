@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
@@ -27,7 +28,8 @@ class _PerkRowState extends State<PerkRow> {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = Provider.of<CharacterModel>(context);
+    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     for (final Perk perk in widget.perks) {
       _perkIds.add(perk.perkId);
     }
@@ -59,7 +61,7 @@ class _PerkRowState extends State<PerkRow> {
                                     widget.perks[index].perkId,
                               )
                               .characterPerkIsSelected,
-                          onChanged: characterModel.isEditable
+                          onChanged: charactersModel.isEditMode
                               ? (value) => characterModel.togglePerk(
                                     characterModel.characterPerks.firstWhere(
                                       (element) =>
@@ -84,7 +86,7 @@ class _PerkRowState extends State<PerkRow> {
                               element.associatedPerkId ==
                               widget.perks[index].perkId)
                           .characterPerkIsSelected,
-                      onChanged: characterModel.isEditable
+                      onChanged: charactersModel.isEditMode
                           ? (value) => characterModel.togglePerk(
                                 characterModel.characterPerks.firstWhere(
                                     (element) =>

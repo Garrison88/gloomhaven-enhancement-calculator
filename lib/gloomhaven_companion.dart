@@ -1,11 +1,15 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
+import 'package:provider/provider.dart';
 import 'data/constants.dart';
 import 'shared_prefs.dart';
 import 'ui/screens/home.dart';
 
 class GloomhavenCompanion extends StatelessWidget {
-  GloomhavenCompanion({
+  const GloomhavenCompanion({
     Key key,
   }) : super(key: key);
 
@@ -39,6 +43,8 @@ class GloomhavenCompanion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = ThemeData(
+      // removes splash animation from InkWell on bottom app bar navigation destination
+      splashFactory: NoSplash.splashFactory,
       fontFamily: highTower,
       textTheme: TextTheme(
         subtitle1: const TextStyle(
@@ -79,7 +85,30 @@ class GloomhavenCompanion extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Gloomhaven Companion',
-      home: Home(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => EnhancementCalculatorModel(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => CharactersModel(
+              context,
+              // hideRetireCharacterAnimationController: AnimationController(
+              //   vsync: this,
+              //   duration: kThemeAnimationDuration,
+              // )..forward(),
+              pageController: PageController(
+                initialPage: SharedPrefs().initialPage,
+              ),
+            ),
+            // child: Home(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => AppModel(),
+          )
+        ],
+        child: const Home(),
+      ),
       themeMode: EasyDynamicTheme.of(context).themeMode,
       theme: theme.copyWith(
         iconTheme: IconThemeData(

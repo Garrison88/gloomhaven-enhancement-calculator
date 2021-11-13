@@ -11,7 +11,7 @@ import '../shared_prefs.dart';
 class CharactersModel with ChangeNotifier {
   CharactersModel(
     this.context, {
-    this.hideRetireCharacterAnimationController,
+    // this.hideRetireCharacterAnimationController,
     this.pageController,
   });
 
@@ -21,10 +21,22 @@ class CharactersModel with ChangeNotifier {
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   PageController pageController = PageController();
-  AnimationController hideRetireCharacterAnimationController;
-  bool showRetired = SharedPrefs().showRetiredCharacters;
+  // AnimationController hideRetireCharacterAnimationController;
+  bool _showRetired = SharedPrefs().showRetiredCharacters;
+
+  bool get showRetired => _showRetired;
+
+  set showRetired(bool showRetired) {
+    _showRetired = showRetired;
+    notifyListeners();
+  }
+
   bool isEditMode = false;
   // double currentPage = pageController.page;
+
+  bool get retiredCharactersAreHidden {
+    return !showRetired && _characters.isNotEmpty;
+  }
 
   List<Character> get characters => showRetired
       ? _characters
@@ -55,9 +67,9 @@ class CharactersModel with ChangeNotifier {
 
   void toggleEditMode() {
     // if (value) {
-    isEditMode
-        ? hideRetireCharacterAnimationController.reverse()
-        : hideRetireCharacterAnimationController.forward();
+    // isEditMode
+    //     ? hideRetireCharacterAnimationController.reverse()
+    //     : hideRetireCharacterAnimationController.forward();
     // } else {
     //   hideRetireCharacterAnimationController.reverse();
     // }
@@ -129,7 +141,7 @@ class CharactersModel with ChangeNotifier {
 
   void setCurrentCharacter({
     int index,
-    bool updateTheme = true,
+    // bool updateTheme = true,
   }) {
     // isDialOpen.value = false;
     if (characters.isEmpty) {
@@ -143,9 +155,9 @@ class CharactersModel with ChangeNotifier {
 
       SharedPrefs().initialPage = index;
     }
-    if (updateTheme) {
-      _updateTheme();
-    }
+    // if (updateTheme) {
+    _updateTheme();
+    // }
   }
 
   void _updateTheme() {

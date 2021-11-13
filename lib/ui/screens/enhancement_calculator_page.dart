@@ -23,7 +23,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   void initState() {
     super.initState();
     Provider.of<EnhancementCalculatorModel>(context, listen: false)
-        .calculateCost();
+        .calculateCost(notify: false);
   }
 
   @override

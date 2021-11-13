@@ -16,66 +16,11 @@ class CharacterScreen extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-//   @override
-//   _CharacterScreenState createState() => _CharacterScreenState();
-// }
-
-// class _CharacterScreenState extends State<CharacterScreen> {
-  // AnimationController _hideFabAnimation;
-  // final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  //     GlobalKey<ScaffoldMessengerState>();
-
-  // bool _handleScrollNotification(ScrollNotification notification) {
-  //   if (notification.depth == 0) {
-  //     if (notification is UserScrollNotification) {
-  //       final UserScrollNotification userScroll = notification;
-  //       switch (userScroll.direction) {
-  //         case ScrollDirection.forward:
-  //         case ScrollDirection.reverse:
-  //           if (userScroll.metrics.maxScrollExtent !=
-  //               userScroll.metrics.minScrollExtent) {
-  //             _hideFabAnimation.reverse();
-  //           }
-  //           break;
-  //         case ScrollDirection.idle:
-  //           _hideFabAnimation.forward();
-  //           break;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _hideFabAnimation = AnimationController(
-  //     vsync: this,
-  //     duration: kThemeAnimationDuration,
-  //   )..forward();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _hideFabAnimation.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
-    // CharactersModel charactersModel =
-    //     Provider.of<CharactersModel>(context, listen: false);
-    return
-        // ScaffoldMessenger(
-        //   key: scaffoldMessengerKey,
-        //   child: Scaffold(
-        //     // key: _scaffoldKey,
-        //     backgroundColor: Colors.transparent,
-        //     body: NotificationListener<ScrollNotification>(
-        //       onNotification: _handleScrollNotification,
-        //       child:
-        SingleChildScrollView(
+    CharactersModel charactersModel = context.watch<CharactersModel>();
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: smallPadding),
         child: Column(
@@ -326,23 +271,21 @@ class CharacterScreen extends StatelessWidget {
                     ),
                   ), */
             // NOTES
-            characterModel.character.notes.isEmpty && !characterModel.isEditable
+            characterModel.character.notes.isEmpty &&
+                    !charactersModel.isEditMode
                 ? Container()
                 : const Padding(
                     padding: EdgeInsets.all(smallPadding),
                     child: NotesSection(),
                   ),
             // BATTLE GOAL CHECKMARKS
-            characterModel.isEditable
-                ? const Padding(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: BattleGoalCheckmarksSection(),
-                  )
-                : Container(),
+            const BattleGoalCheckmarksSection(),
             // PERKS
             Padding(
               padding: const EdgeInsets.all(smallPadding),
-              child: PerkSection(characterModel: characterModel),
+              child: PerkSection(
+                characterModel: characterModel,
+              ),
             ),
             const SizedBox(
               height: 24,
@@ -350,142 +293,6 @@ class CharacterScreen extends StatelessWidget {
           ],
         ),
       ),
-      //   ),
-      // ),
-      // floatingActionButton: ScaleTransition(
-      //   scale: _hideFabAnimation,
-      //   child: SpeedDial(
-      //     onOpen: () {
-      //       characterModel.isEditable = true;
-      //       charactersModel.isEditMode = true;
-      //     },
-      //     onClose: () {
-      //       characterModel.isEditable = false;
-      //       charactersModel.isEditMode = false;
-      //     },
-      //     renderOverlay: false,
-      //     heroTag: null,
-      //     foregroundColor: ThemeData.estimateBrightnessForColor(
-      //                 Theme.of(context).colorScheme.secondary) ==
-      //             Brightness.dark
-      //         ? Colors.white
-      //         : Colors.black,
-      //     icon: Icons.edit,
-      //     activeIcon: Icons.check,
-      //     children: [
-      //       SpeedDialChild(
-      //         child: Icon(
-      //           characterModel.character.isRetired
-      //               ? Icons.directions_walk
-      //               : Icons.elderly,
-      //         ),
-      //         backgroundColor: Colors.blue[400],
-      //         foregroundColor: Colors.white,
-      //         onTap: () async {
-      //           final String retiredCharactersName =
-      //               charactersModel.currentCharacter.name;
-      //           final bool retiredCharacterIsRetired =
-      //               charactersModel.currentCharacter.isRetired;
-      //           final int currentCharacterIndex = charactersModel.characters
-      //               .indexOf(charactersModel.currentCharacter);
-      //           await charactersModel.retireCurrentCharacter();
-      //           try {
-      //             scaffoldMessengerKey.currentState.showSnackBar(
-      //               SnackBar(
-      //                 duration: const Duration(seconds: 2),
-      //                 content: Text(
-      //                     '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-      //                 action: charactersModel.showRetired
-      //                     ? null
-      //                     : SnackBarAction(
-      //                         label: 'Show',
-      //                         onPressed: () {
-      //                           // int index = charactersModel.characters.indexOf(
-      //                           //         charactersModel.currentCharacter) +
-      //                           //     1;
-      //                           setState(() {
-      //                             charactersModel.showRetired = true;
-      //                             charactersModel.setCurrentCharacter(
-      //                               index: currentCharacterIndex,
-      //                             );
-      //                           });
-      //                         }),
-      //               ),
-      //             );
-      //           } catch (e) {
-      //             // ScaffoldMessenger.maybeOf(context).showSnackBar(
-      //             //   SnackBar(
-      //             //     duration: const Duration(seconds: 2),
-      //             //     content: Text(
-      //             //         '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-      //             //     action: charactersModel.showRetired
-      //             //         ? null
-      //             //         : SnackBarAction(
-      //             //             label: 'Show',
-      //             //             onPressed: () {
-      //             //               // int index = charactersModel.characters.indexOf(
-      //             //               //         charactersModel.currentCharacter) +
-      //             //               //     1;
-      //             //               setState(() {
-      //             //                 charactersModel.showRetired = true;
-      //             //                 charactersModel.setCurrentCharacter(
-      //             //                   index: currentCharacterIndex,
-      //             //                 );
-      //             //               });
-      //             //             }),
-      //             //   ),
-      //             // );
-      //           }
-      //         },
-      //       ),
-      //       SpeedDialChild(
-      //         child: const Icon(Icons.delete),
-      //         backgroundColor: Colors.red[400],
-      //         foregroundColor: Colors.white,
-      //         onTap: () async {
-      //           showDialog<bool>(
-      //             context: context,
-      //             builder: (_) {
-      //               return AlertDialog(
-      //                 content: const Text(
-      //                   'Are you sure? This cannot be undone',
-      //                 ),
-      //                 actions: <Widget>[
-      //                   TextButton(
-      //                     child: const Text(
-      //                       'Cancel',
-      //                     ),
-      //                     onPressed: () => Navigator.pop(context, false),
-      //                   ),
-      //                   ElevatedButton(
-      //                     style: ButtonStyle(
-      //                       backgroundColor: MaterialStateProperty.all<Color>(
-      //                           Colors.red[400]),
-      //                     ),
-      //                     onPressed: () => Navigator.pop(context, true),
-      //                     child: const Text(
-      //                       'Delete',
-      //                       style: TextStyle(
-      //                         color: Colors.white,
-      //                       ),
-      //                     ),
-      //                   )
-      //                 ],
-      //               );
-      //             },
-      //           ).then(
-      //             (result) async {
-      //               if (result) {
-      //                 await charactersModel.deleteCurrentCharacter();
-      //               }
-      //             },
-      //           );
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // ),
     );
   }
 }
@@ -498,6 +305,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -505,7 +313,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width / 4,
-              child: characterModel.isEditable
+              child: charactersModel.isEditMode
                   ? TextField(
                       enableInteractiveSelection: false,
                       onChanged: (String value) =>
@@ -594,9 +402,10 @@ class NameAndClassSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Column(
       children: <Widget>[
-        characterModel.isEditable
+        charactersModel.isEditMode
             ? TextField(
                 autocorrect: false,
                 onChanged: (String value) {
@@ -672,6 +481,7 @@ class StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -686,7 +496,7 @@ class StatsSection extends StatelessWidget {
                     ? Colors.white
                     : Colors.black87,
               ),
-              characterModel.isEditable
+              charactersModel.isEditMode
                   ? Column(
                       children: <Widget>[
                         SizedBox(
@@ -753,7 +563,7 @@ class StatsSection extends StatelessWidget {
                     ? Colors.white
                     : Colors.black87,
               ),
-              characterModel.isEditable
+              charactersModel.isEditMode
                   ? Column(
                       children: <Widget>[
                         SizedBox(
@@ -836,6 +646,7 @@ class NotesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Column(
       children: <Widget>[
         Text(
@@ -846,7 +657,7 @@ class NotesSection extends StatelessWidget {
         const SizedBox(
           height: smallPadding,
         ),
-        characterModel.isEditable
+        charactersModel.isEditMode
             ? SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: TextField(
@@ -878,51 +689,58 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
-    return Column(
-      children: <Widget>[
-        const AutoSizeText(
-          'Battle Goal Checkmarks',
-          textAlign: TextAlign.center,
-          minFontSize: titleFontSize,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Visibility(
-              visible: characterModel.character.checkMarks > 0,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: IconButton(
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
-                icon: const Icon(
-                  Icons.remove_circle,
+    return context.watch<CharactersModel>().isEditMode
+        ? Padding(
+            padding: const EdgeInsets.all(smallPadding),
+            child: Column(
+              children: <Widget>[
+                const AutoSizeText(
+                  'Battle Goal Checkmarks',
+                  textAlign: TextAlign.center,
+                  minFontSize: titleFontSize,
                 ),
-                onPressed: characterModel.decreaseCheckmark,
-              ),
-            ),
-            Text(
-              '${characterModel.character.checkMarks} / 18',
-              style: const TextStyle(fontSize: titleFontSize),
-            ),
-            Visibility(
-              visible: characterModel.character.checkMarks < 18,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: IconButton(
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
-                icon: const Icon(
-                  Icons.add_circle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Visibility(
+                      visible: characterModel.character.checkMarks > 0,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: IconButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        iconSize:
+                            Theme.of(context).textTheme.bodyText2.fontSize,
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                        onPressed: characterModel.decreaseCheckmark,
+                      ),
+                    ),
+                    Text(
+                      '${characterModel.character.checkMarks} / 18',
+                      style: const TextStyle(fontSize: titleFontSize),
+                    ),
+                    Visibility(
+                      visible: characterModel.character.checkMarks < 18,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: IconButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        iconSize:
+                            Theme.of(context).textTheme.bodyText2.fontSize,
+                        icon: const Icon(
+                          Icons.add_circle,
+                        ),
+                        onPressed: characterModel.increaseCheckmark,
+                      ),
+                    ),
+                  ],
                 ),
-                onPressed: characterModel.increaseCheckmark,
-              ),
+              ],
             ),
-          ],
-        ),
-      ],
-    );
+          )
+        : Container();
   }
 }
