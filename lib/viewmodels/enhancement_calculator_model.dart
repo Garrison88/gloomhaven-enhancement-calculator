@@ -64,7 +64,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateCost() {
+  void calculateCost({bool notify = true}) {
     int baseCost = enhancement != null && enhancement.baseCost != null
         ? enhancement.baseCost
         : 0;
@@ -81,7 +81,9 @@ class EnhancementCalculatorModel with ChangeNotifier {
     disableMultiTargetsSwitch = SharedPrefs().disableMultiTargetSwitch;
     showCost =
         cardLevel != 0 || previousEnhancements != 0 || enhancement != null;
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   void enhancementSelected(Enhancement selectedEnhancement) {

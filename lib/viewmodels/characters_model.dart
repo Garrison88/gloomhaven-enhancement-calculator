@@ -1,6 +1,5 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/character_model.dart';
 import 'package:uuid/uuid.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
@@ -11,20 +10,28 @@ import '../shared_prefs.dart';
 class CharactersModel with ChangeNotifier {
   CharactersModel(
     this.context, {
-    this.hideRetireCharacterAnimationController,
     this.pageController,
+    this.showRetired,
   });
 
   BuildContext context;
   List<Character> _characters = [];
-  // List<CharacterModel> characterModels = [];
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   PageController pageController = PageController();
   AnimationController hideRetireCharacterAnimationController;
-  bool showRetired = SharedPrefs().showRetiredCharacters;
+  bool showRetired;
   bool isEditMode = false;
-  // double currentPage = pageController.page;
+
+  bool get retiredCharactersAreHidden {
+    return !showRetired && _characters.isNotEmpty;
+  }
+
+  void toggleShowRetired() {
+    showRetired = !showRetired;
+    SharedPrefs().showRetiredCharacters = showRetired;
+    notifyListeners();
+  }
 
   List<Character> get characters => showRetired
       ? _characters
@@ -32,7 +39,7 @@ class CharactersModel with ChangeNotifier {
 
   set characters(List<Character> characters) {
     _characters = characters;
-    // notifyListeners();
+    notifyListeners();
   }
 
   double currentPage() => pageController.page;
@@ -41,41 +48,18 @@ class CharactersModel with ChangeNotifier {
     characters = await databaseHelper.queryAllCharacters();
     setCurrentCharacter(
       index: SharedPrefs().initialPage,
-      // updateTheme: false,
     );
-    // await Future.forEach(_characters, (character) {
-    //   characterModels.add(
-    //     CharacterModel()..character = character,
-    //     // ..isEditable = isEditMode,
-    //   );
-    // });
     notifyListeners();
     return characters;
   }
 
   void toggleEditMode() {
-    // if (value) {
     isEditMode
         ? hideRetireCharacterAnimationController.reverse()
         : hideRetireCharacterAnimationController.forward();
-    // } else {
-    //   hideRetireCharacterAnimationController.reverse();
-    // }
     isEditMode = !isEditMode;
     notifyListeners();
   }
-
-  // bool get isEditMode => _isEditMode;
-
-  // set isEditMode(bool value) {
-  //   if (value) {
-  //     hideRetireCharacterAnimationController.forward();
-  //   } else {
-  //     hideRetireCharacterAnimationController.reverse();
-  //   }
-  //   _isEditMode = value;
-  //   notifyListeners();
-  // }
 
   void onPageChanged(
     int index,
@@ -129,9 +113,7 @@ class CharactersModel with ChangeNotifier {
 
   void setCurrentCharacter({
     int index,
-    bool updateTheme = true,
   }) {
-    // isDialOpen.value = false;
     if (characters.isEmpty) {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;
@@ -143,9 +125,7 @@ class CharactersModel with ChangeNotifier {
 
       SharedPrefs().initialPage = index;
     }
-    if (updateTheme) {
-      _updateTheme();
-    }
+    _updateTheme();
   }
 
   void _updateTheme() {

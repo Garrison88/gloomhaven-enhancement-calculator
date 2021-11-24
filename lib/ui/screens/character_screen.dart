@@ -16,77 +16,13 @@ class CharacterScreen extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-//   @override
-//   _CharacterScreenState createState() => _CharacterScreenState();
-// }
-
-// class _CharacterScreenState extends State<CharacterScreen> {
-  // AnimationController _hideFabAnimation;
-  // final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  //     GlobalKey<ScaffoldMessengerState>();
-
-  // bool _handleScrollNotification(ScrollNotification notification) {
-  //   if (notification.depth == 0) {
-  //     if (notification is UserScrollNotification) {
-  //       final UserScrollNotification userScroll = notification;
-  //       switch (userScroll.direction) {
-  //         case ScrollDirection.forward:
-  //         case ScrollDirection.reverse:
-  //           if (userScroll.metrics.maxScrollExtent !=
-  //               userScroll.metrics.minScrollExtent) {
-  //             _hideFabAnimation.reverse();
-  //           }
-  //           break;
-  //         case ScrollDirection.idle:
-  //           _hideFabAnimation.forward();
-  //           break;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _hideFabAnimation = AnimationController(
-  //     vsync: this,
-  //     duration: kThemeAnimationDuration,
-  //   )..forward();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _hideFabAnimation.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
-    // CharactersModel charactersModel =
-    //     Provider.of<CharactersModel>(context, listen: false);
-    return
-        // ScaffoldMessenger(
-        //   key: scaffoldMessengerKey,
-        //   child: Scaffold(
-        //     // key: _scaffoldKey,
-        //     backgroundColor: Colors.transparent,
-        //     body: NotificationListener<ScrollNotification>(
-        //       onNotification: _handleScrollNotification,
-        //       child:
-        SingleChildScrollView(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: smallPadding),
         child: Column(
           children: <Widget>[
-            // Padding(
-            //   padding: EdgeInsets.symmetric(
-            //     vertical: charactersModel.characters.length > 1
-            //         ? smallPadding * 2
-            //         : smallPadding,
-            //   ),
-            // ),
             // RETIREMENTS and POCKET ITEMS
             const RetirementsAndPocketItemsSection(),
             // NAME and CLASS
@@ -100,249 +36,23 @@ class CharacterScreen extends StatelessWidget {
               child: StatsSection(),
             ),
             // RESOURCES
-            /* Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: SharedPrefs().darkTheme
-                            ? Colors.white54
-                            : Colors.black54,
-                      ),
-                      // Make rounded corners
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(dividerColor: Colors.transparent),
-                      child: ExpansionTile(
-                        onExpansionChanged: (value) =>
-                            SharedPrefs().resourcesExpanded = value,
-                        initiallyExpanded: SharedPrefs().resourcesExpanded,
-                        title: const Text(
-                          'Resources',
-                        ),
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: smallPadding),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: Wrap(
-                                runSpacing: smallPadding,
-                                spacing: smallPadding,
-                                alignment: WrapAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  ResourceCard(
-                                    resource: CharacterData.resources[0],
-                                    // name: 'Hide',
-                                    // icon: 'images/class_icons/voidwarden.svg',
-                                    count: characterModel.character.resourceHide,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceHide = characterModel
-                                                .character.resourceHide +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceHide = characterModel
-                                                .character.resourceHide -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[1],
-                                    // name: 'Metal',
-                                    // icon: 'images/class_icons/doomstalker.svg',
-                                    count: characterModel.character.resourceMetal,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceMetal = characterModel
-                                                .character.resourceMetal +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceMetal = characterModel
-                                                .character.resourceMetal -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[2],
-                                    // name: 'Wood',
-                                    // icon: 'images/class_icons/soothsinger.svg',
-                                    count: characterModel.character.resourceWood,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceWood = characterModel
-                                                .character.resourceWood +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceWood = characterModel
-                                                .character.resourceWood -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[3],
-                                    // name: 'Arrow Vine',
-                                    // icon: 'images/class_icons/beast_tyrant.svg',
-                                    count: characterModel
-                                        .character.resourceArrowVine,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceArrowVine = characterModel
-                                                .character.resourceArrowVine +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceArrowVine = characterModel
-                                                .character.resourceArrowVine -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[4],
-                                    // name: 'Axe Nut',
-                                    // icon: 'images/class_icons/red_guard.svg',
-                                    count:
-                                        characterModel.character.resourceAxeNut,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceAxeNut = characterModel
-                                                .character.resourceAxeNut +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceAxeNut = characterModel
-                                                .character.resourceAxeNut -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[5],
-                                    // name: 'Rock Root',
-                                    // icon: 'images/class_icons/mirefoot.svg',
-                                    count:
-                                        characterModel.character.resourceRockRoot,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceRockRoot = characterModel
-                                                .character.resourceRockRoot +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceRockRoot = characterModel
-                                                .character.resourceRockRoot -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[6],
-                                    // name: 'Flame Fruit',
-                                    // icon: 'images/class_icons/mirefoot.svg',
-                                    count: characterModel
-                                        .character.resourceFlameFruit,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceFlameFruit = characterModel
-                                                .character.resourceFlameFruit +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceFlameFruit = characterModel
-                                                .character.resourceFlameFruit -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[7],
-                                    // name: 'Corpse Cap',
-                                    // icon: 'images/class_icons/mirefoot.svg',
-                                    count: characterModel
-                                        .character.resourceCorpseCap,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceCorpseCap = characterModel
-                                                .character.resourceCorpseCap +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceCorpseCap = characterModel
-                                                .character.resourceCorpseCap -
-                                            1,
-                                    ),
-                                  ),
-                                  ResourceCard(
-                                    resource: CharacterData.resources[8],
-                                    // name: 'Snow Thistle',
-                                    // icon: 'images/class_icons/mirefoot.svg',
-                                    count: characterModel
-                                        .character.resourceSnowThistle,
-                                    increaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceSnowThistle = characterModel
-                                                .character.resourceSnowThistle +
-                                            1,
-                                    ),
-                                    decreaseCount: () =>
-                                        characterModel.updateCharacter(
-                                      characterModel.character
-                                        ..resourceSnowThistle = characterModel
-                                                .character.resourceSnowThistle -
-                                            1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ), */
+            const ResourcesSection(),
             // NOTES
-            characterModel.character.notes.isEmpty && !characterModel.isEditable
+            context.read<CharacterModel>().character.notes.isEmpty &&
+                    !context.read<CharactersModel>().isEditMode
                 ? Container()
                 : const Padding(
                     padding: EdgeInsets.all(smallPadding),
                     child: NotesSection(),
                   ),
             // BATTLE GOAL CHECKMARKS
-            characterModel.isEditable
-                ? const Padding(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: BattleGoalCheckmarksSection(),
-                  )
-                : Container(),
+            const BattleGoalCheckmarksSection(),
             // PERKS
             Padding(
               padding: const EdgeInsets.all(smallPadding),
-              child: PerkSection(characterModel: characterModel),
+              child: PerkSection(
+                characterModel: context.watch<CharacterModel>(),
+              ),
             ),
             const SizedBox(
               height: 24,
@@ -350,142 +60,6 @@ class CharacterScreen extends StatelessWidget {
           ],
         ),
       ),
-      //   ),
-      // ),
-      // floatingActionButton: ScaleTransition(
-      //   scale: _hideFabAnimation,
-      //   child: SpeedDial(
-      //     onOpen: () {
-      //       characterModel.isEditable = true;
-      //       charactersModel.isEditMode = true;
-      //     },
-      //     onClose: () {
-      //       characterModel.isEditable = false;
-      //       charactersModel.isEditMode = false;
-      //     },
-      //     renderOverlay: false,
-      //     heroTag: null,
-      //     foregroundColor: ThemeData.estimateBrightnessForColor(
-      //                 Theme.of(context).colorScheme.secondary) ==
-      //             Brightness.dark
-      //         ? Colors.white
-      //         : Colors.black,
-      //     icon: Icons.edit,
-      //     activeIcon: Icons.check,
-      //     children: [
-      //       SpeedDialChild(
-      //         child: Icon(
-      //           characterModel.character.isRetired
-      //               ? Icons.directions_walk
-      //               : Icons.elderly,
-      //         ),
-      //         backgroundColor: Colors.blue[400],
-      //         foregroundColor: Colors.white,
-      //         onTap: () async {
-      //           final String retiredCharactersName =
-      //               charactersModel.currentCharacter.name;
-      //           final bool retiredCharacterIsRetired =
-      //               charactersModel.currentCharacter.isRetired;
-      //           final int currentCharacterIndex = charactersModel.characters
-      //               .indexOf(charactersModel.currentCharacter);
-      //           await charactersModel.retireCurrentCharacter();
-      //           try {
-      //             scaffoldMessengerKey.currentState.showSnackBar(
-      //               SnackBar(
-      //                 duration: const Duration(seconds: 2),
-      //                 content: Text(
-      //                     '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-      //                 action: charactersModel.showRetired
-      //                     ? null
-      //                     : SnackBarAction(
-      //                         label: 'Show',
-      //                         onPressed: () {
-      //                           // int index = charactersModel.characters.indexOf(
-      //                           //         charactersModel.currentCharacter) +
-      //                           //     1;
-      //                           setState(() {
-      //                             charactersModel.showRetired = true;
-      //                             charactersModel.setCurrentCharacter(
-      //                               index: currentCharacterIndex,
-      //                             );
-      //                           });
-      //                         }),
-      //               ),
-      //             );
-      //           } catch (e) {
-      //             // ScaffoldMessenger.maybeOf(context).showSnackBar(
-      //             //   SnackBar(
-      //             //     duration: const Duration(seconds: 2),
-      //             //     content: Text(
-      //             //         '$retiredCharactersName ${retiredCharacterIsRetired ? 'unretired' : 'retired'}'),
-      //             //     action: charactersModel.showRetired
-      //             //         ? null
-      //             //         : SnackBarAction(
-      //             //             label: 'Show',
-      //             //             onPressed: () {
-      //             //               // int index = charactersModel.characters.indexOf(
-      //             //               //         charactersModel.currentCharacter) +
-      //             //               //     1;
-      //             //               setState(() {
-      //             //                 charactersModel.showRetired = true;
-      //             //                 charactersModel.setCurrentCharacter(
-      //             //                   index: currentCharacterIndex,
-      //             //                 );
-      //             //               });
-      //             //             }),
-      //             //   ),
-      //             // );
-      //           }
-      //         },
-      //       ),
-      //       SpeedDialChild(
-      //         child: const Icon(Icons.delete),
-      //         backgroundColor: Colors.red[400],
-      //         foregroundColor: Colors.white,
-      //         onTap: () async {
-      //           showDialog<bool>(
-      //             context: context,
-      //             builder: (_) {
-      //               return AlertDialog(
-      //                 content: const Text(
-      //                   'Are you sure? This cannot be undone',
-      //                 ),
-      //                 actions: <Widget>[
-      //                   TextButton(
-      //                     child: const Text(
-      //                       'Cancel',
-      //                     ),
-      //                     onPressed: () => Navigator.pop(context, false),
-      //                   ),
-      //                   ElevatedButton(
-      //                     style: ButtonStyle(
-      //                       backgroundColor: MaterialStateProperty.all<Color>(
-      //                           Colors.red[400]),
-      //                     ),
-      //                     onPressed: () => Navigator.pop(context, true),
-      //                     child: const Text(
-      //                       'Delete',
-      //                       style: TextStyle(
-      //                         color: Colors.white,
-      //                       ),
-      //                     ),
-      //                   )
-      //                 ],
-      //               );
-      //             },
-      //           ).then(
-      //             (result) async {
-      //               if (result) {
-      //                 await charactersModel.deleteCurrentCharacter();
-      //               }
-      //             },
-      //           );
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // ),
     );
   }
 }
@@ -497,7 +71,8 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharacterModel characterModel = context.read<CharacterModel>();
+    // CharactersModel charactersModel = ;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -505,7 +80,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width / 4,
-              child: characterModel.isEditable
+              child: context.watch<CharactersModel>().isEditMode
                   ? TextField(
                       enableInteractiveSelection: false,
                       onChanged: (String value) =>
@@ -566,7 +141,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 3.5),
                   child: Text(
-                    characterModel.numOfPocketItems.toString(),
+                    context.watch<CharacterModel>().numOfPocketItems.toString(),
                     style: Theme.of(context).textTheme.bodyText2.copyWith(
                         fontSize: 20,
                         color: Theme.of(context).brightness == Brightness.dark
@@ -593,10 +168,12 @@ class NameAndClassSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    print('NAME BUILD RAN::');
+    CharacterModel characterModel = context.read<CharacterModel>();
+    // CharactersModel charactersModel = ;
     return Column(
       children: <Widget>[
-        characterModel.isEditable
+        context.watch<CharactersModel>().isEditMode
             ? TextField(
                 autocorrect: false,
                 onChanged: (String value) {
@@ -631,7 +208,7 @@ class NameAndClassSection extends StatelessWidget {
                       : Colors.black87,
                 ),
                 Text(
-                  '${characterModel.currentLevel}',
+                  '${context.watch<CharacterModel>().currentLevel}',
                   style: TextStyle(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.black87
@@ -671,7 +248,9 @@ class StatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    print('STATS BUILD RAN::');
+    CharacterModel characterModel = context.read<CharacterModel>();
+    // CharactersModel charactersModel = context.watch<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -686,7 +265,7 @@ class StatsSection extends StatelessWidget {
                     ? Colors.white
                     : Colors.black87,
               ),
-              characterModel.isEditable
+              context.watch<CharactersModel>().isEditMode
                   ? Column(
                       children: <Widget>[
                         SizedBox(
@@ -730,11 +309,11 @@ class StatsSection extends StatelessWidget {
                       ],
                     )
                   : Text(
-                      ' ${characterModel.character.xp}',
+                      characterModel.character.xp.toString(),
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
               Text(
-                ' / ${characterModel.nextLevelXp}',
+                ' / ${context.watch<CharacterModel>().nextLevelXp}',
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontSize:
                         Theme.of(context).textTheme.bodyText2.fontSize / 2),
@@ -753,7 +332,7 @@ class StatsSection extends StatelessWidget {
                     ? Colors.white
                     : Colors.black87,
               ),
-              characterModel.isEditable
+              context.watch<CharactersModel>().isEditMode
                   ? Column(
                       children: <Widget>[
                         SizedBox(
@@ -828,6 +407,196 @@ class StatsSection extends StatelessWidget {
   }
 }
 
+class ResourcesSection extends StatelessWidget {
+  const ResourcesSection({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        /* decoration: BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: SharedPrefs().darkTheme ? Colors.white54 : Colors.black54,
+        ),
+        // Make rounded corners
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          onExpansionChanged: (value) =>
+              SharedPrefs().resourcesExpanded = value,
+          initiallyExpanded: SharedPrefs().resourcesExpanded,
+          title: const Text(
+            'Resources',
+          ),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: smallPadding),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Wrap(
+                  runSpacing: smallPadding,
+                  spacing: smallPadding,
+                  alignment: WrapAlignment.spaceEvenly,
+                  children: <Widget>[
+                    ResourceCard(
+                      resource: CharacterData.resources[0],
+                      // name: 'Hide',
+                      // icon: 'images/class_icons/voidwarden.svg',
+                      count: characterModel.character.resourceHide,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceHide =
+                              characterModel.character.resourceHide + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceHide =
+                              characterModel.character.resourceHide - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[1],
+                      // name: 'Metal',
+                      // icon: 'images/class_icons/doomstalker.svg',
+                      count: characterModel.character.resourceMetal,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceMetal =
+                              characterModel.character.resourceMetal + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceMetal =
+                              characterModel.character.resourceMetal - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[2],
+                      // name: 'Wood',
+                      // icon: 'images/class_icons/soothsinger.svg',
+                      count: characterModel.character.resourceWood,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceWood =
+                              characterModel.character.resourceWood + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceWood =
+                              characterModel.character.resourceWood - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[3],
+                      // name: 'Arrow Vine',
+                      // icon: 'images/class_icons/beast_tyrant.svg',
+                      count: characterModel.character.resourceArrowVine,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceArrowVine =
+                              characterModel.character.resourceArrowVine + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceArrowVine =
+                              characterModel.character.resourceArrowVine - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[4],
+                      // name: 'Axe Nut',
+                      // icon: 'images/class_icons/red_guard.svg',
+                      count: characterModel.character.resourceAxeNut,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceAxeNut =
+                              characterModel.character.resourceAxeNut + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceAxeNut =
+                              characterModel.character.resourceAxeNut - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[5],
+                      // name: 'Rock Root',
+                      // icon: 'images/class_icons/mirefoot.svg',
+                      count: characterModel.character.resourceRockRoot,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceRockRoot =
+                              characterModel.character.resourceRockRoot + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceRockRoot =
+                              characterModel.character.resourceRockRoot - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[6],
+                      // name: 'Flame Fruit',
+                      // icon: 'images/class_icons/mirefoot.svg',
+                      count: characterModel.character.resourceFlameFruit,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceFlameFruit =
+                              characterModel.character.resourceFlameFruit + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceFlameFruit =
+                              characterModel.character.resourceFlameFruit - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[7],
+                      // name: 'Corpse Cap',
+                      // icon: 'images/class_icons/mirefoot.svg',
+                      count: characterModel.character.resourceCorpseCap,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceCorpseCap =
+                              characterModel.character.resourceCorpseCap + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceCorpseCap =
+                              characterModel.character.resourceCorpseCap - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[8],
+                      // name: 'Snow Thistle',
+                      // icon: 'images/class_icons/mirefoot.svg',
+                      count: characterModel.character.resourceSnowThistle,
+                      increaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceSnowThistle =
+                              characterModel.character.resourceSnowThistle + 1,
+                      ),
+                      decreaseCount: () => characterModel.updateCharacter(
+                        characterModel.character
+                          ..resourceSnowThistle =
+                              characterModel.character.resourceSnowThistle - 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ), */
+        );
+  }
+}
+
 class NotesSection extends StatelessWidget {
   const NotesSection({
     Key key,
@@ -835,7 +604,8 @@ class NotesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharacterModel characterModel = context.read<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Column(
       children: <Widget>[
         Text(
@@ -846,7 +616,7 @@ class NotesSection extends StatelessWidget {
         const SizedBox(
           height: smallPadding,
         ),
-        characterModel.isEditable
+        charactersModel.isEditMode
             ? SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: TextField(
@@ -878,51 +648,58 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.watch<CharacterModel>();
-    return Column(
-      children: <Widget>[
-        const AutoSizeText(
-          'Battle Goal Checkmarks',
-          textAlign: TextAlign.center,
-          minFontSize: titleFontSize,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Visibility(
-              visible: characterModel.character.checkMarks > 0,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: IconButton(
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
-                icon: const Icon(
-                  Icons.remove_circle,
+    return context.watch<CharactersModel>().isEditMode
+        ? Padding(
+            padding: const EdgeInsets.all(smallPadding),
+            child: Column(
+              children: <Widget>[
+                const AutoSizeText(
+                  'Battle Goal Checkmarks',
+                  textAlign: TextAlign.center,
+                  minFontSize: titleFontSize,
                 ),
-                onPressed: characterModel.decreaseCheckmark,
-              ),
-            ),
-            Text(
-              '${characterModel.character.checkMarks} / 18',
-              style: const TextStyle(fontSize: titleFontSize),
-            ),
-            Visibility(
-              visible: characterModel.character.checkMarks < 18,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: IconButton(
-                color: Theme.of(context).colorScheme.secondary,
-                iconSize: Theme.of(context).textTheme.bodyText2.fontSize,
-                icon: const Icon(
-                  Icons.add_circle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Visibility(
+                      visible: characterModel.character.checkMarks > 0,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: IconButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        iconSize:
+                            Theme.of(context).textTheme.bodyText2.fontSize,
+                        icon: const Icon(
+                          Icons.remove_circle,
+                        ),
+                        onPressed: characterModel.decreaseCheckmark,
+                      ),
+                    ),
+                    Text(
+                      '${characterModel.character.checkMarks} / 18',
+                      style: const TextStyle(fontSize: titleFontSize),
+                    ),
+                    Visibility(
+                      visible: characterModel.character.checkMarks < 18,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: IconButton(
+                        color: Theme.of(context).colorScheme.secondary,
+                        iconSize:
+                            Theme.of(context).textTheme.bodyText2.fontSize,
+                        icon: const Icon(
+                          Icons.add_circle,
+                        ),
+                        onPressed: characterModel.increaseCheckmark,
+                      ),
+                    ),
+                  ],
                 ),
-                onPressed: characterModel.increaseCheckmark,
-              ),
+              ],
             ),
-          ],
-        ),
-      ],
-    );
+          )
+        : Container();
   }
 }

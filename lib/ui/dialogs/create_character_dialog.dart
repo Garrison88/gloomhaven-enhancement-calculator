@@ -268,6 +268,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               await widget.charactersModel.createCharacter(
+                // context,
                 _nameTextFieldController.text,
                 _selectedClass,
                 initialLevel: int.parse(_levelTextFieldController.text),

@@ -9,27 +9,17 @@ import '../../models/enhancement.dart';
 import '../../shared_prefs.dart';
 import '../dialogs/info_dialog.dart';
 
-class EnhancementCalculatorPage extends StatefulWidget {
+class EnhancementCalculatorPage extends StatelessWidget {
   const EnhancementCalculatorPage({
     Key key,
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EnhancementCalculatorPageState();
-}
-
-class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<EnhancementCalculatorModel>(context, listen: false)
-        .calculateCost();
-  }
-
-  @override
   Widget build(BuildContext context) {
     EnhancementCalculatorModel enhancementCalculatorModel =
         context.watch<EnhancementCalculatorModel>();
+    enhancementCalculatorModel.calculateCost(notify: false);
+
     return Center(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: smallPadding),

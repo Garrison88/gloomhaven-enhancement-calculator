@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
@@ -37,8 +36,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   String downloadPath;
 
   Future<PackageInfo> _packageInfoFuture;
@@ -228,17 +225,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {
-              // SharedPrefs().showRetiredCharacters = val;
-              widget.charactersModel.showRetired = val;
-              SharedPrefs().showRetiredCharacters = val;
-              // try {
+              widget.charactersModel.toggleShowRetired();
               widget.updateTheme();
-              // } catch (e) {
-              //   print(e.toString());
-              // }
-              // widget.loadCharacters(val);
-              // setState(() {
-              // });
             },
           ),
           const SettingsDivider(),
@@ -380,9 +368,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     contents = file.readAsStringSync();
                     if (contents != null) {
                       _showLoaderDialog(context);
-                      await DatabaseHelper.instance.restoreBackup(contents);
+                      await DatabaseHelper.instance.restoreBackup(
+                        contents,
+                      );
                       await widget.charactersModel.loadCharacters();
-                      widget.charactersModel.setCurrentCharacter(index: 0);
                       widget.charactersModel.jumpToPage(0);
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
