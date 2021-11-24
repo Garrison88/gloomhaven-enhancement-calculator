@@ -286,22 +286,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             Widget child,
             Animation<double> animation,
           ) {
-            final TweenSequence<double> _tweenSequence = TweenSequence([
-              TweenSequenceItem(
-                tween: Tween(
-                  begin: 1.0,
-                  end: 1.1,
+            final TweenSequence<double> _tweenSequence = TweenSequence(
+              [
+                TweenSequenceItem(
+                  tween: Tween(
+                    begin: 1.0,
+                    end: 1.1,
+                  ),
+                  weight: 1,
                 ),
-                weight: 1,
-              ),
-              TweenSequenceItem(
-                tween: Tween(
-                  begin: 1.1,
-                  end: 1.0,
+                TweenSequenceItem(
+                  tween: Tween(
+                    begin: 1.1,
+                    end: 1.0,
+                  ),
+                  weight: 1,
                 ),
-                weight: 1,
-              ),
-            ]);
+              ],
+            );
             final Tween<double> _angle = Tween(
               begin: 0 / 180,
               end: -90 / 180,
