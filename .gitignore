@@ -64,6 +64,8 @@ build/
 **/ios/Flutter/flutter_assets/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/Flutter.podspec
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
@@ -71,14 +73,9 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-ios/Flutter/Flutter.podspec
-ios/Flutter/flutter_export_environment.sh
-.flutter-plugins-dependencies
 
 # Ignore Gradle project-specific cache directory
 .gradle
 
 # Ignore Gradle build output directory
 build
-.flutter-plugins-dependencies
-ios/Flutter/flutter_export_environment.sh
