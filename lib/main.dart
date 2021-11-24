@@ -13,7 +13,7 @@ main() async {
   }
   runApp(
     EasyDynamicThemeWidget(
-      child: GloomhavenCompanion(),
+      child: const GloomhavenCompanion(),
     ),
   );
 }

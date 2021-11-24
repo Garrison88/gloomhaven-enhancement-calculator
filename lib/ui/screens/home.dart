@@ -336,8 +336,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ? Icons.edit_off_outlined
                             : Icons.edit_outlined,
                 color: ThemeData.estimateBrightnessForColor(
-                            Theme.of(context).colorScheme.secondary) ==
-                        Brightness.dark
+                                Theme.of(context).colorScheme.secondary) ==
+                            Brightness.dark ||
+                        Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black,
               ),

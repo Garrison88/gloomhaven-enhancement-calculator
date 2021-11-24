@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/tomkatcreative/Downloads/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/tomkatcreative/Development/gloomhaven-enhancement-calculator"
+export "FLUTTER_APPLICATION_PATH=/Users/tomkatcreative/Desktop/gloomhaven-enhancement-calculator"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"

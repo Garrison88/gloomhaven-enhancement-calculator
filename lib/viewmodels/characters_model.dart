@@ -23,14 +23,18 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool isEditMode = false;
 
-  bool get retiredCharactersAreHidden {
-    return !showRetired && _characters.isNotEmpty;
-  }
+  // bool get retiredCharactersAreHidden {
+  //   return !showRetired && _characters.isNotEmpty;
+  // }
 
   void toggleShowRetired() {
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
     notifyListeners();
+  }
+
+  bool get retiredCharactersAreHidden {
+    return !showRetired && _characters.isNotEmpty;
   }
 
   List<Character> get characters => showRetired

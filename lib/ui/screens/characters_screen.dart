@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class CharactersScreen extends StatelessWidget {
   const CharactersScreen({
+    // this.future,
     Key key,
   }) : super(key: key);
   @override
