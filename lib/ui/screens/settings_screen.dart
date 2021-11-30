@@ -4,6 +4,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
@@ -93,18 +94,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value: Theme.of(context).brightness == Brightness.dark,
               onChanged: (val) {
                 SharedPrefs().darkTheme = val;
-                EasyDynamicTheme.of(context).changeTheme(dynamic: true);
+                EasyDynamicTheme.of(context).changeTheme();
               }),
-          const SettingsDivider(),
-          SwitchListTile(
-              title: const Text('Inline Icons'),
-              subtitle: const Text('Show icons in perk rows'),
-              value: SharedPrefs().showPerkImages,
-              onChanged: (val) {
-                setState(() {
-                  SharedPrefs().showPerkImages = val;
-                });
-              }),
+          // const SettingsDivider(),
+          // SwitchListTile(
+          //     title: const Text('Inline Icons'),
+          //     subtitle: const Text('Show icons in perk rows'),
+          //     value: SharedPrefs().showPerkImages,
+          //     onChanged: (val) {
+          //       setState(() {
+          //         SharedPrefs().showPerkImages = val;
+          //       });
+          //     }),
           const SettingsDivider(),
           SwitchListTile(
             title: const Text("Solve 'Envelope X'"),
@@ -175,6 +176,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           SharedPrefs().envelopeX = val;
                         },
                       );
+                      ScaffoldMessenger.of(context)
+                        ..clearSnackBars()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                flutter_svg.SvgPicture.asset(
+                                  'images/class_icons/bladeswarm.svg',
+                                  width: iconSize,
+                                  height: iconSize,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                                const SizedBox(
+                                  width: smallPadding,
+                                ),
+                                const Text('Bladeswarm unlocked'),
+                              ],
+                            ),
+                          ),
+                        );
                     }
                   },
                 );
@@ -183,30 +208,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SettingsDivider(),
           SwitchListTile(
-              title: const Text('Scenario 114 Reward'),
-              subtitle: Row(
-                children: const [
-                  Icon(Icons.warning),
-                  SizedBox(
-                    width: smallPadding,
+            title: const Text('Scenario 114 Reward'),
+            subtitle: Row(
+              children: const [
+                Icon(Icons.warning),
+                SizedBox(
+                  width: smallPadding,
+                ),
+                Expanded(
+                  child: Text(
+                    'Forgotten Circles spoilers',
+                    overflow: TextOverflow.fade,
                   ),
-                  Expanded(
-                    child: Text(
-                      'Forgotten Circles spoilers',
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                ],
-              ),
-              value: SharedPrefs().partyBoon,
-              onChanged: (val) {
-                setState(
-                  () {
-                    SharedPrefs().partyBoon = val;
-                    widget.enhancementCalculatorModel.calculateCost();
-                  },
-                );
-              }),
+                ),
+              ],
+            ),
+            value: SharedPrefs().partyBoon,
+            onChanged: (val) {
+              setState(
+                () {
+                  SharedPrefs().partyBoon = val;
+                  widget.enhancementCalculatorModel.calculateCost();
+                },
+              );
+            },
+          ),
           const SettingsDivider(),
           SwitchListTile(
             subtitle: const Text(
@@ -225,8 +251,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {
-              widget.charactersModel.toggleShowRetired();
-              widget.updateTheme();
+              setState(() {
+                widget.charactersModel.toggleShowRetired();
+              });
             },
           ),
           const SettingsDivider(),
@@ -300,11 +327,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 (backupName) async {
                   if (backupName != null) {
                     if (backupName == 'save') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Saved to $downloadPath'),
-                        ),
-                      );
+                      ScaffoldMessenger.of(context)
+                        ..clearSnackBars()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Text('Saved to $downloadPath'),
+                          ),
+                        );
                     } else {
                       Directory directory = await getTemporaryDirectory();
                       downloadPath = directory.path;

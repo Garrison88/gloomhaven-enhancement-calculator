@@ -47,6 +47,7 @@ class GloomhavenCompanion extends StatelessWidget {
       splashFactory: NoSplash.splashFactory,
       fontFamily: highTower,
       textTheme: TextTheme(
+        button: const TextStyle(fontSize: 20),
         subtitle1: const TextStyle(
           fontSize: 23.0,
         ),
@@ -58,9 +59,9 @@ class GloomhavenCompanion extends StatelessWidget {
           letterSpacing: 0.7,
           fontFamily: nyala,
         ),
-        button: const TextStyle(
-          fontSize: 23.0,
-        ),
+        // button: const TextStyle(
+        //   fontSize: 23.0,
+        // ),
         headline1: TextStyle(
           fontFamily: pirataOne,
           color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
@@ -76,9 +77,12 @@ class GloomhavenCompanion extends StatelessWidget {
           letterSpacing: 2.0,
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+      snackBarTheme: SnackBarThemeData(
+        contentTextStyle: TextStyle(
+          fontFamily: highTower,
+          fontSize: 20,
+          color: SharedPrefs().darkTheme ? Colors.black : Colors.white,
+        ),
       ),
       brightness: SharedPrefs().darkTheme ? Brightness.dark : Brightness.light,
     );
@@ -96,16 +100,6 @@ class GloomhavenCompanion extends StatelessWidget {
           ChangeNotifierProvider(
             create: (_) => CharactersModel(
               context,
-              // hideRetireCharacterAnimationController: AnimationController(
-              //   vsync: this,
-              //   duration: kThemeAnimationDuration,
-              //   reverseDuration: kThemeAnimationDuration,
-              // )..forward(),
-              // toggleAddDeleteAnimationController: AnimationController(
-              //   vsync: this,
-              //   duration: Duration(seconds: 2),
-              //   reverseDuration: Duration(seconds: 2),
-              // )..forward(),
               pageController: PageController(
                 initialPage: SharedPrefs().initialPage,
               ),

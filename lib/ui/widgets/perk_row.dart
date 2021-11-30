@@ -127,19 +127,22 @@ class _PerkRowState extends State<PerkRow> {
               });
             },
             child: Expanded(
-              child: SharedPrefs().showPerkImages
-                  ? RichText(
-                      text: TextSpan(
-                        style: Theme.of(context).textTheme.bodyText2,
-                        children: Utils.generatePerkDetailsWithInlineIcons(
-                          widget.perks.first.perkDetails.split(' '),
-                          SharedPrefs().darkTheme,
-                        ),
-                      ),
-                    )
-                  : Text(widget.perks.first.perkDetails
-                      .replaceAll(RegExp(r'_'), ' ')
-                      .replaceAll(RegExp(r'&'), '+')),
+              child:
+                  // SharedPrefs().showPerkImages
+                  //     ?
+                  RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.bodyText2,
+                  children: Utils.generatePerkDetailsWithInlineIcons(
+                    widget.perks.first.perkDetails.split(' '),
+                    SharedPrefs().darkTheme,
+                  ),
+                ),
+              )
+              // : Text(widget.perks.first.perkDetails
+              //     .replaceAll(RegExp(r'_'), ' ')
+              //     .replaceAll(RegExp(r'&'), '+'))
+              ,
             ),
           ),
         ],

@@ -28,9 +28,27 @@ class CharactersScreen extends StatelessWidget {
               left: smallPadding * 2,
               right: smallPadding * 2,
             ),
-            child: const Text(
-              'Create your first character using the button below, or restore a backup from the Settings menu',
-              textAlign: TextAlign.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Create ${charactersModel.retiredCharactersAreHidden ? 'a' : 'your first'} character using the button below, or restore a backup from the Settings menu',
+                  textAlign: TextAlign.center,
+                ),
+                if (charactersModel.retiredCharactersAreHidden) ...[
+                  const SizedBox(
+                    height: smallPadding,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: smallPadding),
+                    child: Divider(),
+                  ),
+                  TextButton(
+                    onPressed: charactersModel.toggleShowRetired,
+                    child: const Text('Show Retired Characters'),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
@@ -70,10 +88,12 @@ class CharactersScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
                       'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
-                      color: Color(
-                        int.parse(
-                            _characterModel.character.playerClass.classColor),
-                      ).withOpacity(0.1),
+                      color: _characterModel.character.isRetired
+                          ? Colors.black.withOpacity(0.1)
+                          : Color(
+                              int.parse(_characterModel
+                                  .character.playerClass.classColor),
+                            ).withOpacity(0.1),
                     ),
                   ),
                 ),

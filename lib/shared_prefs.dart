@@ -23,11 +23,11 @@ class SharedPrefs {
     _sharedPrefs.setBool('clearOldPrefs', value);
   }
 
-  bool get showPerkImages => _sharedPrefs.getBool('showPerkImages') ?? true;
+  // bool get showPerkImages => _sharedPrefs.getBool('showPerkImages') ?? true;
 
-  set showPerkImages(bool value) {
-    _sharedPrefs.setBool('showPerkImages', value);
-  }
+  // set showPerkImages(bool value) {
+  //   _sharedPrefs.setBool('showPerkImages', value);
+  // }
 
   bool get partyBoon => _sharedPrefs.getBool('partyBoon') ?? false;
 

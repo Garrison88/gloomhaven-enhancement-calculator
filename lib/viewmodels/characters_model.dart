@@ -23,13 +23,11 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool isEditMode = false;
 
-  // bool get retiredCharactersAreHidden {
-  //   return !showRetired && _characters.isNotEmpty;
-  // }
-
   void toggleShowRetired() {
+    int index = characters.indexOf(currentCharacter);
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
+    setCurrentCharacter(index: index);
     notifyListeners();
   }
 
