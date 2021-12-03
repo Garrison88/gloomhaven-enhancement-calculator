@@ -4,6 +4,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,8 +51,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: _scaffoldKey,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness:
+              Theme.of(context).brightness == Brightness.dark
+                  ? Brightness.light
+                  : ThemeData.estimateBrightnessForColor(
+                              Theme.of(context).colorScheme.secondary) ==
+                          Brightness.dark
+                      ? Brightness.light
+                      : Brightness.dark,
+          statusBarBrightness: Theme.of(context).brightness == Brightness.dark
+              ? Brightness.dark
+              : ThemeData.estimateBrightnessForColor(
+                          Theme.of(context).colorScheme.secondary) ==
+                      Brightness.dark
+                  ? Brightness.dark
+                  : Brightness.light,
+          statusBarColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.secondary,
+        ),
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -81,31 +101,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: <Widget>[
           SwitchListTile(
-              title: const Text('Theme'),
-              subtitle: Theme.of(context).brightness == Brightness.dark
-                  ? const Text('Dark')
-                  : const Text('Light'),
-              activeThumbImage: const Svg('images/elem_dark.svg'),
-              activeColor: const Color(0xff1f272e),
-              inactiveThumbColor: const Color(0xffeda50b),
-              inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
-              activeTrackColor: Colors.white30,
-              inactiveThumbImage: const Svg('images/elem_light.svg'),
-              value: Theme.of(context).brightness == Brightness.dark,
-              onChanged: (val) {
-                SharedPrefs().darkTheme = val;
-                EasyDynamicTheme.of(context).changeTheme();
-              }),
-          // const SettingsDivider(),
-          // SwitchListTile(
-          //     title: const Text('Inline Icons'),
-          //     subtitle: const Text('Show icons in perk rows'),
-          //     value: SharedPrefs().showPerkImages,
-          //     onChanged: (val) {
-          //       setState(() {
-          //         SharedPrefs().showPerkImages = val;
-          //       });
-          //     }),
+            title: const Text('Theme'),
+            subtitle: Theme.of(context).brightness == Brightness.dark
+                ? const Text('Dark')
+                : const Text('Light'),
+            activeThumbImage: const Svg('images/elem_dark.svg'),
+            activeColor: const Color(0xff1f272e),
+            inactiveThumbColor: const Color(0xffeda50b),
+            inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
+            activeTrackColor: Colors.white30,
+            inactiveThumbImage: const Svg('images/elem_light.svg'),
+            value: Theme.of(context).brightness == Brightness.dark,
+            onChanged: (val) {
+              SharedPrefs().darkTheme = val;
+              EasyDynamicTheme.of(context).changeTheme();
+            },
+          ),
           const SettingsDivider(),
           SwitchListTile(
             title: const Text("Solve 'Envelope X'"),
@@ -251,6 +262,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {
+              int index = widget.charactersModel.characters
+                  .indexOf(widget.charactersModel.currentCharacter);
               setState(() {
                 widget.charactersModel.toggleShowRetired();
               });

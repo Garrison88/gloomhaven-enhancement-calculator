@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
@@ -29,6 +31,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     context.read<CharactersModel>().hideRetireCharacterAnimationController =
         AnimationController(
       vsync: this,
@@ -39,9 +42,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
-    print('BUILD HOME');
+  void didChangeDependencies() {
+    FlutterStatusbarcolor.setNavigationBarColor(
+      Theme.of(context).colorScheme.surface,
+    );
+    FlutterStatusbarcolor.setNavigationBarWhiteForeground(
+      Theme.of(context).brightness == Brightness.dark,
+    );
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     EnhancementCalculatorModel enhancementCalculatorModel =
         context.read<EnhancementCalculatorModel>();
     AppModel appModel = context.read<AppModel>();
@@ -52,59 +64,74 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           extendBody: true,
           key: scaffoldMessengerKey,
           appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarIconBrightness:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Brightness.light
+                      : ThemeData.estimateBrightnessForColor(
+                                  Theme.of(context).colorScheme.secondary) ==
+                              Brightness.dark
+                          ? Brightness.light
+                          : Brightness.dark,
+              statusBarBrightness:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Brightness.dark
+                      : ThemeData.estimateBrightnessForColor(
+                                  Theme.of(context).colorScheme.secondary) ==
+                              Brightness.dark
+                          ? Brightness.dark
+                          : Brightness.light,
+              statusBarColor: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.surface
+                  : Theme.of(context).colorScheme.secondary,
+            ),
+            centerTitle: true,
             // must watch
-            bottom: context.watch<AppModel>().page == 0 &&
+            title: context.watch<AppModel>().page == 0 &&
                     charactersModel.characters.length > 1
-                ? PreferredSize(
-                    preferredSize: const Size.fromHeight(28),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
-                      child: SmoothPageIndicator(
-                        controller: charactersModel.pageController,
-                        count: charactersModel.characters.length,
-                        effect: ScrollingDotsEffect(
-                          dotColor:
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.grey
-                                  : ThemeData.estimateBrightnessForColor(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary) ==
-                                          Brightness.dark
-                                      ? Colors.grey[400]
-                                      : Colors.black45,
-                          dotHeight: 10,
-                          dotWidth: 10,
-                          activeDotColor:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? ThemeData.estimateBrightnessForColor(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black
-                                  : Colors.white,
-                        ),
-                      ),
+                ? SmoothPageIndicator(
+                    controller: charactersModel.pageController,
+                    count: charactersModel.characters.length,
+                    effect: ScrollingDotsEffect(
+                      dotColor: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey
+                          : ThemeData.estimateBrightnessForColor(
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .secondary) ==
+                                  Brightness.dark
+                              ? Colors.grey[400]
+                              : Colors.black45,
+                      dotHeight: 10,
+                      dotWidth: 10,
+                      activeDotColor:
+                          Theme.of(context).brightness == Brightness.light
+                              ? ThemeData.estimateBrightnessForColor(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .secondary) ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black
+                              : Colors.white,
                     ),
                   )
                 : null,
-            title: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                'Gloomhaven Companion',
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).colorScheme.secondary) ==
-                              Brightness.dark ||
-                          Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-            ),
+            // title: SingleChildScrollView(
+            //   scrollDirection: Axis.horizontal,
+            //   child: Text(
+            //     'Gloomhaven Companion',
+            //     style: TextStyle(
+            //       fontSize: 25.0,
+            //       color: ThemeData.estimateBrightnessForColor(
+            //                       Theme.of(context).colorScheme.secondary) ==
+            //                   Brightness.dark ||
+            //               Theme.of(context).brightness == Brightness.dark
+            //           ? Colors.white
+            //           : Colors.black,
+            //     ),
+            //   ),
+            // ),
             actions: <Widget>[
               if (charactersModel.isEditMode)
                 ScaleTransition(
@@ -130,7 +157,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       onPressed: () async {
                         final String message =
                             '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                        await charactersModel.retireCurrentCharacter();
+                        int index =
+                            await charactersModel.retireCurrentCharacter();
                         ScaffoldMessenger.of(context)
                           ..clearSnackBars()
                           ..showSnackBar(
@@ -140,8 +168,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   ? null
                                   : SnackBarAction(
                                       label: 'Show',
-                                      onPressed: () =>
-                                          charactersModel.toggleShowRetired(),
+                                      onPressed: () {
+                                        charactersModel.toggleShowRetired(
+                                            index: index);
+                                      },
                                     ),
                             ),
                           );

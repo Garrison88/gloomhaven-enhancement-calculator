@@ -44,7 +44,7 @@ class CharactersScreen extends StatelessWidget {
                     child: Divider(),
                   ),
                   TextButton(
-                    onPressed: charactersModel.toggleShowRetired,
+                    onPressed: () => charactersModel.toggleShowRetired(),
                     child: const Text('Show Retired Characters'),
                   ),
                 ],

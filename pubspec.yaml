@@ -15,23 +15,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.0.9
   easy_dynamic_theme: ^2.2.0
-  auto_size_text: ^2.1.0
+  auto_size_text: ^3.0.0
   sqflite: ^2.0.0
-  path_provider: ^2.0.1
+  path_provider: ^2.0.7
   provider: ^6.0.1
   flutter_svg: ^0.22.0
   flutter_svg_provider: ^0.1.10
   share_plus: ^3.0.4
-  file_picker: ^4.1.5
+  file_picker: ^4.2.6
   intl: ^0.17.0
   smooth_page_indicator: ^1.0.0
-  permission_handler: ^8.2.5
+  permission_handler: ^8.3.0
   uuid: ^3.0.5
   package_info_plus: ^1.3.0
   url_launcher: ^6.0.12
   font_awesome_flutter: ^9.2.0
+  flutter_statusbarcolor_ns: ^0.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

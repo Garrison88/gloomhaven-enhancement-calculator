@@ -1,5 +1,6 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
@@ -45,6 +46,7 @@ class GloomhavenCompanion extends StatelessWidget {
     ThemeData theme = ThemeData(
       // removes splash animation from InkWell on bottom app bar navigation destination
       splashFactory: NoSplash.splashFactory,
+
       fontFamily: highTower,
       textTheme: TextTheme(
         button: const TextStyle(fontSize: 20),
@@ -59,9 +61,6 @@ class GloomhavenCompanion extends StatelessWidget {
           letterSpacing: 0.7,
           fontFamily: nyala,
         ),
-        // button: const TextStyle(
-        //   fontSize: 23.0,
-        // ),
         headline1: TextStyle(
           fontFamily: pirataOne,
           color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,

@@ -707,7 +707,7 @@ abstract class CharacterData {
     Perk('vw', 2, '$add $one +1 CURSE $card'),
     // AMBER AEGIS
     Perk('aa', 1,
-        '$replace $one -2 $card with $one -1 "Place $one Colony token of your choice on any empty hex within Range 2." $card'),
+        '$replace $one -2 $card with $one -1 "Place $one Colony token of your choice on any empty hex within Range 2" $card'),
     Perk('aa', 1, '$remove $two -1 $cards'),
     Perk('aa', 1, '$remove four +0 $cards'),
     Perk('aa', 1, '$replace $one -1 $card with $one +2 MUDDLE $card'),

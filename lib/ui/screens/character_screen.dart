@@ -72,7 +72,6 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.read<CharacterModel>();
-    // CharactersModel charactersModel = ;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -168,9 +167,7 @@ class NameAndClassSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('NAME BUILD RAN::');
     CharacterModel characterModel = context.read<CharacterModel>();
-    // CharactersModel charactersModel = ;
     return Column(
       children: <Widget>[
         context.watch<CharactersModel>().isEditMode
@@ -248,9 +245,7 @@ class StatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('STATS BUILD RAN::');
     CharacterModel characterModel = context.read<CharacterModel>();
-    // CharactersModel charactersModel = context.watch<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -264,6 +259,9 @@ class StatsSection extends StatelessWidget {
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black87,
+              ),
+              const SizedBox(
+                width: smallPadding,
               ),
               context.watch<CharactersModel>().isEditMode
                   ? Column(
@@ -296,15 +294,17 @@ class StatsSection extends StatelessWidget {
                               builder: (_) => AddSubtractDialog(
                                     characterModel.character.xp,
                                     'XP',
-                                  )).then((value) {
-                            if (value != null) {
-                              characterModel.xpController.text =
-                                  value.toString();
-                              characterModel.updateCharacter(
-                                characterModel.character..xp = value,
-                              );
-                            }
-                          }),
+                                  )).then(
+                            (value) {
+                              if (value != null) {
+                                characterModel.xpController.text =
+                                    value.toString();
+                                characterModel.updateCharacter(
+                                  characterModel.character..xp = value,
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ],
                     )
@@ -362,15 +362,17 @@ class StatsSection extends StatelessWidget {
                               builder: (_) => AddSubtractDialog(
                                     characterModel.character.gold,
                                     'Gold',
-                                  )).then((value) {
-                            if (value != null) {
-                              characterModel.goldController.text =
-                                  value.toString();
-                              characterModel.updateCharacter(
-                                characterModel.character..gold = value,
-                              );
-                            }
-                          }),
+                                  )).then(
+                            (value) {
+                              if (value != null) {
+                                characterModel.goldController.text =
+                                    value.toString();
+                                characterModel.updateCharacter(
+                                  characterModel.character..gold = value,
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ],
                     )
@@ -631,7 +633,8 @@ class NotesSection extends StatelessWidget {
                     hintText: 'Notes',
                   ),
                   controller: characterModel.notesController,
-                ))
+                ),
+              )
             : Text(
                 characterModel.character.notes,
               ),

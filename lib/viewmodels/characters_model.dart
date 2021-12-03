@@ -22,12 +22,27 @@ class CharactersModel with ChangeNotifier {
   AnimationController hideRetireCharacterAnimationController;
   bool showRetired;
   bool isEditMode = false;
+  // int _trueIndex;
 
-  void toggleShowRetired() {
-    int index = characters.indexOf(currentCharacter);
+  // int get trueIndex => _characters.indexOf(currentCharacter);
+
+  // set trueIndex(int trueIndex) {
+  //   _trueIndex = trueIndex;
+  // }
+
+  void toggleShowRetired({
+    int index,
+  }) {
+    int theIndex = index ??= showRetired
+        ? _characters
+            .where((character) => !character.isRetired)
+            .toList()
+            .indexOf(currentCharacter)
+        : _characters.indexOf(currentCharacter);
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    setCurrentCharacter(index: index);
+    jumpToPage(theIndex == -1 ? 0 : theIndex);
+    setCurrentCharacter(index: theIndex == -1 ? 0 : theIndex);
     notifyListeners();
   }
 
@@ -116,6 +131,7 @@ class CharactersModel with ChangeNotifier {
   void setCurrentCharacter({
     int index,
   }) {
+    print('SET CHARACTER INDEX:: $index');
     if (characters.isEmpty) {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;
@@ -164,8 +180,9 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  Future<void> retireCurrentCharacter() async {
+  Future<int> retireCurrentCharacter() async {
     isEditMode = false;
+    int trueIndex = _characters.indexOf(currentCharacter);
     int index = characters.indexOf(currentCharacter);
     currentCharacter.isRetired = !currentCharacter.isRetired;
     await DatabaseHelper.instance.updateCharacter(currentCharacter);
@@ -176,5 +193,6 @@ class CharactersModel with ChangeNotifier {
       index: index,
     );
     notifyListeners();
+    return trueIndex;
   }
 }
