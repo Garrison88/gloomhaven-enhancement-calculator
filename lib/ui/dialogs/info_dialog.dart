@@ -253,7 +253,10 @@ class InfoDialog extends StatelessWidget {
           : Center(
               child: Text(
                 title,
-                style: const TextStyle(fontSize: 28.0, fontFamily: pirataOne),
+                style: const TextStyle(
+                  fontSize: 28.0,
+                  fontFamily: pirataOne,
+                ),
               ),
             ),
       content: SingleChildScrollView(

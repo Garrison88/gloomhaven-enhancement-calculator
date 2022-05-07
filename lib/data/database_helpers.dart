@@ -1,6 +1,9 @@
 import 'dart:convert' as convert;
 import 'dart:io';
 
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+
 import 'database_migrations.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -106,6 +109,29 @@ class DatabaseHelper {
           $columnAssociatedPerkId $integerType,
           $columnCharacterPerkIsSelected $boolType
         )''');
+
+      await txn.execute('''
+        $createTable $tableMasteries (
+          $columnMasteryId $idType,
+          $columnMasteryClass $textType,
+          $columnMasteryDetails $textType
+        )''');
+
+      await txn.execute('''
+        $createTable $tableCharacterMasteries (
+          $columnAssociatedCharacterUuid $textType,
+          $columnAssociatedMasteryId $integerType,
+          $columnMasteryProgress $integerType
+        )''');
+      //   .then(
+      //   (_) async {
+      //     for (Mastery mastery in CharacterData.masteries) {
+      //       // for (int i = 0; i < perk.numOfPerks; i++) {
+      //       //   await txn.insert(tablePerks, perk.toMap());
+      //       // }
+      //     }
+      //   },
+      // );
     });
   }
 

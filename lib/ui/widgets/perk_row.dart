@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import '../../viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';

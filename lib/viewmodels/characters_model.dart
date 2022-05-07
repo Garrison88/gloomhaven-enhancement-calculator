@@ -131,7 +131,6 @@ class CharactersModel with ChangeNotifier {
   void setCurrentCharacter({
     int index,
   }) {
-    print('SET CHARACTER INDEX:: $index');
     if (characters.isEmpty) {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;

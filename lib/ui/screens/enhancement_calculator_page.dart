@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 import '../../data/constants.dart';
 import '../../data/enhancement_data.dart';
@@ -80,6 +81,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // CARD LEVEL
                   Card(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,6 +115,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // PREVIOUS ENHANCEMENTS
                   Card(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,6 +165,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // ENHANCEMENT
                   Card(
                     child: Column(
                       children: <Widget>[
@@ -207,7 +211,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               'Type',
                             ),
                             value: enhancementCalculatorModel.enhancement,
-                            items: EnhancementData.enhancementTypes(),
+                            items: EnhancementData.enhancementTypes(
+                                SharedPrefs().gloomhavenEnhancementCosts),
                             onChanged: (Enhancement selectedEnhancement) {
                               enhancementCalculatorModel
                                   .enhancementSelected(selectedEnhancement);
@@ -217,6 +222,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // MULTIPLE TARGETS
                   Card(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,15 +254,97 @@ class EnhancementCalculatorPage extends StatelessWidget {
                                 }
                               : null,
                         ),
-                        const IconButton(
-                            icon: Icon(
-                              Icons.info_outline,
-                              color: Colors.transparent,
-                            ),
-                            onPressed: null),
                       ],
                     ),
                   ),
+                  // LOSS NON-PERSISTENT
+                  if (!SharedPrefs().gloomhavenEnhancementCosts)
+                    Card(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(
+                              Icons.info_outline,
+                            ),
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return InfoDialog(
+                                  title: Strings.multipleTargetsInfoTitle,
+                                  message:
+                                      Strings.multipleTargetsInfoBody(context),
+                                );
+                              },
+                            ),
+                          ),
+                          SvgPicture.asset(
+                            SharedPrefs().darkTheme
+                                ? 'images/loss.svg'
+                                : 'images/loss_light.svg',
+                            width: iconSize,
+                          ),
+                          SvgPicture.asset(
+                            SharedPrefs().darkTheme
+                                ? 'images/persistent.svg'
+                                : 'images/persistent_light.svg',
+                            width: iconSize,
+                          ),
+                          Switch(
+                              value:
+                                  enhancementCalculatorModel.lossNonPersistent,
+                              onChanged: enhancementCalculatorModel.persistent
+                                  ? null
+                                  : (bool value) {
+                                      enhancementCalculatorModel
+                                          .lossNonPersistent = value;
+                                      enhancementCalculatorModel
+                                          .calculateCost();
+                                    }),
+                        ],
+                      ),
+                    ),
+                  // PERSISTENT
+                  if (!SharedPrefs().gloomhavenEnhancementCosts)
+                    Card(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(
+                              Icons.info_outline,
+                            ),
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (_) {
+                                return InfoDialog(
+                                  title: Strings.multipleTargetsInfoTitle,
+                                  message:
+                                      Strings.multipleTargetsInfoBody(context),
+                                );
+                              },
+                            ),
+                          ),
+                          SvgPicture.asset(
+                            SharedPrefs().darkTheme
+                                ? 'images/persistent.svg'
+                                : 'images/persistent_light.svg',
+                            width: iconSize,
+                          ),
+                          Switch(
+                            value: enhancementCalculatorModel.persistent,
+                            onChanged: (bool value) {
+                              // if (value) {
+                              //   enhancementCalculatorModel.lossNonPersistent =
+                              //       false;
+                              // }
+                              enhancementCalculatorModel.persistent = value;
+                              enhancementCalculatorModel.calculateCost();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
               Opacity(

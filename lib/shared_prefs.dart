@@ -124,4 +124,24 @@ class SharedPrefs {
   set backup(String value) {
     _sharedPrefs.setString('backup', value);
   }
+
+  bool get gloomhavenEnhancementCosts =>
+      _sharedPrefs.getBool('gloomhavenEnhancementCosts') ?? true;
+
+  set gloomhavenEnhancementCosts(bool value) {
+    _sharedPrefs.setBool('gloomhavenEnhancementCosts', value);
+  }
+
+  bool get lossNonPersistent =>
+      _sharedPrefs.getBool('lossNonPersistent') ?? false;
+
+  set lossNonPersistent(bool value) {
+    _sharedPrefs.setBool('lossNonPersistent', value);
+  }
+
+  bool get persistent => _sharedPrefs.getBool('persistent') ?? false;
+
+  set persistent(bool value) {
+    _sharedPrefs.setBool('persistent', value);
+  }
 }

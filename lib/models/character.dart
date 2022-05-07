@@ -1,5 +1,5 @@
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import '../data/character_data.dart';
+import 'player_class.dart';
 
 const String tableCharacters = 'Characters';
 

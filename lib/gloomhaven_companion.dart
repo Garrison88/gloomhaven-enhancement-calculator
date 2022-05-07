@@ -1,9 +1,8 @@
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
+import 'viewmodels/app_model.dart';
+import 'viewmodels/characters_model.dart';
+import 'viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 import 'data/constants.dart';
 import 'shared_prefs.dart';

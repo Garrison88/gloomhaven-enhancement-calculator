@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../custom_search_delegate.dart';
-import '../../data/character_data.dart';
-import '../../data/constants.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+
+import '../../custom_search_delegate.dart';
+import '../../data/character_data.dart';
+import '../../data/constants.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;

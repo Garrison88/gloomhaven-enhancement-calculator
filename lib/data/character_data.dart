@@ -1,4 +1,6 @@
-import 'package:gloomhaven_enhancement_calc/main.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+
+import '../main.dart';
 
 import '../models/goal.dart';
 import '../models/perk.dart';
@@ -26,8 +28,9 @@ abstract class CharacterData {
   static const valrath = 'Valrath';
   static const vermling = 'Vermling';
 
-  static const two = 'two';
   static const one = 'one';
+  static const two = 'two';
+  static const three = 'three';
   static const card = 'card';
   static const cards = 'cards';
   static const add = 'Add';
@@ -417,6 +420,14 @@ abstract class CharacterData {
       classCategory: ClassCategory.custom,
       classColor: '0xffdb332d',
     ),
+    PlayerClass(
+      race: orchid,
+      className: 'Thornreaper',
+      classCode: 'thornreaper',
+      classIconUrl: 'thornreaper.svg',
+      classCategory: ClassCategory.custom,
+      classColor: '0xffc3d678',
+    ),
   ];
 
   static PlayerClass playerClassByClassCode(String classCode) =>
@@ -432,7 +443,7 @@ abstract class CharacterData {
     Perk('br', 1, '$remove $one -1 $card and $addL $one +1 $card'),
     Perk('br', 2, '$add $two +1 $cards'),
     Perk('br', 1, '$add $one +3 $card'),
-    Perk('br', 2, '$add three $rolling PUSH 1 $cards'),
+    Perk('br', 2, '$add $three $rolling PUSH 1 $cards'),
     Perk('br', 1, '$add $two $rolling PIERCE 3 $cards'),
     Perk('br', 2, '$add $one $rolling STUN $card'),
     Perk('br', 1,
@@ -446,7 +457,7 @@ abstract class CharacterData {
     Perk('ti', 1, '$add $two +1 $cards'),
     Perk('ti', 1, '$add $one +3 $card'),
     Perk('ti', 1, '$add $two $rolling FIRE $cards'),
-    Perk('ti', 1, '$add three $rolling MUDDLE $cards'),
+    Perk('ti', 1, '$add $three $rolling MUDDLE $cards'),
     Perk('ti', 2, '$add $one +1 WOUND $card'),
     Perk('ti', 2, '$add $one +1 IMMOBILIZE $card'),
     Perk('ti', 2, '$add $one +1 HEAL 2 $card'),
@@ -494,8 +505,8 @@ abstract class CharacterData {
     Perk('mt', 1, '$replace $one -2 $card with $one +0 $card'),
     Perk('mt', 2, '$add $one +2 ICE $card'),
     Perk('mt', 2, '$add $two $rolling +1 $cards'),
-    Perk('mt', 1, '$add three $rolling PULL 1 $cards'),
-    Perk('mt', 1, '$add three $rolling MUDDLE $cards'),
+    Perk('mt', 1, '$add $three $rolling PULL 1 $cards'),
+    Perk('mt', 1, '$add $three $rolling MUDDLE $cards'),
     Perk('mt', 1, '$add $two $rolling IMMOBILIZE $cards'),
     Perk('mt', 1, '$add $one $rolling STUN $card'),
     Perk('mt', 1,
@@ -518,7 +529,7 @@ abstract class CharacterData {
     Perk('qm', 1, '$remove four +0 $cards'),
     Perk('qm', 2, '$replace $one +0 $card with $one +2 $card'),
     Perk('qm', 2, '$add $two $rolling +1 $cards'),
-    Perk('qm', 1, '$add three $rolling MUDDLE $cards'),
+    Perk('qm', 1, '$add $three $rolling MUDDLE $cards'),
     Perk('qm', 1, '$add $two $rolling PIERCE 3 $cards'),
     Perk('qm', 1, '$add $one $rolling STUN $card'),
     Perk('qm', 1, '$add $one $rolling ADD TARGET $card'),
@@ -542,7 +553,7 @@ abstract class CharacterData {
     Perk('ns', 2, '$add $one -1 DARK $card'),
     Perk('ns', 2, '$replace $one -1 DARK $card with $one +1 DARK $card'),
     Perk('ns', 2, '$add $one +1 INVISIBLE $card'),
-    Perk('ns', 2, '$add three $rolling MUDDLE $cards'),
+    Perk('ns', 2, '$add $three $rolling MUDDLE $cards'),
     Perk('ns', 1, '$add $two $rolling HEAL 1 $cards'),
     Perk('ns', 1, '$add $two $rolling CURSE $cards'),
     Perk('ns', 1, '$add $one $rolling ADD TARGET $card'),
@@ -554,7 +565,7 @@ abstract class CharacterData {
     Perk('ph', 2, '$replace $one +0 $card with $one +2 $card'),
     Perk('ph', 1, '$add $two +1 $cards'),
     Perk('ph', 3, '$add $one +1 AIR $card'),
-    Perk('ph', 1, '$add three $rolling POISON $cards'),
+    Perk('ph', 1, '$add $three $rolling POISON $cards'),
     Perk('ph', 1, '$add $two $rolling CURSE $cards'),
     Perk('ph', 1, '$add $two $rolling IMMOBILIZE $cards'),
     Perk('ph', 2, '$add $one $rolling STUN $card'),
@@ -582,7 +593,7 @@ abstract class CharacterData {
     Perk('ss', 1, '$replace $one +0 $card with $one +2 CURSE $card'),
     Perk('ss', 1, '$replace $one +0 $card with $one +3 MUDDLE $card'),
     Perk('ss', 1, '$replace $one -1 $card with $one +0 STUN $card'),
-    Perk('ss', 1, '$add three $rolling +1 $cards'),
+    Perk('ss', 1, '$add $three $rolling +1 $cards'),
     Perk('ss', 2, '$add $two $rolling CURSE $cards'),
     // DOOMSTALKER
     Perk('ds', 2, '$remove $two -1 $cards'),
@@ -609,10 +620,10 @@ abstract class CharacterData {
     Perk('el', 2, '$remove $two -1 $cards'),
     Perk('el', 1, '$replace $one -1 $card with $one +1 $card'),
     Perk('el', 2, '$replace $one +0 $card with $one +2 $card'),
-    Perk('el', 1, '$add three +0 FIRE $cards'),
-    Perk('el', 1, '$add three +0 ICE $cards'),
-    Perk('el', 1, '$add three +0 AIR $cards'),
-    Perk('el', 1, '$add three +0 EARTH $cards'),
+    Perk('el', 1, '$add $three +0 FIRE $cards'),
+    Perk('el', 1, '$add $three +0 ICE $cards'),
+    Perk('el', 1, '$add $three +0 AIR $cards'),
+    Perk('el', 1, '$add $three +0 EARTH $cards'),
     Perk('el', 1,
         '$replace $two +0 $cards with $one +0 FIRE $card and $one +0 EARTH $card'),
     Perk('el', 1,
@@ -780,7 +791,7 @@ abstract class CharacterData {
     Perk('bp', 1,
         '$add $one $rolling "HEAL 1, Range 3, LIGHT" $card and $one $rolling "PIERCE 2, FIRE" $card'),
     Perk('bp', 1,
-        '$add three $rolling "Consume_Any_Element : Any_Element" $cards'),
+        '$add $three $rolling "Consume_Any_Element : Any_Element" $cards'),
     Perk('bp', 1,
         'Ignore $negative $scenario $effects and $removeL $one -1 $card'),
     // CHIEFTAIN
@@ -827,8 +838,8 @@ abstract class CharacterData {
     Perk('fb', 1, '$replace $one +1 $card with $one +3 $card'),
     Perk('fb', 1, '$add $one +0 STUN $card'),
     Perk('fb', 2, '$add $one $rolling ADD TARGET $card'),
-    Perk('fb', 1, '$add three $rolling CHILL $cards'),
-    Perk('fb', 1, '$add three $rolling PUSH 1 $cards'),
+    Perk('fb', 1, '$add $three $rolling CHILL $cards'),
+    Perk('fb', 1, '$add $three $rolling PUSH 1 $cards'),
     Perk('fb', 1, 'Ignore DIFFICULT and HAZARDOUS terrain during move actions'),
     Perk('fb', 1, 'Ignore $scenario $effects'),
     // HOLLOWPACT
@@ -883,7 +894,7 @@ abstract class CharacterData {
     Perk('cg', 2,
         '$replace $two +0 $cards with $one $rolling "SHIELD 1, Self" $card'),
     Perk('cg', 1, '$add $two $rolling "RETALIATE 1, Self" $cards'),
-    Perk('cg', 1, '$add three $rolling SWING 3 $cards'),
+    Perk('cg', 1, '$add $three $rolling SWING 3 $cards'),
     Perk('cg', 1, '$replace $one +1 $card with $one +2 WOUND $card'),
     Perk('cg', 1, '$add $one +1 "DISARM if the target is Shackled" $card'),
     Perk('cg', 1,
@@ -932,7 +943,7 @@ abstract class CharacterData {
     Perk('scr', 2, '$replace $one +0 $card with $one +1 AIR $card'),
     Perk('scr', 2, '$replace $one +0 $card with $one +1 DARK $card'),
     Perk('scr', 1, '$replace $one +0 $card with $one +1 PIERCE 2 $card'),
-    Perk('scr', 1, '$add three $rolling PIERCE 3 $cards'),
+    Perk('scr', 1, '$add $three $rolling PIERCE 3 $cards'),
     Perk('scr', 1, '$add $one +1 CURSE $card'),
     Perk('scr', 1, '$add $one $rolling ADD TARGET $card'),
     Perk('scr', 1, '$replace $one +1 $card with $one +2 PUSH 2 $card'),
@@ -971,6 +982,28 @@ abstract class CharacterData {
         'Whenever $one of your abilities causes at least $one enemy to gain RUPTURE, immediately after that ability perform "Move 1"'),
     Perk('rm', 1,
         'Ignore $negative $scenario $effects, and $removeL $one -1 $card'),
+    // THORNREAPER
+    Perk('thornreaper', 2,
+        '$replace $one -1 $card with $one $rolling "+1 if LIGHT is Strong or Waning" $card'),
+    Perk('thornreaper', 1, '$replace $one -2 $card with $one +0 $card'),
+    Perk('thornreaper', 1, '$replace $one +0 $card with $one +2 $card'),
+    Perk('thornreaper', 2,
+        '$add $three $rolling "+1 if LIGHT is Strong or Waning" $cards'),
+    Perk('thornreaper', 1, '$add $two $rolling LIGHT $cards'),
+    Perk('thornreaper', 1,
+        '$add $three $rolling "EARTH if LIGHT is Strong or Waning" $cards'),
+    Perk('thornreaper', 2,
+        '$add $one "Create hazardous terrain in $one hex within Range 1" $card'),
+    Perk('thornreaper', 2,
+        '$add $one $rolling "RETALIATE 3, next attack from an adjacent enemy while you occupy hazardous terrain" $card'),
+    Perk('thornreaper', 2,
+        '$add $one $rolling "SHIELD 3, next damage from an attack while you occupy hazardous terrain" $card'),
+    Perk('thornreaper', 1,
+        'Ignore $negative item $effects and $addL $one $rolling "+1 if LIGHT is Strong or Waning" $card'),
+    Perk('thornreaper', 2, 'Gain SHIELD 1 while you occupy hazardous terrain',
+        perkIsGrouped: true),
+    Perk('thornreaper', 1,
+        'At the end of each of your long rests, generate LIGHT'),
     if (includeFrosthaven) ...[
       // BANNER SPEAR
       Perk('bannerspear', 3,
@@ -1057,7 +1090,7 @@ abstract class CharacterData {
       Perk('boneshaper', 3,
           '$replace $one +0 $card with $one +1 "Kill the attacking summon to instead $addL +4" $card'),
       Perk('boneshaper', 2,
-          '$add three $rolling "HEAL 1, Target Boneshaper" $cards'),
+          '$add $three $rolling "HEAL 1, Target Boneshaper" $cards'),
       Perk('boneshaper', 3, '$add $one +2 EARTH/DARK $card'),
       Perk('boneshaper', 1,
           'Ignore $negative $scenario $effects and $addL $two +1 $cards'),
@@ -1087,6 +1120,14 @@ abstract class CharacterData {
       Perk('deathwalker', 1,
           'Whenever you short rest, you may consume_DARK to perform "CURSE, Range 2" as if you were occupying a hex with a SHADOW'),
     ],
+  ];
+
+  static final List<Mastery> masteries = [
+    Mastery(
+      masteryClassCode: 'br',
+      description: 'First one',
+      numOfChecks: 5,
+    ),
   ];
 
   static final List<Resource> resources = [
