@@ -39,7 +39,7 @@ class InfoDialog extends StatelessWidget {
       for (final Enhancement enhancement in list) {
         icons.add(
           Padding(
-            child: SharedPrefs().darkTheme && enhancement.invertColor
+            child: SharedPrefs().darkTheme && enhancement.invertIconColor
                 ? SvgPicture.asset(
                     'images/${enhancement.icon}',
                     height: iconSize,
@@ -61,14 +61,6 @@ class InfoDialog extends StatelessWidget {
     return icons;
   }
 
-  // void showInfoDialog() {
-  // info about enhancement category requested
-
-  // showDialog<void>(
-  //     context: context,
-  //     builder: (_) => );
-  // }
-
   @override
   Widget build(BuildContext context) {
     if (category != null) {
@@ -76,7 +68,10 @@ class InfoDialog extends StatelessWidget {
         // plus one for character enhancement selected
         case EnhancementCategory.charPlusOne:
         case EnhancementCategory.target:
-          _bodyText = Strings.plusOneCharacterInfoBody(context);
+          _bodyText = Strings.plusOneCharacterInfoBody(
+            context,
+            SharedPrefs().gloomhavenMode,
+          );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
                 (element) =>
@@ -87,7 +82,10 @@ class InfoDialog extends StatelessWidget {
           break;
         // plus one for summon enhancement selected
         case EnhancementCategory.summonPlusOne:
-          _bodyText = Strings.plusOneSummonInfoBody(context);
+          _bodyText = Strings.plusOneSummonInfoBody(
+            context,
+            SharedPrefs().gloomhavenMode,
+          );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
                 (element) =>
@@ -102,15 +100,23 @@ class InfoDialog extends StatelessWidget {
               .where(
                 (element) => element.category == EnhancementCategory.negEffect,
               )
-              .toList();
+              .toList()
+            ..removeWhere(
+              (element) =>
+                  element.name == 'Disarm' && !SharedPrefs().gloomhavenMode,
+            );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
-                (element) =>
-                    element.category == EnhancementCategory.negEffect ||
-                    ['Attack', 'Push', 'Pull'].contains(element.name) &&
-                        element.category != EnhancementCategory.summonPlusOne,
+                (enhancement) =>
+                    enhancement.category == EnhancementCategory.negEffect ||
+                    ['Attack', 'Push', 'Pull'].contains(enhancement.name) &&
+                        enhancement.category !=
+                            EnhancementCategory.summonPlusOne,
               )
-              .toList();
+              .toList()
+            ..add(
+              Enhancement(EnhancementCategory.negEffect, 0, 'stun.svg', 'Stun'),
+            );
           break;
         // positive enhancement selected
         case EnhancementCategory.posEffect:
@@ -132,8 +138,12 @@ class InfoDialog extends StatelessWidget {
               )
               .toList();
           _eligibleForIcons.add(
-            Enhancement(EnhancementCategory.posEffect, 0, 'invisible.svg',
-                false, 'Invisible'),
+            Enhancement(
+              EnhancementCategory.posEffect,
+              0,
+              'invisible.svg',
+              'Invisible',
+            ),
           );
           break;
         // jump selected
@@ -154,20 +164,47 @@ class InfoDialog extends StatelessWidget {
           break;
         // specific element selected
         case EnhancementCategory.specElem:
-          _bodyText = Strings.specificElementInfoBody(context);
+          _bodyText = Strings.specificElementInfoBody(
+            context,
+            SharedPrefs().gloomhavenMode,
+          );
           _titleIcons = [
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_air.svg',
-                false, 'Specific Element'),
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_earth.svg',
-                false, 'Specific Element'),
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_fire.svg',
-                false, 'Specific Element'),
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_ice.svg',
-                false, 'Specific Element'),
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_dark.svg',
-                false, 'Specific Element'),
-            Enhancement(EnhancementCategory.specElem, 100, 'elem_light.svg',
-                false, 'Specific Element')
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_air.svg',
+              'Specific Element',
+            ),
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_earth.svg',
+              'Specific Element',
+            ),
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_fire.svg',
+              'Specific Element',
+            ),
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_ice.svg',
+              'Specific Element',
+            ),
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_dark.svg',
+              'Specific Element',
+            ),
+            Enhancement(
+              EnhancementCategory.specElem,
+              100,
+              'elem_light.svg',
+              'Specific Element',
+            )
           ];
           _eligibleForIcons = EnhancementData.enhancements
               .where(
@@ -187,13 +224,20 @@ class InfoDialog extends StatelessWidget {
               )
               .toList();
           _eligibleForIcons.add(
-            Enhancement(EnhancementCategory.posEffect, 0, 'invisible.svg',
-                false, 'Invisible'),
+            Enhancement(
+              EnhancementCategory.posEffect,
+              0,
+              'invisible.svg',
+              'Invisible',
+            ),
           );
           break;
         // any element selected
         case EnhancementCategory.anyElem:
-          _bodyText = Strings.anyElementInfoBody(context);
+          _bodyText = Strings.anyElementInfoBody(
+            context,
+            SharedPrefs().gloomhavenMode,
+          );
           _titleIcons = EnhancementData.enhancements
               .where(
                 (element) => element.category == EnhancementCategory.anyElem,
@@ -217,8 +261,12 @@ class InfoDialog extends StatelessWidget {
               )
               .toList();
           _eligibleForIcons.add(
-            Enhancement(EnhancementCategory.posEffect, 0, 'invisible.svg',
-                false, 'Invisible'),
+            Enhancement(
+              EnhancementCategory.posEffect,
+              0,
+              'invisible.svg',
+              'Invisible',
+            ),
           );
           break;
         // hex selected

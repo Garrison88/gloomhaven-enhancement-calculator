@@ -33,8 +33,8 @@ class Strings {
           ),
           const TextSpan(
               text: "the Prosperity level of Gloomhaven. Only abilities with a "
-                  "small translucent circle beside them can be enhanced, and only one "
-                  "enhancement per circle can be added. Once an enhancement is placed,"),
+                  "small translucent icon beside them can be enhanced, and only one "
+                  "enhancement per icon can be added. Once an enhancement is placed,"),
           TextSpan(
             text: " it persists through subsequent playthroughs ",
             style: Theme.of(context).textTheme.bodyText2.copyWith(
@@ -120,7 +120,10 @@ class Strings {
   }
 
   // plus one for character
-  static RichText plusOneCharacterInfoBody(BuildContext context) {
+  static RichText plusOneCharacterInfoBody(
+    BuildContext context,
+    bool gloomhavenMode,
+  ) {
     return RichText(
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyText2,
@@ -139,23 +142,26 @@ class Strings {
                 text:
                     "That value is increased by 1. Increasing a Target by 1 is"),
             TextSpan(
-              text: " always ",
+              text: " ${gloomhavenMode ? 'always' : 'never'} ",
               style: Theme.of(context)
                   .textTheme
                   .bodyText2
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            const TextSpan(text: "subject to the multiple target fee.")
+            const TextSpan(text: "subject to the multiple targets multiplier.")
           ]),
     );
   }
 
   // plus one for summon
-  static RichText plusOneSummonInfoBody(BuildContext context) {
+  static RichText plusOneSummonInfoBody(
+    BuildContext context,
+    bool gloomhavenMode,
+  ) {
     return RichText(
-        text: TextSpan(
-            style: Theme.of(context).textTheme.bodyText2,
-            children: <TextSpan>[
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyText2,
+        children: <TextSpan>[
           const TextSpan(
               text: "This enhancement can be placed on any summon ability"
                   " with a"),
@@ -164,8 +170,20 @@ class Strings {
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
-          const TextSpan(text: "That value is increased by 1.")
-        ]));
+          const TextSpan(text: "That value is increased by 1."),
+          if (!gloomhavenMode) ...[
+            const TextSpan(text: " Summon stat enhancements are"),
+            TextSpan(
+              text: " never ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(text: "subject to the persistent icon multiplier."),
+          ]
+        ],
+      ),
+    );
   }
 
   // negative effects
@@ -242,41 +260,70 @@ class Strings {
   }
 
   // specific element
-  static RichText specificElementInfoBody(BuildContext context) {
+  static RichText specificElementInfoBody(
+    BuildContext context,
+    bool gloomhavenMode,
+  ) {
     return RichText(
       text: TextSpan(
-          style: Theme.of(context).textTheme.bodyText2,
-          children: <TextSpan>[
-            const TextSpan(text: "These enhancements can be placed on any"),
+        style: Theme.of(context).textTheme.bodyText2,
+        children: <TextSpan>[
+          const TextSpan(text: "These enhancements can be placed on any"),
+          TextSpan(
+            text: " main ",
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const TextSpan(
+              text: "ability line. The specific element is created when the "
+                  "ability is used."),
+          if (!gloomhavenMode) ...[
+            const TextSpan(text: " Element enhancements are"),
             TextSpan(
-                text: " main ",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            const TextSpan(
-                text: "ability line. The specific element is created when the "
-                    "ability is used.")
-          ]),
+              text: " never ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(text: "subject to the multiple targets multiplier."),
+          ],
+        ],
+      ),
     );
   }
 
   // any element
-  static RichText anyElementInfoBody(BuildContext context) {
+  static RichText anyElementInfoBody(
+    BuildContext context,
+    bool gloomhavenMode,
+  ) {
     return RichText(
       text: TextSpan(
-          style: Theme.of(context).textTheme.bodyText2,
-          children: <TextSpan>[
-            const TextSpan(text: "This enhancement can be placed on any"),
+        style: Theme.of(context).textTheme.bodyText2,
+        children: <TextSpan>[
+          const TextSpan(text: "This enhancement can be placed on any"),
+          TextSpan(
+              text: " main ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )),
+          const TextSpan(
+              text:
+                  "ability line. The player chooses the element that is created "
+                  "when the ability is used."),
+          if (!gloomhavenMode) ...[
+            const TextSpan(text: " Element enhancements are"),
             TextSpan(
-                text: " main ",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            const TextSpan(
-                text:
-                    "ability line. The player chooses the element that is created "
-                    "when the ability is used."),
-          ]),
+              text: " never ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(text: "subject to the multiple targets multiplier."),
+          ],
+        ],
+      ),
     );
   }
 
@@ -302,12 +349,12 @@ class Strings {
                 text: "The new Hex becomes an additional target of "
                     "the attack. Adding a Hex is"),
             TextSpan(
-              text: " not ",
+              text: " never ",
               style: Theme.of(context).textTheme.bodyText2.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const TextSpan(text: "subject to the multiple target fee.")
+            const TextSpan(text: "subject to the multiple targets multiplier.")
           ]),
     );
   }
@@ -315,43 +362,103 @@ class Strings {
   static List<String> hexIcon = ['hex.svg'];
   static List<String> hexEligibleIcons = ['hex.svg'];
 
+  static String multipleTargetsInfoTitle = "Multiple Targets Multiplier";
+
   // multiple targets
-  static RichText multipleTargetsInfoBody(BuildContext context) {
+  static RichText multipleTargetsInfoBody(
+    BuildContext context,
+    bool gloomhavenMode,
+  ) {
     return RichText(
       text: TextSpan(
-          style: Theme.of(context).textTheme.bodyText2,
-          children: <TextSpan>[
-            const TextSpan(
-                text:
-                    "If an ability targets multiple enemies or allies, the enhancement base cost "
-                    "is"),
-            TextSpan(
-                text: " doubled. ",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            const TextSpan(
-                text:
-                    "This includes abilities that target 'All adjacent enemies' or "
-                    "'All allies within range 3', for example. Adding +1 Target will"),
+        style: Theme.of(context).textTheme.bodyText2,
+        children: <TextSpan>[
+          const TextSpan(
+              text:
+                  "If an ability targets multiple enemies or allies, the enhancement base cost "
+                  "is"),
+          TextSpan(
+              text: " doubled. ",
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )),
+          const TextSpan(
+              text:
+                  "This includes abilities that target 'All adjacent enemies' or "
+                  "'All allies within range 3', for example."),
+          if (gloomhavenMode) ...[
+            const TextSpan(text: " This will"),
             TextSpan(
                 text: " always ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            const TextSpan(
-                text: "be double base cost, while adding a Hex will"),
+            const TextSpan(text: "apply to adding +1 Target, and it will"),
             TextSpan(
                 text: " never ",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
-            const TextSpan(text: "be.")
-          ]),
+            const TextSpan(text: "apply to adding a Hex."),
+          ],
+          if (!gloomhavenMode) ...[
+            const TextSpan(text: " This will"),
+            TextSpan(
+                text: " never ",
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      fontWeight: FontWeight.bold,
+                    )),
+            const TextSpan(
+                text:
+                    "apply to adding +1 Target, enhancing an ability with an Element, or adding a Hex."),
+          ],
+        ],
+      ),
     );
   }
 
-  static String multipleTargetsInfoTitle = "Multiple Targets Multiplier";
+  static String lostNonPersistentInfoTitle = "Lost & Non-Persistent";
+
+  // lost non-persistent
+  static RichText lostNonPersistentInfoBody(
+    BuildContext context,
+  ) {
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyText2,
+        children: const <TextSpan>[
+          TextSpan(
+              text:
+                  "If the action has a Lost icon, but no Persistent icon, halve the base cost."),
+        ],
+      ),
+    );
+  }
+
+  static String persistentInfoTitle = "Persistent";
+
+  // persistent
+  static RichText persistentInfoBody(
+    BuildContext context,
+  ) {
+    return RichText(
+      text: TextSpan(
+        style: Theme.of(context).textTheme.bodyText2,
+        children: <TextSpan>[
+          const TextSpan(
+              text:
+                  "If the action has a Persistent icon, whether or not there is a Lost icon, triple the base cost. This"),
+          TextSpan(
+            text: " does not ",
+            style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const TextSpan(text: "apply to summon stat enhancements."),
+        ],
+      ),
+    );
+  }
 
   static String previousRetirementsInfoTitle = "Previous Retirements";
   static RichText previousRetirementsInfoBody(BuildContext context) {

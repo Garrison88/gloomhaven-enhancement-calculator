@@ -11,12 +11,17 @@ class EnhancementCalculatorModel with ChangeNotifier {
   Enhancement _enhancement = SharedPrefs().enhancementTypeIndex != 0
       ? EnhancementData.enhancements[SharedPrefs().enhancementTypeIndex]
       : null;
+
   bool _multipleTargets = SharedPrefs().multipleTargetsSwitch;
-  bool _lossNonPersistent = SharedPrefs().lossNonPersistent;
+
+  bool _lostNonPersistent = SharedPrefs().lostNonPersistent;
+
   bool _persistent = SharedPrefs().persistent;
 
-  bool disableMultiTargetsSwitch = SharedPrefs().disableMultiTargetSwitch;
+  bool _disableMultiTargetsSwitch = SharedPrefs().disableMultiTargetSwitch;
+
   bool showCost = false;
+
   int enhancementCost = 0;
 
   int get cardLevel => _cardLevel;
@@ -24,6 +29,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
   set cardLevel(int cardLevel) {
     SharedPrefs().targetCardLvl = cardLevel;
     _cardLevel = cardLevel;
+    calculateCost();
   }
 
   int get previousEnhancements => _previousEnhancements;
@@ -31,6 +37,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
   set previousEnhancements(int previousEnhancements) {
     SharedPrefs().previousEnhancements = previousEnhancements;
     _previousEnhancements = previousEnhancements;
+    calculateCost();
   }
 
   Enhancement get enhancement => _enhancement;
@@ -43,27 +50,39 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   bool get multipleTargets => _multipleTargets;
 
-  set multipleTargets(bool multipleTargets) {
-    SharedPrefs().multipleTargetsSwitch = multipleTargets;
-    _multipleTargets = multipleTargets;
+  set multipleTargets(bool value) {
+    SharedPrefs().multipleTargetsSwitch = value;
+    _multipleTargets = value;
+    calculateCost();
   }
 
-  bool get lossNonPersistent => _lossNonPersistent;
+  bool get disableMultiTargetsSwitch => _disableMultiTargetsSwitch;
 
-  set lossNonPersistent(bool lossNonPersistent) {
-    SharedPrefs().lossNonPersistent = lossNonPersistent;
-    _lossNonPersistent = lossNonPersistent;
+  set disableMultiTargetsSwitch(bool value) {
+    SharedPrefs().disableMultiTargetSwitch = value;
+    _disableMultiTargetsSwitch = value;
+  }
+
+  bool get lostNonPersistent => _lostNonPersistent;
+
+  set lostNonPersistent(bool value) {
+    if (value) {
+      persistent = false;
+    }
+    SharedPrefs().lostNonPersistent = value;
+    _lostNonPersistent = value;
+    calculateCost();
   }
 
   bool get persistent => _persistent;
 
-  set persistent(bool persistent) {
-    // does NOT apply to summon stat enhancements
-    if (persistent) {
-      lossNonPersistent = false;
+  set persistent(bool value) {
+    if (value) {
+      lostNonPersistent = false;
     }
-    SharedPrefs().persistent = persistent;
-    _persistent = persistent;
+    SharedPrefs().persistent = value;
+    _persistent = value;
+    calculateCost();
   }
 
   void resetCost() {
@@ -74,6 +93,8 @@ class EnhancementCalculatorModel with ChangeNotifier {
     disableMultiTargetsSwitch = false;
     enhancementCost = 0;
     showCost = false;
+    lostNonPersistent = false;
+    persistent = false;
     SharedPrefs().remove('targetCardLvl');
     SharedPrefs().remove('enhancementsOnTargetAction');
     SharedPrefs().remove('enhancementType');
@@ -81,35 +102,44 @@ class EnhancementCalculatorModel with ChangeNotifier {
     SharedPrefs().remove('multipleTargetsSelected');
     SharedPrefs().remove('enhancementCost');
     SharedPrefs().remove('disableMultiTargetsSwitch');
+    SharedPrefs().remove('lostNonPersistent');
+    SharedPrefs().remove('persistent');
     notifyListeners();
   }
 
   void calculateCost({
     bool notify = true,
   }) {
-    int baseCost = enhancement != null && enhancement.ghCost != null
-        ? SharedPrefs().gloomhavenEnhancementCosts
+    /// get the base cost of the selected enhancement
+    enhancementCost = enhancement != null && enhancement.ghCost != null
+        ? SharedPrefs().gloomhavenMode
             ? enhancement.ghCost
             : enhancement.fhCost ?? enhancement.ghCost
         : 0;
-    if (!SharedPrefs().gloomhavenEnhancementCosts) {
-      if (persistent) {
-        baseCost = baseCost * 3;
-      } else if (lossNonPersistent) {
-        baseCost = (baseCost / 2).round();
-      }
+
+    /// multiply [baseCost] x2 if [multipleTargets]
+    enhancementCost = multipleTargets ? enhancementCost * 2 : enhancementCost;
+
+    /// if Frosthaven
+    if (!SharedPrefs().gloomhavenMode) {
+      /// halve the cost if [lostNonPersistent]
+      enhancementCost =
+          lostNonPersistent ? (enhancementCost / 2).round() : enhancementCost;
+
+      /// triple the cost if [persistent]
+      enhancementCost = persistent ? enhancementCost * 3 : enhancementCost;
     }
-    int enhancementCost =
-        // add 25g for each card level beyond 1 (20 if 'Party Boon' is enabled)
-        (cardLevel != null && cardLevel > 0
-                ? cardLevel * (SharedPrefs().partyBoon ? 20 : 25)
-                : 0) +
-            // add 75g for each previous enhancement on target action
-            (previousEnhancements != null ? previousEnhancements * 75 : 0) +
-            // multiply base cost x2 if multiple targets switch is true
-            (multipleTargets ? baseCost * 2 : baseCost);
-    this.enhancementCost = enhancementCost;
-    disableMultiTargetsSwitch = SharedPrefs().disableMultiTargetSwitch;
+
+    /// add 25g for each [cardLevel] beyond 1 (20 if 'Party Boon' is enabled)
+    enhancementCost += (cardLevel != null && cardLevel > 0
+        ? cardLevel * (SharedPrefs().partyBoon ? 20 : 25)
+        : 0);
+
+    /// add 75g for each [previousEnhancement]
+    enhancementCost +=
+        (previousEnhancements != null ? previousEnhancements * 75 : 0);
+
+    /// only show cost if there's a price to display
     showCost =
         cardLevel != 0 || previousEnhancements != 0 || enhancement != null;
     if (notify) {
@@ -118,51 +148,50 @@ class EnhancementCalculatorModel with ChangeNotifier {
   }
 
   void gameVersionToggled(bool value) {
-    enhancementSelected(enhancement);
-    calculateCost();
+    if (enhancement == null) {
+      notifyListeners();
+    } else {
+      enhancementSelected(enhancement);
+    }
   }
 
   void enhancementSelected(Enhancement selectedEnhancement) {
+    if (!SharedPrefs().gloomhavenMode &&
+        selectedEnhancement?.name == 'Disarm') {
+      _enhancement = null;
+      SharedPrefs().remove('enhancementType');
+      notifyListeners();
+      return;
+    }
     switch (selectedEnhancement.category) {
       case EnhancementCategory.title:
         return;
       case EnhancementCategory.target:
-        multipleTargets = SharedPrefs().gloomhavenEnhancementCosts;
-        SharedPrefs().multipleTargetsSwitch =
-            SharedPrefs().gloomhavenEnhancementCosts;
+        multipleTargets = SharedPrefs().gloomhavenMode;
         disableMultiTargetsSwitch = true;
-        SharedPrefs().disableMultiTargetSwitch = true;
-        enhancement = selectedEnhancement;
         break;
       case EnhancementCategory.hex:
         multipleTargets = false;
-        SharedPrefs().multipleTargetsSwitch = false;
         disableMultiTargetsSwitch = true;
-        SharedPrefs().disableMultiTargetSwitch = true;
-        enhancement = selectedEnhancement;
         break;
       case EnhancementCategory.anyElem:
       case EnhancementCategory.specElem:
-        if (!SharedPrefs().gloomhavenEnhancementCosts) {
+        if (!SharedPrefs().gloomhavenMode) {
           multipleTargets = false;
-          SharedPrefs().multipleTargetsSwitch = false;
           disableMultiTargetsSwitch = true;
-          SharedPrefs().disableMultiTargetSwitch = true;
-          enhancement = selectedEnhancement;
         } else {
           disableMultiTargetsSwitch = false;
-          SharedPrefs().disableMultiTargetSwitch = false;
         }
-        enhancement = selectedEnhancement;
+        break;
+      case EnhancementCategory.summonPlusOne:
+        persistent = false;
+        disableMultiTargetsSwitch = false;
         break;
       default:
         disableMultiTargetsSwitch = false;
-        SharedPrefs().disableMultiTargetSwitch = false;
-        enhancement = selectedEnhancement;
         break;
     }
-    SharedPrefs().enhancementTypeIndex =
-        EnhancementData.enhancements.indexOf(selectedEnhancement);
+    enhancement = selectedEnhancement;
     calculateCost();
   }
 }

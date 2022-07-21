@@ -97,4 +97,26 @@ class DatabaseMigrations {
         DROP TABLE ctmp
         ''');
   }
+
+  static includeFrosthavenResources(Transaction txn) async {
+    await regeneratePerksTable(txn);
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceMetal ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceLumber ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceArrowVine ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceAxeNut ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceRockRoot ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceFlameFruit ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpseCap ${DatabaseHelper.integerType} DEFAULT 0');
+    await txn.rawInsert(
+        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowThistle ${DatabaseHelper.integerType} DEFAULT 0');
+  }
 }

@@ -125,18 +125,17 @@ class SharedPrefs {
     _sharedPrefs.setString('backup', value);
   }
 
-  bool get gloomhavenEnhancementCosts =>
-      _sharedPrefs.getBool('gloomhavenEnhancementCosts') ?? true;
+  bool get gloomhavenMode => _sharedPrefs.getBool('gloomhavenMode') ?? true;
 
-  set gloomhavenEnhancementCosts(bool value) {
-    _sharedPrefs.setBool('gloomhavenEnhancementCosts', value);
+  set gloomhavenMode(bool value) {
+    _sharedPrefs.setBool('gloomhavenMode', value);
   }
 
-  bool get lossNonPersistent =>
-      _sharedPrefs.getBool('lossNonPersistent') ?? false;
+  bool get lostNonPersistent =>
+      _sharedPrefs.getBool('lostNonPersistent') ?? false;
 
-  set lossNonPersistent(bool value) {
-    _sharedPrefs.setBool('lossNonPersistent', value);
+  set lostNonPersistent(bool value) {
+    _sharedPrefs.setBool('lostNonPersistent', value);
   }
 
   bool get persistent => _sharedPrefs.getBool('persistent') ?? false;

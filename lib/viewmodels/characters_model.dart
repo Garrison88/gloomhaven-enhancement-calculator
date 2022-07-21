@@ -22,13 +22,6 @@ class CharactersModel with ChangeNotifier {
   AnimationController hideRetireCharacterAnimationController;
   bool showRetired;
   bool isEditMode = false;
-  // int _trueIndex;
-
-  // int get trueIndex => _characters.indexOf(currentCharacter);
-
-  // set trueIndex(int trueIndex) {
-  //   _trueIndex = trueIndex;
-  // }
 
   void toggleShowRetired({
     int index,
@@ -41,8 +34,12 @@ class CharactersModel with ChangeNotifier {
         : _characters.indexOf(currentCharacter);
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    jumpToPage(theIndex == -1 ? 0 : theIndex);
-    setCurrentCharacter(index: theIndex == -1 ? 0 : theIndex);
+    jumpToPage(
+      theIndex == -1 ? 0 : theIndex,
+    );
+    setCurrentCharacter(
+      index: theIndex == -1 ? 0 : theIndex,
+    );
     notifyListeners();
   }
 
@@ -95,12 +92,21 @@ class CharactersModel with ChangeNotifier {
     int previousRetirements = 0,
   }) async {
     Character character = Character(
-      uuid: Uuid().v1(),
+      uuid: const Uuid().v1(),
       name: name,
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
       xp: initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0,
       gold: 15 * (initialLevel + 1),
+      resourceHide: 0,
+      resourceMetal: 0,
+      resourceLumber: 0,
+      resourceArrowVine: 0,
+      resourceAxeNut: 0,
+      resourceCorpseCap: 0,
+      resourceFlameFruit: 0,
+      resourceRockRoot: 0,
+      resourceSnowThistle: 0,
     );
     character.id = await databaseHelper.insertCharacter(
       character,

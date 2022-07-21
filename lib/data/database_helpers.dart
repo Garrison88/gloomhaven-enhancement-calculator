@@ -1,6 +1,5 @@
 import 'dart:convert' as convert;
 import 'dart:io';
-
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 
@@ -20,7 +19,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 6;
+  static const _databaseVersion = 7;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -77,17 +76,17 @@ class DatabaseHelper {
           $columnCharacterGold $integerType,
           $columnCharacterNotes $textType,
           $columnCharacterCheckMarks $integerType,
-          $columnIsRetired $boolType
+          $columnIsRetired $boolType,
+          $columnResourceHide $integerType,
+          $columnResourceMetal $integerType,
+          $columnResourceLumber $integerType,
+          $columnResourceArrowVine $integerType,
+          $columnResourceAxeNut $integerType,
+          $columnResourceRockRoot $integerType,
+          $columnResourceFlameFruit $integerType,
+          $columnResourceCorpseCap $integerType,
+          $columnResourceSnowThistle $integerType
         )''');
-      // $columnResourceHide $integerType,
-      // $columnResourceMetal $integerType,
-      // $columnResourceWood $integerType,
-      // $columnResourceArrowVine $integerType,
-      // $columnResourceAxeNut $integerType,
-      // $columnResourceRockRoot $integerType,
-      // $columnResourceFlameFruit $integerType,
-      // $columnResourceCorpseCap $integerType,
-      // $columnResourceSnowThistle $integerType,
       await txn.execute('''
         $createTable $tablePerks (
           $columnPerkId $idType,
@@ -110,19 +109,19 @@ class DatabaseHelper {
           $columnCharacterPerkIsSelected $boolType
         )''');
 
-      await txn.execute('''
-        $createTable $tableMasteries (
-          $columnMasteryId $idType,
-          $columnMasteryClass $textType,
-          $columnMasteryDetails $textType
-        )''');
+      // await txn.execute('''
+      //   $createTable $tableMasteries (
+      //     $columnMasteryId $idType,
+      //     $columnMasteryClass $textType,
+      //     $columnMasteryDetails $textType
+      //   )''');
 
-      await txn.execute('''
-        $createTable $tableCharacterMasteries (
-          $columnAssociatedCharacterUuid $textType,
-          $columnAssociatedMasteryId $integerType,
-          $columnMasteryProgress $integerType
-        )''');
+      // await txn.execute('''
+      //   $createTable $tableCharacterMasteries (
+      //     $columnAssociatedCharacterUuid $textType,
+      //     $columnAssociatedMasteryId $integerType,
+      //     $columnMasteryProgress $integerType
+      //   )''');
       //   .then(
       //   (_) async {
       //     for (Mastery mastery in CharacterData.masteries) {
@@ -153,25 +152,10 @@ class DatabaseHelper {
           // Cleanup perks and add Ruinmaw
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
-        // INSERT RESOURCES ROWS
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceMetal $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceWood $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceArrowVine $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceAxeNut $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceRockRoot $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceFlameFruit $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpseCap $integerType DEFAULT 0');
-        // await txn.rawInsert(
-        //     'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowThistle $integerType DEFAULT 0');
+        if (oldVersion <= 6) {
+          // Include Frosthaven Resources
+          await DatabaseMigrations.includeFrosthavenResources(txn);
+        }
       },
     );
   }

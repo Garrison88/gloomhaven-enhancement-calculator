@@ -21,57 +21,59 @@ enum EnhancementCategory {
 class EnhancementData {
   static final List<Enhancement> enhancements = [
     // plus one
-    Enhancement(EnhancementCategory.title, null, 'plus_one.svg', false,
-        ' For Character'),
+    Enhancement(
+      EnhancementCategory.title,
+      null,
+      'plus_one.svg',
+      ' For Character',
+    ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       30,
       'move.svg',
-      true,
       'Move',
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       40,
       'teleport.svg',
-      true,
       'Teleport',
       fhCost: 50,
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       50,
       'attack.svg',
-      true,
       'Attack',
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       30,
       'range.svg',
-      true,
       'Range',
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       100,
       'shield.svg',
-      true,
       'Shield',
       fhCost: 80,
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       30,
       'push.svg',
-      false,
       'Push',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       30,
       'pull.svg',
-      false,
       'Pull',
       fhCost: 20,
     ),
@@ -79,29 +81,26 @@ class EnhancementData {
       EnhancementCategory.charPlusOne,
       30,
       'pierce.svg',
-      false,
       'Pierce',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       100,
       'retaliate.svg',
-      true,
       'Retaliate',
       fhCost: 60,
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       30,
       SharedPrefs().darkTheme ? 'heal.svg' : 'heal_light.svg',
-      false,
       'Heal',
     ),
     Enhancement(
       EnhancementCategory.target,
       50,
       SharedPrefs().darkTheme ? 'target_alt.svg' : 'target_alt_light.svg',
-      false,
       'Target',
       fhCost: 75,
     ),
@@ -109,52 +108,49 @@ class EnhancementData {
       EnhancementCategory.title,
       null,
       'plus_one.svg',
-      false,
       ' For Summon',
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       100,
       'move.svg',
-      true,
-      'Move',
+      'Summon Move',
       fhCost: 60,
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       100,
       'attack.svg',
-      true,
-      'Attack',
+      'Summon Attack',
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       50,
       'range.svg',
-      true,
-      'Range',
+      'Summon Range',
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       50,
       'hp.svg',
-      true,
-      'HP',
+      'Summon HP',
       fhCost: 40,
+      invertIconColor: true,
     ),
     // negative effects
     Enhancement(
       EnhancementCategory.title,
       null,
       null,
-      false,
       'Effect',
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       75,
       'poison.svg',
-      false,
       'Poison',
       fhCost: 50,
     ),
@@ -162,14 +158,12 @@ class EnhancementData {
       EnhancementCategory.negEffect,
       75,
       'wound.svg',
-      false,
       'Wound',
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       50,
       'muddle.svg',
-      false,
       'Muddle',
       fhCost: 40,
     ),
@@ -177,23 +171,19 @@ class EnhancementData {
       EnhancementCategory.negEffect,
       100,
       'immobilize.svg',
-      false,
       'Immobilize',
       fhCost: 150,
     ),
-    // TODO: remove when using FH
     Enhancement(
       EnhancementCategory.negEffect,
       150,
       'disarm.svg',
-      false,
       'Disarm',
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       75,
       'curse.svg',
-      false,
       'Curse',
       fhCost: 150,
     ),
@@ -202,7 +192,6 @@ class EnhancementData {
       EnhancementCategory.posEffect,
       50,
       'strengthen.svg',
-      false,
       'Strengthen',
       fhCost: 100,
     ),
@@ -210,7 +199,6 @@ class EnhancementData {
       EnhancementCategory.posEffect,
       50,
       'bless.svg',
-      false,
       'Bless',
       fhCost: 75,
     ),
@@ -218,7 +206,6 @@ class EnhancementData {
       EnhancementCategory.posEffect,
       50,
       'regenerate.svg',
-      false,
       'Regenerate',
       fhCost: 40,
     ),
@@ -226,113 +213,98 @@ class EnhancementData {
       EnhancementCategory.jump,
       50,
       'jump.svg',
-      true,
       'Jump',
       fhCost: 60,
+      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.specElem,
       100,
       'elem_fire.svg',
-      false,
       'Element',
     ),
     Enhancement(
       EnhancementCategory.anyElem,
       150,
       'elem_any.svg',
-      false,
       'Wild Element',
     ),
     Enhancement(
       EnhancementCategory.title,
       null,
       'hex.svg',
-      false,
       ' Hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       100,
       'hex.svg',
-      false,
       '2 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       66,
       'hex.svg',
-      false,
       '3 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       50,
       'hex.svg',
-      false,
       '4 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       40,
       'hex.svg',
-      false,
       '5 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       33,
       'hex.svg',
-      false,
       '6 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       28,
       'hex.svg',
-      false,
       '7 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       25,
       'hex.svg',
-      false,
       '8 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       22,
       'hex.svg',
-      false,
       '9 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       20,
       'hex.svg',
-      false,
       '10 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       18,
       'hex.svg',
-      false,
       '11 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       16,
       'hex.svg',
-      false,
       '12 Current Hexes',
     ),
     Enhancement(
       EnhancementCategory.hex,
       15,
       'hex.svg',
-      false,
       '13 Current Hexes',
     ),
   ];
@@ -368,10 +340,13 @@ class EnhancementData {
   }
 
   static List<DropdownMenuItem<Enhancement>> enhancementTypes(
-    bool gloomhavenEnhancementCosts,
+    bool gloomhavenMode,
   ) {
     List<DropdownMenuItem<Enhancement>> list = [];
     for (final Enhancement enhancement in enhancements) {
+      if (!gloomhavenMode && enhancement.name == 'Disarm') {
+        continue;
+      }
       list.add(
         enhancement.category == EnhancementCategory.title
             ? DropdownMenuItem(
@@ -419,7 +394,8 @@ class EnhancementData {
                         ? Stack(
                             alignment: const Alignment(1.75, -1.75),
                             children: <Widget>[
-                              enhancement.invertColor && SharedPrefs().darkTheme
+                              enhancement.invertIconColor &&
+                                      SharedPrefs().darkTheme
                                   ? SvgPicture.asset(
                                       'images/${enhancement.icon}',
                                       width: iconSize,
@@ -437,7 +413,7 @@ class EnhancementData {
                             ],
                           )
                         // otherwise, no +1 icon
-                        : enhancement.invertColor && SharedPrefs().darkTheme
+                        : enhancement.invertIconColor && SharedPrefs().darkTheme
                             ? SvgPicture.asset(
                                 'images/${enhancement.icon}',
                                 width: iconSize,
@@ -507,7 +483,7 @@ class EnhancementData {
                                     width: iconSize,
                                   ),
                     Text(
-                      ' ${enhancement.name} (${gloomhavenEnhancementCosts ? enhancement.ghCost : enhancement.fhCost ?? enhancement.ghCost}g)',
+                      ' ${enhancement.name} (${gloomhavenMode ? enhancement.ghCost : enhancement.fhCost ?? enhancement.ghCost}g)',
                     )
                   ],
                 ),

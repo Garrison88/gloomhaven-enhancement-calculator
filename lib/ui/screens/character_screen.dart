@@ -2,6 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/resource_card.dart';
 import '../../data/constants.dart';
 import '../../data/strings.dart';
 import '../dialogs/add_subtract_dialog.dart';
@@ -326,11 +329,14 @@ class StatsSection extends StatelessWidget {
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
-                'images/loot.svg',
-                width: iconSize,
+                'images/gold.svg',
+                width: iconSize + 5,
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white
                     : Colors.black87,
+              ),
+              const SizedBox(
+                width: 5,
               ),
               context.watch<CharactersModel>().isEditMode
                   ? Column(
@@ -409,25 +415,35 @@ class StatsSection extends StatelessWidget {
   }
 }
 
-class ResourcesSection extends StatelessWidget {
+class ResourcesSection extends StatefulWidget {
   const ResourcesSection({
     Key key,
   }) : super(key: key);
 
   @override
+  State<ResourcesSection> createState() => _ResourcesSectionState();
+}
+
+class _ResourcesSectionState extends State<ResourcesSection> {
+  @override
   Widget build(BuildContext context) {
+    CharacterModel characterModel = context.watch<CharacterModel>();
     return Container(
-        /* decoration: BoxDecoration(
+      decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: SharedPrefs().darkTheme ? Colors.white54 : Colors.black54,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white54
+              : Colors.black54,
         ),
-        // Make rounded corners
         borderRadius: BorderRadius.circular(4),
       ),
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+        ),
         child: ExpansionTile(
+          maintainState: true,
           onExpansionChanged: (value) =>
               SharedPrefs().resourcesExpanded = value,
           initiallyExpanded: SharedPrefs().resourcesExpanded,
@@ -436,18 +452,34 @@ class ResourcesSection extends StatelessWidget {
           ),
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: smallPadding),
+              padding: const EdgeInsets.only(
+                bottom: smallPadding,
+              ),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Wrap(
                   runSpacing: smallPadding,
                   spacing: smallPadding,
                   alignment: WrapAlignment.spaceEvenly,
-                  children: <Widget>[
+                  children: <ResourceCard>[
+                    // ...CharacterData.resources.map(
+                    //   ((resource) => ResourceCard(
+                    //         resource: resource,
+                    //         count: characterModel.character.resourceHide,
+                    //         increaseCount: () => characterModel.updateCharacter(
+                    //           characterModel.character
+                    //             ..resourceHide =
+                    //                 characterModel.character.resourceHide + 1,
+                    //         ),
+                    //         decreaseCount: () => characterModel.updateCharacter(
+                    //           characterModel.character
+                    //             ..resourceHide =
+                    //                 characterModel.character.resourceHide - 1,
+                    //         ),
+                    //       )),
+                    // )
                     ResourceCard(
                       resource: CharacterData.resources[0],
-                      // name: 'Hide',
-                      // icon: 'images/class_icons/voidwarden.svg',
                       count: characterModel.character.resourceHide,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -462,8 +494,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[1],
-                      // name: 'Metal',
-                      // icon: 'images/class_icons/doomstalker.svg',
                       count: characterModel.character.resourceMetal,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -478,24 +508,20 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[2],
-                      // name: 'Wood',
-                      // icon: 'images/class_icons/soothsinger.svg',
-                      count: characterModel.character.resourceWood,
+                      count: characterModel.character.resourceLumber,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
-                          ..resourceWood =
-                              characterModel.character.resourceWood + 1,
+                          ..resourceLumber =
+                              characterModel.character.resourceLumber + 1,
                       ),
                       decreaseCount: () => characterModel.updateCharacter(
                         characterModel.character
-                          ..resourceWood =
-                              characterModel.character.resourceWood - 1,
+                          ..resourceLumber =
+                              characterModel.character.resourceLumber - 1,
                       ),
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[3],
-                      // name: 'Arrow Vine',
-                      // icon: 'images/class_icons/beast_tyrant.svg',
                       count: characterModel.character.resourceArrowVine,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -510,8 +536,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[4],
-                      // name: 'Axe Nut',
-                      // icon: 'images/class_icons/red_guard.svg',
                       count: characterModel.character.resourceAxeNut,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -526,8 +550,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[5],
-                      // name: 'Rock Root',
-                      // icon: 'images/class_icons/mirefoot.svg',
                       count: characterModel.character.resourceRockRoot,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -542,8 +564,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[6],
-                      // name: 'Flame Fruit',
-                      // icon: 'images/class_icons/mirefoot.svg',
                       count: characterModel.character.resourceFlameFruit,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -558,8 +578,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[7],
-                      // name: 'Corpse Cap',
-                      // icon: 'images/class_icons/mirefoot.svg',
                       count: characterModel.character.resourceCorpseCap,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -574,8 +592,6 @@ class ResourcesSection extends StatelessWidget {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[8],
-                      // name: 'Snow Thistle',
-                      // icon: 'images/class_icons/mirefoot.svg',
                       count: characterModel.character.resourceSnowThistle,
                       increaseCount: () => characterModel.updateCharacter(
                         characterModel.character
@@ -594,8 +610,8 @@ class ResourcesSection extends StatelessWidget {
             ),
           ],
         ),
-      ), */
-        );
+      ),
+    );
   }
 }
 

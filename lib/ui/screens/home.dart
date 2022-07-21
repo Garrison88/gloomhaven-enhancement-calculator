@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import '../../data/constants.dart';
 import '../../models/character.dart';
 import '../../viewmodels/app_model.dart';
@@ -119,9 +118,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         inactiveTrackColor: const Color(0xffa98274),
                         activeColor: const Color(0xff005cb2),
                         activeTrackColor: const Color(0xff6ab7ff),
-                        value: !SharedPrefs().gloomhavenEnhancementCosts,
+                        value: !SharedPrefs().gloomhavenMode,
                         onChanged: (value) {
-                          SharedPrefs().gloomhavenEnhancementCosts = !value;
+                          SharedPrefs().gloomhavenMode = !value;
                           Provider.of<EnhancementCalculatorModel>(context,
                                   listen: false)
                               .gameVersionToggled(value);
@@ -133,57 +132,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         },
                       ),
                       Image.asset('images/titles/frosthaven.png', scale: 7),
-
-                      // ToggleSwitch(
-                      //   activeFgColor: ThemeData.estimateBrightnessForColor(
-                      //               Theme.of(context).colorScheme.secondary) ==
-                      //           Brightness.dark
-                      //       ? Colors.white
-                      //       : Colors.black,
-                      //   borderWidth: 1,
-                      //   borderColor: [
-                      //     SharedPrefs().darkTheme
-                      //         ? Colors.transparent
-                      //         : Colors.grey[700]
-                      //   ],
-                      //   activeBgColor: [
-                      //     Color(
-                      //       int.parse(
-                      //         SharedPrefs().themeColor,
-                      //       ),
-                      //     )
-                      //   ],
-                      //   inactiveBgColor: Colors.grey,
-                      //   inactiveFgColor: Colors.grey[900],
-                      //   minWidth: 100,
-                      //   minHeight: 30,
-                      //   cornerRadius: 30,
-                      //   initialLabelIndex:
-                      //       SharedPrefs().gloomhavenEnhancementCosts ? 0 : 1,
-                      //   totalSwitches: 2,
-                      //   // labels: const [
-                      //   //   'Gloomhaven',
-                      //   //   'Frosthaven',
-                      //   // ],
-
-                      //   customIcons: [
-                      //     // Icon(
-                      //     //   Image.asset('images/titles/gloomhaven.png'),
-                      //     // ),
-                      //   ],
-                      //   animate: true,
-                      //   animationDuration: 250,
-                      //   curve: Curves.easeIn,
-                      //   onToggle: (index) {
-                      //     setState(() {
-                      //       SharedPrefs().gloomhavenEnhancementCosts =
-                      //           index == 0;
-                      //       Provider.of<EnhancementCalculatorModel>(context,
-                      //               listen: false)
-                      //           .calculateCost();
-                      //     });
-                      //   },
-                      // ),
                     ],
                   )
                 : null,

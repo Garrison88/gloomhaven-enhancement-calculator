@@ -108,7 +108,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
                                 SharedPrefs().partyBoon),
                             onChanged: (int value) {
                               enhancementCalculatorModel.cardLevel = value;
-                              enhancementCalculatorModel.calculateCost();
                             },
                           ),
                         ),
@@ -158,7 +157,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             onChanged: (int value) {
                               enhancementCalculatorModel.previousEnhancements =
                                   value;
-                              enhancementCalculatorModel.calculateCost();
                             },
                           ),
                         ),
@@ -212,7 +210,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             ),
                             value: enhancementCalculatorModel.enhancement,
                             items: EnhancementData.enhancementTypes(
-                                SharedPrefs().gloomhavenEnhancementCosts),
+                              SharedPrefs().gloomhavenMode,
+                            ),
                             onChanged: (Enhancement selectedEnhancement) {
                               enhancementCalculatorModel
                                   .enhancementSelected(selectedEnhancement);
@@ -236,8 +235,10 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             builder: (_) {
                               return InfoDialog(
                                 title: Strings.multipleTargetsInfoTitle,
-                                message:
-                                    Strings.multipleTargetsInfoBody(context),
+                                message: Strings.multipleTargetsInfoBody(
+                                  context,
+                                  SharedPrefs().gloomhavenMode,
+                                ),
                               );
                             },
                           ),
@@ -250,7 +251,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               ? (bool value) {
                                   enhancementCalculatorModel.multipleTargets =
                                       value;
-                                  enhancementCalculatorModel.calculateCost();
                                 }
                               : null,
                         ),
@@ -258,7 +258,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                     ),
                   ),
                   // LOSS NON-PERSISTENT
-                  if (!SharedPrefs().gloomhavenEnhancementCosts)
+                  if (!SharedPrefs().gloomhavenMode)
                     Card(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,9 +271,10 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               context: context,
                               builder: (_) {
                                 return InfoDialog(
-                                  title: Strings.multipleTargetsInfoTitle,
-                                  message:
-                                      Strings.multipleTargetsInfoBody(context),
+                                  title: Strings.lostNonPersistentInfoTitle,
+                                  message: Strings.lostNonPersistentInfoBody(
+                                    context,
+                                  ),
                                 );
                               },
                             ),
@@ -284,28 +285,44 @@ class EnhancementCalculatorPage extends StatelessWidget {
                                 : 'images/loss_light.svg',
                             width: iconSize,
                           ),
-                          SvgPicture.asset(
-                            SharedPrefs().darkTheme
-                                ? 'images/persistent.svg'
-                                : 'images/persistent_light.svg',
-                            width: iconSize,
+                          SizedBox(
+                            width: iconSize + 16,
+                            height: iconSize + 11,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned(
+                                  child: SvgPicture.asset(
+                                    SharedPrefs().darkTheme
+                                        ? 'images/persistent.svg'
+                                        : 'images/persistent_light.svg',
+                                    width: iconSize,
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 5,
+                                  child: SvgPicture.asset(
+                                    'images/not.svg',
+                                    width: iconSize + 11,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Switch(
-                              value:
-                                  enhancementCalculatorModel.lossNonPersistent,
-                              onChanged: enhancementCalculatorModel.persistent
-                                  ? null
-                                  : (bool value) {
-                                      enhancementCalculatorModel
-                                          .lossNonPersistent = value;
-                                      enhancementCalculatorModel
-                                          .calculateCost();
-                                    }),
+                            value: enhancementCalculatorModel.lostNonPersistent,
+                            onChanged: enhancementCalculatorModel.persistent
+                                ? null
+                                : (bool value) {
+                                    enhancementCalculatorModel
+                                        .lostNonPersistent = value;
+                                  },
+                          ),
                         ],
                       ),
                     ),
                   // PERSISTENT
-                  if (!SharedPrefs().gloomhavenEnhancementCosts)
+                  if (!SharedPrefs().gloomhavenMode)
                     Card(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -318,9 +335,10 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               context: context,
                               builder: (_) {
                                 return InfoDialog(
-                                  title: Strings.multipleTargetsInfoTitle,
-                                  message:
-                                      Strings.multipleTargetsInfoBody(context),
+                                  title: Strings.persistentInfoTitle,
+                                  message: Strings.persistentInfoBody(
+                                    context,
+                                  ),
                                 );
                               },
                             ),
@@ -333,14 +351,15 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           ),
                           Switch(
                             value: enhancementCalculatorModel.persistent,
-                            onChanged: (bool value) {
-                              // if (value) {
-                              //   enhancementCalculatorModel.lossNonPersistent =
-                              //       false;
-                              // }
-                              enhancementCalculatorModel.persistent = value;
-                              enhancementCalculatorModel.calculateCost();
-                            },
+                            onChanged: enhancementCalculatorModel
+                                            .enhancement?.category ==
+                                        EnhancementCategory.summonPlusOne ||
+                                    enhancementCalculatorModel.lostNonPersistent
+                                ? null
+                                : (bool value) {
+                                    enhancementCalculatorModel.persistent =
+                                        value;
+                                  },
                           ),
                         ],
                       ),

@@ -61,9 +61,10 @@ class Utils {
           case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
-          case '2x':
-            assetPath = 'attack_modifiers/2_x.svg';
-            break;
+          // TODO: find nice looking 2X icon
+          // case '2x':
+          //   assetPath = 'attack_modifiers/2_x.svg';
+          //   break;
           case '+1':
             assetPath = 'attack_modifiers/plus_1.png';
             break;
@@ -80,7 +81,7 @@ class Utils {
             assetPath = 'equipment_slots/one_handed.svg';
             invertColor = true;
             break;
-          case 'Move':
+          case 'MOVE':
             assetPath = 'move.svg';
             invertColor = true;
             break;

@@ -131,7 +131,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       onSelected: (value) => stateSetter(() {
                         rc = value;
                       }),
-                      label: const Text('Released Classes'),
+                      label: const Text('Custom Classes'),
                     ),
                 ],
               ),
@@ -172,7 +172,10 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      separatorBuilder: (BuildContext context, int index) {
+      separatorBuilder: (
+        BuildContext _,
+        int index,
+      ) {
         if ((!SharedPrefs().envelopeX &&
                 widget.suggestions[index].classCode == 'bs') ||
             !SharedPrefs().customClasses &&
@@ -191,48 +194,96 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       },
       itemCount: widget.suggestions.length,
       itemBuilder: (BuildContext context, int index) {
-        final String suggestion = widget.suggestions[index].locked
-            ? '???'
-            : widget.suggestions[index].className;
+        final PlayerClass selectedPlayerClass = widget.suggestions[index];
+        // final String suggestion = selectedPlayerClass.locked
+        //     ? '???'
+        //     : selectedPlayerClass.className;
         if ((!SharedPrefs().envelopeX &&
-                widget.suggestions[index].classCode == 'bs') ||
+                selectedPlayerClass.classCode == 'bs') ||
             !SharedPrefs().customClasses &&
-                (widget.suggestions[index].classCategory ==
-                        ClassCategory.custom ||
-                    widget.suggestions[index].classCategory ==
+                (selectedPlayerClass.classCategory == ClassCategory.custom ||
+                    selectedPlayerClass.classCategory ==
                         ClassCategory.crimsonScales)) {
           return Container();
         } else {
           bool showHidden = false;
-          return StatefulBuilder(builder: (thisLowerContext, innerSetState) {
-            return ListTile(
-              trailing: widget.suggestions[index].locked
-                  ? IconButton(
-                      onPressed: () {
-                        innerSetState(() {
-                          showHidden = !showHidden;
-                        });
-                      },
-                      icon: Icon(
-                        showHidden ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : null,
-              leading: SvgPicture.asset(
-                'images/class_icons/${widget.suggestions[index].classIconUrl}',
-                width: iconSize + 5,
-                height: iconSize + 5,
-                color: Color(int.parse(widget.suggestions[index].classColor)),
-              ),
-              title: Text(showHidden
-                  ? widget.suggestions[index].className
-                  : suggestion),
-              onTap: () {
-                Navigator.pop<PlayerClass>(context, widget.suggestions[index]);
-              },
-            );
-          });
+          return StatefulBuilder(
+            builder: (
+              thisLowerContext,
+              innerSetState,
+            ) {
+              return ListTile(
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    selectedPlayerClass.classCategory == ClassCategory.custom
+                        ? IconButton(
+                            onPressed: () {
+                              showDialog<bool>(
+                                context: context,
+                                builder: (_) {
+                                  return AlertDialog(
+                                    content: const Text(
+                                      'Please note that these classes are ',
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text(
+                                          'Got it!',
+                                        ),
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : Container(),
+                    selectedPlayerClass.locked
+                        ? IconButton(
+                            onPressed: () {
+                              innerSetState(() {
+                                showHidden = !showHidden;
+                              });
+                            },
+                            icon: Icon(
+                              showHidden
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
+                leading: SvgPicture.asset(
+                  'images/class_icons/${selectedPlayerClass.classIconUrl}',
+                  width: iconSize + 5,
+                  height: iconSize + 5,
+                  color: Color(
+                    int.parse(
+                      selectedPlayerClass.classColor,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  showHidden ? selectedPlayerClass.className : '???',
+                ),
+                onTap: () {
+                  Navigator.pop<PlayerClass>(
+                    context,
+                    selectedPlayerClass,
+                  );
+                },
+              );
+            },
+          );
         }
       },
     );

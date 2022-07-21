@@ -246,7 +246,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SettingsDivider(),
           SwitchListTile(
             subtitle: const Text(
-                "Include Crimson Scales classes and 'released' classes created by the community"),
+                "Include Crimson Scales classes and 'released' custom classes created by the community"),
             title: const Text('Custom Content'),
             value: SharedPrefs().customClasses,
             onChanged: (val) {
@@ -451,32 +451,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 FontAwesomeIcons.discord,
                               ),
                               onPressed: () {
-                                _launchURL('https://discord.gg/FxuKNzDAmj');
+                                _launchURL(
+                                  Uri(
+                                    scheme: 'https',
+                                    host: 'discord.gg',
+                                    path: 'FxuKNzDAmj',
+                                  ),
+                                );
                               },
                             ),
                             IconButton(
                               icon: const FaIcon(
                                 FontAwesomeIcons.instagram,
                               ),
-                              onPressed: () {
-                                _launchURL(
-                                    'https://instagram.com/tomkatcreative');
+                              onPressed: () async {
+                                await _launchURL(
+                                  Uri(
+                                    scheme: 'https',
+                                    host: 'instagram.com',
+                                    path: 'tomkatcreative',
+                                  ),
+                                );
                               },
                             ),
                             IconButton(
                               icon: const Icon(
                                 Icons.email,
                               ),
-                              onPressed: () {
-                                final Uri uri = Uri(
-                                  scheme: 'mailto',
-                                  path: 'tomkatcreative@gmail.com',
-                                  query: encodeQueryParameters(<String, String>{
-                                    'subject':
-                                        'GHC support - v${snapshot.data.version}+${snapshot.data.buildNumber}',
-                                  }),
+                              onPressed: () async {
+                                await _launchURL(
+                                  Uri(
+                                    scheme: 'mailto',
+                                    path: 'tomkatcreative@gmail.com',
+                                    queryParameters: {
+                                      'subject':
+                                          'GHC support - v${snapshot.data.version}+${snapshot.data.buildNumber}'
+                                    },
+                                  ),
                                 );
-                                _launchURL(uri.toString());
                               },
                             ),
                           ],
@@ -540,13 +552,15 @@ void _showLoaderDialog(BuildContext context) {
   );
 }
 
-void _launchURL(String url) async =>
-    await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
+    ? await launchUrl(uri)
+    : throw 'Could not launch $uri';
 
 String encodeQueryParameters(Map<String, String> params) {
   return params.entries
-      .map((e) =>
-          '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+      .map(
+        (e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+      )
       .join('&');
 }
 
