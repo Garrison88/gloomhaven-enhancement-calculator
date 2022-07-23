@@ -30,7 +30,7 @@ class Perk {
       columnPerkId: perkId,
       columnPerkClass: perkClassCode,
       columnPerkDetails: perkDetails,
-      columnPerkIsGrouped: perkIsGrouped ? 1 : 0
+      columnPerkIsGrouped: perkIsGrouped ? 1 : 0,
     };
     return map;
   }

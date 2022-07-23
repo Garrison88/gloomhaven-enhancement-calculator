@@ -5,7 +5,7 @@ import '../models/perk.dart';
 import '../ui/widgets/perk_row.dart';
 
 class Utils {
-  static List<InlineSpan> generatePerkDetailsWithInlineIcons(
+  static List<InlineSpan> generatePerkDetails(
     List<String> list,
     bool darkTheme,
   ) {
@@ -187,6 +187,14 @@ class Utils {
             break;
           case 'HEX':
             assetPath = 'luminary_hexes.svg';
+            break;
+          case 'SHADOW':
+            assetPath = 'shadow.svg';
+            invertColor = true;
+            break;
+          case 'TIME_TOKEN':
+            assetPath = 'time_token.svg';
+            invertColor = true;
             break;
           case 'DAMAGE':
             assetPath = darkTheme ? 'damage.svg' : 'damage_light.svg';

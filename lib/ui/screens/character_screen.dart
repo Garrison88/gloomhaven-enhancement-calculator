@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/masteries_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/resource_card.dart';
 import '../../data/constants.dart';
 import '../../data/strings.dart';
 import '../dialogs/add_subtract_dialog.dart';
-import '../widgets/perk_section.dart';
+import '../widgets/perks_section.dart';
 import '../../viewmodels/character_model.dart';
 import '../dialogs/info_dialog.dart';
 import '../../viewmodels/characters_model.dart';
@@ -50,16 +53,20 @@ class CharacterScreen extends StatelessWidget {
                   ),
             // BATTLE GOAL CHECKMARKS
             const BattleGoalCheckmarksSection(),
+
             // PERKS
             Padding(
               padding: const EdgeInsets.all(smallPadding),
-              child: PerkSection(
+              child: PerksSection(
                 characterModel: context.watch<CharacterModel>(),
               ),
             ),
-            const SizedBox(
-              height: 24,
-            )
+            MasteriesSection(
+              characterModel: context.watch<CharacterModel>(),
+            ),
+            Container(
+              height: 200,
+            ),
           ],
         ),
       ),
@@ -391,23 +398,35 @@ class StatsSection extends StatelessWidget {
         ),
         Tooltip(
           message: 'Battle Goal Checkmarks',
-          child: Row(
-            children: <Widget>[
-              SvgPicture.asset(
-                'images/goal.svg',
-                width: iconSize,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87,
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              Text(
-                '${characterModel.checkMarkProgress} / 3',
-                style: Theme.of(context).textTheme.bodyText2,
-              )
-            ],
+          child: SizedBox(
+            width: 100,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                SvgPicture.asset(
+                  'images/goal.svg',
+                  width: iconSize,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                SizedBox(
+                  width: 5,
+                  child: Text(
+                    characterModel.checkMarkProgress.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Text(
+                  '/3',
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              ],
+            ),
           ),
         ),
       ],

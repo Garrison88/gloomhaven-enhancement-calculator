@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
 import '../../models/perk.dart';
 import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
+import '../../viewmodels/characters_model.dart';
 import '../../viewmodels/character_model.dart';
 
 class PerkRow extends StatefulWidget {
@@ -132,7 +132,7 @@ class _PerkRowState extends State<PerkRow> {
                   RichText(
                 text: TextSpan(
                   style: Theme.of(context).textTheme.bodyText2,
-                  children: Utils.generatePerkDetailsWithInlineIcons(
+                  children: Utils.generatePerkDetails(
                     widget.perks.first.perkDetails.split(' '),
                     SharedPrefs().darkTheme,
                   ),
@@ -182,5 +182,3 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
     return widget.child;
   }
 }
-
-typedef TogglePerk = Function(bool value);

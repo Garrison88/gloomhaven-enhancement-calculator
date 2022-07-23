@@ -1099,7 +1099,6 @@ abstract class CharacterData {
       Perk('blinkblade', 3,
           '$_replace $_one +0 $_card with $_one $_rolling "Place this $_card in your active area. On your next attack, discard this $_card to $_addL +2 Attack" $_card'),
       Perk('blinkblade', 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
-      // TODO: what is this icon?
       Perk('blinkblade', 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
       Perk('blinkblade', 2,
           '$_add $_one $_rolling +2 "REGENERATE, Self" $_card'),
@@ -1183,7 +1182,6 @@ abstract class CharacterData {
           '$_add $_one $_rolling DISARM and $_one $_rolling MUDDLE $_card'),
       Perk('deathwalker', 2, '$_add $_two $_rolling "HEAL 1, Ally" $_cards'),
       Perk('deathwalker', 1, 'Ignore $_negative $_scenario $_effects'),
-      // TODO: add SHADOW icon
       Perk('deathwalker', 1,
           'Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
       Perk('deathwalker', 1,
@@ -1196,9 +1194,12 @@ abstract class CharacterData {
 
   static final List<Mastery> masteries = [
     Mastery(
-      masteryClassCode: 'br',
-      description: 'First one',
-      numOfChecks: 5,
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'First one for DW',
+    ),
+    Mastery(
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'Second mastery for Deathwalker',
     ),
   ];
 

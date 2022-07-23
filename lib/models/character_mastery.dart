@@ -1,32 +1,32 @@
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 const String tableCharacterMasteries = 'CharacterMasteries';
-// const String columnAssociatedCharacterUuid = 'CharacterUuid';
 const String columnAssociatedMasteryId = 'MasteryID';
-const String columnMasteryProgress = 'Progress';
+const String columnCharacterMasteryAchieved = 'MasteryAchieved';
 
 class CharacterMastery {
   String associatedCharacterUuid;
   int associatedMasteryId;
-  int masteryProgress = 0;
+  bool characterMasteryAchieved = false;
 
   CharacterMastery(
     this.associatedCharacterUuid,
     this.associatedMasteryId,
-    this.masteryProgress,
+    this.characterMasteryAchieved,
   );
 
   CharacterMastery.fromMap(Map<String, dynamic> map) {
     associatedCharacterUuid = map[columnAssociatedCharacterUuid];
     associatedMasteryId = map[columnAssociatedMasteryId];
-    masteryProgress = map[columnMasteryProgress];
+    characterMasteryAchieved =
+        map[columnCharacterMasteryAchieved] == 1 ? true : false;
   }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnAssociatedCharacterUuid: associatedCharacterUuid,
       columnAssociatedMasteryId: associatedMasteryId,
-      columnMasteryProgress: masteryProgress,
+      columnCharacterMasteryAchieved: characterMasteryAchieved ? 1 : 0,
     };
     return map;
   }

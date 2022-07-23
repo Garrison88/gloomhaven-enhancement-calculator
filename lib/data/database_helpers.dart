@@ -109,28 +109,24 @@ class DatabaseHelper {
           $columnCharacterPerkIsSelected $boolType
         )''');
 
-      // await txn.execute('''
-      //   $createTable $tableMasteries (
-      //     $columnMasteryId $idType,
-      //     $columnMasteryClass $textType,
-      //     $columnMasteryDetails $textType
-      //   )''');
-
-      // await txn.execute('''
-      //   $createTable $tableCharacterMasteries (
-      //     $columnAssociatedCharacterUuid $textType,
-      //     $columnAssociatedMasteryId $integerType,
-      //     $columnMasteryProgress $integerType
-      //   )''');
-      //   .then(
-      //   (_) async {
-      //     for (Mastery mastery in CharacterData.masteries) {
-      //       // for (int i = 0; i < perk.numOfPerks; i++) {
-      //       //   await txn.insert(tablePerks, perk.toMap());
-      //       // }
-      //     }
-      //   },
-      // );
+      await txn.execute('''
+        $createTable $tableMasteries (
+          $columnMasteryId $idType,
+          $columnMasteryClass $textType,
+          $columnMasteryDetails $textType
+        )''').then(
+        (_) async {
+          for (Mastery mastery in CharacterData.masteries) {
+            await txn.insert(tableMasteries, mastery.toMap());
+          }
+        },
+      );
+      await txn.execute('''
+        $createTable $tableCharacterMasteries (
+          $columnAssociatedCharacterUuid $textType,
+          $columnAssociatedMasteryId $integerType,
+          $columnCharacterMasteryAchieved $boolType
+        )''');
     });
   }
 
@@ -235,6 +231,19 @@ class DatabaseHelper {
         );
       },
     );
+    final masteries = await queryMasteries(character.playerClass.classCode);
+    masteries.asMap().forEach(
+      (key, mastery) async {
+        await db.insert(
+          tableCharacterMasteries,
+          {
+            columnAssociatedCharacterUuid: character.uuid,
+            columnAssociatedMasteryId: mastery[columnMasteryId],
+            columnCharacterMasteryAchieved: 0,
+          },
+        );
+      },
+    );
     return id;
   }
 
@@ -269,6 +278,25 @@ class DatabaseHelper {
     );
   }
 
+  Future<void> updateCharacterMastery(
+    CharacterMastery mastery,
+    bool value,
+  ) async {
+    Database db = await database;
+    Map<String, dynamic> map = {
+      columnAssociatedCharacterUuid: mastery.associatedCharacterUuid,
+      columnAssociatedMasteryId: mastery.associatedMasteryId,
+      columnCharacterMasteryAchieved: value ? 1 : 0
+    };
+    await db.update(
+      tableCharacterMasteries,
+      map,
+      where:
+          '$columnAssociatedMasteryId = ? AND $columnAssociatedCharacterUuid = ?',
+      whereArgs: [mastery.associatedMasteryId, mastery.associatedCharacterUuid],
+    );
+  }
+
   Future<List<CharacterPerk>> queryCharacterPerks(
     String characterUuid,
   ) async {
@@ -287,6 +315,24 @@ class DatabaseHelper {
     return list;
   }
 
+  Future<List<CharacterMastery>> queryCharacterMasteries(
+    String characterUuid,
+  ) async {
+    Database db = await database;
+    List<CharacterMastery> list = [];
+    List result = await db.query(
+      tableCharacterMasteries,
+      where: '$columnAssociatedCharacterUuid = ?',
+      whereArgs: [characterUuid],
+    );
+    for (final mastery in result) {
+      list.add(
+        CharacterMastery.fromMap(mastery),
+      );
+    }
+    return list;
+  }
+
   Future<List> queryPerks(
     String classCode,
   ) async {
@@ -294,6 +340,18 @@ class DatabaseHelper {
     var result = await db.query(
       tablePerks,
       where: '$columnPerkClass = ?',
+      whereArgs: [classCode],
+    );
+    return result.toList();
+  }
+
+  Future<List> queryMasteries(
+    String classCode,
+  ) async {
+    Database db = await database;
+    var result = await db.query(
+      tableMasteries,
+      where: '$columnMasteryClass = ?',
       whereArgs: [classCode],
     );
     return result.toList();

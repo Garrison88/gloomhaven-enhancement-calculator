@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
 import '../models/character.dart';
@@ -12,6 +14,7 @@ class CharacterModel with ChangeNotifier {
   bool _isEditable = false;
   Character character;
   List<CharacterPerk> characterPerks = [];
+  List<CharacterMastery> characterMasteries = [];
   int numOfSelectedPerks = 0;
   TextEditingController previousRetirementsController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -85,10 +88,16 @@ class CharacterModel with ChangeNotifier {
     }
   }
 
-  Future<List<CharacterPerk>> loadCharacterPerks(String id) async {
+  Future<List<CharacterPerk>> loadCharacterPerks() async {
     characterPerks =
         await DatabaseHelper.instance.queryCharacterPerks(character.uuid);
     return characterPerks;
+  }
+
+  Future<List<CharacterMastery>> loadCharacterMasteries() async {
+    characterMasteries =
+        await DatabaseHelper.instance.queryCharacterMasteries(character.uuid);
+    return characterMasteries;
   }
 
   Future<void> togglePerk(
@@ -106,6 +115,23 @@ class CharacterModel with ChangeNotifier {
     return value;
   }
 
+  Future<void> toggleMastery(
+    CharacterMastery mastery,
+    bool value,
+  ) async {
+    for (CharacterMastery characterMastery in characterMasteries) {
+      if (characterMastery.associatedMasteryId == mastery.associatedMasteryId) {
+        characterMastery.characterMasteryAchieved = value;
+      }
+    }
+    await db.updateCharacterMastery(mastery, value);
+    notifyListeners();
+    return value;
+  }
+
   Future<List> loadPerks(String characterCode) async =>
       await db.queryPerks(characterCode);
+
+  Future<List> loadMasteries(String characterCode) async =>
+      await db.queryMasteries(characterCode);
 }

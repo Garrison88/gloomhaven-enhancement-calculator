@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 
 import '../../data/constants.dart';
 import '../../models/perk.dart';
 import 'perk_row.dart';
 import '../../viewmodels/character_model.dart';
 
-class PerkSection extends StatefulWidget {
+class PerksSection extends StatefulWidget {
   final CharacterModel characterModel;
 
-  const PerkSection({
+  const PerksSection({
     Key key,
     this.characterModel,
   }) : super(key: key);
   @override
-  State<StatefulWidget> createState() => PerkSectionState();
+  State<StatefulWidget> createState() => PerksSectionState();
 }
 
-class PerkSectionState extends State<PerkSection> {
+class PerksSectionState extends State<PerksSection> {
   Future<List<List<dynamic>>> _futures;
 
   @override
@@ -26,7 +27,7 @@ class PerkSectionState extends State<PerkSection> {
   }
 
   @override
-  void didUpdateWidget(covariant PerkSection oldWidget) {
+  void didUpdateWidget(covariant PerksSection oldWidget) {
     if (oldWidget.characterModel.character.uuid !=
         widget.characterModel.character.uuid) {
       _loadData();
@@ -37,9 +38,7 @@ class PerkSectionState extends State<PerkSection> {
   void _loadData() {
     _futures = Future.wait(
       [
-        widget.characterModel.loadCharacterPerks(
-          widget.characterModel.character.uuid,
-        ),
+        widget.characterModel.loadCharacterPerks(),
         widget.characterModel.loadPerks(
           widget.characterModel.character.playerClass.classCode.toLowerCase(),
         ),
@@ -61,7 +60,7 @@ class PerkSectionState extends State<PerkSection> {
             snapshot.hasData) {
           widget.characterModel.characterPerks = snapshot.data[0];
           int temp = 0;
-          for (final perk in snapshot.data[0]) {
+          for (final CharacterPerk perk in snapshot.data[0]) {
             if (perk.characterPerkIsSelected) {
               temp++;
             }
@@ -130,6 +129,7 @@ class PerkSectionState extends State<PerkSection> {
                 height: smallPadding,
               ),
               ListView(
+                padding: EdgeInsets.zero,
                 children: perkRows,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

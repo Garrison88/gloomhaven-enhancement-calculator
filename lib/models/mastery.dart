@@ -4,16 +4,27 @@ const String columnMasteryClass = 'Class';
 const String columnMasteryDetails = 'Details';
 
 class Mastery {
+  int masteryId;
   String masteryClassCode;
-  String description;
-  int numOfChecks;
-  // bool isComplete;
+  String masteryDetails;
 
   Mastery({
     this.masteryClassCode,
-    this.description,
-    this.numOfChecks,
-
-    // this.isComplete,
+    this.masteryDetails,
   });
+
+  Mastery.fromMap(Map<String, dynamic> map) {
+    masteryId = map[columnMasteryId];
+    masteryClassCode = map[columnMasteryClass];
+    masteryDetails = map[columnMasteryDetails];
+  }
+
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      columnMasteryId: masteryId,
+      columnMasteryClass: masteryClassCode,
+      columnMasteryDetails: masteryDetails,
+    };
+    return map;
+  }
 }

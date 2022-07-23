@@ -1,9 +1,12 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'dart:math' as math;
 
 import '../../custom_search_delegate.dart';
 import '../../data/character_data.dart';
@@ -37,9 +40,16 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   @override
   void initState() {
     super.initState();
+    faker = Faker();
+    // .withGenerator(
+    //   RandomGenerator(
+    //     seed: math.Random().nextInt(100000),
+    //   ),
+    // );
     _selectedClass = CharacterData.playerClasses[0];
     _classTextFieldController.text = _selectedClass.className;
     _levelTextFieldController.text = '${_levels[0]}';
+    placeholderName = _generateRandomName();
   }
 
   @override
@@ -50,6 +60,10 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     _levelTextFieldController.dispose();
     _previousRetirementsTextFieldController.dispose();
     super.dispose();
+  }
+
+  String _generateRandomName() {
+    return '${faker.person.firstName()} ${faker.person.lastName()}';
   }
 
   // PersonalGoal _personalGoal;
@@ -116,6 +130,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   }
 
   PlayerClass _selectedClass;
+  Faker faker;
+  String placeholderName;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
@@ -141,15 +157,31 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                textCapitalization: TextCapitalization.words,
-                autocorrect: false,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                ),
-                validator: (value) =>
-                    value.isNotEmpty ? null : 'Please enter a name',
-                controller: _nameTextFieldController,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      textCapitalization: TextCapitalization.words,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        hintText: placeholderName,
+                        // labelText: 'Name',
+                      ),
+                      // validator: (value) =>
+                      //     value.isNotEmpty ? null : 'Please enter a name',
+                      controller: _nameTextFieldController,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const FaIcon(FontAwesomeIcons.dice),
+                    onPressed: () {
+                      setState(() {
+                        placeholderName = _generateRandomName();
+                      });
+                    },
+                    iconSize: 25,
+                  ),
+                ],
               ),
               TextFormField(
                 readOnly: true,
@@ -267,19 +299,18 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 MaterialStateProperty.all<Color>(Colors.green[400]),
           ),
           onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              await widget.charactersModel.createCharacter(
-                // context,
-                _nameTextFieldController.text,
-                _selectedClass,
-                initialLevel: int.parse(_levelTextFieldController.text),
-                previousRetirements: _previousRetirementsTextFieldController
-                        .text.isEmpty
-                    ? 0
-                    : int.parse(_previousRetirementsTextFieldController.text),
-              );
-              Navigator.pop(context, true);
-            }
+            await widget.charactersModel.createCharacter(
+              _nameTextFieldController.text.isEmpty
+                  ? placeholderName
+                  : _nameTextFieldController.text,
+              _selectedClass,
+              initialLevel: int.parse(_levelTextFieldController.text),
+              previousRetirements:
+                  _previousRetirementsTextFieldController.text.isEmpty
+                      ? 0
+                      : int.parse(_previousRetirementsTextFieldController.text),
+            );
+            Navigator.pop(context, true);
           },
           child: const Text(
             'Create',
