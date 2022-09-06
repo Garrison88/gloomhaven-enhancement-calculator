@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
@@ -16,7 +18,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   bool jotl = false;
   bool fh = false;
   bool cs = false;
-  bool rc = false;
+  bool cc = false;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -56,7 +58,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       ) {
         final Iterable<PlayerClass> playerClass =
             _playerClasses.where((playerClass) {
-          if (!gh && !jotl && !fh && !cs && !rc) {
+          if (!gh && !jotl && !fh && !cs && !cc) {
             return playerClass.className
                 .toLowerCase()
                 .contains(query.toLowerCase());
@@ -74,7 +76,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
               (playerClass.className
                       .toLowerCase()
                       .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.frostHaven &&
+                  playerClass.classCategory == ClassCategory.frosthaven &&
                   fh) ||
               (playerClass.className
                       .toLowerCase()
@@ -85,17 +87,36 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       .toLowerCase()
                       .contains(query.toLowerCase()) &&
                   playerClass.classCategory == ClassCategory.custom &&
-                  rc);
+                  cc);
         }).toList();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: smallPadding),
+              padding: const EdgeInsets.only(
+                left: smallPadding,
+                top: smallPadding,
+              ),
               child: Wrap(
+                runSpacing: smallPadding,
                 spacing: smallPadding,
                 children: [
                   FilterChip(
+                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: gh
+                              ? ThemeData.estimateBrightnessForColor(
+                                          Theme.of(context).primaryColor) ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black
+                              : Theme.of(context).textTheme.bodyText1.color,
+                        ),
+                    checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                Theme.of(context).primaryColor) ==
+                            Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    visualDensity: VisualDensity.compact,
                     selected: gh,
                     onSelected: (value) => stateSetter(() {
                       gh = value;
@@ -103,6 +124,21 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     label: const Text('Gloomhaven'),
                   ),
                   FilterChip(
+                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: jotl
+                              ? ThemeData.estimateBrightnessForColor(
+                                          Theme.of(context).primaryColor) ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black
+                              : Theme.of(context).textTheme.bodyText1.color,
+                        ),
+                    checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                Theme.of(context).primaryColor) ==
+                            Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    visualDensity: VisualDensity.compact,
                     selected: jotl,
                     onSelected: (value) => stateSetter(() {
                       jotl = value;
@@ -111,6 +147,24 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                   ),
                   if (includeFrosthaven)
                     FilterChip(
+                      labelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(
+                            color: fh
+                                ? ThemeData.estimateBrightnessForColor(
+                                            Theme.of(context).primaryColor) ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black
+                                : Theme.of(context).textTheme.bodyText1.color,
+                          ),
+                      checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                  Theme.of(context).primaryColor) ==
+                              Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                      visualDensity: VisualDensity.compact,
                       selected: fh,
                       onSelected: (value) => stateSetter(() {
                         fh = value;
@@ -119,6 +173,24 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
+                      labelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(
+                            color: cs
+                                ? ThemeData.estimateBrightnessForColor(
+                                            Theme.of(context).primaryColor) ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black
+                                : Theme.of(context).textTheme.bodyText1.color,
+                          ),
+                      checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                  Theme.of(context).primaryColor) ==
+                              Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                      visualDensity: VisualDensity.compact,
                       selected: cs,
                       onSelected: (value) => stateSetter(() {
                         cs = value;
@@ -127,9 +199,27 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
-                      selected: rc,
+                      labelStyle: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(
+                            color: cc
+                                ? ThemeData.estimateBrightnessForColor(
+                                            Theme.of(context).primaryColor) ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black
+                                : Theme.of(context).textTheme.bodyText1.color,
+                          ),
+                      checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                  Theme.of(context).primaryColor) ==
+                              Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                      visualDensity: VisualDensity.compact,
+                      selected: cc,
                       onSelected: (value) => stateSetter(() {
-                        rc = value;
+                        cc = value;
                       }),
                       label: const Text('Custom Classes'),
                     ),
@@ -193,11 +283,11 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         }
       },
       itemCount: widget.suggestions.length,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (
+        BuildContext context,
+        int index,
+      ) {
         final PlayerClass selectedPlayerClass = widget.suggestions[index];
-        // final String suggestion = selectedPlayerClass.locked
-        //     ? '???'
-        //     : selectedPlayerClass.className;
         if ((!SharedPrefs().envelopeX &&
                 selectedPlayerClass.classCode == 'bs') ||
             !SharedPrefs().customClasses &&
@@ -212,39 +302,11 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
               thisLowerContext,
               innerSetState,
             ) {
+              bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
               return ListTile(
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    selectedPlayerClass.classCategory == ClassCategory.custom
-                        ? IconButton(
-                            onPressed: () {
-                              showDialog<bool>(
-                                context: context,
-                                builder: (_) {
-                                  return AlertDialog(
-                                    content: const Text(
-                                      'Please note that these classes are ',
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text(
-                                          'Got it!',
-                                        ),
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.warning_amber_rounded,
-                              color: Colors.grey,
-                            ),
-                          )
-                        : Container(),
                     selectedPlayerClass.locked
                         ? IconButton(
                             onPressed: () {
@@ -273,13 +335,125 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                   ),
                 ),
                 title: Text(
-                  showHidden ? selectedPlayerClass.className : '???',
+                  showHidden || !selectedPlayerClass.locked
+                      ? selectedPlayerClass.className
+                      : '???',
                 ),
                 onTap: () {
-                  Navigator.pop<PlayerClass>(
-                    context,
-                    selectedPlayerClass,
-                  );
+                  if ((selectedPlayerClass.classCategory ==
+                              ClassCategory.custom ||
+                          selectedPlayerClass.classCategory ==
+                              ClassCategory.crimsonScales) &&
+                      !hideMessage) {
+                    showDialog<bool>(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          content: StatefulBuilder(
+                            builder: (
+                              thisLowerContext,
+                              innerSetState,
+                            ) {
+                              return SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                            text:
+                                                'Please note that these classes are created by members of the Gloomhaven Custom Content Unity Guild and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ',
+                                          ),
+                                          TextSpan(
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2
+                                                .copyWith(
+                                                  color: Colors.blue,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                            text: 'Discord server',
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                Uri uri = Uri(
+                                                  scheme: 'https',
+                                                  host: 'discord.gg',
+                                                  path: 'gSRz6sB',
+                                                );
+                                                var urllaunchable =
+                                                    await canLaunchUrl(
+                                                  uri,
+                                                );
+                                                if (urllaunchable) {
+                                                  await launchUrl(
+                                                    uri,
+                                                  );
+                                                } else {
+                                                  // print(
+                                                  //     "URL can't be launched.");
+                                                }
+                                              },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 35),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        const Text(
+                                          "Don't show again",
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                        Checkbox(
+                                          value: hideMessage,
+                                          onChanged: (value) =>
+                                              innerSetState(() {
+                                            SharedPrefs()
+                                                    .hideCustomClassesWarningMessage =
+                                                value;
+                                            hideMessage = !hideMessage;
+                                          }),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text(
+                                'Go back',
+                              ),
+                              onPressed: () => Navigator.pop(context, false),
+                            ),
+                            TextButton(
+                              child: const Text(
+                                'Got it!',
+                              ),
+                              onPressed: () => Navigator.pop(context, true),
+                            ),
+                          ],
+                        );
+                      },
+                    ).then((value) {
+                      if (value) {
+                        Navigator.pop<PlayerClass>(
+                          context,
+                          selectedPlayerClass,
+                        );
+                      }
+                    });
+                  } else {
+                    Navigator.pop<PlayerClass>(
+                      context,
+                      selectedPlayerClass,
+                    );
+                  }
                 },
               );
             },

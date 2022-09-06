@@ -22,7 +22,7 @@ class ResourceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     CharactersModel charactersModel = context.watch<CharactersModel>();
     return SizedBox(
-      height: charactersModel.isEditMode ? 90 : 50,
+      height: charactersModel.isEditMode ? 90 : 70,
       width: 100,
       child: Stack(
         alignment: charactersModel.isEditMode
@@ -41,8 +41,7 @@ class ResourceCard extends StatelessWidget {
                 : Alignment.centerLeft,
             child: charactersModel.isEditMode
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ResourceIcon(
                         iconPath: resource.icon,
@@ -50,7 +49,7 @@ class ResourceCard extends StatelessWidget {
                       Text(
                         resource.name,
                         style: const TextStyle(
-                          fontSize: 11.5,
+                          fontSize: 12,
                         ),
                       ),
                       const SizedBox(),
@@ -103,14 +102,25 @@ class ResourceDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     CharactersModel charactersModel = context.watch<CharactersModel>();
     return SizedBox(
-      width: charactersModel.isEditMode ? 100 : 65,
+      width: charactersModel.isEditMode ? 100 : 80,
       child: Card(
         child: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
             Center(
-              child: Text('$count'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (!charactersModel.isEditMode)
+                    Text(
+                      name,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  Text('$count'),
+                ],
+              ),
             ),
-            if (charactersModel.isEditMode)
+            if (charactersModel.isEditMode) ...[
               Positioned(
                 bottom: -smallPadding,
                 left: -2,
@@ -121,7 +131,6 @@ class ResourceDetails extends StatelessWidget {
                   ),
                 ),
               ),
-            if (charactersModel.isEditMode)
               Positioned(
                 bottom: -smallPadding,
                 right: -2,
@@ -132,6 +141,7 @@ class ResourceDetails extends StatelessWidget {
                   ),
                 ),
               ),
+            ]
           ],
         ),
       ),

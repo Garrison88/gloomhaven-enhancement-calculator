@@ -60,52 +60,57 @@ class CharactersScreen extends StatelessWidget {
       } catch (e) {
         charactersModel.currentCharacter = charactersModel.characters[0];
       }
-      return PageView.builder(
-        controller: charactersModel.pageController,
-        onPageChanged: (index) {
-          charactersModel.onPageChanged(
-            index,
-          );
-        },
-        itemCount: charactersModel.characters.length,
-        itemBuilder: (context, int index) {
-          CharacterModel _characterModel;
-          try {
-            _characterModel = CharacterModel(
-              character: charactersModel.characters[index],
-            )..isEditable = charactersModel.isEditMode;
-          } on RangeError {
-            _characterModel = CharacterModel(
-              character: charactersModel.characters[0],
-            )..isEditable = charactersModel.isEditMode;
-          }
-          return Stack(
-            children: <Widget>[
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 80),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: SvgPicture.asset(
-                      'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
-                      color: _characterModel.character.isRetired
-                          ? Colors.black.withOpacity(0.1)
-                          : Color(
-                              int.parse(_characterModel
-                                  .character.playerClass.classColor),
-                            ).withOpacity(0.1),
+      return FutureBuilder<bool>(
+          future: null,
+          builder: (context, snapshot) {
+            return PageView.builder(
+              // key: scaffoldKey,
+              controller: charactersModel.pageController,
+              onPageChanged: (index) {
+                charactersModel.onPageChanged(
+                  index,
+                );
+              },
+              itemCount: charactersModel.characters.length,
+              itemBuilder: (context, int index) {
+                CharacterModel _characterModel;
+                try {
+                  _characterModel = CharacterModel(
+                    character: charactersModel.characters[index],
+                  )..isEditable = charactersModel.isEditMode;
+                } on RangeError {
+                  _characterModel = CharacterModel(
+                    character: charactersModel.characters[0],
+                  )..isEditable = charactersModel.isEditMode;
+                }
+                return Stack(
+                  children: <Widget>[
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 80),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: SvgPicture.asset(
+                            'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
+                            color: _characterModel.character.isRetired
+                                ? Colors.black.withOpacity(0.1)
+                                : Color(
+                                    int.parse(_characterModel
+                                        .character.playerClass.classColor),
+                                  ).withOpacity(0.1),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              ChangeNotifierProvider.value(
-                value: _characterModel,
-                child: const CharacterScreen(),
-              ),
-            ],
-          );
-        },
-      );
+                    ChangeNotifierProvider.value(
+                      value: _characterModel,
+                      child: const CharacterScreen(),
+                    ),
+                  ],
+                );
+              },
+            );
+          });
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 
@@ -32,6 +33,7 @@ class DatabaseHelper {
   List<String> tables = [
     tableCharacters,
     tableCharacterPerks,
+    tableCharacterMasteries,
   ];
 
   Future<Database> get database async => _database ??= await _initDatabase();
@@ -76,17 +78,19 @@ class DatabaseHelper {
           $columnCharacterGold $integerType,
           $columnCharacterNotes $textType,
           $columnCharacterCheckMarks $integerType,
-          $columnIsRetired $boolType,
-          $columnResourceHide $integerType,
-          $columnResourceMetal $integerType,
-          $columnResourceLumber $integerType,
-          $columnResourceArrowVine $integerType,
-          $columnResourceAxeNut $integerType,
-          $columnResourceRockRoot $integerType,
-          $columnResourceFlameFruit $integerType,
-          $columnResourceCorpseCap $integerType,
-          $columnResourceSnowThistle $integerType
+          $columnIsRetired $boolType
         )''');
+      // TODO: move this up into characters table when ready for Resources
+      //         ,
+      // $columnResourceHide $integerType,
+      // $columnResourceMetal $integerType,
+      // $columnResourceLumber $integerType,
+      // $columnResourceArrowvine $integerType,
+      // $columnResourceAxenut $integerType,
+      // $columnResourceRockroot $integerType,
+      // $columnResourceFlamefruit $integerType,
+      // $columnResourceCorpsecap $integerType,
+      // $columnResourceSnowthistle $integerType
       await txn.execute('''
         $createTable $tablePerks (
           $columnPerkId $idType,
@@ -149,8 +153,9 @@ class DatabaseHelper {
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
         if (oldVersion <= 6) {
-          // Include Frosthaven Resources
-          await DatabaseMigrations.includeFrosthavenResources(txn);
+          // Include class Masteries
+          await DatabaseMigrations.regeneratePerksTable(txn);
+          await DatabaseMigrations.includeClassMasteries(txn);
         }
       },
     );
@@ -231,19 +236,27 @@ class DatabaseHelper {
         );
       },
     );
-    final masteries = await queryMasteries(character.playerClass.classCode);
-    masteries.asMap().forEach(
-      (key, mastery) async {
-        await db.insert(
-          tableCharacterMasteries,
-          {
-            columnAssociatedCharacterUuid: character.uuid,
-            columnAssociatedMasteryId: mastery[columnMasteryId],
-            columnCharacterMasteryAchieved: 0,
-          },
-        );
-      },
-    );
+    bool addMasteries = false;
+    CharacterData.masteries.map((e) {
+      addMasteries = character.playerClass.classCode == e.masteryClassCode;
+    });
+    if (addMasteries) {
+      List<dynamic> masteries =
+          await queryMasteries(character.playerClass.classCode);
+
+      masteries.asMap().forEach(
+        (key, mastery) async {
+          await db.insert(
+            tableCharacterMasteries,
+            {
+              columnAssociatedCharacterUuid: character.uuid,
+              columnAssociatedMasteryId: mastery[columnMasteryId],
+              columnCharacterMasteryAchieved: 0,
+            },
+          );
+        },
+      );
+    }
     return id;
   }
 
@@ -274,7 +287,10 @@ class DatabaseHelper {
       map,
       where:
           '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-      whereArgs: [perk.associatedPerkId, perk.associatedCharacterUuid],
+      whereArgs: [
+        perk.associatedPerkId,
+        perk.associatedCharacterUuid,
+      ],
     );
   }
 
@@ -293,7 +309,10 @@ class DatabaseHelper {
       map,
       where:
           '$columnAssociatedMasteryId = ? AND $columnAssociatedCharacterUuid = ?',
-      whereArgs: [mastery.associatedMasteryId, mastery.associatedCharacterUuid],
+      whereArgs: [
+        mastery.associatedMasteryId,
+        mastery.associatedCharacterUuid,
+      ],
     );
   }
 
@@ -382,6 +401,11 @@ class DatabaseHelper {
       );
       await txn.delete(
         tableCharacterPerks,
+        where: '$columnAssociatedCharacterUuid = ?',
+        whereArgs: [character.uuid],
+      );
+      await txn.delete(
+        tableCharacterMasteries,
         where: '$columnAssociatedCharacterUuid = ?',
         whereArgs: [character.uuid],
       );

@@ -1,11 +1,14 @@
 class Resource {
-  String id;
+  // String id;
   String name;
   String icon;
 
   Resource(
-    this.id,
+    // this.id,
     this.name,
     this.icon,
   );
+  //  {
+  //   id = name.toLowerCase().replaceAll(' ', '');
+  // }
 }

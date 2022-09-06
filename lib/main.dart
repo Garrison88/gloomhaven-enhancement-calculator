@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'gloomhaven_companion.dart';
 import 'shared_prefs.dart';
 
-bool includeFrosthaven = true;
+bool includeFrosthaven = false;
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
@@ -16,8 +16,15 @@ main() async {
       child: const GloomhavenCompanion(),
     ),
   );
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   systemNavigationBarIconBrightness: Brightness.dark,
-  //   systemNavigationBarColor: Colors.white,
-  // ));
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   SystemUiOverlayStyle(
+  //     statusBarIconBrightness:
+  //         SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
+  //     systemNavigationBarIconBrightness:
+  //         SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
+  //     systemNavigationBarContrastEnforced: true,
+  //     systemNavigationBarColor:
+  //         SharedPrefs().darkTheme ? Colors.pink : Colors.white,
+  //   ),
+  // );
 }

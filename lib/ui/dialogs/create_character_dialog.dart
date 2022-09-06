@@ -5,8 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'dart:math' as math;
 
 import '../../custom_search_delegate.dart';
 import '../../data/character_data.dart';
@@ -41,11 +41,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   void initState() {
     super.initState();
     faker = Faker();
-    // .withGenerator(
-    //   RandomGenerator(
-    //     seed: math.Random().nextInt(100000),
-    //   ),
-    // );
     _selectedClass = CharacterData.playerClasses[0];
     _classTextFieldController.text = _selectedClass.className;
     _levelTextFieldController.text = '${_levels[0]}';
@@ -132,6 +127,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   PlayerClass _selectedClass;
   Faker faker;
   String placeholderName;
+  FocusNode nameFocusNode = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
@@ -161,61 +157,72 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      autofocus: true,
                       textCapitalization: TextCapitalization.words,
                       autocorrect: false,
+                      focusNode: nameFocusNode,
                       decoration: InputDecoration(
                         hintText: placeholderName,
-                        // labelText: 'Name',
+                        labelText: 'Name',
                       ),
-                      // validator: (value) =>
-                      //     value.isNotEmpty ? null : 'Please enter a name',
                       controller: _nameTextFieldController,
                     ),
                   ),
                   IconButton(
                     icon: const FaIcon(FontAwesomeIcons.dice),
                     onPressed: () {
+                      _nameTextFieldController.clear();
+                      FocusScope.of(context).requestFocus(nameFocusNode);
                       setState(() {
                         placeholderName = _generateRandomName();
                       });
                     },
-                    iconSize: 25,
                   ),
                 ],
               ),
-              TextFormField(
-                readOnly: true,
-                controller: _classTextFieldController,
-                decoration: InputDecoration(
-                  labelText: 'Class',
-                  suffixIcon: SizedBox(
-                    height: iconSize + 5,
-                    width: iconSize + 5,
-                    child: SvgPicture.asset(
-                      'images/class_icons/${_selectedClass.classIconUrl}',
-                      color: Color(
-                        int.parse(
-                          _selectedClass.classColor,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: _classTextFieldController,
+                      decoration: const InputDecoration(
+                        labelText: 'Class',
+                      ),
+                      onTap: () async {
+                        await showSearch<PlayerClass>(
+                          context: context,
+                          delegate: CustomSearchDelegate(
+                            CharacterData.playerClasses,
+                          ),
+                        ).then((value) {
+                          FocusScope.of(context).requestFocus(nameFocusNode);
+                          if (value != null) {
+                            setState(() {
+                              _selectedClass = value;
+                              _classTextFieldController.text = value.className;
+                            });
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SvgPicture.asset(
+                        'images/class_icons/${_selectedClass.classIconUrl}',
+                        color: Color(
+                          int.parse(
+                            _selectedClass.classColor,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                onTap: () async {
-                  await showSearch<PlayerClass>(
-                    context: context,
-                    delegate: CustomSearchDelegate(
-                      CharacterData.playerClasses,
-                    ),
-                  ).then((value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedClass = value;
-                        _classTextFieldController.text = value.className;
-                      });
-                    }
-                  });
-                },
+                  )
+                ],
               ),
               TextFormField(
                 enableInteractiveSelection: false,
@@ -284,20 +291,17 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         ),
       ),
       actions: <Widget>[
-        MaterialButton(
+        TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text(
+          child: Text(
             'Cancel',
             style: TextStyle(
-              fontSize: secondaryFontSize,
+              color:
+                  SharedPrefs().darkTheme ? Colors.grey[300] : Colors.black87,
             ),
           ),
         ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.green[400]),
-          ),
+        TextButton(
           onPressed: () async {
             await widget.charactersModel.createCharacter(
               _nameTextFieldController.text.isEmpty
@@ -315,8 +319,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           child: const Text(
             'Create',
             style: TextStyle(
-              fontSize: secondaryFontSize,
-              color: Colors.white,
+              color: Colors.green,
             ),
           ),
         ),

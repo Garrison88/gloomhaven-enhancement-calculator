@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import '../../viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 import '../../data/constants.dart';
@@ -25,6 +26,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: smallPadding),
         child: SingleChildScrollView(
+          controller:
+              context.read<CharactersModel>().enhancementCalcScrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +52,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.secondary),
+                            Theme.of(context).primaryColor,
+                          ),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
@@ -59,9 +63,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         icon: Icon(
                           Icons.info_outlined,
                           color: ThemeData.estimateBrightnessForColor(
-                                      Theme.of(context)
-                                          .colorScheme
-                                          .secondary) ==
+                                      Theme.of(context).primaryColor) ==
                                   Brightness.dark
                               ? Colors.white
                               : Colors.black,
@@ -70,9 +72,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           'General Guidelines',
                           style: TextStyle(
                             color: ThemeData.estimateBrightnessForColor(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .secondary) ==
+                                        Theme.of(context).primaryColor) ==
                                     Brightness.dark
                                 ? Colors.white
                                 : Colors.black,
@@ -172,8 +172,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           children: <Widget>[
                             IconButton(
                                 disabledColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondary
+                                    .primaryColor
                                     .withOpacity(0.5),
                                 icon: const Icon(
                                   Icons.info_outline,

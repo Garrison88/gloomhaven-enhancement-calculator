@@ -43,12 +43,34 @@ class GloomhavenCompanion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = ThemeData(
+      navigationBarTheme: NavigationBarThemeData(
+        indicatorColor: Color(
+          int.parse(
+            SharedPrefs().themeColor,
+          ),
+        ).withOpacity(.25),
+      ),
+      useMaterial3: true,
       // removes splash animation from InkWell on bottom app bar navigation destination
       splashFactory: NoSplash.splashFactory,
-
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          textStyle: const TextStyle(
+            fontSize: secondaryFontSize,
+            fontFamily: nyala,
+          ),
+          foregroundColor: Color(
+            int.parse(
+              SharedPrefs().themeColor,
+            ),
+          ),
+        ),
+      ),
       fontFamily: highTower,
       textTheme: TextTheme(
-        button: const TextStyle(fontSize: 20),
+        button: const TextStyle(
+          fontSize: 20,
+        ),
         subtitle1: const TextStyle(
           fontSize: 23.0,
         ),
@@ -93,7 +115,7 @@ class GloomhavenCompanion extends StatelessWidget {
             create: (_) => EnhancementCalculatorModel(),
           ),
           ChangeNotifierProvider(
-            create: (_) => AppModel(),
+            create: (_) => AppModel(PageController()),
           ),
           ChangeNotifierProvider(
             create: (_) => CharactersModel(
@@ -109,7 +131,21 @@ class GloomhavenCompanion extends StatelessWidget {
       ),
       themeMode: EasyDynamicTheme.of(context).themeMode,
       theme: theme.copyWith(
-        iconTheme: IconThemeData(
+        // bottomAppBarTheme: BottomAppBarTheme(
+        //   color: theme.colorScheme.onPrimaryContainer,
+        // ),
+        primaryColor: Color(
+          int.parse(
+            SharedPrefs().themeColor,
+          ),
+        ),
+        appBarTheme: theme.appBarTheme.copyWith(
+          // systemOverlayStyle: SharedPrefs().darkTheme
+          //     ? SystemUiOverlayStyle.light
+          //     : SystemUiOverlayStyle.dark,
+          color: theme.scaffoldBackgroundColor,
+        ),
+        iconTheme: theme.iconTheme.copyWith(
           color: Color(
             int.parse(
               SharedPrefs().themeColor,
@@ -117,16 +153,7 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
         ),
         colorScheme: theme.colorScheme.copyWith(
-          primary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          secondary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          surfaceTint: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
         ),
         checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.resolveWith(
@@ -139,6 +166,13 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
           thumbColor: MaterialStateProperty.resolveWith(
             getSwitchThumbColor,
+          ),
+        ),
+        chipTheme: ChipThemeData(
+          selectedColor: Color(
+            int.parse(
+              SharedPrefs().themeColor,
+            ),
           ),
         ),
       ),

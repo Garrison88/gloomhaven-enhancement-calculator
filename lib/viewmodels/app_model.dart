@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppModel extends ChangeNotifier {
-  AppModel();
-  PageController pageController = PageController();
+  AppModel(this.pageController);
+  final PageController pageController;
   int _page = 0;
 
   int get page => _page;

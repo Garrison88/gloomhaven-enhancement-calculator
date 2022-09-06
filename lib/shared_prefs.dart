@@ -143,4 +143,11 @@ class SharedPrefs {
   set persistent(bool value) {
     _sharedPrefs.setBool('persistent', value);
   }
+
+  bool get hideCustomClassesWarningMessage =>
+      _sharedPrefs.getBool('hideCustomClassesWarningMessage') ?? false;
+
+  set hideCustomClassesWarningMessage(bool value) {
+    _sharedPrefs.setBool('hideCustomClassesWarningMessage', value);
+  }
 }

@@ -15,10 +15,11 @@ class InfoDialog extends StatelessWidget {
   List<Enhancement> _eligibleForIcons;
 
   InfoDialog({
+    Key key,
     this.title,
     this.message,
     this.category,
-  });
+  }) : super(key: key);
 
   List<Widget> _createIconsListForDialog(List<Enhancement> list) {
     List<Widget> icons = [];
@@ -347,10 +348,6 @@ class InfoDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Got it!',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: secondaryFontSize,
-            ),
           ),
         ),
       ],

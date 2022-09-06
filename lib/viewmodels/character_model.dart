@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
 import '../models/character.dart';
@@ -21,6 +20,7 @@ class CharacterModel with ChangeNotifier {
   TextEditingController xpController = TextEditingController();
   TextEditingController goldController = TextEditingController();
   TextEditingController notesController = TextEditingController();
+  // ScrollController scrollController = ScrollController();
   DatabaseHelper db = DatabaseHelper.instance;
 
   int get maximumPerks =>
@@ -129,9 +129,9 @@ class CharacterModel with ChangeNotifier {
     return value;
   }
 
-  Future<List> loadPerks(String characterCode) async =>
-      await db.queryPerks(characterCode);
+  Future<List> loadPerks() async =>
+      await db.queryPerks(character.playerClass.classCode.toLowerCase());
 
-  Future<List> loadMasteries(String characterCode) async =>
-      await db.queryMasteries(characterCode);
+  Future<List> loadMasteries() async =>
+      await db.queryMasteries(character.playerClass.classCode.toLowerCase());
 }

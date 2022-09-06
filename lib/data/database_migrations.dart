@@ -1,3 +1,6 @@
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+
 import 'character_data.dart';
 import 'database_helpers.dart';
 import '../models/character.dart';
@@ -98,25 +101,54 @@ class DatabaseMigrations {
         ''');
   }
 
-  static includeFrosthavenResources(Transaction txn) async {
-    await regeneratePerksTable(txn);
+  static includeClassMasteries(Transaction txn) async {
+    await txn.execute('''
+        ${DatabaseHelper.createTable} $tableMasteries (
+          $columnMasteryId ${DatabaseHelper.idType},
+          $columnMasteryClass ${DatabaseHelper.textType},
+          $columnMasteryDetails ${DatabaseHelper.textType}
+        )''').then(
+      (_) async {
+        for (Mastery mastery in CharacterData.masteries) {
+          await txn.insert(tableMasteries, mastery.toMap());
+        }
+      },
+    );
+    await txn.execute('''
+        ${DatabaseHelper.createTable} $tableCharacterMasteries (
+          $columnAssociatedCharacterUuid ${DatabaseHelper.textType},
+          $columnAssociatedMasteryId ${DatabaseHelper.integerType},
+          $columnCharacterMasteryAchieved ${DatabaseHelper.boolType}
+        )''');
+  }
+
+  static includeResources(Transaction txn) async {
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceHide ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceMetal ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceMetal ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceLumber ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceLumber ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceArrowVine ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceArrowvine ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceAxeNut ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceAxenut ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceRockRoot ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceRockroot ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceFlameFruit ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceFlamefruit ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpseCap ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceCorpsecap ${DatabaseHelper.integerType} DEFAULT 0',
+    );
     await txn.rawInsert(
-        'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowThistle ${DatabaseHelper.integerType} DEFAULT 0');
+      'ALTER TABLE $tableCharacters ADD COLUMN $columnResourceSnowthistle ${DatabaseHelper.integerType} DEFAULT 0',
+    );
   }
 }

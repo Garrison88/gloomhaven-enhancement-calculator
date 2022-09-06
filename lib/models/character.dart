@@ -15,12 +15,12 @@ const String columnCharacterCheckMarks = 'CheckMarks';
 const String columnResourceHide = 'ResourceHide';
 const String columnResourceMetal = 'ResourceMetal';
 const String columnResourceLumber = 'ResourceWood';
-const String columnResourceArrowVine = 'ResourceArrowVine';
-const String columnResourceAxeNut = 'ResourceAxeNut';
-const String columnResourceRockRoot = 'ResourceRockRoot';
-const String columnResourceFlameFruit = 'ResourceFlameFruit';
-const String columnResourceCorpseCap = 'ResourceCorpseCap';
-const String columnResourceSnowThistle = 'ResourceSnowThistle';
+const String columnResourceArrowvine = 'ResourceArrowVine';
+const String columnResourceAxenut = 'ResourceAxeNut';
+const String columnResourceRockroot = 'ResourceRockRoot';
+const String columnResourceFlamefruit = 'ResourceFlameFruit';
+const String columnResourceCorpsecap = 'ResourceCorpseCap';
+const String columnResourceSnowthistle = 'ResourceSnowThistle';
 const String columnIsRetired = 'IsRetired';
 
 class Character {
@@ -33,15 +33,16 @@ class Character {
   int gold;
   String notes;
   int checkMarks;
-  int resourceHide;
-  int resourceMetal;
-  int resourceLumber;
-  int resourceArrowVine;
-  int resourceAxeNut;
-  int resourceRockRoot;
-  int resourceFlameFruit;
-  int resourceCorpseCap;
-  int resourceSnowThistle;
+  // TODO: uncomment this when including Resources
+  // int resourceHide;
+  // int resourceMetal;
+  // int resourceLumber;
+  // int resourceArrowvine;
+  // int resourceAxenut;
+  // int resourceRockroot;
+  // int resourceFlamefruit;
+  // int resourceCorpsecap;
+  // int resourceSnowthistle;
   bool isRetired;
   Character({
     this.id,
@@ -53,15 +54,16 @@ class Character {
     this.gold = 0,
     this.notes = 'Items, reminders, wishlist...',
     this.checkMarks = 0,
-    this.resourceHide = 0,
-    this.resourceMetal = 0,
-    this.resourceLumber = 0,
-    this.resourceArrowVine = 0,
-    this.resourceAxeNut = 0,
-    this.resourceRockRoot = 0,
-    this.resourceFlameFruit = 0,
-    this.resourceCorpseCap = 0,
-    this.resourceSnowThistle = 0,
+    // TODO: uncomment this when including Resources
+    // this.resourceHide = 0,
+    // this.resourceMetal = 0,
+    // this.resourceLumber = 0,
+    // this.resourceArrowvine = 0,
+    // this.resourceAxenut = 0,
+    // this.resourceRockroot = 0,
+    // this.resourceFlamefruit = 0,
+    // this.resourceCorpsecap = 0,
+    // this.resourceSnowthistle = 0,
     this.isRetired = false,
   });
 
@@ -77,15 +79,16 @@ class Character {
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
     checkMarks = map[columnCharacterCheckMarks];
-    resourceHide = map[columnResourceHide];
-    resourceMetal = map[columnResourceMetal];
-    resourceLumber = map[columnResourceLumber];
-    resourceArrowVine = map[columnResourceArrowVine];
-    resourceAxeNut = map[columnResourceAxeNut];
-    resourceRockRoot = map[columnResourceRockRoot];
-    resourceFlameFruit = map[columnResourceFlameFruit];
-    resourceCorpseCap = map[columnResourceCorpseCap];
-    resourceSnowThistle = map[columnResourceSnowThistle];
+    // TODO: uncomment this when including Resources
+    // resourceHide = map[columnResourceHide];
+    // resourceMetal = map[columnResourceMetal];
+    // resourceLumber = map[columnResourceLumber];
+    // resourceArrowvine = map[columnResourceArrowvine];
+    // resourceAxenut = map[columnResourceAxenut];
+    // resourceRockroot = map[columnResourceRockroot];
+    // resourceFlamefruit = map[columnResourceFlamefruit];
+    // resourceCorpsecap = map[columnResourceCorpsecap];
+    // resourceSnowthistle = map[columnResourceSnowthistle];
     isRetired = map[columnIsRetired] == 1 ? true : false;
   }
 
@@ -99,15 +102,16 @@ class Character {
         columnCharacterGold: gold,
         columnCharacterNotes: notes,
         columnCharacterCheckMarks: checkMarks,
-        columnResourceHide: resourceHide,
-        columnResourceMetal: resourceMetal,
-        columnResourceLumber: resourceLumber,
-        columnResourceArrowVine: resourceArrowVine,
-        columnResourceAxeNut: resourceAxeNut,
-        columnResourceRockRoot: resourceRockRoot,
-        columnResourceFlameFruit: resourceFlameFruit,
-        columnResourceCorpseCap: resourceCorpseCap,
-        columnResourceSnowThistle: resourceSnowThistle,
+        // TODO: uncomment this when including Resources
+        // columnResourceHide: resourceHide,
+        // columnResourceMetal: resourceMetal,
+        // columnResourceLumber: resourceLumber,
+        // columnResourceArrowvine: resourceArrowvine,
+        // columnResourceAxenut: resourceAxenut,
+        // columnResourceRockroot: resourceRockroot,
+        // columnResourceFlamefruit: resourceFlamefruit,
+        // columnResourceCorpsecap: resourceCorpsecap,
+        // columnResourceSnowthistle: resourceSnowthistle,
         columnIsRetired: isRetired ? 1 : 0,
       };
 }

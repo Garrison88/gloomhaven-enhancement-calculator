@@ -21,7 +21,7 @@ class PerkRow extends StatefulWidget {
 }
 
 class _PerkRowState extends State<PerkRow> {
-  final List<int> _perkIds = [];
+  final List<int> perkIds = [];
 
   double height = 0;
 
@@ -30,7 +30,7 @@ class _PerkRowState extends State<PerkRow> {
     CharacterModel characterModel = context.watch<CharacterModel>();
     CharactersModel charactersModel = context.watch<CharactersModel>();
     for (final Perk perk in widget.perks) {
-      _perkIds.add(perk.perkId);
+      perkIds.add(perk.perkId);
     }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
@@ -101,22 +101,10 @@ class _PerkRowState extends State<PerkRow> {
               ? const SizedBox(
                   width: smallPadding,
                 )
-              // : Container(
-              //     height: height,
-              //     child: VerticalDivider(
-              //       color: allPerksSelected(characterModel)
-              //           ? Theme.of(context).colorScheme.secondary
-              //           : null,
-              //     ),
-              //   ),
               : Container(
                   height: height,
                   width: 1,
-                  color:
-                      // allPerksSelected(characterModel)
-                      //     ? Theme.of(context).colorScheme.secondary
-                      // :
-                      Theme.of(context).dividerColor,
+                  color: Theme.of(context).dividerColor,
                   margin: const EdgeInsets.only(right: 12),
                 ),
           SizeProviderWidget(
@@ -126,22 +114,17 @@ class _PerkRowState extends State<PerkRow> {
               });
             },
             child: Expanded(
-              child:
-                  // SharedPrefs().showPerkImages
-                  //     ?
-                  RichText(
+              child: RichText(
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyText2,
-                  children: Utils.generatePerkDetails(
-                    widget.perks.first.perkDetails.split(' '),
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      // height: 1.4,
+                      ),
+                  children: Utils.generateCheckRowDetails(
+                    widget.perks.first.perkDetails,
                     SharedPrefs().darkTheme,
                   ),
                 ),
-              )
-              // : Text(widget.perks.first.perkDetails
-              //     .replaceAll(RegExp(r'_'), ' ')
-              //     .replaceAll(RegExp(r'&'), '+'))
-              ,
+              ),
             ),
           ),
         ],
@@ -153,7 +136,7 @@ class _PerkRowState extends State<PerkRow> {
     CharacterModel characterModel,
   ) {
     return characterModel.characterPerks
-        .where((element) => _perkIds.contains(element.associatedPerkId))
+        .where((element) => perkIds.contains(element.associatedPerkId))
         .every((element) => element.characterPerkIsSelected);
   }
 }
@@ -162,8 +145,11 @@ class SizeProviderWidget extends StatefulWidget {
   final Widget child;
   final Function(Size) onChildSize;
 
-  const SizeProviderWidget({Key key, this.onChildSize, this.child})
-      : super(key: key);
+  const SizeProviderWidget({
+    Key key,
+    this.onChildSize,
+    this.child,
+  }) : super(key: key);
   @override
   _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
 }

@@ -20,6 +20,10 @@ class CharactersModel with ChangeNotifier {
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
   PageController pageController = PageController();
   AnimationController hideRetireCharacterAnimationController;
+  bool isScrolledToTop = true;
+  ScrollController charScreenScrollController = ScrollController();
+  ScrollController enhancementCalcScrollController = ScrollController();
+
   bool showRetired;
   bool isEditMode = false;
 
@@ -56,7 +60,7 @@ class CharactersModel with ChangeNotifier {
     notifyListeners();
   }
 
-  double currentPage() => pageController.page;
+  // double currentPage() => pageController.page;
 
   Future<List<Character>> loadCharacters() async {
     characters = await databaseHelper.queryAllCharacters();
@@ -78,7 +82,10 @@ class CharactersModel with ChangeNotifier {
   void onPageChanged(
     int index,
   ) {
+    // charScreenScrollController.dispose();
+    // charScreenScrollController = ScrollController();
     SharedPrefs().initialPage = index;
+    isScrolledToTop = true;
     setCurrentCharacter(
       index: index,
     );
@@ -98,15 +105,16 @@ class CharactersModel with ChangeNotifier {
       previousRetirements: previousRetirements,
       xp: initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0,
       gold: 15 * (initialLevel + 1),
-      resourceHide: 0,
-      resourceMetal: 0,
-      resourceLumber: 0,
-      resourceArrowVine: 0,
-      resourceAxeNut: 0,
-      resourceCorpseCap: 0,
-      resourceFlameFruit: 0,
-      resourceRockRoot: 0,
-      resourceSnowThistle: 0,
+      // TODO: uncomment this when including Resources
+      // resourceHide: 0,
+      // resourceMetal: 0,
+      // resourceLumber: 0,
+      // resourceArrowvine: 0,
+      // resourceAxenut: 0,
+      // resourceCorpsecap: 0,
+      // resourceFlamefruit: 0,
+      // resourceRockroot: 0,
+      // resourceSnowthistle: 0,
     );
     character.id = await databaseHelper.insertCharacter(
       character,

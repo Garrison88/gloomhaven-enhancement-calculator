@@ -39,9 +39,7 @@ class PerksSectionState extends State<PerksSection> {
     _futures = Future.wait(
       [
         widget.characterModel.loadCharacterPerks(),
-        widget.characterModel.loadPerks(
-          widget.characterModel.character.playerClass.classCode.toLowerCase(),
-        ),
+        widget.characterModel.loadPerks(),
       ],
     );
   }

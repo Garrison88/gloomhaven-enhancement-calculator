@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../data/constants.dart';
-import '../models/perk.dart';
-import '../ui/widgets/perk_row.dart';
 
 class Utils {
-  static List<InlineSpan> generatePerkDetails(
-    List<String> list,
+  static List<InlineSpan> generateCheckRowDetails(
+    String details,
     bool darkTheme,
   ) {
     List<InlineSpan> inlineList = [];
+    List<String> list = details.split(' ');
     for (String element in list) {
       String assetPath;
       bool invertColor = false;
       if (element.contains('&')) {
+        // Stack both Elements
         List<String> elements = element.split('&');
         element = '';
         inlineList.add(
@@ -47,8 +47,12 @@ class Utils {
           ),
         );
       } else {
-        switch (
-            element.replaceAll(RegExp(r'"'), '').replaceAll(RegExp(r','), '')) {
+        switch (element
+            .replaceAll(RegExp(r'"'), '')
+            .replaceAll(RegExp(r','), '')
+            .replaceAll(RegExp(r'\('), '')
+            .replaceAll(RegExp(r'\)'), '')
+            .replaceAll(RegExp(r':'), '')) {
           case '-2':
             assetPath = 'attack_modifiers/minus_2.png';
             break;
@@ -61,10 +65,9 @@ class Utils {
           case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
-          // TODO: find nice looking 2X icon
-          // case '2x':
-          //   assetPath = 'attack_modifiers/2_x.svg';
-          //   break;
+          case '2x':
+            assetPath = 'attack_modifiers/2_x.png';
+            break;
           case '+1':
             assetPath = 'attack_modifiers/plus_1.png';
             break;
@@ -79,6 +82,10 @@ class Utils {
             break;
           case 'One_Hand':
             assetPath = 'equipment_slots/one_handed.svg';
+            invertColor = true;
+            break;
+          case 'Two_Hand':
+            assetPath = 'equipment_slots/two_handed.svg';
             invertColor = true;
             break;
           case 'MOVE':
@@ -122,7 +129,7 @@ class Utils {
           case 'Target':
             assetPath = darkTheme ? 'target_alt.svg' : 'target_alt_light.svg';
             break;
-          case 'Range':
+          case 'RANGE':
             assetPath = 'range.svg';
             invertColor = true;
             break;
@@ -134,18 +141,19 @@ class Utils {
             assetPath = 'retaliate.svg';
             invertColor = true;
             break;
-          case 'Attack':
+          case 'ATTACK':
             assetPath = 'attack.svg';
             invertColor = true;
             break;
           case 'Recover':
+          case 'REFRESH':
             assetPath =
                 darkTheme ? 'recover_card.svg' : 'recover_card_light.svg';
             break;
-          case 'Refresh':
-            assetPath =
-                darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg';
-            break;
+          // case 'REFRESH':
+          //   assetPath =
+          //       darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg';
+          //   break;
           case 'PUSH':
             assetPath = 'push.svg';
             break;
@@ -184,6 +192,9 @@ class Utils {
             break;
           case 'EMPOWER':
             assetPath = 'empower.svg';
+            break;
+          case 'ENFEEBLE':
+            assetPath = 'enfeeble.svg';
             break;
           case 'HEX':
             assetPath = 'luminary_hexes.svg';
@@ -246,36 +257,55 @@ class Utils {
             assetPath = 'voidsight.svg';
             invertColor = true;
             break;
+          case 'CONQUEROR':
+            assetPath = 'conqueror.svg';
+            break;
+          case 'REAVER':
+            assetPath = 'reaver.svg';
+            break;
+          case 'RITUALIST':
+            assetPath = 'ritualist.svg';
+            break;
           // ELEMENTS
           case 'EARTH':
+          case 'consume_EARTH':
             assetPath = 'elem_earth.svg';
             break;
           case 'AIR':
+          case 'consume_AIR':
             assetPath = 'elem_air.svg';
             break;
           case 'DARK':
+          case 'consume_DARK':
             assetPath = 'elem_dark.svg';
             break;
           case 'LIGHT':
+          case 'consume_LIGHT':
             assetPath = 'elem_light.svg';
             break;
           case 'ICE':
+          case 'consume_ICE':
             assetPath = 'elem_ice.svg';
             break;
           case 'FIRE':
+          case 'consume_FIRE':
             assetPath = 'elem_fire.svg';
             break;
           case 'EARTH/FIRE':
+          case 'consume_EARTH/FIRE':
             assetPath = 'elem_earth_or_fire.svg';
             break;
           case 'EARTH/DARK':
+          case 'consume_EARTH/DARK':
             assetPath = 'elem_earth_or_dark.svg';
             break;
-          case 'Any_Element':
-            assetPath = 'elem_any.svg';
+          case 'FIRE/ICE':
+          case 'consume_FIRE/ICE':
+            assetPath = 'elem_fire_or_ice.svg';
             break;
+          case 'Any_Element':
           case 'Consume_Any_Element':
-            assetPath = 'elem_any_consume.svg';
+            assetPath = 'elem_any.svg';
             break;
         }
       }
@@ -283,6 +313,11 @@ class Utils {
         if (element.startsWith('"')) {
           inlineList.add(
             const TextSpan(text: '"'),
+          );
+        }
+        if (element.startsWith('(')) {
+          inlineList.add(
+            const TextSpan(text: '('),
           );
         }
         inlineList.add(
@@ -308,9 +343,26 @@ class Utils {
                             color: Colors.white,
                           )
                     : assetPath.contains('.svg')
-                        ? SvgPicture.asset(
-                            'images/$assetPath',
-                          )
+                        ? element.toLowerCase().contains('consume')
+                            // Stack a Consume icon ontop of the Element icon
+                            ? Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  SvgPicture.asset(
+                                    'images/$assetPath',
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                    width: 15,
+                                    child: SvgPicture.asset(
+                                      'images/consume.svg',
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : SvgPicture.asset(
+                                'images/$assetPath',
+                              )
                         : Image.asset(
                             'images/$assetPath',
                           ),
@@ -328,6 +380,11 @@ class Utils {
             const TextSpan(text: ','),
           );
         }
+        if (element.endsWith(')')) {
+          inlineList.add(
+            const TextSpan(text: ')'),
+          );
+        }
       } else {
         inlineList.add(
           TextSpan(text: element),
@@ -340,64 +397,64 @@ class Utils {
     return inlineList;
   }
 
-  static List<PerkRow> generatePerkRows(List<dynamic> perkMaps) {
-    List<PerkRow> perkRows = [];
-    List<Perk> perkRowPerks = [];
-    List<Perk> perks = [];
-    for (var perkMap in perkMaps) {
-      perks.add(Perk.fromMap(perkMap));
-    }
-    String details = '';
-    for (Perk perk in perks) {
-      if (details.isEmpty) {
-        details = perk.perkDetails;
-        perkRowPerks.add(perk);
-        continue;
-      }
-      if (details == perk.perkDetails) {
-        perkRowPerks.add(perk);
-        continue;
-      }
-      if (details != perk.perkDetails) {
-        perkRows.add(
-          PerkRow(
-            perks: perkRowPerks,
-          ),
-        );
-        perkRowPerks = [perk];
-        details = perk.perkDetails;
-      }
-    }
-    perkRows.add(
-      PerkRow(
-        perks: perkRowPerks,
-      ),
-    );
-    return perkRows;
-  }
+  // static List<PerkRow> generatePerkRows(List<dynamic> perkMaps) {
+  //   List<PerkRow> perkRows = [];
+  //   List<Perk> perkRowPerks = [];
+  //   List<Perk> perks = [];
+  //   for (var perkMap in perkMaps) {
+  //     perks.add(Perk.fromMap(perkMap));
+  //   }
+  //   String details = '';
+  //   for (Perk perk in perks) {
+  //     if (details.isEmpty) {
+  //       details = perk.perkDetails;
+  //       perkRowPerks.add(perk);
+  //       continue;
+  //     }
+  //     if (details == perk.perkDetails) {
+  //       perkRowPerks.add(perk);
+  //       continue;
+  //     }
+  //     if (details != perk.perkDetails) {
+  //       perkRows.add(
+  //         PerkRow(
+  //           perks: perkRowPerks,
+  //         ),
+  //       );
+  //       perkRowPerks = [perk];
+  //       details = perk.perkDetails;
+  //     }
+  //   }
+  //   perkRows.add(
+  //     PerkRow(
+  //       perks: perkRowPerks,
+  //     ),
+  //   );
+  //   return perkRows;
+  // }
 
-  /// Darken a color by [percent] amount (100 = black)
-// ........................................................
-  static Color darken(Color c, [int percent = 10]) {
-    assert(1 <= percent && percent <= 100);
-    var f = 1 - percent / 100;
-    return Color.fromARGB(c.alpha, (c.red * f).round(), (c.green * f).round(),
-        (c.blue * f).round());
-    // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
-  }
+//   /// Darken a color by [percent] amount (100 = black)
+// // ........................................................
+//   static Color darken(Color c, [int percent = 10]) {
+//     assert(1 <= percent && percent <= 100);
+//     var f = 1 - percent / 100;
+//     return Color.fromARGB(c.alpha, (c.red * f).round(), (c.green * f).round(),
+//         (c.blue * f).round());
+//     // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
+//   }
 
-  /// Lighten a color by [percent] amount (100 = white)
-// ........................................................
-  static Color lighten(Color c, [int percent = 10]) {
-    assert(1 <= percent && percent <= 100);
-    var p = percent / 100;
-    return Color.fromARGB(
-        c.alpha,
-        c.red + ((255 - c.red) * p).round(),
-        c.green + ((255 - c.green) * p).round(),
-        c.blue + ((255 - c.blue) * p).round());
-    // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
-  }
+//   /// Lighten a color by [percent] amount (100 = white)
+// // ........................................................
+//   static Color lighten(Color c, [int percent = 10]) {
+//     assert(1 <= percent && percent <= 100);
+//     var p = percent / 100;
+//     return Color.fromARGB(
+//         c.alpha,
+//         c.red + ((255 - c.red) * p).round(),
+//         c.green + ((255 - c.green) * p).round(),
+//         c.blue + ((255 - c.blue) * p).round());
+//     // '0x${Utils.darken(Color(int.parse(currentCharacter.playerClass.classColor))).value.toRadixString(16)}'
+//   }
 }
 
 extension StringCasingExtension on String {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/mastery_row.dart';
 
@@ -37,9 +38,7 @@ class MasteriesSectionState extends State<MasteriesSection> {
     _futures = Future.wait(
       [
         widget.characterModel.loadCharacterMasteries(),
-        widget.characterModel.loadMasteries(
-          widget.characterModel.character.playerClass.classCode.toLowerCase(),
-        ),
+        widget.characterModel.loadMasteries(),
       ],
     );
   }
@@ -57,22 +56,33 @@ class MasteriesSectionState extends State<MasteriesSection> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           widget.characterModel.characterMasteries = snapshot.data[0];
-          return Column(
-            children: [
-              Text(
-                'Masteries',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              ...snapshot.data[1].map(
-                (mastery) => MasteryRow(
-                  mastery: Mastery.fromMap(
-                    mastery,
-                  ),
-                ),
-              ),
-            ],
-          );
+          return widget.characterModel.characterMasteries.isNotEmpty
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Masteries',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    const SizedBox(
+                      height: smallPadding + 5,
+                    ),
+                    ...snapshot.data[1].map(
+                      (mastery) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: smallPadding / 2,
+                        ),
+                        child: MasteryRow(
+                          mastery: Mastery.fromMap(
+                            mastery,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Container();
         } else {
           return const Center(
             child: CircularProgressIndicator(),

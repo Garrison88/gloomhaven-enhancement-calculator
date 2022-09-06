@@ -4,6 +4,7 @@ import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -47,53 +48,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _packageInfoFuture = PackageInfo.fromPlatform();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   SystemChrome.setSystemUIOverlayStyle(
+  //     SystemUiOverlayStyle(
+  //       statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
+  //           ? Brightness.light
+  //           : Brightness.dark,
+  //       systemNavigationBarIconBrightness:
+  //           Theme.of(context).brightness == Brightness.dark
+  //               ? Brightness.dark
+  //               : Brightness.light,
+  //     ),
+  //   );
+  //   super.didChangeDependencies();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Brightness.light
-                  : ThemeData.estimateBrightnessForColor(
-                              Theme.of(context).colorScheme.secondary) ==
-                          Brightness.dark
-                      ? Brightness.light
-                      : Brightness.dark,
-          statusBarBrightness: Theme.of(context).brightness == Brightness.dark
-              ? Brightness.dark
-              : ThemeData.estimateBrightnessForColor(
-                          Theme.of(context).colorScheme.secondary) ==
-                      Brightness.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-          statusBarColor: Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).colorScheme.surface
-              : Theme.of(context).colorScheme.secondary,
-        ),
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Platform.isIOS ? Icons.arrow_back_ios_new : Icons.arrow_back,
-            color: ThemeData.estimateBrightnessForColor(
-                            Theme.of(context).colorScheme.secondary) ==
-                        Brightness.dark ||
-                    Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
           ),
         ),
-        title: Text(
+        title: const Text(
           'Settings',
           style: TextStyle(
             fontSize: 25.0,
-            color: ThemeData.estimateBrightnessForColor(
-                            Theme.of(context).colorScheme.secondary) ==
-                        Brightness.dark ||
-                    Theme.of(context).brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
           ),
         ),
       ),
@@ -112,8 +97,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             inactiveThumbImage: const Svg('images/elem_light.svg'),
             value: Theme.of(context).brightness == Brightness.dark,
             onChanged: (val) {
+              // setState(() {
               SharedPrefs().darkTheme = val;
-              EasyDynamicTheme.of(context).changeTheme();
+              EasyDynamicTheme.of(context).changeTheme(dynamic: true);
+              // SystemChrome.setSystemUIOverlayStyle(
+              //     val ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light
+              // SystemUiOverlayStyle(
+              //   systemStatusBarContrastEnforced: false,
+              //   statusBarIconBrightness:
+              //       val ? Brightness.light : Brightness.dark,
+              //   systemNavigationBarIconBrightness:
+              //       val ? Brightness.dark : Brightness.light,
+              //   systemNavigationBarColor:
+              //       Theme.of(context).scaffoldBackgroundColor,
+              // ),
+              // );
+              // });
             },
           ),
           const SettingsDivider(),
@@ -161,7 +160,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: const Text('Cancel'),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: SharedPrefs().darkTheme
+                                        ? Colors.grey[300]
+                                        : Colors.black87,
+                                  ),
+                                ),
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                 },
@@ -376,7 +382,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         'Restoring a backup file will overwrite any current characters. Do you wish to proceed?'),
                     actions: <Widget>[
                       TextButton(
-                        child: const Text('Cancel'),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: SharedPrefs().darkTheme
+                                ? Colors.grey[300]
+                                : Colors.black87,
+                          ),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },
