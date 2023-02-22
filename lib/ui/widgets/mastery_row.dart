@@ -93,7 +93,7 @@ class _MasteryRowState extends State<MasteryRow> {
             child: Expanded(
               child: RichText(
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   children: Utils.generateCheckRowDetails(
                     widget.mastery.masteryDetails,
                     SharedPrefs().darkTheme,

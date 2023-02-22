@@ -21,7 +21,6 @@ class CharacterScreen extends StatelessWidget {
   }) : super(
           key: key,
         );
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -40,18 +39,21 @@ class CharacterScreen extends StatelessWidget {
             // STATS
             const Padding(
               padding: EdgeInsets.all(smallPadding),
-              child: StatsSection(),
+              child: StatsSection(
+                  // isEditMode: isEditMode,
+                  ),
             ),
             // RESOURCES
             // const ResourcesSection(),
             // NOTES
-            context.read<CharacterModel>().character.notes.isEmpty &&
-                    !context.read<CharactersModel>().isEditMode
-                ? Container()
-                : const Padding(
-                    padding: EdgeInsets.all(smallPadding),
-                    child: NotesSection(),
-                  ),
+            // context.read<CharacterModel>().character.notes.isEmpty &&
+            //         !context.read<CharactersModel>().isEditMode
+            //     ? Container()
+            // :
+            const Padding(
+              padding: EdgeInsets.all(smallPadding),
+              child: NotesSection(),
+            ),
             // BATTLE GOAL CHECKMARKS
             const BattleGoalCheckmarksSection(),
 
@@ -72,7 +74,7 @@ class CharacterScreen extends StatelessWidget {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).padding.bottom + 30,
+              height: MediaQuery.of(context).padding.bottom + 72,
             ),
           ],
         ),
@@ -105,7 +107,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                           ..previousRetirements =
                               value.isEmpty ? 0 : int.parse(value),
                       ),
-                      style: Theme.of(context).textTheme.subtitle2,
+                      style: Theme.of(context).textTheme.titleSmall,
                       textAlign: TextAlign.center,
                       controller: characterModel.previousRetirementsController,
                       inputFormatters: [
@@ -117,7 +119,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                   : Text(
                       'Retirements: ${characterModel.character.previousRetirements}',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle2,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
             ),
             IconButton(
@@ -156,14 +158,22 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 3.5),
-                  child: Text(
-                    context.watch<CharacterModel>().numOfPocketItems.toString(),
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
-                          fontSize: 15,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black
-                              : Colors.white,
-                        ),
+                  child: Consumer<CharacterModel>(
+                    builder: (
+                      _,
+                      characterModel,
+                      __,
+                    ) =>
+                        Text(
+                      characterModel.numOfPocketItems.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                            fontSize: 15,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.black
+                                    : Colors.white,
+                          ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -199,14 +209,14 @@ class NameAndClassSection extends StatelessWidget {
                 minLines: 1,
                 maxLines: 2,
                 controller: characterModel.nameController,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
               )
             : AutoSizeText(
                 characterModel.character.name,
                 maxLines: 2,
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.center,
               ),
         Row(
@@ -222,16 +232,23 @@ class NameAndClassSection extends StatelessWidget {
                       ? Colors.white
                       : Colors.black87,
                 ),
-                Text(
-                  '${context.watch<CharacterModel>().currentLevel}',
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.black87
-                        : Colors.white,
-                    fontSize: titleFontSize - 7,
-                    fontFamily: pirataOne,
+                Consumer<CharacterModel>(
+                  builder: (
+                    _,
+                    characterModel,
+                    __,
+                  ) =>
+                      Text(
+                    characterModel.currentLevel.toString(),
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black87
+                          : Colors.white,
+                      fontSize: titleFontSize - 7,
+                      fontFamily: pirataOne,
+                    ),
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(
@@ -260,7 +277,6 @@ class StatsSection extends StatelessWidget {
   const StatsSection({
     Key key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.read<CharacterModel>();
@@ -295,7 +311,7 @@ class StatsSection extends StatelessWidget {
                               );
                             },
                             textAlignVertical: TextAlignVertical.center,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                             controller: characterModel.xpController,
                             inputFormatters: [
@@ -307,7 +323,7 @@ class StatsSection extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.exposure),
-                          onPressed: () async => await showDialog<int>(
+                          onPressed: () => showDialog<int>(
                               context: context,
                               builder: (_) => AddSubtractDialog(
                                     characterModel.character.xp,
@@ -328,13 +344,20 @@ class StatsSection extends StatelessWidget {
                     )
                   : Text(
                       characterModel.character.xp.toString(),
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-              Text(
-                ' / ${context.watch<CharacterModel>().nextLevelXp}',
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                    fontSize:
-                        Theme.of(context).textTheme.bodyText2.fontSize / 2),
+              Consumer<CharacterModel>(
+                builder: (
+                  _,
+                  characterModel,
+                  __,
+                ) =>
+                    Text(
+                  ' / ${characterModel.nextLevelXp}',
+                  style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      fontSize:
+                          Theme.of(context).textTheme.bodyMedium.fontSize / 2),
+                ),
               ),
             ],
           ),
@@ -366,7 +389,7 @@ class StatsSection extends StatelessWidget {
                                 ..gold = value == '' ? 0 : int.parse(value),
                             ),
                             textAlignVertical: TextAlignVertical.center,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                             controller: characterModel.goldController,
                             inputFormatters: [
@@ -399,7 +422,7 @@ class StatsSection extends StatelessWidget {
                     )
                   : Text(
                       ' ${characterModel.character.gold}',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     )
             ],
           ),
@@ -429,7 +452,7 @@ class StatsSection extends StatelessWidget {
                   softWrap: false,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyMedium
                       .copyWith(letterSpacing: 4),
                 ),
               ],
@@ -646,37 +669,33 @@ class NotesSection extends StatelessWidget {
   const NotesSection({
     Key key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     CharacterModel characterModel = context.read<CharacterModel>();
-    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Column(
       children: <Widget>[
         Text(
           'Notes',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         const SizedBox(
           height: smallPadding,
         ),
-        charactersModel.isEditMode
-            ? SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: TextField(
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (String value) {
-                    characterModel.updateCharacter(
-                        characterModel.character..notes = value);
-                  },
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    hintText: 'Notes',
-                  ),
-                  controller: characterModel.notesController,
+        context.watch<CharactersModel>().isEditMode
+            ? TextField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                onChanged: (String value) {
+                  characterModel.updateCharacter(
+                    characterModel.character..notes = value,
+                  );
+                },
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  hintText: 'Notes',
                 ),
+                controller: characterModel.notesController,
               )
             : Text(
                 characterModel.character.notes,
@@ -713,7 +732,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                       maintainAnimation: true,
                       maintainState: true,
                       child: IconButton(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         icon: const Icon(
                           Icons.remove_circle,
                         ),
@@ -730,7 +749,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                       maintainAnimation: true,
                       maintainState: true,
                       child: IconButton(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         icon: const Icon(
                           Icons.add_circle,
                         ),

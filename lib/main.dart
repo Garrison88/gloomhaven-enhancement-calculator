@@ -1,9 +1,11 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:provider/provider.dart';
 import 'gloomhaven_companion.dart';
 import 'shared_prefs.dart';
 
-bool includeFrosthaven = false;
+bool includeFrosthaven = true;
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
@@ -12,19 +14,25 @@ main() async {
     SharedPrefs().clearSharedPrefs = false;
   }
   runApp(
-    EasyDynamicThemeWidget(
+    ChangeNotifierProvider(
+      create: (_) => AppModel(
+        PageController(),
+        SharedPrefs().darkTheme ? ThemeMode.dark : ThemeMode.light,
+      ),
       child: const GloomhavenCompanion(),
     ),
   );
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   SystemUiOverlayStyle(
-  //     statusBarIconBrightness:
-  //         SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
-  //     systemNavigationBarIconBrightness:
-  //         SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
-  //     systemNavigationBarContrastEnforced: true,
-  //     systemNavigationBarColor:
-  //         SharedPrefs().darkTheme ? Colors.pink : Colors.white,
-  //   ),
-  // );
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarIconBrightness:
+          SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
+      systemNavigationBarColor: SharedPrefs().darkTheme
+          ? Color(
+              int.parse(
+                '0xff424242',
+              ),
+            )
+          : Colors.white,
+    ),
+  );
 }

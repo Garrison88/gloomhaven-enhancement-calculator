@@ -292,16 +292,24 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       ),
       actions: <Widget>[
         TextButton(
+          style: Theme.of(context).textButtonTheme.style.copyWith(
+                foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) => SharedPrefs().darkTheme
+                      ? Colors.grey[300]
+                      : Colors.black87,
+                ),
+              ),
           onPressed: () => Navigator.pop(context, false),
-          child: Text(
+          child: const Text(
             'Cancel',
-            style: TextStyle(
-              color:
-                  SharedPrefs().darkTheme ? Colors.grey[300] : Colors.black87,
-            ),
           ),
         ),
-        TextButton(
+        ElevatedButton.icon(
+          style: Theme.of(context).textButtonTheme.style.copyWith(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) => Colors.green.withOpacity(0.75),
+                ),
+              ),
           onPressed: () async {
             await widget.charactersModel.createCharacter(
               _nameTextFieldController.text.isEmpty
@@ -316,11 +324,15 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             );
             Navigator.pop(context, true);
           },
-          child: const Text(
+          label: const Text(
             'Create',
             style: TextStyle(
-              color: Colors.green,
+              color: Colors.white,
             ),
+          ),
+          icon: const Icon(
+            Icons.check,
+            color: Colors.white,
           ),
         ),
       ],

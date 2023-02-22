@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_app_bar.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_navigation_bar.dart';
 import '../../data/constants.dart';
 import '../../models/character.dart';
 import '../../viewmodels/app_model.dart';
@@ -45,10 +45,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         context.read<EnhancementCalculatorModel>();
     final appModel = context.read<AppModel>();
     final charactersModel = context.read<CharactersModel>();
+    // ..pageController = PageController(
+    //   initialPage: SharedPrefs().initialPage,
+    // );
     return Scaffold(
       extendBody: true,
       key: scaffoldMessengerKey,
-      // Don't make this const
+      // TODO: Don't make this const - why?
       appBar: GHCAppBar(),
       body: PageView(
         children: [
@@ -57,7 +60,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
-                return const CharactersScreen();
+                return CharactersScreen(
+                    // charactersModel: charactersModel,
+                    );
               } else {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -84,19 +89,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {});
         },
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButtonLocation:
-          MediaQuery.of(context).viewInsets.bottom != 0.0
-              ? FloatingActionButtonLocation.endFloat
-              : FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButtonLocation:
+      //     MediaQuery.of(context).viewInsets.bottom != 0.0
+      //         ? FloatingActionButtonLocation.endFloat
+      //         : FloatingActionButtonLocation.centerDocked,
 
       floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        backgroundColor: Color(
-          int.parse(
-            SharedPrefs().themeColor,
-          ),
-        ),
+        // shape: const CircleBorder(),
+        // backgroundColor: Color(
+        //   int.parse(
+        //     SharedPrefs().themeColor,
+        //   ),
+        // ),
         mini: MediaQuery.of(context).viewInsets.bottom != 0.0,
         heroTag: null,
         child: Icon(
@@ -108,7 +113,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ? Icons.edit_off_outlined
                       : Icons.edit_outlined,
           color: ThemeData.estimateBrightnessForColor(
-                      Theme.of(context).primaryColor) ==
+                      Theme.of(context).colorScheme.primary) ==
                   Brightness.dark
               ? Colors.white
               : Colors.black,
@@ -117,7 +122,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ? () => enhancementCalculatorModel.resetCost()
             // must watch
             : context.watch<CharactersModel>().characters.isEmpty
-                ? () async => await showDialog<void>(
+                ? () async {
+                    return await showDialog<bool>(
                       barrierDismissible: false,
                       context: context,
                       builder: (_) {
@@ -125,10 +131,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           charactersModel: charactersModel,
                         );
                       },
-                    )
+                    ).then((value) {
+                      if (value) {
+                        appModel.updateTheme();
+                      }
+                    });
+                  }
                 : () => charactersModel.toggleEditMode(),
       ),
-      bottomNavigationBar: const GHCBottomAppBar(),
+      bottomNavigationBar: const GHCBottomNavigationBar(),
     );
   }
 }

@@ -102,17 +102,19 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                 spacing: smallPadding,
                 children: [
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
                           color: gh
                               ? ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context).primaryColor) ==
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary) ==
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black
-                              : Theme.of(context).textTheme.bodyText1.color,
+                              : Theme.of(context).textTheme.bodyLarge.color,
                         ),
                     checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                Theme.of(context).primaryColor) ==
+                                Theme.of(context).colorScheme.primary) ==
                             Brightness.dark
                         ? Colors.white
                         : Colors.black,
@@ -124,17 +126,19 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     label: const Text('Gloomhaven'),
                   ),
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
                           color: jotl
                               ? ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context).primaryColor) ==
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary) ==
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black
-                              : Theme.of(context).textTheme.bodyText1.color,
+                              : Theme.of(context).textTheme.bodyLarge.color,
                         ),
                     checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                Theme.of(context).primaryColor) ==
+                                Theme.of(context).colorScheme.primary) ==
                             Brightness.dark
                         ? Colors.white
                         : Colors.black,
@@ -149,18 +153,20 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     FilterChip(
                       labelStyle: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           .copyWith(
                             color: fh
                                 ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context).primaryColor) ==
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .primary) ==
                                         Brightness.dark
                                     ? Colors.white
                                     : Colors.black
-                                : Theme.of(context).textTheme.bodyText1.color,
+                                : Theme.of(context).textTheme.bodyLarge.color,
                           ),
                       checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).primaryColor) ==
+                                  Theme.of(context).colorScheme.primary) ==
                               Brightness.dark
                           ? Colors.white
                           : Colors.black,
@@ -175,18 +181,20 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     FilterChip(
                       labelStyle: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           .copyWith(
                             color: cs
                                 ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context).primaryColor) ==
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .primary) ==
                                         Brightness.dark
                                     ? Colors.white
                                     : Colors.black
-                                : Theme.of(context).textTheme.bodyText1.color,
+                                : Theme.of(context).textTheme.bodyLarge.color,
                           ),
                       checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).primaryColor) ==
+                                  Theme.of(context).colorScheme.primary) ==
                               Brightness.dark
                           ? Colors.white
                           : Colors.black,
@@ -201,18 +209,20 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     FilterChip(
                       labelStyle: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyLarge
                           .copyWith(
                             color: cc
                                 ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context).primaryColor) ==
+                                            Theme.of(context)
+                                                .colorScheme
+                                                .primary) ==
                                         Brightness.dark
                                     ? Colors.white
                                     : Colors.black
-                                : Theme.of(context).textTheme.bodyText1.color,
+                                : Theme.of(context).textTheme.bodyLarge.color,
                           ),
                       checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).primaryColor) ==
+                                  Theme.of(context).colorScheme.primary) ==
                               Brightness.dark
                           ? Colors.white
                           : Colors.black,
@@ -349,6 +359,9 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                       context: context,
                       builder: (_) {
                         return AlertDialog(
+                          title: const Center(
+                            child: Text('Custom Content'),
+                          ),
                           content: StatefulBuilder(
                             builder: (
                               thisLowerContext,
@@ -363,12 +376,12 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                                         children: [
                                           const TextSpan(
                                             text:
-                                                'Please note that these classes are created by members of the Gloomhaven Custom Content Unity Guild and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ',
+                                                "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
                                           ),
                                           TextSpan(
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText2
+                                                .bodyMedium
                                                 .copyWith(
                                                   color: Colors.blue,
                                                   decoration:
@@ -426,14 +439,22 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: const Text(
-                                'Go back',
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  color: SharedPrefs().darkTheme
+                                      ? Colors.grey[300]
+                                      : Colors.black87,
+                                ),
                               ),
                               onPressed: () => Navigator.pop(context, false),
                             ),
                             TextButton(
-                              child: const Text(
+                              child: Text(
                                 'Got it!',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                               ),
                               onPressed: () => Navigator.pop(context, true),
                             ),

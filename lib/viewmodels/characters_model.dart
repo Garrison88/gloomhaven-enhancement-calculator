@@ -1,4 +1,4 @@
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
+// import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../data/character_data.dart';
@@ -9,16 +9,19 @@ import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
   CharactersModel(
-    this.context, {
-    this.pageController,
+      // this.context,
+      {
+    // this.pageController,
     this.showRetired,
   });
 
-  BuildContext context;
   List<Character> _characters = [];
   Character currentCharacter;
   DatabaseHelper databaseHelper = DatabaseHelper.instance;
-  PageController pageController = PageController();
+  PageController pageController = PageController(
+    initialPage: SharedPrefs().initialPage,
+    keepPage: false,
+  );
   AnimationController hideRetireCharacterAnimationController;
   bool isScrolledToTop = true;
   ScrollController charScreenScrollController = ScrollController();
@@ -64,6 +67,7 @@ class CharactersModel with ChangeNotifier {
 
   Future<List<Character>> loadCharacters() async {
     characters = await databaseHelper.queryAllCharacters();
+    print('INITIAL PAGE IS:: ${SharedPrefs().initialPage}');
     setCurrentCharacter(
       index: SharedPrefs().initialPage,
     );
@@ -82,8 +86,6 @@ class CharactersModel with ChangeNotifier {
   void onPageChanged(
     int index,
   ) {
-    // charScreenScrollController.dispose();
-    // charScreenScrollController = ScrollController();
     SharedPrefs().initialPage = index;
     isScrolledToTop = true;
     setCurrentCharacter(
@@ -103,7 +105,9 @@ class CharactersModel with ChangeNotifier {
       name: name,
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
-      xp: initialLevel > 1 ? CharacterData.levelXp[initialLevel - 2] : 0,
+      xp: CharacterData.levelXp.entries
+          .lastWhere((entry) => entry.key == initialLevel)
+          .value,
       gold: 15 * (initialLevel + 1),
       // TODO: uncomment this when including Resources
       // resourceHide: 0,
@@ -153,7 +157,6 @@ class CharactersModel with ChangeNotifier {
       SharedPrefs().initialPage = characters.indexOf(characters.last);
     } else {
       currentCharacter = characters[index];
-
       SharedPrefs().initialPage = index;
     }
     _updateTheme();
@@ -168,7 +171,7 @@ class CharactersModel with ChangeNotifier {
           ? '0xff111111'
           : currentCharacter.playerClass.classColor;
     }
-    EasyDynamicTheme.of(context).changeTheme(dynamic: true);
+    // EasyDynamicTheme.of(context).changeTheme(dynamic: true);
   }
 
   void animateToPage(

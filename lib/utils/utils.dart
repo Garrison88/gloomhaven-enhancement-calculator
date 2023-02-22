@@ -47,12 +47,7 @@ class Utils {
           ),
         );
       } else {
-        switch (element
-            .replaceAll(RegExp(r'"'), '')
-            .replaceAll(RegExp(r','), '')
-            .replaceAll(RegExp(r'\('), '')
-            .replaceAll(RegExp(r'\)'), '')
-            .replaceAll(RegExp(r':'), '')) {
+        switch (element.replaceAll(RegExp(r'[",:()]'), '')) {
           case '-2':
             assetPath = 'attack_modifiers/minus_2.png';
             break;
@@ -195,6 +190,18 @@ class Utils {
             break;
           case 'ENFEEBLE':
             assetPath = 'enfeeble.svg';
+            break;
+          case 'INFECT':
+            assetPath = 'infect.svg';
+            break;
+          case 'DODGE':
+            assetPath = 'dodge.svg';
+            break;
+          case 'IMMUNE':
+            assetPath = 'immune.svg';
+            break;
+          case 'IMPAIR':
+            assetPath = 'impair.svg';
             break;
           case 'HEX':
             assetPath = 'luminary_hexes.svg';

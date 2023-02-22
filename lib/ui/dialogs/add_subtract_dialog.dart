@@ -64,7 +64,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                     autofocus: true,
                     decoration: InputDecoration(hintText: widget.hintText),
                     controller: _addSubtractTextEditingController,
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium.copyWith(
                           fontSize: titleFontSize,
                         ),
                   ),

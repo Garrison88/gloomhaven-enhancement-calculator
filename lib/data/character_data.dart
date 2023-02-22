@@ -452,7 +452,17 @@ abstract class CharacterData {
         (playerClass) => playerClass.classCode == classCode,
       );
 
-  static final List<int> levelXp = [45, 95, 150, 210, 275, 345, 420, 500];
+  static final Map<int, int> levelXp = {
+    1: 0,
+    2: 45,
+    3: 95,
+    4: 150,
+    5: 210,
+    6: 275,
+    7: 345,
+    8: 420,
+    9: 500
+  };
 
   static final List<Perk> perks = [
     // BRUTE

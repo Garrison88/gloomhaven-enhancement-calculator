@@ -348,6 +348,9 @@ class InfoDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Got it!',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
@@ -40,22 +39,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
     context.read<CharactersModel>().enhancementCalcScrollController.dispose();
     super.dispose();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   ScrollController scrollController =
-  //       context.read<CharactersModel>().charScreenScrollController;
-  //   if (scrollController.hasClients &&
-  //       scrollController.positions.length == 1 &&
-  //       scrollController.offset <= scrollController.position.minScrollExtent) {
-  //     setState(() {
-  //       isScrolledToTop = true;
-  //     });
-  //   }
-  //   super.didChangeDependencies();
-  // }
-
-  // bool isScrolledToTop = true;
 
   _charScreenScrollListener() {
     ScrollController scrollController =
@@ -112,9 +95,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
     return AppBar(
-      // surfaceTintColor: Theme.of(context).primaryColor,
+      // surfaceTintColor: Colors.orange,
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
-      // shadowColor: Colors.transparent,
       centerTitle: true,
       title: context.watch<AppModel>().page == 0 &&
               charactersModel.characters.length > 1
@@ -171,6 +153,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                 final String message =
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
                 int index = await charactersModel.retireCurrentCharacter();
+                context.read<AppModel>().updateTheme();
                 ScaffoldMessenger.of(context)
                   ..clearSnackBars()
                   ..showSnackBar(
@@ -215,22 +198,43 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: Text(
+                                style: Theme.of(context)
+                                    .textButtonTheme
+                                    .style
+                                    .copyWith(
+                                      foregroundColor: MaterialStateProperty
+                                          .resolveWith<Color>(
+                                        (Set<MaterialState> states) =>
+                                            SharedPrefs().darkTheme
+                                                ? Colors.grey[300]
+                                                : Colors.black87,
+                                      ),
+                                    ),
+                                child: const Text(
                                   'Cancel',
-                                  style: TextStyle(
-                                    color: SharedPrefs().darkTheme
-                                        ? Colors.grey[300]
-                                        : Colors.black87,
-                                  ),
                                 ),
                                 onPressed: () => Navigator.pop(context, false),
                               ),
-                              TextButton(
+                              ElevatedButton.icon(
+                                style: Theme.of(context)
+                                    .textButtonTheme
+                                    .style
+                                    .copyWith(
+                                      backgroundColor: MaterialStateProperty
+                                          .resolveWith<Color>(
+                                        (Set<MaterialState> states) =>
+                                            Colors.red.withOpacity(0.75),
+                                      ),
+                                    ),
                                 onPressed: () => Navigator.pop(context, true),
-                                child: Text(
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.white,
+                                ),
+                                label: const Text(
                                   'Delete',
                                   style: TextStyle(
-                                    color: Colors.red[400],
+                                    color: Colors.white,
                                   ),
                                 ),
                               )
@@ -243,6 +247,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             final String characterName =
                                 charactersModel.currentCharacter.name;
                             await charactersModel.deleteCurrentCharacter();
+                            context.read<AppModel>().updateTheme();
                             ScaffoldMessenger.of(context)
                               ..clearSnackBars()
                               ..showSnackBar(
@@ -263,7 +268,11 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             charactersModel: charactersModel,
                           );
                         },
-                      );
+                      ).then((value) {
+                        if (value) {
+                          appModel.updateTheme();
+                        }
+                      });
                     },
             ),
           ),
@@ -285,6 +294,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                 MaterialPageRoute(
                   builder: (_) => SettingsScreen(
                     // must watch
+                    appModel: context.watch<AppModel>(),
                     charactersModel: context.watch<CharactersModel>(),
                     enhancementCalculatorModel: enhancementCalculatorModel,
                   ),

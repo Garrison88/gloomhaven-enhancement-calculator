@@ -1,6 +1,5 @@
 import 'dart:convert' as convert;
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 

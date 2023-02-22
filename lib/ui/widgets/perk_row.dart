@@ -42,7 +42,7 @@ class _PerkRowState extends State<PerkRow> {
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: allPerksSelected(characterModel)
-                          ? Theme.of(context).colorScheme.secondary
+                          ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).dividerColor,
                     ),
                     borderRadius: BorderRadius.circular(4),
@@ -116,8 +116,9 @@ class _PerkRowState extends State<PerkRow> {
             child: Expanded(
               child: RichText(
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      // height: 1.4,
+                  style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                        // height: 1.4,
+                        letterSpacing: 0.7,
                       ),
                   children: Utils.generateCheckRowDetails(
                     widget.perks.first.perkDetails,

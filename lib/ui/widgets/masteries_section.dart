@@ -63,7 +63,7 @@ class MasteriesSectionState extends State<MasteriesSection> {
                     Text(
                       'Masteries',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(
                       height: smallPadding + 5,

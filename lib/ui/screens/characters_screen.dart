@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import '../../data/constants.dart';
 import '../../shared_prefs.dart';
 import 'character_screen.dart';
@@ -7,17 +9,22 @@ import '../../viewmodels/characters_model.dart';
 import '../../viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
-class CharactersScreen extends StatelessWidget {
+class CharactersScreen extends StatefulWidget {
   const CharactersScreen({
-    // this.future,
     Key key,
   }) : super(key: key);
+
+  @override
+  State<CharactersScreen> createState() => _CharactersScreenState();
+}
+
+class _CharactersScreenState extends State<CharactersScreen>
+    with AutomaticKeepAliveClientMixin {
+  final GlobalKey _pageStorageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.read<CharactersModel>()
-      ..pageController = PageController(
-        initialPage: SharedPrefs().initialPage,
-      );
+    super.build(context);
+    CharactersModel charactersModel = context.read<CharactersModel>();
     // must watch
     if (context.watch<CharactersModel>().characters.isEmpty) {
       return Padding(
@@ -44,8 +51,16 @@ class CharactersScreen extends StatelessWidget {
                     child: Divider(),
                   ),
                   TextButton(
-                    onPressed: () => charactersModel.toggleShowRetired(),
-                    child: const Text('Show Retired Characters'),
+                    onPressed: () {
+                      charactersModel.toggleShowRetired();
+                      context.read<AppModel>().updateTheme();
+                    },
+                    child: Text(
+                      'Show Retired Characters',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ],
               ],
@@ -60,57 +75,69 @@ class CharactersScreen extends StatelessWidget {
       } catch (e) {
         charactersModel.currentCharacter = charactersModel.characters[0];
       }
-      return FutureBuilder<bool>(
-          future: null,
-          builder: (context, snapshot) {
-            return PageView.builder(
-              // key: scaffoldKey,
-              controller: charactersModel.pageController,
-              onPageChanged: (index) {
-                charactersModel.onPageChanged(
-                  index,
-                );
-              },
-              itemCount: charactersModel.characters.length,
-              itemBuilder: (context, int index) {
-                CharacterModel _characterModel;
-                try {
-                  _characterModel = CharacterModel(
-                    character: charactersModel.characters[index],
-                  )..isEditable = charactersModel.isEditMode;
-                } on RangeError {
-                  _characterModel = CharacterModel(
-                    character: charactersModel.characters[0],
-                  )..isEditable = charactersModel.isEditMode;
-                }
-                return Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 80),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: SvgPicture.asset(
-                            'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
-                            color: _characterModel.character.isRetired
-                                ? Colors.black.withOpacity(0.1)
-                                : Color(
-                                    int.parse(_characterModel
-                                        .character.playerClass.classColor),
-                                  ).withOpacity(0.1),
-                          ),
-                        ),
-                      ),
+      return PageView.builder(
+        key: _pageStorageKey,
+        controller: charactersModel.pageController,
+        onPageChanged: (index) {
+          charactersModel.onPageChanged(
+            index,
+          );
+          Theme.of(context).colorScheme.copyWith(
+                primary: Color(
+                  int.parse(
+                    SharedPrefs().themeColor,
+                  ),
+                ),
+              );
+
+          context.read<AppModel>().updateTheme();
+        },
+        itemCount: charactersModel.characters.length,
+        itemBuilder: (context, int index) {
+          CharacterModel _characterModel;
+          try {
+            _characterModel = CharacterModel(
+              db: DatabaseHelper.instance,
+              character: charactersModel.characters[index],
+            )..isEditable = charactersModel.isEditMode;
+          } on RangeError {
+            _characterModel = CharacterModel(
+              db: DatabaseHelper.instance,
+              character: charactersModel.characters[0],
+            )..isEditable = charactersModel.isEditMode;
+          }
+          return Stack(
+            children: <Widget>[
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SvgPicture.asset(
+                      'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
+                      color: _characterModel.character.isRetired
+                          ? Colors.black.withOpacity(0.1)
+                          : Color(
+                              int.parse(
+                                _characterModel
+                                    .character.playerClass.classColor,
+                              ),
+                            ).withOpacity(0.1),
                     ),
-                    ChangeNotifierProvider.value(
-                      value: _characterModel,
-                      child: const CharacterScreen(),
-                    ),
-                  ],
-                );
-              },
-            );
-          });
+                  ),
+                ),
+              ),
+              ChangeNotifierProvider.value(
+                value: _characterModel,
+                child: const CharacterScreen(),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

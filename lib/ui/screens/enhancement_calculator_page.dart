@@ -52,7 +52,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).primaryColor,
+                            Theme.of(context).colorScheme.primary,
                           ),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
@@ -63,7 +63,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         icon: Icon(
                           Icons.info_outlined,
                           color: ThemeData.estimateBrightnessForColor(
-                                      Theme.of(context).primaryColor) ==
+                                      Theme.of(context).colorScheme.primary) ==
                                   Brightness.dark
                               ? Colors.white
                               : Colors.black,
@@ -72,7 +72,9 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           'General Guidelines',
                           style: TextStyle(
                             color: ThemeData.estimateBrightnessForColor(
-                                        Theme.of(context).primaryColor) ==
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .primary) ==
                                     Brightness.dark
                                 ? Colors.white
                                 : Colors.black,
@@ -171,9 +173,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             IconButton(
-                                disabledColor: Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(0.5),
                                 icon: const Icon(
                                   Icons.info_outline,
                                 ),
@@ -376,14 +375,14 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         'Enhancement Cost:',
                         maxLines: 1,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline1,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ),
                     Text(
                       '${enhancementCalculatorModel.enhancementCost} g',
                       style: Theme.of(context)
                           .textTheme
-                          .headline1
+                          .displayLarge
                           .copyWith(fontSize: 80),
                     )
                   ],

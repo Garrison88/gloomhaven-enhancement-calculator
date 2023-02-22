@@ -1,20 +1,20 @@
 import 'dart:io';
 
-import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../viewmodels/characters_model.dart';
 import '../../viewmodels/enhancement_calculator_model.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/constants.dart';
@@ -22,13 +22,14 @@ import '../../data/database_helpers.dart';
 import '../../shared_prefs.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final void Function() updateTheme;
+  final AppModel appModel;
   final CharactersModel charactersModel;
+
   final EnhancementCalculatorModel enhancementCalculatorModel;
 
   const SettingsScreen({
     Key key,
-    this.updateTheme,
+    this.appModel,
     this.charactersModel,
     this.enhancementCalculatorModel,
   }) : super(key: key);
@@ -47,22 +48,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     _packageInfoFuture = PackageInfo.fromPlatform();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   SystemChrome.setSystemUIOverlayStyle(
-  //     SystemUiOverlayStyle(
-  //       statusBarIconBrightness: Theme.of(context).brightness == Brightness.dark
-  //           ? Brightness.light
-  //           : Brightness.dark,
-  //       systemNavigationBarIconBrightness:
-  //           Theme.of(context).brightness == Brightness.dark
-  //               ? Brightness.dark
-  //               : Brightness.light,
-  //     ),
-  //   );
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,24 +80,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
             activeTrackColor: Colors.white30,
             inactiveThumbImage: const Svg('images/elem_light.svg'),
-            value: Theme.of(context).brightness == Brightness.dark,
+            value: widget.appModel.themeMode == ThemeMode.dark,
             onChanged: (val) {
-              // setState(() {
               SharedPrefs().darkTheme = val;
-              EasyDynamicTheme.of(context).changeTheme(dynamic: true);
-              // SystemChrome.setSystemUIOverlayStyle(
-              //     val ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light
-              // SystemUiOverlayStyle(
-              //   systemStatusBarContrastEnforced: false,
-              //   statusBarIconBrightness:
-              //       val ? Brightness.light : Brightness.dark,
-              //   systemNavigationBarIconBrightness:
-              //       val ? Brightness.dark : Brightness.light,
-              //   systemNavigationBarColor:
-              //       Theme.of(context).scaffoldBackgroundColor,
-              // ),
-              // );
-              // });
+              widget.appModel.updateTheme(
+                themeMode: val ? ThemeMode.dark : ThemeMode.light,
+              );
+              SystemChrome.setSystemUIOverlayStyle(
+                SystemUiOverlayStyle(
+                  systemNavigationBarIconBrightness:
+                      val ? Brightness.light : Brightness.dark,
+                  systemNavigationBarColor: val
+                      ? Color(
+                          int.parse(
+                            '0xff424242',
+                          ),
+                        )
+                      : Colors.white,
+                ),
+              );
             },
           ),
           const SettingsDivider(),
@@ -141,7 +127,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     builder: (_) {
                       bool envelopeXSolved = false;
                       return StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
+                        builder: (
+                          BuildContext context,
+                          StateSetter setState,
+                        ) {
                           return AlertDialog(
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -152,7 +141,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   onChanged: (String val) {
                                     setState(() {
                                       envelopeXSolved =
-                                          val.toLowerCase() == 'bladeswarm';
+                                          val.toLowerCase().trim() ==
+                                              'bladeswarm';
                                     });
                                   },
                                 ),
@@ -173,7 +163,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 },
                               ),
                               TextButton(
-                                child: const Text('Solve'),
+                                child: Text(
+                                  'Solve',
+                                  style: TextStyle(
+                                    color: envelopeXSolved
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .surfaceTint,
+                                  ),
+                                ),
                                 onPressed: envelopeXSolved
                                     ? () {
                                         Navigator.of(context).pop(true);
@@ -267,8 +266,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {
-              int index = widget.charactersModel.characters
-                  .indexOf(widget.charactersModel.currentCharacter);
+              // int index = widget.charactersModel.characters.indexOf(
+              //   widget.charactersModel.currentCharacter,
+              // );
+              context.read<AppModel>().updateTheme();
               setState(() {
                 widget.charactersModel.toggleShowRetired();
               });
@@ -312,8 +313,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     actions: <Widget>[
                       if (Platform.isAndroid)
                         TextButton.icon(
-                          icon: const Icon(Icons.save),
-                          label: const Text('Save'),
+                          icon: Icon(
+                            Icons.save,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          label: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey[300]
+                                  : Colors.black87,
+                            ),
+                          ),
                           onPressed: () async {
                             if (!await _getStoragePermission()) {
                               return;
@@ -332,11 +344,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Navigator.of(context).pop(titleController.text);
                         },
                         icon: Platform.isAndroid
-                            ? const Icon(
+                            ? Icon(
                                 Icons.share,
+                                color: Theme.of(context).colorScheme.primary,
                               )
                             : Container(),
-                        label: Text(Platform.isAndroid ? 'Share' : 'Continue'),
+                        label: Text(
+                          Platform.isAndroid ? 'Share' : 'Continue',
+                          style: TextStyle(
+                            color: Platform.isAndroid
+                                ? Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[300]
+                                    : Colors.black87
+                                : Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -359,8 +382,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           await DatabaseHelper.instance.generateBackup();
                       File backupFile = File('$downloadPath/$backupName.txt');
                       await backupFile.writeAsString(backupValue);
-                      await Share.shareFiles(
-                        ['$downloadPath/$backupName.txt'],
+                      await Share.shareXFiles(
+                        [
+                          XFile(
+                            '$downloadPath/$backupName.txt',
+                          ),
+                        ],
                       );
                     }
                   }
@@ -385,9 +412,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Text(
                           'Cancel',
                           style: TextStyle(
-                            color: SharedPrefs().darkTheme
-                                ? Colors.grey[300]
-                                : Colors.black87,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[300]
+                                    : Colors.black87,
                           ),
                         ),
                         onPressed: () {
@@ -395,7 +423,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       TextButton(
-                        child: const Text('Proceed'),
+                        child: Text(
+                          'Proceed',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                         onPressed: () async {
                           if (!await _getStoragePermission()) {
                             return;
@@ -535,11 +568,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 Future<bool> _getStoragePermission() async {
-  if (await Permission.storage.request().isGranted) {
+  if (Platform.isAndroid) {
     return true;
-  } else if (await Permission.storage.request().isPermanentlyDenied) {
+  }
+  PermissionStatus permissionStatus = await Permission.storage.request();
+  if (permissionStatus.isGranted) {
+    return true;
+  } else if (permissionStatus.isPermanentlyDenied) {
     await openAppSettings();
-  } else if (await Permission.storage.request().isDenied) {
+    // return true;
+  } else if (permissionStatus.isDenied) {
     return false;
   }
   return false;
