@@ -18,19 +18,6 @@ class CharactersScreen extends StatefulWidget {
 
 class _CharactersScreenState extends State<CharactersScreen>
     with AutomaticKeepAliveClientMixin {
-  Future futures;
-// @override
-  // void initState() {
-  //   futures = _futures = Future.wait(
-  //     [
-  //       context.read<CharactersModel>().loadCharacterPerks(uuid),
-  //       context.read<CharactersModel>().loadPerks(uuid),
-  //     ],
-  //   );
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
-
   final GlobalKey _pageStorageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -126,14 +113,9 @@ class _CharactersScreenState extends State<CharactersScreen>
                   ),
                 ),
               ),
-              // FutureBuilder<void>(
-              //   future: _futures,
-              //   builder: (context, snapshot) {
               CharacterScreen(
                 character: charactersModel.characters[index],
-              )
-              // }
-              // ),
+              ),
             ],
           );
         },

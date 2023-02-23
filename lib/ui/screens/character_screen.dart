@@ -62,25 +62,26 @@ class _CharacterScreenState extends State<CharacterScreen> {
               ),
             ),
             // RESOURCES
-            // const ResourcesSection(),
+            ResourcesSection(
+              character: widget.character,
+            ),
             // NOTES
-            // context.read<CharactersModel>().currentCharacter.notes.isEmpty &&
-            //         !context.read<CharactersModel>().isEditMode
-            //     ? Container()
-            // :
-            const Padding(
-              padding: EdgeInsets.all(smallPadding),
-              child: NotesSection(),
+            Padding(
+              padding: const EdgeInsets.all(smallPadding),
+              child: NotesSection(
+                character: widget.character,
+              ),
             ),
             // BATTLE GOAL CHECKMARKS
-            const BattleGoalCheckmarksSection(),
-
+            BattleGoalCheckmarksSection(
+              character: widget.character,
+            ),
             // PERKS
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: smallPadding),
               child: PerksSection(
                 character: widget.character,
-                uuid: context.watch<CharactersModel>().currentCharacter.uuid,
+                // uuid: context.watch<CharactersModel>().currentCharacter.uuid,
                 // charactersModel: context.watch<CharactersModel>(),
               ),
             ),
@@ -90,6 +91,7 @@ class _CharacterScreenState extends State<CharacterScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: smallPadding - 3),
               child: MasteriesSection(
+                character: widget.character,
                 charactersModel: context.watch<CharactersModel>(),
               ),
             ),
@@ -468,7 +470,7 @@ class StatsSection extends StatelessWidget {
                 SizedBox(
                   width: 5,
                   child: Text(
-                    charactersModel.checkMarkProgress.toString(),
+                    character.checkMarkProgress().toString(),
                   ),
                 ),
                 Text(
@@ -490,9 +492,10 @@ class StatsSection extends StatelessWidget {
 
 class ResourcesSection extends StatefulWidget {
   const ResourcesSection({
+    this.character,
     Key key,
   }) : super(key: key);
-
+  final Character character;
   @override
   State<ResourcesSection> createState() => _ResourcesSectionState();
 }
@@ -500,7 +503,7 @@ class ResourcesSection extends StatefulWidget {
 class _ResourcesSectionState extends State<ResourcesSection> {
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.watch<CharactersModel>();
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -538,146 +541,144 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                     // ...CharacterData.resources.map(
                     //   ((resource) => ResourceCard(
                     //         resource: resource,
-                    //         count: charactersModel.currentCharacter.resourceHide,
-                    //         increaseCount: () => charactersModel.updateCharacter(
-                    //           charactersModel.character
+                    //         count: widget.character.resourceHide,
+                    //         increaseCount: () =>
+                    //             charactersModel.updateCharacter(
+                    //           widget.character
                     //             ..resourceHide =
-                    //                 charactersModel.currentCharacter.resourceHide + 1,
+                    //                 widget.character.resourceHide + 1,
                     //         ),
-                    //         decreaseCount: () => charactersModel.updateCharacter(
-                    //           charactersModel.character
+                    //         decreaseCount: () =>
+                    //             charactersModel.updateCharacter(
+                    //           widget.character
                     //             ..resourceHide =
-                    //                 charactersModel.currentCharacter.resourceHide - 1,
+                    //                 widget.character.resourceHide - 1,
                     //         ),
                     //       )),
-                    // )
+                    // ),
                     // TODO: uncomment this when including Resources
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[0],
-                    //   count: charactersModel.currentCharacter.resourceHide,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceHide =
-                    //           charactersModel.currentCharacter.resourceHide + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceHide =
-                    //           charactersModel.currentCharacter.resourceHide - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[1],
-                    //   count: charactersModel.currentCharacter.resourceMetal,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceMetal =
-                    //           charactersModel.currentCharacter.resourceMetal + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceMetal =
-                    //           charactersModel.currentCharacter.resourceMetal - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[2],
-                    //   count: charactersModel.currentCharacter.resourceLumber,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceLumber =
-                    //           charactersModel.currentCharacter.resourceLumber + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceLumber =
-                    //           charactersModel.currentCharacter.resourceLumber - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[3],
-                    //   count: charactersModel.currentCharacter.resourceArrowvine,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceArrowvine =
-                    //           charactersModel.currentCharacter.resourceArrowvine + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceArrowvine =
-                    //           charactersModel.currentCharacter.resourceArrowvine - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[4],
-                    //   count: charactersModel.currentCharacter.resourceAxenut,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceAxenut =
-                    //           charactersModel.currentCharacter.resourceAxenut + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceAxenut =
-                    //           charactersModel.currentCharacter.resourceAxenut - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[5],
-                    //   count: charactersModel.currentCharacter.resourceRockroot,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceRockroot =
-                    //           charactersModel.currentCharacter.resourceRockroot + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceRockroot =
-                    //           charactersModel.currentCharacter.resourceRockroot - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[6],
-                    //   count: charactersModel.currentCharacter.resourceFlamefruit,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceFlamefruit =
-                    //           charactersModel.currentCharacter.resourceFlamefruit + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceFlamefruit =
-                    //           charactersModel.currentCharacter.resourceFlamefruit - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[7],
-                    //   count: charactersModel.currentCharacter.resourceCorpsecap,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceCorpsecap =
-                    //           charactersModel.currentCharacter.resourceCorpsecap + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceCorpsecap =
-                    //           charactersModel.currentCharacter.resourceCorpsecap - 1,
-                    //   ),
-                    // ),
-                    // ResourceCard(
-                    //   resource: CharacterData.resources[8],
-                    //   count: charactersModel.currentCharacter.resourceSnowthistle,
-                    //   increaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceSnowthistle =
-                    //           charactersModel.currentCharacter.resourceSnowthistle + 1,
-                    //   ),
-                    //   decreaseCount: () => charactersModel.updateCharacter(
-                    //     charactersModel.character
-                    //       ..resourceSnowthistle =
-                    //           charactersModel.currentCharacter.resourceSnowthistle - 1,
-                    //   ),
-                    // ),
+                    ResourceCard(
+                      resource: CharacterData.resources[0],
+                      count: widget.character.resourceHide,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceHide = widget.character.resourceHide + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceHide = widget.character.resourceHide - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[1],
+                      count: widget.character.resourceMetal,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceMetal = widget.character.resourceMetal + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceMetal = widget.character.resourceMetal - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[2],
+                      count: widget.character.resourceLumber,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceLumber =
+                              widget.character.resourceLumber + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceLumber =
+                              widget.character.resourceLumber - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[3],
+                      count: widget.character.resourceArrowvine,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceArrowvine =
+                              widget.character.resourceArrowvine + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceArrowvine =
+                              widget.character.resourceArrowvine - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[4],
+                      count: widget.character.resourceAxenut,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceAxenut =
+                              widget.character.resourceAxenut + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceAxenut =
+                              widget.character.resourceAxenut - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[5],
+                      count: widget.character.resourceRockroot,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceRockroot =
+                              widget.character.resourceRockroot + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceRockroot =
+                              widget.character.resourceRockroot - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[6],
+                      count: widget.character.resourceFlamefruit,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceFlamefruit =
+                              widget.character.resourceFlamefruit + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceFlamefruit =
+                              widget.character.resourceFlamefruit - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[7],
+                      count: widget.character.resourceCorpsecap,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceCorpsecap =
+                              widget.character.resourceCorpsecap + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceCorpsecap =
+                              widget.character.resourceCorpsecap - 1,
+                      ),
+                    ),
+                    ResourceCard(
+                      resource: CharacterData.resources[8],
+                      count: widget.character.resourceSnowthistle,
+                      increaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceSnowthistle =
+                              widget.character.resourceSnowthistle + 1,
+                      ),
+                      decreaseCount: () => charactersModel.updateCharacter(
+                        widget.character
+                          ..resourceSnowthistle =
+                              widget.character.resourceSnowthistle - 1,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -691,8 +692,10 @@ class _ResourcesSectionState extends State<ResourcesSection> {
 
 class NotesSection extends StatelessWidget {
   const NotesSection({
+    @required this.character,
     Key key,
   }) : super(key: key);
+  final Character character;
   @override
   Widget build(BuildContext context) {
     CharactersModel charactersModel = context.read<CharactersModel>();
@@ -722,7 +725,7 @@ class NotesSection extends StatelessWidget {
                 controller: charactersModel.notesController,
               )
             : Text(
-                charactersModel.currentCharacter.notes,
+                character.notes,
               ),
       ],
     );
@@ -731,8 +734,10 @@ class NotesSection extends StatelessWidget {
 
 class BattleGoalCheckmarksSection extends StatelessWidget {
   const BattleGoalCheckmarksSection({
+    @required this.character,
     Key key,
   }) : super(key: key);
+  final Character character;
 
   @override
   Widget build(BuildContext context) {
@@ -751,7 +756,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Visibility(
-                      visible: charactersModel.currentCharacter.checkMarks > 0,
+                      visible: character.checkMarks > 0,
                       maintainSize: true,
                       maintainAnimation: true,
                       maintainState: true,
@@ -764,11 +769,11 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${charactersModel.currentCharacter.checkMarks} / 18',
+                      '${character.checkMarks} / 18',
                       style: const TextStyle(fontSize: titleFontSize),
                     ),
                     Visibility(
-                      visible: charactersModel.currentCharacter.checkMarks < 18,
+                      visible: character.checkMarks < 18,
                       maintainSize: true,
                       maintainAnimation: true,
                       maintainState: true,

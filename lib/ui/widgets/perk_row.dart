@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
@@ -9,10 +10,12 @@ import '../../viewmodels/characters_model.dart';
 // import '../../viewmodels/character_model.dart';
 
 class PerkRow extends StatefulWidget {
+  final Character character;
   final List<Perk> perks;
 
   const PerkRow({
     Key key,
+    @required this.character,
     @required this.perks,
   }) : super(key: key);
 
@@ -41,7 +44,7 @@ class _PerkRowState extends State<PerkRow> {
                   margin: const EdgeInsets.only(right: 6, left: 1),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: allPerksSelected(charactersModel)
+                      color: allPerksSelected(widget.character)
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).dividerColor,
                     ),
@@ -53,7 +56,7 @@ class _PerkRowState extends State<PerkRow> {
                       (index) {
                         return Checkbox(
                           visualDensity: VisualDensity.compact,
-                          value: charactersModel.characterPerks
+                          value: widget.character.characterPerks
                               .firstWhere(
                                 (element) =>
                                     element.associatedPerkId ==
@@ -61,14 +64,22 @@ class _PerkRowState extends State<PerkRow> {
                               )
                               .characterPerkIsSelected,
                           onChanged: charactersModel.isEditMode
-                              ? (value) => charactersModel.togglePerk(
-                                    charactersModel.characterPerks.firstWhere(
+                              ? (value) {
+                                  charactersModel.togglePerk(
+                                    characterPerks:
+                                        widget.character.characterPerks,
+                                    perk: widget.character.characterPerks
+                                        .firstWhere(
                                       (element) =>
                                           element.associatedPerkId ==
                                           widget.perks[index].perkId,
                                     ),
-                                    value,
-                                  )
+                                    value: value,
+                                  );
+                                  // value
+                                  //     ? widget.character.numOfSelectedPerks++
+                                  //     : widget.character.numOfSelectedPerks--;
+                                }
                               : null,
                         );
                       },
@@ -80,19 +91,25 @@ class _PerkRowState extends State<PerkRow> {
                     widget.perks.length,
                     (index) => Checkbox(
                       visualDensity: VisualDensity.comfortable,
-                      value: charactersModel.characterPerks
+                      value: widget.character.characterPerks
                           .firstWhere((element) =>
                               element.associatedPerkId ==
                               widget.perks[index].perkId)
                           .characterPerkIsSelected,
                       onChanged: charactersModel.isEditMode
-                          ? (value) => charactersModel.togglePerk(
-                                charactersModel.characterPerks.firstWhere(
-                                    (element) =>
+                          ? (value) {
+                              charactersModel.togglePerk(
+                                characterPerks: widget.character.characterPerks,
+                                perk: widget.character.characterPerks
+                                    .firstWhere((element) =>
                                         element.associatedPerkId ==
                                         widget.perks[index].perkId),
-                                value,
-                              )
+                                value: value,
+                              );
+                              // value
+                              //     ? widget.character.numOfSelectedPerks++
+                              //     : widget.character.numOfSelectedPerks--;
+                            }
                           : null,
                     ),
                   ),
@@ -134,9 +151,9 @@ class _PerkRowState extends State<PerkRow> {
   }
 
   bool allPerksSelected(
-    CharactersModel charactersModel,
+    Character character,
   ) {
-    return charactersModel.characterPerks
+    return character.characterPerks
         .where((element) => perkIds.contains(element.associatedPerkId))
         .every((element) => element.characterPerkIsSelected);
   }

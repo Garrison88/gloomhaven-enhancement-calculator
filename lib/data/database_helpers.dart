@@ -77,19 +77,19 @@ class DatabaseHelper {
           $columnCharacterGold $integerType,
           $columnCharacterNotes $textType,
           $columnCharacterCheckMarks $integerType,
-          $columnIsRetired $boolType
+          $columnIsRetired $boolType,
+          $columnResourceHide $integerType,
+          $columnResourceMetal $integerType,
+          $columnResourceLumber $integerType,
+          $columnResourceArrowvine $integerType,
+          $columnResourceAxenut $integerType,
+          $columnResourceRockroot $integerType,
+          $columnResourceFlamefruit $integerType,
+          $columnResourceCorpsecap $integerType,
+          $columnResourceSnowthistle $integerType
         )''');
-      // TODO: move this up into characters table when ready for Resources
-      //         ,
-      // $columnResourceHide $integerType,
-      // $columnResourceMetal $integerType,
-      // $columnResourceLumber $integerType,
-      // $columnResourceArrowvine $integerType,
-      // $columnResourceAxenut $integerType,
-      // $columnResourceRockroot $integerType,
-      // $columnResourceFlamefruit $integerType,
-      // $columnResourceCorpsecap $integerType,
-      // $columnResourceSnowthistle $integerType
+      // TODO: move this up into characters table when ready for Resources - DONE
+
       await txn.execute('''
         $createTable $tablePerks (
           $columnPerkId $idType,
@@ -111,7 +111,7 @@ class DatabaseHelper {
           $columnAssociatedPerkId $integerType,
           $columnCharacterPerkIsSelected $boolType
         )''');
-
+      // TODO: don't use await / then structure
       await txn.execute('''
         $createTable $tableMasteries (
           $columnMasteryId $idType,
@@ -152,9 +152,12 @@ class DatabaseHelper {
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
         if (oldVersion <= 6) {
-          // Include class Masteries
+          // Include Frosthaven classes
           await DatabaseMigrations.regeneratePerksTable(txn);
+          // Include class Masteries
           await DatabaseMigrations.includeClassMasteries(txn);
+          // Include Resources
+          await DatabaseMigrations.includeResources(txn);
         }
       },
     );
@@ -222,7 +225,9 @@ class DatabaseHelper {
       tableCharacters,
       character.toMap(),
     );
-    final perks = await queryPerks(character.playerClass.classCode);
+    final perks = await queryPerks(
+      character.playerClass.classCode,
+    );
     perks.asMap().forEach(
       (key, perk) async {
         await db.insert(
@@ -235,27 +240,21 @@ class DatabaseHelper {
         );
       },
     );
-    bool addMasteries = false;
-    CharacterData.masteries.map((e) {
-      addMasteries = character.playerClass.classCode == e.masteryClassCode;
-    });
-    if (addMasteries) {
-      List<dynamic> masteries =
-          await queryMasteries(character.playerClass.classCode);
-
-      masteries.asMap().forEach(
-        (key, mastery) async {
-          await db.insert(
-            tableCharacterMasteries,
-            {
-              columnAssociatedCharacterUuid: character.uuid,
-              columnAssociatedMasteryId: mastery[columnMasteryId],
-              columnCharacterMasteryAchieved: 0,
-            },
-          );
-        },
-      );
-    }
+    final masteries = await queryMasteries(
+      character.playerClass.classCode,
+    );
+    masteries.asMap().forEach(
+      (key, mastery) async {
+        await db.insert(
+          tableCharacterMasteries,
+          {
+            columnAssociatedCharacterUuid: character.uuid,
+            columnAssociatedMasteryId: mastery[columnMasteryId],
+            columnCharacterMasteryAchieved: 0,
+          },
+        );
+      },
+    );
     return id;
   }
 

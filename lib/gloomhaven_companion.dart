@@ -56,7 +56,6 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => CharactersModel(
-              // context,
               showRetired: SharedPrefs().showRetiredCharacters,
               databaseHelper: DatabaseHelper.instance,
             ),

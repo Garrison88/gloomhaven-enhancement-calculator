@@ -227,62 +227,60 @@ abstract class CharacterData {
       classColor: '0xffd9d9d9',
     ),
     // FROSTHAVEN
-    if (includeFrosthaven) ...[
-      PlayerClass(
-        race: _human,
-        className: 'Banner Spear',
-        classCode: 'bannerspear',
-        classIconUrl: 'banner_spear.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xfffdd072',
-      ),
-      PlayerClass(
-        race: _quatryl,
-        className: 'Blink Blade',
-        classCode: 'blinkblade',
-        classIconUrl: 'blink_blade.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xff00a8cf',
-      ),
-      PlayerClass(
-        race: _valrath,
-        className: 'Deathwalker',
-        classCode: 'deathwalker',
-        classIconUrl: 'deathwalker.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xffacc8ed',
-      ),
-      PlayerClass(
-        race: _aesther,
-        className: 'Boneshaper',
-        classCode: 'boneshaper',
-        classIconUrl: 'boneshaper.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xff6cbe4c',
-      ),
-      PlayerClass(
-        race: _inox,
-        className: 'Drifter',
-        classCode: 'drifter',
-        classIconUrl: 'drifter.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xff92887f',
-      ),
-      PlayerClass(
-        race: _harrower,
-        className: 'Geminate',
-        classCode: 'geminate',
-        classIconUrl: 'geminate.svg',
-        classCategory: ClassCategory.frosthaven,
-        locked: false,
-        classColor: '0xffab1c54',
-      ),
-    ],
+    PlayerClass(
+      race: _human,
+      className: 'Banner Spear',
+      classCode: 'bannerspear',
+      classIconUrl: 'banner_spear.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xfffdd072',
+    ),
+    PlayerClass(
+      race: _quatryl,
+      className: 'Blink Blade',
+      classCode: 'blinkblade',
+      classIconUrl: 'blink_blade.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xff00a8cf',
+    ),
+    PlayerClass(
+      race: _valrath,
+      className: 'Deathwalker',
+      classCode: 'deathwalker',
+      classIconUrl: 'deathwalker.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xffacc8ed',
+    ),
+    PlayerClass(
+      race: _aesther,
+      className: 'Boneshaper',
+      classCode: 'boneshaper',
+      classIconUrl: 'boneshaper.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xff6cbe4c',
+    ),
+    PlayerClass(
+      race: _inox,
+      className: 'Drifter',
+      classCode: 'drifter',
+      classIconUrl: 'drifter.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xff92887f',
+    ),
+    PlayerClass(
+      race: _harrower,
+      className: 'Geminate',
+      classCode: 'geminate',
+      classIconUrl: 'geminate.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xffab1c54',
+    ),
     // CRIMSON SCALES
     PlayerClass(
       race: _quatryl,
@@ -1312,61 +1310,59 @@ abstract class CharacterData {
       masteryDetails:
           'Perform fifteen attacks using One_Hand or Two_Hand items',
     ),
-    if (includeFrosthaven) ...[
-      Mastery(
-        masteryClassCode: 'bannerspear',
-        masteryDetails:
-            'Attack at least three targets with three different area of effect attacks',
-      ),
-      Mastery(
-        masteryClassCode: 'bannerspear',
-        masteryDetails:
-            'Play a Banner summon ability on your first turn, always have it within RANGE 3 of you, and keep it alive for the entire scenario',
-      ),
-      Mastery(
-        masteryClassCode: 'blinkblade',
-        masteryDetails: 'Declare Fast seven rounds in a row',
-      ),
-      Mastery(
-        masteryClassCode: 'blinkblade',
-        masteryDetails: 'Never be targeted by an attack',
-      ),
-      Mastery(
-        masteryClassCode: 'deathwalker',
-        masteryDetails: 'Consume seven SHADOW in one round',
-      ),
-      Mastery(
-        masteryClassCode: 'deathwalker',
-        masteryDetails: 'Create or consume at least one SHADOW every round',
-      ),
-      Mastery(
-        masteryClassCode: 'boneshaper',
-        masteryDetails: 'Kill at least 15 of your summons',
-      ),
-      Mastery(
-        masteryClassCode: 'boneshaper',
-        masteryDetails:
-            'Play a summon action on your first turn, have this summon kill at least 6 enemies, and keep it alive for the entire scenario',
-      ),
-      Mastery(
-        masteryClassCode: 'drifter',
-        masteryDetails:
-            'End a scenario with your character tokens on the last use slots of four persistent abilities',
-      ),
-      Mastery(
-        masteryClassCode: 'drifter',
-        masteryDetails:
-            'Never perform a move or attack ability with a value less than 4, and perform at least one move or attack ability every round',
-      ),
-      Mastery(
-        masteryClassCode: 'geminate',
-        masteryDetails: 'Switch forms every round',
-      ),
-      Mastery(
-        masteryClassCode: 'geminate',
-        masteryDetails: 'Lose at least one card every round',
-      ),
-    ],
+    Mastery(
+      masteryClassCode: 'bannerspear',
+      masteryDetails:
+          'Attack at least three targets with three different area of effect attacks',
+    ),
+    Mastery(
+      masteryClassCode: 'bannerspear',
+      masteryDetails:
+          'Play a Banner summon ability on your first turn, always have it within RANGE 3 of you, and keep it alive for the entire scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'blinkblade',
+      masteryDetails: 'Declare Fast seven rounds in a row',
+    ),
+    Mastery(
+      masteryClassCode: 'blinkblade',
+      masteryDetails: 'Never be targeted by an attack',
+    ),
+    Mastery(
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'Consume seven SHADOW in one round',
+    ),
+    Mastery(
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'Create or consume at least one SHADOW every round',
+    ),
+    Mastery(
+      masteryClassCode: 'boneshaper',
+      masteryDetails: 'Kill at least 15 of your summons',
+    ),
+    Mastery(
+      masteryClassCode: 'boneshaper',
+      masteryDetails:
+          'Play a summon action on your first turn, have this summon kill at least 6 enemies, and keep it alive for the entire scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'drifter',
+      masteryDetails:
+          'End a scenario with your character tokens on the last use slots of four persistent abilities',
+    ),
+    Mastery(
+      masteryClassCode: 'drifter',
+      masteryDetails:
+          'Never perform a move or attack ability with a value less than 4, and perform at least one move or attack ability every round',
+    ),
+    Mastery(
+      masteryClassCode: 'geminate',
+      masteryDetails: 'Switch forms every round',
+    ),
+    Mastery(
+      masteryClassCode: 'geminate',
+      masteryDetails: 'Lose at least one card every round',
+    ),
   ];
 
   static final List<Resource> resources = [

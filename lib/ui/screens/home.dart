@@ -45,9 +45,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         context.read<EnhancementCalculatorModel>();
     final appModel = context.read<AppModel>();
     final charactersModel = context.read<CharactersModel>();
-    // ..pageController = PageController(
-    //   initialPage: SharedPrefs().initialPage,
-    // );
     return Scaffold(
       extendBody: true,
       key: scaffoldMessengerKey,
@@ -60,9 +57,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
-                return CharactersScreen(
-                    // charactersModel: charactersModel,
-                    );
+                return CharactersScreen();
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
               } else {

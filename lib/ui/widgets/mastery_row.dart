@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
@@ -9,10 +10,12 @@ import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
 
 class MasteryRow extends StatefulWidget {
+  final Character character;
   final Mastery mastery;
 
   const MasteryRow({
     Key key,
+    this.character,
     @required this.mastery,
   }) : super(key: key);
 
@@ -30,7 +33,7 @@ class _MasteryRowState extends State<MasteryRow> {
       margin: const EdgeInsets.only(right: 6, left: 1),
       decoration: BoxDecoration(
         border: Border.all(
-          color: charactersModel.characterMasteries
+          color: widget.character.characterMasteries
                   .firstWhere((mastery) =>
                       mastery.associatedMasteryId == widget.mastery.masteryId)
                   .characterMasteryAchieved
@@ -44,36 +47,25 @@ class _MasteryRowState extends State<MasteryRow> {
         children: <Widget>[
           Checkbox(
             visualDensity: VisualDensity.comfortable,
-            value: charactersModel.characterMasteries
+            value: widget.character.characterMasteries
                 .firstWhere((mastery) =>
                     mastery.associatedMasteryId == widget.mastery.masteryId)
                 .characterMasteryAchieved,
             onChanged: charactersModel.isEditMode
                 ? (value) => charactersModel.toggleMastery(
-                      charactersModel.characterMasteries.firstWhere((mastery) =>
-                          mastery.associatedMasteryId ==
-                          widget.mastery.masteryId),
-                      value,
+                      characterMasteries: widget.character.characterMasteries,
+                      mastery: widget.character.characterMasteries.firstWhere(
+                          (mastery) =>
+                              mastery.associatedMasteryId ==
+                              widget.mastery.masteryId),
+                      value: value,
                     )
                 : null,
           ),
-          // widget.perks[0].perkIsGrouped
-          //     ? const SizedBox(
-          //         width: smallPadding,
-          //       )
-          // :
-          // Container(
-          //     height: height,
-          //     child: VerticalDivider(
-          //       color: allPerksSelected(characterModel)
-          //           ? Theme.of(context).colorScheme.secondary
-          //           : null,
-          //     ),
-          //   ),
           Container(
             height: height,
             width: 1,
-            color: charactersModel.characterMasteries
+            color: widget.character.characterMasteries
                     .firstWhere((mastery) =>
                         mastery.associatedMasteryId == widget.mastery.masteryId)
                     .characterMasteryAchieved
@@ -99,34 +91,8 @@ class _MasteryRowState extends State<MasteryRow> {
               ),
             ),
           ),
-          // ),
         ],
       ),
     );
   }
 }
-
-// class SizeProviderWidget extends StatefulWidget {
-//   final Widget child;
-//   final Function(Size) onChildSize;
-
-//   const SizeProviderWidget({Key key, this.onChildSize, this.child})
-//       : super(key: key);
-//   @override
-//   _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
-// }
-
-// class _SizeProviderWidgetState extends State<SizeProviderWidget> {
-//   @override
-//   void initState() {
-//     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-//       widget.onChildSize(context.size);
-//     });
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return widget.child;
-//   }
-// }
