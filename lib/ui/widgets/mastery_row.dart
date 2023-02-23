@@ -4,11 +4,9 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
-import '../../models/perk.dart';
 import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
-import '../../viewmodels/character_model.dart';
 
 class MasteryRow extends StatefulWidget {
   final Mastery mastery;
@@ -27,13 +25,12 @@ class _MasteryRowState extends State<MasteryRow> {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
     CharactersModel charactersModel = context.watch<CharactersModel>();
     return Container(
       margin: const EdgeInsets.only(right: 6, left: 1),
       decoration: BoxDecoration(
         border: Border.all(
-          color: characterModel.characterMasteries
+          color: charactersModel.characterMasteries
                   .firstWhere((mastery) =>
                       mastery.associatedMasteryId == widget.mastery.masteryId)
                   .characterMasteryAchieved
@@ -47,13 +44,13 @@ class _MasteryRowState extends State<MasteryRow> {
         children: <Widget>[
           Checkbox(
             visualDensity: VisualDensity.comfortable,
-            value: characterModel.characterMasteries
+            value: charactersModel.characterMasteries
                 .firstWhere((mastery) =>
                     mastery.associatedMasteryId == widget.mastery.masteryId)
                 .characterMasteryAchieved,
             onChanged: charactersModel.isEditMode
-                ? (value) => characterModel.toggleMastery(
-                      characterModel.characterMasteries.firstWhere((mastery) =>
+                ? (value) => charactersModel.toggleMastery(
+                      charactersModel.characterMasteries.firstWhere((mastery) =>
                           mastery.associatedMasteryId ==
                           widget.mastery.masteryId),
                       value,
@@ -76,7 +73,7 @@ class _MasteryRowState extends State<MasteryRow> {
           Container(
             height: height,
             width: 1,
-            color: characterModel.characterMasteries
+            color: charactersModel.characterMasteries
                     .firstWhere((mastery) =>
                         mastery.associatedMasteryId == widget.mastery.masteryId)
                     .characterMasteryAchieved

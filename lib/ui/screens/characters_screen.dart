@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import '../../data/constants.dart';
 import '../../shared_prefs.dart';
 import 'character_screen.dart';
 import '../../viewmodels/characters_model.dart';
-import '../../viewmodels/character_model.dart';
 import 'package:provider/provider.dart';
 
 class CharactersScreen extends StatefulWidget {
@@ -20,6 +18,19 @@ class CharactersScreen extends StatefulWidget {
 
 class _CharactersScreenState extends State<CharactersScreen>
     with AutomaticKeepAliveClientMixin {
+  Future futures;
+// @override
+  // void initState() {
+  //   futures = _futures = Future.wait(
+  //     [
+  //       context.read<CharactersModel>().loadCharacterPerks(uuid),
+  //       context.read<CharactersModel>().loadPerks(uuid),
+  //     ],
+  //   );
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
+
   final GlobalKey _pageStorageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -94,18 +105,6 @@ class _CharactersScreenState extends State<CharactersScreen>
         },
         itemCount: charactersModel.characters.length,
         itemBuilder: (context, int index) {
-          CharacterModel _characterModel;
-          try {
-            _characterModel = CharacterModel(
-              db: DatabaseHelper.instance,
-              character: charactersModel.characters[index],
-            )..isEditable = charactersModel.isEditMode;
-          } on RangeError {
-            _characterModel = CharacterModel(
-              db: DatabaseHelper.instance,
-              character: charactersModel.characters[0],
-            )..isEditable = charactersModel.isEditMode;
-          }
           return Stack(
             children: <Widget>[
               Center(
@@ -114,23 +113,27 @@ class _CharactersScreenState extends State<CharactersScreen>
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
-                      'images/class_icons/${_characterModel.character.playerClass.classIconUrl}',
-                      color: _characterModel.character.isRetired
+                      'images/class_icons/${charactersModel.characters[index].playerClass.classIconUrl}',
+                      color: charactersModel.characters[index].isRetired
                           ? Colors.black.withOpacity(0.1)
                           : Color(
                               int.parse(
-                                _characterModel
-                                    .character.playerClass.classColor,
+                                charactersModel
+                                    .characters[index].playerClass.classColor,
                               ),
                             ).withOpacity(0.1),
                     ),
                   ),
                 ),
               ),
-              ChangeNotifierProvider.value(
-                value: _characterModel,
-                child: const CharacterScreen(),
-              ),
+              // FutureBuilder<void>(
+              //   future: _futures,
+              //   builder: (context, snapshot) {
+              CharacterScreen(
+                character: charactersModel.characters[index],
+              )
+              // }
+              // ),
             ],
           );
         },

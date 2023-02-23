@@ -1,5 +1,8 @@
-// import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:uuid/uuid.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
@@ -8,16 +11,14 @@ import '../models/player_class.dart';
 import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
-  CharactersModel(
-      // this.context,
-      {
-    // this.pageController,
+  CharactersModel({
+    this.databaseHelper,
     this.showRetired,
   });
 
   List<Character> _characters = [];
   Character currentCharacter;
-  DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  DatabaseHelper databaseHelper;
   PageController pageController = PageController(
     initialPage: SharedPrefs().initialPage,
     keepPage: false,
@@ -63,11 +64,8 @@ class CharactersModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // double currentPage() => pageController.page;
-
   Future<List<Character>> loadCharacters() async {
     characters = await databaseHelper.queryAllCharacters();
-    print('INITIAL PAGE IS:: ${SharedPrefs().initialPage}');
     setCurrentCharacter(
       index: SharedPrefs().initialPage,
     );
@@ -152,12 +150,27 @@ class CharactersModel with ChangeNotifier {
     if (characters.isEmpty) {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;
-    } else if (index > characters.length - 1 || index == -1) {
-      currentCharacter = characters.last;
-      SharedPrefs().initialPage = characters.indexOf(characters.last);
     } else {
-      currentCharacter = characters[index];
-      SharedPrefs().initialPage = index;
+      if (index > characters.length - 1 || index == -1) {
+        currentCharacter = characters.last;
+        SharedPrefs().initialPage = characters.indexOf(characters.last);
+      } else {
+        currentCharacter = characters[index];
+        SharedPrefs().initialPage = index;
+      }
+      currentCharacter = index > characters.length - 1 || index == -1
+          ? characters.last
+          : characters[index];
+      previousRetirementsController.text =
+          currentCharacter.previousRetirements != 0
+              ? '${currentCharacter.previousRetirements}'
+              : '';
+      nameController.text = currentCharacter.name;
+      xpController.text =
+          currentCharacter.xp != 0 ? '${currentCharacter.xp}' : '';
+      goldController.text =
+          currentCharacter.gold != 0 ? '${currentCharacter.gold}' : '';
+      notesController.text = currentCharacter.notes;
     }
     _updateTheme();
   }
@@ -211,4 +224,139 @@ class CharactersModel with ChangeNotifier {
     notifyListeners();
     return trueIndex;
   }
+
+  int numOfSelectedPerks = 0;
+  List<CharacterPerk> characterPerks = [];
+  List<CharacterMastery> characterMasteries = [];
+
+  final previousRetirementsController = TextEditingController();
+  final nameController = TextEditingController();
+  final xpController = TextEditingController();
+  final goldController = TextEditingController();
+  final notesController = TextEditingController();
+
+  int get checkMarkProgress => currentCharacter.checkMarks != 0
+      ? currentCharacter.checkMarks % 3 == 0
+          ? 3
+          : currentCharacter.checkMarks % 3
+      : 0;
+
+  Future<void> updateCharacter(Character updatedCharacter) async {
+    currentCharacter = updatedCharacter;
+    await databaseHelper.updateCharacter(updatedCharacter);
+    notifyListeners();
+  }
+
+  void increaseCheckmark() {
+    if (currentCharacter.checkMarks < 18) {
+      updateCharacter(
+        currentCharacter..checkMarks = currentCharacter.checkMarks + 1,
+      );
+    }
+  }
+
+  void decreaseCheckmark() {
+    if (currentCharacter.checkMarks > 0) {
+      updateCharacter(
+        currentCharacter..checkMarks = currentCharacter.checkMarks - 1,
+      );
+    }
+  }
+
+  Future<List<CharacterPerk>> loadCharacterPerks(String uuid) async {
+    characterPerks = await databaseHelper.queryCharacterPerks(uuid);
+    int temp = 0;
+    for (final CharacterPerk perk in characterPerks) {
+      if (perk.characterPerkIsSelected) {
+        temp++;
+      }
+    }
+    numOfSelectedPerks = temp;
+    return characterPerks;
+  }
+
+  Future<List<CharacterMastery>> loadCharacterMasteries() async {
+    characterMasteries =
+        await databaseHelper.queryCharacterMasteries(currentCharacter.uuid);
+    return characterMasteries;
+  }
+
+  Future<void> togglePerk(
+    CharacterPerk perk,
+    bool value,
+  ) async {
+    value ? numOfSelectedPerks++ : numOfSelectedPerks--;
+    for (CharacterPerk characterPerk in characterPerks) {
+      if (characterPerk.associatedPerkId == perk.associatedPerkId) {
+        characterPerk.characterPerkIsSelected = value;
+      }
+    }
+    await databaseHelper.updateCharacterPerk(perk, value);
+    notifyListeners();
+    return value;
+  }
+
+  Future<void> toggleMastery(
+    CharacterMastery mastery,
+    bool value,
+  ) async {
+    for (CharacterMastery characterMastery in characterMasteries) {
+      if (characterMastery.associatedMasteryId == mastery.associatedMasteryId) {
+        characterMastery.characterMasteryAchieved = value;
+      }
+    }
+    await databaseHelper.updateCharacterMastery(mastery, value);
+    notifyListeners();
+    return value;
+  }
+
+  Future<List> loadPerks(String uuid) async {
+    List list = await databaseHelper.queryPerks(
+      characters
+          .firstWhere((element) => element.uuid == uuid)
+          .playerClass
+          .classCode
+          .toLowerCase(),
+    );
+
+    List<PerkRow> perkRows = [];
+    List<Perk> perkRowPerks = [];
+    List<Perk> perks = [];
+    for (var perkMap in list) {
+      perks.add(
+        Perk.fromMap(perkMap),
+      );
+    }
+    String details = '';
+    for (Perk perk in perks) {
+      if (details.isEmpty) {
+        details = perk.perkDetails;
+        perkRowPerks.add(perk);
+        continue;
+      }
+      if (details == perk.perkDetails) {
+        perkRowPerks.add(perk);
+        continue;
+      }
+      if (details != perk.perkDetails) {
+        perkRows.add(
+          PerkRow(
+            perks: perkRowPerks,
+          ),
+        );
+        perkRowPerks = [perk];
+        details = perk.perkDetails;
+      }
+    }
+    perkRows.add(
+      PerkRow(
+        perks: perkRowPerks,
+      ),
+    );
+    return perkRows;
+  }
+
+  Future<List> loadMasteries() async => await databaseHelper.queryMasteries(
+        currentCharacter.playerClass.classCode.toLowerCase(),
+      );
 }

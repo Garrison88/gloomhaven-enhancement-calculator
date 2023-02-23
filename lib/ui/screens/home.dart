@@ -63,6 +63,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 return CharactersScreen(
                     // charactersModel: charactersModel,
                     );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
               } else {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,

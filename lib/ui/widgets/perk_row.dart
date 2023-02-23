@@ -6,7 +6,7 @@ import '../../models/perk.dart';
 import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
-import '../../viewmodels/character_model.dart';
+// import '../../viewmodels/character_model.dart';
 
 class PerkRow extends StatefulWidget {
   final List<Perk> perks;
@@ -27,7 +27,7 @@ class _PerkRowState extends State<PerkRow> {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    // CharactersModel charactersModel = context.watch<CharactersModel>();
     CharactersModel charactersModel = context.watch<CharactersModel>();
     for (final Perk perk in widget.perks) {
       perkIds.add(perk.perkId);
@@ -41,7 +41,7 @@ class _PerkRowState extends State<PerkRow> {
                   margin: const EdgeInsets.only(right: 6, left: 1),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: allPerksSelected(characterModel)
+                      color: allPerksSelected(charactersModel)
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).dividerColor,
                     ),
@@ -53,7 +53,7 @@ class _PerkRowState extends State<PerkRow> {
                       (index) {
                         return Checkbox(
                           visualDensity: VisualDensity.compact,
-                          value: characterModel.characterPerks
+                          value: charactersModel.characterPerks
                               .firstWhere(
                                 (element) =>
                                     element.associatedPerkId ==
@@ -61,8 +61,8 @@ class _PerkRowState extends State<PerkRow> {
                               )
                               .characterPerkIsSelected,
                           onChanged: charactersModel.isEditMode
-                              ? (value) => characterModel.togglePerk(
-                                    characterModel.characterPerks.firstWhere(
+                              ? (value) => charactersModel.togglePerk(
+                                    charactersModel.characterPerks.firstWhere(
                                       (element) =>
                                           element.associatedPerkId ==
                                           widget.perks[index].perkId,
@@ -80,14 +80,14 @@ class _PerkRowState extends State<PerkRow> {
                     widget.perks.length,
                     (index) => Checkbox(
                       visualDensity: VisualDensity.comfortable,
-                      value: characterModel.characterPerks
+                      value: charactersModel.characterPerks
                           .firstWhere((element) =>
                               element.associatedPerkId ==
                               widget.perks[index].perkId)
                           .characterPerkIsSelected,
                       onChanged: charactersModel.isEditMode
-                          ? (value) => characterModel.togglePerk(
-                                characterModel.characterPerks.firstWhere(
+                          ? (value) => charactersModel.togglePerk(
+                                charactersModel.characterPerks.firstWhere(
                                     (element) =>
                                         element.associatedPerkId ==
                                         widget.perks[index].perkId),
@@ -134,9 +134,9 @@ class _PerkRowState extends State<PerkRow> {
   }
 
   bool allPerksSelected(
-    CharacterModel characterModel,
+    CharactersModel charactersModel,
   ) {
-    return characterModel.characterPerks
+    return charactersModel.characterPerks
         .where((element) => perkIds.contains(element.associatedPerkId))
         .every((element) => element.characterPerkIsSelected);
   }

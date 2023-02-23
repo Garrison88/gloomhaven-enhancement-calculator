@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/masteries_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/resource_card.dart';
@@ -10,43 +11,60 @@ import '../../data/constants.dart';
 import '../../data/strings.dart';
 import '../dialogs/add_subtract_dialog.dart';
 import '../widgets/perks_section.dart';
-import '../../viewmodels/character_model.dart';
 import '../dialogs/info_dialog.dart';
 import '../../viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
-class CharacterScreen extends StatelessWidget {
+class CharacterScreen extends StatefulWidget {
   const CharacterScreen({
+    @required this.character,
     Key key,
   }) : super(
           key: key,
         );
+  final Character character;
+  @override
+  State<CharacterScreen> createState() => _CharacterScreenState();
+}
+
+class _CharacterScreenState extends State<CharacterScreen> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: context.read<CharactersModel>().charScreenScrollController,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: smallPadding,
+        ),
         child: Column(
           children: <Widget>[
             // RETIREMENTS and POCKET ITEMS
-            const RetirementsAndPocketItemsSection(),
+            RetirementsAndPocketItemsSection(
+              character: widget.character,
+            ),
             // NAME and CLASS
-            const Padding(
-              padding: EdgeInsets.all(smallPadding),
-              child: NameAndClassSection(),
+            Padding(
+              padding: const EdgeInsets.all(
+                smallPadding,
+              ),
+              child: NameAndClassSection(
+                character: widget.character,
+              ),
             ),
             // STATS
-            const Padding(
-              padding: EdgeInsets.all(smallPadding),
+            Padding(
+              padding: const EdgeInsets.all(
+                smallPadding,
+              ),
               child: StatsSection(
-                  // isEditMode: isEditMode,
-                  ),
+                character: widget.character,
+                // isEditMode: isEditMode,
+              ),
             ),
             // RESOURCES
             // const ResourcesSection(),
             // NOTES
-            // context.read<CharacterModel>().character.notes.isEmpty &&
+            // context.read<CharactersModel>().currentCharacter.notes.isEmpty &&
             //         !context.read<CharactersModel>().isEditMode
             //     ? Container()
             // :
@@ -61,7 +79,9 @@ class CharacterScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: smallPadding),
               child: PerksSection(
-                characterModel: context.watch<CharacterModel>(),
+                character: widget.character,
+                uuid: context.watch<CharactersModel>().currentCharacter.uuid,
+                // charactersModel: context.watch<CharactersModel>(),
               ),
             ),
             const SizedBox(
@@ -70,7 +90,7 @@ class CharacterScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: smallPadding - 3),
               child: MasteriesSection(
-                characterModel: context.watch<CharacterModel>(),
+                charactersModel: context.watch<CharactersModel>(),
               ),
             ),
             Container(
@@ -85,12 +105,13 @@ class CharacterScreen extends StatelessWidget {
 
 class RetirementsAndPocketItemsSection extends StatelessWidget {
   const RetirementsAndPocketItemsSection({
+    @required this.character,
     Key key,
   }) : super(key: key);
-
+  final Character character;
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.read<CharacterModel>();
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -102,14 +123,14 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                   ? TextField(
                       enableInteractiveSelection: false,
                       onChanged: (String value) =>
-                          characterModel.updateCharacter(
-                        characterModel.character
+                          charactersModel.updateCharacter(
+                        charactersModel.currentCharacter
                           ..previousRetirements =
                               value.isEmpty ? 0 : int.parse(value),
                       ),
                       style: Theme.of(context).textTheme.titleSmall,
                       textAlign: TextAlign.center,
-                      controller: characterModel.previousRetirementsController,
+                      controller: charactersModel.previousRetirementsController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
                             RegExp('[\\.|\\,|\\ |\\-]'))
@@ -117,7 +138,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                       keyboardType: TextInputType.number,
                     )
                   : Text(
-                      'Retirements: ${characterModel.character.previousRetirements}',
+                      'Retirements: ${character.previousRetirements}',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
@@ -140,7 +161,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
         ),
         Tooltip(
           message:
-              '${characterModel.numOfPocketItems} Pocket Item${characterModel.numOfPocketItems > 1 ? 's' : ''} Allowed',
+              '${(character.level() / 2).round()} Pocket Item${(character.level() / 2).round() > 1 ? 's' : ''} Allowed',
           child: Padding(
             padding: const EdgeInsets.only(
               right: smallPadding,
@@ -158,14 +179,14 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 3.5),
-                  child: Consumer<CharacterModel>(
+                  child: Consumer<CharactersModel>(
                     builder: (
                       _,
-                      characterModel,
+                      charactersModel,
                       __,
                     ) =>
                         Text(
-                      characterModel.numOfPocketItems.toString(),
+                      '${(character.level() / 2).round()}',
                       style: Theme.of(context).textTheme.bodyMedium.copyWith(
                             fontSize: 15,
                             color:
@@ -189,32 +210,35 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
 }
 
 class NameAndClassSection extends StatelessWidget {
-  const NameAndClassSection({
+  NameAndClassSection({
+    @required this.character,
     Key key,
   }) : super(key: key);
-
+  final Character character;
+  final TextEditingController controller =
+      TextEditingController(text: 'My First Guy');
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.read<CharacterModel>();
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return Column(
       children: <Widget>[
         context.watch<CharactersModel>().isEditMode
             ? TextField(
                 autocorrect: false,
                 onChanged: (String value) {
-                  characterModel.updateCharacter(
-                    characterModel.character..name = value,
+                  charactersModel.updateCharacter(
+                    charactersModel.currentCharacter..name = value,
                   );
                 },
                 minLines: 1,
                 maxLines: 2,
-                controller: characterModel.nameController,
+                controller: charactersModel.nameController,
                 style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
               )
             : AutoSizeText(
-                characterModel.character.name,
+                character.name,
                 maxLines: 2,
                 style: Theme.of(context).textTheme.displaySmall,
                 textAlign: TextAlign.center,
@@ -232,14 +256,14 @@ class NameAndClassSection extends StatelessWidget {
                       ? Colors.white
                       : Colors.black87,
                 ),
-                Consumer<CharacterModel>(
+                Consumer<CharactersModel>(
                   builder: (
                     _,
-                    characterModel,
+                    charactersModel,
                     __,
                   ) =>
                       Text(
-                    characterModel.currentLevel.toString(),
+                    '${character.level()}',
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.black87
@@ -256,14 +280,14 @@ class NameAndClassSection extends StatelessWidget {
             ),
             Flexible(
               child: AutoSizeText(
-                '${characterModel.character.playerClass.race} ${characterModel.character.playerClass.className}',
+                '${character.playerClass.race} ${character.playerClass.className}',
                 maxLines: 1,
                 style: const TextStyle(fontSize: titleFontSize),
               ),
             ),
           ],
         ),
-        if (characterModel.character.isRetired)
+        if (character.isRetired)
           const Text(
             '(retired)',
             style: TextStyle(fontSize: 20),
@@ -275,11 +299,13 @@ class NameAndClassSection extends StatelessWidget {
 
 class StatsSection extends StatelessWidget {
   const StatsSection({
+    @required this.character,
     Key key,
   }) : super(key: key);
+  final Character character;
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.read<CharacterModel>();
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -305,15 +331,15 @@ class StatsSection extends StatelessWidget {
                           child: TextField(
                             enableInteractiveSelection: false,
                             onChanged: (String value) {
-                              characterModel.updateCharacter(
-                                characterModel.character
+                              charactersModel.updateCharacter(
+                                character
                                   ..xp = value == '' ? 0 : int.parse(value),
                               );
                             },
                             textAlignVertical: TextAlignVertical.center,
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
-                            controller: characterModel.xpController,
+                            controller: charactersModel.xpController,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(
                                   RegExp('[\\.|\\,|\\ |\\-]'))
@@ -326,15 +352,13 @@ class StatsSection extends StatelessWidget {
                           onPressed: () => showDialog<int>(
                               context: context,
                               builder: (_) => AddSubtractDialog(
-                                    characterModel.character.xp,
+                                    charactersModel.currentCharacter.xp,
                                     'XP',
                                   )).then(
                             (value) {
                               if (value != null) {
-                                characterModel.xpController.text =
-                                    value.toString();
-                                characterModel.updateCharacter(
-                                  characterModel.character..xp = value,
+                                charactersModel.updateCharacter(
+                                  charactersModel.currentCharacter..xp = value,
                                 );
                               }
                             },
@@ -343,20 +367,21 @@ class StatsSection extends StatelessWidget {
                       ],
                     )
                   : Text(
-                      characterModel.character.xp.toString(),
+                      character.xp.toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-              Consumer<CharacterModel>(
+              Consumer<CharactersModel>(
                 builder: (
                   _,
-                  characterModel,
+                  charactersModel,
                   __,
                 ) =>
                     Text(
-                  ' / ${characterModel.nextLevelXp}',
+                  ' / ${character.nextLevelXp()}',
                   style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                      fontSize:
-                          Theme.of(context).textTheme.bodyMedium.fontSize / 2),
+                        fontSize:
+                            Theme.of(context).textTheme.bodyMedium.fontSize / 2,
+                      ),
                 ),
               ),
             ],
@@ -384,14 +409,14 @@ class StatsSection extends StatelessWidget {
                           child: TextField(
                             enableInteractiveSelection: false,
                             onChanged: (String value) =>
-                                characterModel.updateCharacter(
-                              characterModel.character
+                                charactersModel.updateCharacter(
+                              charactersModel.currentCharacter
                                 ..gold = value == '' ? 0 : int.parse(value),
                             ),
                             textAlignVertical: TextAlignVertical.center,
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
-                            controller: characterModel.goldController,
+                            controller: charactersModel.goldController,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(
                                   RegExp('[\\.|\\,|\\ |\\-]'))
@@ -404,15 +429,14 @@ class StatsSection extends StatelessWidget {
                           onPressed: () async => await showDialog<int>(
                               context: context,
                               builder: (_) => AddSubtractDialog(
-                                    characterModel.character.gold,
+                                    charactersModel.currentCharacter.gold,
                                     'Gold',
                                   )).then(
                             (value) {
                               if (value != null) {
-                                characterModel.goldController.text =
-                                    value.toString();
-                                characterModel.updateCharacter(
-                                  characterModel.character..gold = value,
+                                charactersModel.updateCharacter(
+                                  charactersModel.currentCharacter
+                                    ..gold = value,
                                 );
                               }
                             },
@@ -421,7 +445,7 @@ class StatsSection extends StatelessWidget {
                       ],
                     )
                   : Text(
-                      ' ${characterModel.character.gold}',
+                      ' ${character.gold}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     )
             ],
@@ -444,7 +468,7 @@ class StatsSection extends StatelessWidget {
                 SizedBox(
                   width: 5,
                   child: Text(
-                    characterModel.checkMarkProgress.toString(),
+                    charactersModel.checkMarkProgress.toString(),
                   ),
                 ),
                 Text(
@@ -476,7 +500,7 @@ class ResourcesSection extends StatefulWidget {
 class _ResourcesSectionState extends State<ResourcesSection> {
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -514,144 +538,144 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                     // ...CharacterData.resources.map(
                     //   ((resource) => ResourceCard(
                     //         resource: resource,
-                    //         count: characterModel.character.resourceHide,
-                    //         increaseCount: () => characterModel.updateCharacter(
-                    //           characterModel.character
+                    //         count: charactersModel.currentCharacter.resourceHide,
+                    //         increaseCount: () => charactersModel.updateCharacter(
+                    //           charactersModel.character
                     //             ..resourceHide =
-                    //                 characterModel.character.resourceHide + 1,
+                    //                 charactersModel.currentCharacter.resourceHide + 1,
                     //         ),
-                    //         decreaseCount: () => characterModel.updateCharacter(
-                    //           characterModel.character
+                    //         decreaseCount: () => charactersModel.updateCharacter(
+                    //           charactersModel.character
                     //             ..resourceHide =
-                    //                 characterModel.character.resourceHide - 1,
+                    //                 charactersModel.currentCharacter.resourceHide - 1,
                     //         ),
                     //       )),
                     // )
                     // TODO: uncomment this when including Resources
                     // ResourceCard(
                     //   resource: CharacterData.resources[0],
-                    //   count: characterModel.character.resourceHide,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceHide,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceHide =
-                    //           characterModel.character.resourceHide + 1,
+                    //           charactersModel.currentCharacter.resourceHide + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceHide =
-                    //           characterModel.character.resourceHide - 1,
+                    //           charactersModel.currentCharacter.resourceHide - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[1],
-                    //   count: characterModel.character.resourceMetal,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceMetal,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceMetal =
-                    //           characterModel.character.resourceMetal + 1,
+                    //           charactersModel.currentCharacter.resourceMetal + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceMetal =
-                    //           characterModel.character.resourceMetal - 1,
+                    //           charactersModel.currentCharacter.resourceMetal - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[2],
-                    //   count: characterModel.character.resourceLumber,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceLumber,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceLumber =
-                    //           characterModel.character.resourceLumber + 1,
+                    //           charactersModel.currentCharacter.resourceLumber + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceLumber =
-                    //           characterModel.character.resourceLumber - 1,
+                    //           charactersModel.currentCharacter.resourceLumber - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[3],
-                    //   count: characterModel.character.resourceArrowvine,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceArrowvine,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceArrowvine =
-                    //           characterModel.character.resourceArrowvine + 1,
+                    //           charactersModel.currentCharacter.resourceArrowvine + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceArrowvine =
-                    //           characterModel.character.resourceArrowvine - 1,
+                    //           charactersModel.currentCharacter.resourceArrowvine - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[4],
-                    //   count: characterModel.character.resourceAxenut,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceAxenut,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceAxenut =
-                    //           characterModel.character.resourceAxenut + 1,
+                    //           charactersModel.currentCharacter.resourceAxenut + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceAxenut =
-                    //           characterModel.character.resourceAxenut - 1,
+                    //           charactersModel.currentCharacter.resourceAxenut - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[5],
-                    //   count: characterModel.character.resourceRockroot,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceRockroot,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceRockroot =
-                    //           characterModel.character.resourceRockroot + 1,
+                    //           charactersModel.currentCharacter.resourceRockroot + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceRockroot =
-                    //           characterModel.character.resourceRockroot - 1,
+                    //           charactersModel.currentCharacter.resourceRockroot - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[6],
-                    //   count: characterModel.character.resourceFlamefruit,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceFlamefruit,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceFlamefruit =
-                    //           characterModel.character.resourceFlamefruit + 1,
+                    //           charactersModel.currentCharacter.resourceFlamefruit + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceFlamefruit =
-                    //           characterModel.character.resourceFlamefruit - 1,
+                    //           charactersModel.currentCharacter.resourceFlamefruit - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[7],
-                    //   count: characterModel.character.resourceCorpsecap,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceCorpsecap,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceCorpsecap =
-                    //           characterModel.character.resourceCorpsecap + 1,
+                    //           charactersModel.currentCharacter.resourceCorpsecap + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceCorpsecap =
-                    //           characterModel.character.resourceCorpsecap - 1,
+                    //           charactersModel.currentCharacter.resourceCorpsecap - 1,
                     //   ),
                     // ),
                     // ResourceCard(
                     //   resource: CharacterData.resources[8],
-                    //   count: characterModel.character.resourceSnowthistle,
-                    //   increaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   count: charactersModel.currentCharacter.resourceSnowthistle,
+                    //   increaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceSnowthistle =
-                    //           characterModel.character.resourceSnowthistle + 1,
+                    //           charactersModel.currentCharacter.resourceSnowthistle + 1,
                     //   ),
-                    //   decreaseCount: () => characterModel.updateCharacter(
-                    //     characterModel.character
+                    //   decreaseCount: () => charactersModel.updateCharacter(
+                    //     charactersModel.character
                     //       ..resourceSnowthistle =
-                    //           characterModel.character.resourceSnowthistle - 1,
+                    //           charactersModel.currentCharacter.resourceSnowthistle - 1,
                     //   ),
                     // ),
                   ],
@@ -671,7 +695,7 @@ class NotesSection extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.read<CharacterModel>();
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return Column(
       children: <Widget>[
         Text(
@@ -687,18 +711,18 @@ class NotesSection extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 onChanged: (String value) {
-                  characterModel.updateCharacter(
-                    characterModel.character..notes = value,
+                  charactersModel.updateCharacter(
+                    charactersModel.currentCharacter..notes = value,
                   );
                 },
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
                   hintText: 'Notes',
                 ),
-                controller: characterModel.notesController,
+                controller: charactersModel.notesController,
               )
             : Text(
-                characterModel.character.notes,
+                charactersModel.currentCharacter.notes,
               ),
       ],
     );
@@ -712,7 +736,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CharacterModel characterModel = context.watch<CharacterModel>();
+    CharactersModel charactersModel = context.watch<CharactersModel>();
     return context.watch<CharactersModel>().isEditMode
         ? Padding(
             padding: const EdgeInsets.all(smallPadding),
@@ -727,7 +751,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Visibility(
-                      visible: characterModel.character.checkMarks > 0,
+                      visible: charactersModel.currentCharacter.checkMarks > 0,
                       maintainSize: true,
                       maintainAnimation: true,
                       maintainState: true,
@@ -736,15 +760,15 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                         icon: const Icon(
                           Icons.remove_circle,
                         ),
-                        onPressed: characterModel.decreaseCheckmark,
+                        onPressed: charactersModel.decreaseCheckmark,
                       ),
                     ),
                     Text(
-                      '${characterModel.character.checkMarks} / 18',
+                      '${charactersModel.currentCharacter.checkMarks} / 18',
                       style: const TextStyle(fontSize: titleFontSize),
                     ),
                     Visibility(
-                      visible: characterModel.character.checkMarks < 18,
+                      visible: charactersModel.currentCharacter.checkMarks < 18,
                       maintainSize: true,
                       maintainAnimation: true,
                       maintainState: true,
@@ -753,7 +777,7 @@ class BattleGoalCheckmarksSection extends StatelessWidget {
                         icon: const Icon(
                           Icons.add_circle,
                         ),
-                        onPressed: characterModel.increaseCheckmark,
+                        onPressed: charactersModel.increaseCheckmark,
                       ),
                     ),
                   ],

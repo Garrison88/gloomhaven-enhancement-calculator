@@ -114,4 +114,20 @@ class Character {
         // columnResourceSnowthistle: resourceSnowthistle,
         columnIsRetired: isRetired ? 1 : 0,
       };
+
+  int level() => CharacterData.levelXp.entries
+      .lastWhere(
+        (entry) => entry.value <= xp,
+      )
+      .key;
+
+  int nextLevelXp() => CharacterData.levelXp.entries
+      .firstWhere(
+        (entry) => entry.key > level(),
+        orElse: () => CharacterData.levelXp.entries.last,
+      )
+      .value;
+
+  int maximumPerks() =>
+      level() - 1 + ((checkMarks - 1) / 3).round() + previousRetirements;
 }

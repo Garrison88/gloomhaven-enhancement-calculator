@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
-import '../../models/perk.dart';
-import 'perk_row.dart';
-import '../../viewmodels/character_model.dart';
 
 class PerksSection extends StatefulWidget {
-  final CharacterModel characterModel;
+  final Character character;
+  final String uuid;
+  // final CharactersModel charactersModel;
 
   const PerksSection({
+    this.character,
     Key key,
-    this.characterModel,
+    this.uuid,
+    // this.charactersModel,
   }) : super(key: key);
   @override
   State<StatefulWidget> createState() => PerksSectionState();
@@ -20,32 +23,38 @@ class PerksSection extends StatefulWidget {
 class PerksSectionState extends State<PerksSection> {
   Future<List<List<dynamic>>> _futures;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadData(widget.uuid);
+  // }
+
   @override
-  void initState() {
-    super.initState();
-    _loadData();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadData(widget.uuid);
   }
 
   @override
   void didUpdateWidget(covariant PerksSection oldWidget) {
-    if (oldWidget.characterModel.character.uuid !=
-        widget.characterModel.character.uuid) {
-      _loadData();
+    if (oldWidget.uuid != widget.uuid) {
+      _loadData(widget.uuid);
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  void _loadData() {
+  void _loadData(String uuid) {
     _futures = Future.wait(
       [
-        widget.characterModel.loadCharacterPerks(),
-        widget.characterModel.loadPerks(),
+        context.read<CharactersModel>().loadCharacterPerks(uuid),
+        context.read<CharactersModel>().loadPerks(uuid),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    CharactersModel charactersModel = context.read<CharactersModel>();
     return FutureBuilder(
       future: _futures,
       builder: (context, AsyncSnapshot<List<List<dynamic>>> snapshot) {
@@ -56,48 +65,14 @@ class PerksSectionState extends State<PerksSection> {
         }
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          widget.characterModel.characterPerks = snapshot.data[0];
-          int temp = 0;
-          for (final CharacterPerk perk in snapshot.data[0]) {
-            if (perk.characterPerkIsSelected) {
-              temp++;
-            }
-          }
-          widget.characterModel.numOfSelectedPerks = temp;
-          List<PerkRow> perkRows = [];
-          List<Perk> perkRowPerks = [];
-          List<Perk> perks = [];
-          for (var perkMap in snapshot.data[1]) {
-            perks.add(
-              Perk.fromMap(perkMap),
-            );
-          }
-          String details = '';
-          for (Perk perk in perks) {
-            if (details.isEmpty) {
-              details = perk.perkDetails;
-              perkRowPerks.add(perk);
-              continue;
-            }
-            if (details == perk.perkDetails) {
-              perkRowPerks.add(perk);
-              continue;
-            }
-            if (details != perk.perkDetails) {
-              perkRows.add(
-                PerkRow(
-                  perks: perkRowPerks,
-                ),
-              );
-              perkRowPerks = [perk];
-              details = perk.perkDetails;
-            }
-          }
-          perkRows.add(
-            PerkRow(
-              perks: perkRowPerks,
-            ),
-          );
+          // charactersModel.characterPerks = snapshot.data[0];
+          // int temp = 0;
+          // for (final CharacterPerk perk in snapshot.data[0]) {
+          //   if (perk.characterPerkIsSelected) {
+          //     temp++;
+          //   }
+          // }
+          // charactersModel.numOfSelectedPerks = temp;
 
           return Column(
             children: <Widget>[
@@ -110,14 +85,17 @@ class PerksSectionState extends State<PerksSection> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   Text(
-                    '${widget.characterModel.numOfSelectedPerks}',
+                    '${charactersModel.numOfSelectedPerks}',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium.copyWith(
-                          color: widget.characterModel.numOfSelectedPerksColor,
+                          color: widget.character.maximumPerks() >=
+                                  charactersModel.numOfSelectedPerks
+                              ? Colors.black87
+                              : Colors.red,
                         ),
                   ),
                   Text(
-                    ' / ${widget.characterModel.maximumPerks})',
+                    ' / ${widget.character.maximumPerks()})',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium,
                   )
@@ -128,16 +106,17 @@ class PerksSectionState extends State<PerksSection> {
               ),
               ListView(
                 padding: EdgeInsets.zero,
-                children: perkRows,
+                children: snapshot.data[1],
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
             ],
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return Container();
+          // return const Center(
+          //   child: CircularProgressIndicator(),
+          // );
         }
       },
     );

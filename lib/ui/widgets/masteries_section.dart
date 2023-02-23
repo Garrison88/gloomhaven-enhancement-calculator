@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/mastery_row.dart';
-
-import '../../viewmodels/character_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class MasteriesSection extends StatefulWidget {
-  final CharacterModel characterModel;
+  final CharactersModel charactersModel;
 
   const MasteriesSection({
     Key key,
-    this.characterModel,
+    this.charactersModel,
   }) : super(key: key);
   @override
   State<StatefulWidget> createState() => MasteriesSectionState();
@@ -27,8 +26,8 @@ class MasteriesSectionState extends State<MasteriesSection> {
 
   @override
   void didUpdateWidget(covariant MasteriesSection oldWidget) {
-    if (oldWidget.characterModel.character.uuid !=
-        widget.characterModel.character.uuid) {
+    if (oldWidget.charactersModel.currentCharacter.uuid !=
+        widget.charactersModel.currentCharacter.uuid) {
       _loadData();
     }
     super.didUpdateWidget(oldWidget);
@@ -37,8 +36,8 @@ class MasteriesSectionState extends State<MasteriesSection> {
   void _loadData() {
     _futures = Future.wait(
       [
-        widget.characterModel.loadCharacterMasteries(),
-        widget.characterModel.loadMasteries(),
+        widget.charactersModel.loadCharacterMasteries(),
+        widget.charactersModel.loadMasteries(),
       ],
     );
   }
@@ -55,8 +54,8 @@ class MasteriesSectionState extends State<MasteriesSection> {
         }
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          widget.characterModel.characterMasteries = snapshot.data[0];
-          return widget.characterModel.characterMasteries.isNotEmpty
+          widget.charactersModel.characterMasteries = snapshot.data[0];
+          return widget.charactersModel.characterMasteries.isNotEmpty
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

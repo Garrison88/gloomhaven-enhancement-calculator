@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/utils/app_theme.dart';
 import 'viewmodels/app_model.dart';
 import 'viewmodels/characters_model.dart';
@@ -57,6 +58,7 @@ class GloomhavenCompanion extends StatelessWidget {
             create: (_) => CharactersModel(
               // context,
               showRetired: SharedPrefs().showRetiredCharacters,
+              databaseHelper: DatabaseHelper.instance,
             ),
           )
         ],
