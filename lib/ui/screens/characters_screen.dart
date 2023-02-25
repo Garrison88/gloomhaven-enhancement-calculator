@@ -18,7 +18,6 @@ class CharactersScreen extends StatefulWidget {
 
 class _CharactersScreenState extends State<CharactersScreen>
     with AutomaticKeepAliveClientMixin {
-  final GlobalKey _pageStorageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -67,14 +66,7 @@ class _CharactersScreenState extends State<CharactersScreen>
         ),
       );
     } else {
-      try {
-        charactersModel.currentCharacter =
-            charactersModel.characters[SharedPrefs().initialPage];
-      } catch (e) {
-        charactersModel.currentCharacter = charactersModel.characters[0];
-      }
       return PageView.builder(
-        key: _pageStorageKey,
         controller: charactersModel.pageController,
         onPageChanged: (index) {
           charactersModel.onPageChanged(
@@ -98,17 +90,14 @@ class _CharactersScreenState extends State<CharactersScreen>
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 80),
                   child: Container(
+                    width: 500,
+                    height: 500,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
                       'images/class_icons/${charactersModel.characters[index].playerClass.classIconUrl}',
-                      color: charactersModel.characters[index].isRetired
-                          ? Colors.black.withOpacity(0.1)
-                          : Color(
-                              int.parse(
-                                charactersModel
-                                    .characters[index].playerClass.classColor,
-                              ),
-                            ).withOpacity(0.1),
+                      color: charactersModel.characters[index]
+                          .classColor(context)
+                          .withOpacity(0.1),
                     ),
                   ),
                 ),

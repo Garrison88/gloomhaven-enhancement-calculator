@@ -10,7 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const GHCAppBar({Key key}) : super(key: key);
+  const GHCAppBar({
+    Key key,
+  }) : super(
+          key: key,
+        );
 
   @override
   State<GHCAppBar> createState() => _GHCAppBarState();
@@ -95,7 +99,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
     return AppBar(
-      // surfaceTintColor: Colors.orange,
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
       centerTitle: true,
       title: context.watch<AppModel>().page == 0 &&
@@ -115,7 +118,10 @@ class _GHCAppBarState extends State<GHCAppBar> {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('images/titles/gloomhaven.png', scale: 7),
+                    Image.asset(
+                      'images/titles/gloomhaven.png',
+                      scale: 7,
+                    ),
                     Switch(
                       inactiveThumbColor: const Color(0xff4b2c20),
                       inactiveTrackColor: const Color(0xffa98274),
@@ -130,7 +136,10 @@ class _GHCAppBarState extends State<GHCAppBar> {
                         setState(() {});
                       },
                     ),
-                    Image.asset('images/titles/frosthaven.png', scale: 7),
+                    Image.asset(
+                      'images/titles/frosthaven.png',
+                      scale: 7,
+                    ),
                   ],
                 )
               : Container(),
@@ -152,7 +161,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
               onPressed: () async {
                 final String message =
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                int index = await charactersModel.retireCurrentCharacter();
+                // int index =
+                await charactersModel.retireCurrentCharacter();
                 context.read<AppModel>().updateTheme();
                 ScaffoldMessenger.of(context)
                   ..clearSnackBars()
@@ -164,7 +174,11 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           : SnackBarAction(
                               label: 'Show',
                               onPressed: () {
-                                charactersModel.toggleShowRetired(index: index);
+                                charactersModel.toggleShowRetired(
+                                  index: charactersModel.characters.indexOf(
+                                    charactersModel.currentCharacter,
+                                  ),
+                                );
                               },
                             ),
                     ),

@@ -3,7 +3,6 @@ import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:uuid/uuid.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
@@ -22,12 +21,16 @@ class CharactersModel with ChangeNotifier {
   DatabaseHelper databaseHelper;
   PageController pageController = PageController(
     initialPage: SharedPrefs().initialPage,
-    keepPage: false,
   );
   AnimationController hideRetireCharacterAnimationController;
   bool isScrolledToTop = true;
   ScrollController charScreenScrollController = ScrollController();
   ScrollController enhancementCalcScrollController = ScrollController();
+  final previousRetirementsController = TextEditingController();
+  final nameController = TextEditingController();
+  final xpController = TextEditingController();
+  final goldController = TextEditingController();
+  final notesController = TextEditingController();
 
   bool showRetired;
   bool isEditMode = false;
@@ -43,10 +46,12 @@ class CharactersModel with ChangeNotifier {
         : _characters.indexOf(currentCharacter);
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    jumpToPage(
-      theIndex == -1 ? 0 : theIndex,
-    );
-    setCurrentCharacter(
+    if (theIndex >= 1) {
+      jumpToPage(
+        theIndex,
+      );
+    }
+    _setCurrentCharacter(
       index: theIndex == -1 ? 0 : theIndex,
     );
     notifyListeners();
@@ -68,18 +73,10 @@ class CharactersModel with ChangeNotifier {
   Future<List<Character>> loadCharacters() async {
     characters = await databaseHelper.queryAllCharacters();
     for (Character character in characters) {
-      character.characterPerks = await loadCharacterPerks(
-        character.uuid,
+      character.characterPerks = await _loadPerks(
+        character,
       );
-      List<Map<String, Object>> perks = await databaseHelper.queryPerks(
-        character.playerClass.classCode,
-      );
-      for (var perkMap in perks) {
-        character.perks.add(
-          Perk.fromMap(perkMap),
-        );
-      }
-      character.characterMasteries = await loadCharacterMasteries(
+      character.characterMasteries = await _loadMasteries(
         character.uuid,
       );
       List<Map<String, Object>> masteries = await databaseHelper.queryMasteries(
@@ -92,7 +89,7 @@ class CharactersModel with ChangeNotifier {
       }
     }
 
-    setCurrentCharacter(
+    _setCurrentCharacter(
       index: SharedPrefs().initialPage,
     );
     notifyListeners();
@@ -100,9 +97,9 @@ class CharactersModel with ChangeNotifier {
   }
 
   void toggleEditMode() {
-    isEditMode
-        ? hideRetireCharacterAnimationController.reverse()
-        : hideRetireCharacterAnimationController.forward();
+    // isEditMode
+    //     ? hideRetireCharacterAnimationController.reverse()
+    //     : hideRetireCharacterAnimationController.forward();
     isEditMode = !isEditMode;
     notifyListeners();
   }
@@ -112,7 +109,7 @@ class CharactersModel with ChangeNotifier {
   ) {
     SharedPrefs().initialPage = index;
     isScrolledToTop = true;
-    setCurrentCharacter(
+    _setCurrentCharacter(
       index: index,
     );
     isEditMode = false;
@@ -133,31 +130,15 @@ class CharactersModel with ChangeNotifier {
           .lastWhere((entry) => entry.key == initialLevel)
           .value,
       gold: 15 * (initialLevel + 1),
-      // TODO: uncomment this when including Resources
-      resourceHide: 0,
-      resourceMetal: 0,
-      resourceLumber: 0,
-      resourceArrowvine: 0,
-      resourceAxenut: 0,
-      resourceCorpsecap: 0,
-      resourceFlamefruit: 0,
-      resourceRockroot: 0,
-      resourceSnowthistle: 0,
     );
     character.id = await databaseHelper.insertCharacter(
       character,
     );
-    character.characterPerks = await loadCharacterPerks(
-      character.uuid,
+    character.characterPerks = await _loadPerks(
+      character,
     );
-    List<Map<String, Object>> perks =
-        await databaseHelper.queryPerks(character.playerClass.classCode);
-    for (var perkMap in perks) {
-      character.perks.add(
-        Perk.fromMap(perkMap),
-      );
-    }
-    character.characterMasteries = await loadCharacterMasteries(
+
+    character.characterMasteries = await _loadMasteries(
       character.uuid,
     );
     List<Map<String, Object>> masteries =
@@ -169,11 +150,11 @@ class CharactersModel with ChangeNotifier {
     }
     _characters.add(character);
     if (characters.length > 1) {
-      animateToPage(
+      _animateToPage(
         characters.indexOf(character),
       );
     }
-    setCurrentCharacter(
+    _setCurrentCharacter(
       index: characters.indexOf(character),
     );
     notifyListeners();
@@ -184,13 +165,13 @@ class CharactersModel with ChangeNotifier {
     int index = characters.indexOf(currentCharacter);
     await databaseHelper.deleteCharacter(currentCharacter);
     _characters.remove(currentCharacter);
-    setCurrentCharacter(
+    _setCurrentCharacter(
       index: index,
     );
     notifyListeners();
   }
 
-  void setCurrentCharacter({
+  void _setCurrentCharacter({
     int index,
   }) {
     if (characters.isEmpty) {
@@ -218,21 +199,23 @@ class CharactersModel with ChangeNotifier {
           currentCharacter.gold != 0 ? '${currentCharacter.gold}' : '';
       notesController.text = currentCharacter.notes;
     }
-    _updateTheme();
+    updateTheme();
   }
 
-  void _updateTheme() {
+  void updateTheme() {
     if (characters.isEmpty) {
       SharedPrefs().themeColor = '0xff4e7ec1';
       SharedPrefs().initialPage = 0;
     } else {
       SharedPrefs().themeColor = currentCharacter.isRetired
-          ? '0xff111111'
+          ? SharedPrefs().darkTheme
+              ? '0xffffffff'
+              : '0xff111111'
           : currentCharacter.playerClass.classColor;
     }
   }
 
-  void animateToPage(
+  void _animateToPage(
     int index,
   ) {
     if (pageController.hasClients) {
@@ -254,58 +237,60 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  Future<int> retireCurrentCharacter() async {
+  Future<void> retireCurrentCharacter() async {
     isEditMode = false;
-    int trueIndex = _characters.indexOf(currentCharacter);
+    // int trueIndex = _characters.indexOf(character);
     int index = characters.indexOf(currentCharacter);
     currentCharacter.isRetired = !currentCharacter.isRetired;
     await databaseHelper.updateCharacter(currentCharacter);
-    if (!showRetired) {
-      characters.remove(currentCharacter);
-    }
-    setCurrentCharacter(
+    // if (!showRetired) {
+    //   characters.remove(character,);
+    // }
+    _setCurrentCharacter(
       index: index,
     );
     notifyListeners();
-    return trueIndex;
+    // return trueIndex;
   }
 
-  // int numOfSelectedPerks = 0;
-  // List<CharacterPerk> characterPerks = [];
-  // List<CharacterMastery> characterMasteries = [];
-
-  final previousRetirementsController = TextEditingController();
-  final nameController = TextEditingController();
-  final xpController = TextEditingController();
-  final goldController = TextEditingController();
-  final notesController = TextEditingController();
-
-  Future<void> updateCharacter(Character updatedCharacter) async {
-    currentCharacter = updatedCharacter;
-    await databaseHelper.updateCharacter(updatedCharacter);
+  Future<void> updateCharacter(Character character) async {
+    await databaseHelper.updateCharacter(character);
     notifyListeners();
   }
 
-  void increaseCheckmark() {
-    if (currentCharacter.checkMarks < 18) {
+  void increaseCheckmark(Character character) {
+    if (character.checkMarks < 18) {
       updateCharacter(
-        currentCharacter..checkMarks = currentCharacter.checkMarks + 1,
+        character..checkMarks = character.checkMarks + 1,
       );
     }
   }
 
-  void decreaseCheckmark() {
-    if (currentCharacter.checkMarks > 0) {
+  void decreaseCheckmark(Character character) {
+    if (character.checkMarks > 0) {
       updateCharacter(
-        currentCharacter..checkMarks = currentCharacter.checkMarks - 1,
+        character..checkMarks = character.checkMarks - 1,
       );
     }
   }
 
-  Future<List<CharacterPerk>> loadCharacterPerks(String uuid) async =>
-      await databaseHelper.queryCharacterPerks(uuid);
+  Future<List<CharacterPerk>> _loadPerks(
+    Character character,
+  ) async {
+    List<Map<String, Object>> perks = await databaseHelper.queryPerks(
+      character.playerClass.classCode,
+    );
+    for (var perkMap in perks) {
+      character.perks.add(
+        Perk.fromMap(perkMap),
+      );
+    }
+    return await databaseHelper.queryCharacterPerks(
+      character.uuid,
+    );
+  }
 
-  Future<List<CharacterMastery>> loadCharacterMasteries(String uuid) async =>
+  Future<List<CharacterMastery>> _loadMasteries(String uuid) async =>
       await databaseHelper.queryCharacterMasteries(uuid);
 
   Future<void> togglePerk({
@@ -341,8 +326,4 @@ class CharactersModel with ChangeNotifier {
     );
     notifyListeners();
   }
-
-  // Future<List> loadMasteries() async => await databaseHelper.queryMasteries(
-  //       currentCharacter.playerClass.classCode.toLowerCase(),
-  //     );
 }

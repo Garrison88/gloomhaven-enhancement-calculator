@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import '../../data/constants.dart';
 
 class AddSubtractDialog extends StatefulWidget {
-  AddSubtractDialog(
-    this.currentValue,
-    this.hintText,
-  );
+  const AddSubtractDialog(this.currentValue, this.hintText, {Key key})
+      : super(key: key);
 
   final int currentValue;
   final String hintText;

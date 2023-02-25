@@ -88,7 +88,6 @@ class DatabaseHelper {
           $columnResourceCorpsecap $integerType,
           $columnResourceSnowthistle $integerType
         )''');
-      // TODO: move this up into characters table when ready for Resources - DONE
 
       await txn.execute('''
         $createTable $tablePerks (

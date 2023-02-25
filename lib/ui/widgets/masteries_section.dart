@@ -20,38 +20,29 @@ class MasteriesSection extends StatefulWidget {
 class MasteriesSectionState extends State<MasteriesSection> {
   @override
   Widget build(BuildContext context) {
-    return widget.character.characterMasteries.isNotEmpty
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Masteries',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(
-                height: smallPadding + 5,
-              ),
-              ...widget.character.masteries.map(
-                (mastery) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: smallPadding / 2,
-                  ),
-                  child: MasteryRow(
-                    character: widget.character,
-                    mastery: mastery,
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Container();
-    //   } else {
-    //     return const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   }
-    // },
-    // );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Masteries',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        const SizedBox(
+          height: smallPadding + 5,
+        ),
+        ...widget.character.masteries.map(
+          (mastery) => Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: smallPadding / 2,
+            ),
+            child: MasteryRow(
+              character: widget.character,
+              mastery: mastery,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

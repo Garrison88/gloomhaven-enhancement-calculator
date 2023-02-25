@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
@@ -51,7 +50,7 @@ class _MasteryRowState extends State<MasteryRow> {
                 .firstWhere((mastery) =>
                     mastery.associatedMasteryId == widget.mastery.masteryId)
                 .characterMasteryAchieved,
-            onChanged: charactersModel.isEditMode
+            onChanged: charactersModel.isEditMode && !widget.character.isRetired
                 ? (value) => charactersModel.toggleMastery(
                       characterMasteries: widget.character.characterMasteries,
                       mastery: widget.character.characterMasteries.firstWhere(
@@ -75,17 +74,25 @@ class _MasteryRowState extends State<MasteryRow> {
           ),
           SizeProviderWidget(
             onChildSize: (val) {
-              setState(() {
-                height = val.height * 0.9;
-              });
+              if (context != null && context.mounted) {
+                setState(() {
+                  height = val.height * 0.9;
+                });
+              }
             },
             child: Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  children: Utils.generateCheckRowDetails(
-                    widget.mastery.masteryDetails,
-                    SharedPrefs().darkTheme,
+              child: Padding(
+                padding: const EdgeInsets.only(right: smallPadding),
+                child: RichText(
+                  text: TextSpan(
+                    style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                          fontSize: 22,
+                          letterSpacing: 0.7,
+                        ),
+                    children: Utils.generateCheckRowDetails(
+                      widget.mastery.masteryDetails,
+                      SharedPrefs().darkTheme,
+                    ),
                   ),
                 ),
               ),

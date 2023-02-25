@@ -63,7 +63,8 @@ class _PerkRowState extends State<PerkRow> {
                                     widget.perks[index].perkId,
                               )
                               .characterPerkIsSelected,
-                          onChanged: charactersModel.isEditMode
+                          onChanged: charactersModel.isEditMode &&
+                                  !widget.character.isRetired
                               ? (value) {
                                   charactersModel.togglePerk(
                                     characterPerks:
@@ -96,7 +97,8 @@ class _PerkRowState extends State<PerkRow> {
                               element.associatedPerkId ==
                               widget.perks[index].perkId)
                           .characterPerkIsSelected,
-                      onChanged: charactersModel.isEditMode
+                      onChanged: charactersModel.isEditMode &&
+                              !widget.character.isRetired
                           ? (value) {
                               charactersModel.togglePerk(
                                 characterPerks: widget.character.characterPerks,
@@ -126,15 +128,16 @@ class _PerkRowState extends State<PerkRow> {
                 ),
           SizeProviderWidget(
             onChildSize: (val) {
-              setState(() {
-                height = val.height * 0.9;
-              });
+              if (context != null && context.mounted) {
+                setState(() {
+                  height = val.height * 0.9;
+                });
+              }
             },
             child: Expanded(
               child: RichText(
                 text: TextSpan(
                   style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                        // height: 1.4,
                         letterSpacing: 0.7,
                       ),
                   children: Utils.generateCheckRowDetails(
@@ -156,33 +159,5 @@ class _PerkRowState extends State<PerkRow> {
     return character.characterPerks
         .where((element) => perkIds.contains(element.associatedPerkId))
         .every((element) => element.characterPerkIsSelected);
-  }
-}
-
-class SizeProviderWidget extends StatefulWidget {
-  final Widget child;
-  final Function(Size) onChildSize;
-
-  const SizeProviderWidget({
-    Key key,
-    this.onChildSize,
-    this.child,
-  }) : super(key: key);
-  @override
-  _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
-}
-
-class _SizeProviderWidgetState extends State<SizeProviderWidget> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      widget.onChildSize(context.size);
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }

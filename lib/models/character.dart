@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
@@ -38,7 +39,6 @@ class Character {
   int gold;
   String notes;
   int checkMarks;
-  // TODO: uncomment this when including Resources
   int resourceHide;
   int resourceMetal;
   int resourceLumber;
@@ -59,7 +59,6 @@ class Character {
     this.gold = 0,
     this.notes = 'Items, reminders, wishlist...',
     this.checkMarks = 0,
-    // TODO: uncomment this when including Resources
     this.resourceHide = 0,
     this.resourceMetal = 0,
     this.resourceLumber = 0,
@@ -72,7 +71,6 @@ class Character {
     this.isRetired = false,
   });
 
-  // List<Map<String, Object>> perks = [];
   List<Perk> perks = [];
   List<CharacterPerk> characterPerks = [];
   List<Mastery> masteries = [];
@@ -90,7 +88,6 @@ class Character {
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
     checkMarks = map[columnCharacterCheckMarks];
-    // TODO: uncomment this when including Resources
     resourceHide = map[columnResourceHide];
     resourceMetal = map[columnResourceMetal];
     resourceLumber = map[columnResourceLumber];
@@ -113,7 +110,6 @@ class Character {
         columnCharacterGold: gold,
         columnCharacterNotes: notes,
         columnCharacterCheckMarks: checkMarks,
-        // TODO: uncomment this when including Resources
         columnResourceHide: resourceHide,
         columnResourceMetal: resourceMetal,
         columnResourceLumber: resourceLumber,
@@ -125,6 +121,19 @@ class Character {
         columnResourceSnowthistle: resourceSnowthistle,
         columnIsRetired: isRetired ? 1 : 0,
       };
+
+  Color classColor(
+    BuildContext context,
+  ) =>
+      isRetired
+          ? Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black
+          : Color(
+              int.parse(
+                playerClass.classColor,
+              ),
+            );
 
   int level() => CharacterData.levelXp.entries
       .lastWhere(
@@ -139,8 +148,18 @@ class Character {
       )
       .value;
 
-  int maximumPerks() =>
-      level() - 1 + ((checkMarks - 1) / 3).round() + previousRetirements;
+  int maximumPerks() {
+    int sum = 0;
+    sum += level() - 1;
+    sum += ((checkMarks - 1) / 3).round();
+    sum += previousRetirements;
+    sum += characterMasteries.fold(
+      0,
+      (previousValue, mastery) =>
+          previousValue + (mastery.characterMasteryAchieved ? 1 : 0),
+    );
+    return sum;
+  }
 
   int checkMarkProgress() => checkMarks != 0
       ? checkMarks % 3 == 0
@@ -148,13 +167,9 @@ class Character {
           : checkMarks % 3
       : 0;
 
-  int numOfSelectedPerks() {
-    int sum = 0;
-    for (CharacterPerk perk in characterPerks) {
-      if (perk.characterPerkIsSelected) {
-        sum++;
-      }
-    }
-    return sum;
-  }
+  int numOfSelectedPerks() => characterPerks.fold(
+        0,
+        (previousValue, perk) =>
+            previousValue + (perk.characterPerkIsSelected ? 1 : 0),
+      );
 }

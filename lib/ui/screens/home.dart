@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_navigation_bar.dart';
 import '../../data/constants.dart';
@@ -48,8 +47,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return Scaffold(
       extendBody: true,
       key: scaffoldMessengerKey,
-      // TODO: Don't make this const - why?
-      appBar: GHCAppBar(),
+      appBar: const GHCAppBar(),
       body: PageView(
         children: [
           FutureBuilder<List<Character>>(
@@ -57,7 +55,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
-                return CharactersScreen();
+                return const CharactersScreen();
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
               } else {

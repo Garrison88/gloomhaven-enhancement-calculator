@@ -27,6 +27,8 @@ abstract class CharacterData {
   static const _savvas = 'Savvas';
   static const _valrath = 'Valrath';
   static const _vermling = 'Vermling';
+  static const _algox = 'Algox';
+  static const _unfettered = 'Unfettered';
 
   static const _one = 'one';
   static const _two = 'two';
@@ -228,13 +230,13 @@ abstract class CharacterData {
     ),
     // FROSTHAVEN
     PlayerClass(
-      race: _human,
-      className: 'Banner Spear',
-      classCode: 'bannerspear',
-      classIconUrl: 'banner_spear.svg',
+      race: _inox,
+      className: 'Drifter',
+      classCode: 'drifter',
+      classIconUrl: 'drifter.svg',
       classCategory: ClassCategory.frosthaven,
       locked: false,
-      classColor: '0xfffdd072',
+      classColor: '0xff92887f',
     ),
     PlayerClass(
       race: _quatryl,
@@ -244,6 +246,15 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: false,
       classColor: '0xff00a8cf',
+    ),
+    PlayerClass(
+      race: _human,
+      className: 'Banner Spear',
+      classCode: 'bannerspear',
+      classIconUrl: 'banner_spear.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: false,
+      classColor: '0xfffdd072',
     ),
     PlayerClass(
       race: _valrath,
@@ -264,15 +275,6 @@ abstract class CharacterData {
       classColor: '0xff6cbe4c',
     ),
     PlayerClass(
-      race: _inox,
-      className: 'Drifter',
-      classCode: 'drifter',
-      classIconUrl: 'drifter.svg',
-      classCategory: ClassCategory.frosthaven,
-      locked: false,
-      classColor: '0xff92887f',
-    ),
-    PlayerClass(
       race: _harrower,
       className: 'Geminate',
       classCode: 'geminate',
@@ -280,6 +282,105 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: false,
       classColor: '0xffab1c54',
+    ),
+    PlayerClass(
+      race: _orchid,
+      className: 'Infuser',
+      classCode: 'infuser',
+      classIconUrl: 'infuser.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xff7bc144',
+    ),
+    PlayerClass(
+      race: _savvas,
+      className: 'Pyroclast',
+      classCode: 'pyroclast',
+      classIconUrl: 'pyroclast.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffff4a1d',
+    ),
+    PlayerClass(
+      race: _savvas,
+      className: 'Shattersong',
+      classCode: 'shattersong',
+      classIconUrl: 'shattersong.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffc2c5c9',
+    ),
+    PlayerClass(
+      race: _vermling,
+      className: 'Trapper',
+      classCode: 'trapper',
+      classIconUrl: 'trapper.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffd1b38d',
+    ),
+    PlayerClass(
+      race: _aesther,
+      className: 'Pain Conduit',
+      classCode: 'painconduit',
+      classIconUrl: 'pain_conduit.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffbec5e4',
+    ),
+    PlayerClass(
+      race: _algox,
+      className: 'Snowdancer',
+      classCode: 'snowdancer',
+      classIconUrl: 'snowdancer.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xff7cd1e7',
+    ),
+    PlayerClass(
+      race: _algox,
+      className: 'Frozen Fist',
+      classCode: 'frozenfist',
+      classIconUrl: 'frozen_fist.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xff88bee7',
+    ),
+    PlayerClass(
+      race: _unfettered,
+      className: 'HIVE',
+      classCode: 'hive',
+      classIconUrl: 'hive.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffecb633',
+    ),
+    PlayerClass(
+      race: _unfettered,
+      className: 'Metal Mosaic',
+      classCode: 'metalmosaic',
+      classIconUrl: 'metal_mosaic.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffddb586',
+    ),
+    PlayerClass(
+      race: _lurker,
+      className: 'Deepwraith',
+      classCode: 'deepwraith',
+      classIconUrl: 'deepwraith.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xffac427d',
+    ),
+    PlayerClass(
+      race: _lurker,
+      className: 'Crashing Tide',
+      classCode: 'crashingtide',
+      classIconUrl: 'crashing_tide.svg',
+      classCategory: ClassCategory.frosthaven,
+      locked: true,
+      classColor: '0xff59c0a1',
     ),
     // CRIMSON SCALES
     PlayerClass(
@@ -1300,6 +1401,223 @@ abstract class CharacterData {
   ];
 
   static final List<Mastery> masteries = [
+    Mastery(
+      masteryClassCode: 'br',
+      masteryDetails:
+          'Cause enemies to suffer a total of 12 or more RETALIATE damage during attacks targeting you in a single round',
+    ),
+    Mastery(
+      masteryClassCode: 'br',
+      masteryDetails:
+          'Across three consecutive rounds, play six different ability cards and cause enemies to suffer at least DAMAGE 6 on each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'ti',
+      masteryDetails:
+          'Heal an ally or apply a negative condition to an enemy each turn',
+    ),
+    Mastery(
+      masteryClassCode: 'ti',
+      masteryDetails:
+          'Perform two actions with lost icons before your first rest and then only rest after having played at least two actions with lost icons since your previous rest',
+    ),
+    Mastery(
+      masteryClassCode: 'sw',
+      masteryDetails: 'Infuse and consume all six elements',
+    ),
+    Mastery(
+      masteryClassCode: 'sw',
+      masteryDetails: 'Perform four different loss actions twice each',
+    ),
+    Mastery(
+      masteryClassCode: 'sc',
+      masteryDetails:
+          'Kill at least six enemies that are adjacent to at least one of your allies',
+    ),
+    Mastery(
+      masteryClassCode: 'sc',
+      masteryDetails:
+          'Kill at least six enemies that are adjacent to none of your allies',
+    ),
+    Mastery(
+      masteryClassCode: 'ch',
+      masteryDetails: 'Only attack enemies adjacent to obstacles or walls',
+    ),
+    Mastery(
+      masteryClassCode: 'ch',
+      masteryDetails: 'Damage or heal at least one ally each round',
+    ),
+    Mastery(
+      masteryClassCode: 'mt',
+      masteryDetails:
+          'Trigger the on-attack effect of four different Augments thrice each',
+    ),
+    Mastery(
+      masteryClassCode: 'mt',
+      masteryDetails: 'Never be targeted by an attack',
+    ),
+    Mastery(
+      masteryClassCode: 'sk',
+      masteryDetails:
+          'Reduce attacks targeting you by a total of 20 or more through Shield effects in a single round',
+    ),
+    Mastery(
+      masteryClassCode: 'sk',
+      masteryDetails: 'LIGHT or consume_LIGHT during each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'qm',
+      masteryDetails:
+          "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of 'Reinforced Steel'",
+    ),
+    Mastery(
+      masteryClassCode: 'qm',
+      masteryDetails: 'Loot six or more loot tokens in a single turn',
+    ),
+    Mastery(
+      masteryClassCode: 'su',
+      masteryDetails:
+          'Summon the Lava Golem on your first turn and keep it alive for the entire scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'su',
+      masteryDetails:
+          'Perform the summon action of five different ability cards',
+    ),
+    Mastery(
+      masteryClassCode: 'ns',
+      masteryDetails:
+          'Have INVISIBLE at the start or end of each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'ns',
+      masteryDetails: 'DARK or consume_DARK during each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'ph',
+      masteryDetails: 'Kill at least five enemies with non-attack abilities',
+    ),
+    Mastery(
+      masteryClassCode: 'ph',
+      masteryDetails:
+          'Perform three different attack abilities that target at least four enemies each',
+    ),
+    Mastery(
+      masteryClassCode: 'be',
+      masteryDetails:
+          "Lose at least one hit point during each of your turns, without ever performing the bottom action of 'Blood Pact'",
+    ),
+    Mastery(
+      masteryClassCode: 'be',
+      masteryDetails:
+          'Have exactly one hit point at the end of each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'ss',
+      masteryDetails:
+          'On your first turn of the scenario and the turn after each of your rests, perform one Song action that you have not yet performed this scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'ss',
+      masteryDetails:
+          'Have all 10 monster CURSE cards and all 10 BLESS cards in modifier decks at the same time',
+    ),
+    Mastery(
+      masteryClassCode: 'ds',
+      masteryDetails:
+          'Never perform a Doom action that you have already performed in the scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'ds',
+      masteryDetails: 'Kill three Doomed enemies during one of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'sb',
+      masteryDetails:
+          "On each of your turns, give an ally an ability card, target an ally with a HEAL ability, grant an ally SHIELD, or place an ability card in an ally's active area",
+    ),
+    Mastery(
+      masteryClassCode: 'sb',
+      masteryDetails: 'Deal at least DAMAGE 20 with a single attack ability',
+    ),
+    Mastery(
+      masteryClassCode: 'el',
+      masteryDetails:
+          "Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of 'Formless Power' or 'Shaping the Ether'",
+    ),
+    Mastery(
+      masteryClassCode: 'el',
+      masteryDetails:
+          'Infuse five or more elements during one of your turns, then consume five or more elements during your following turn',
+    ),
+    Mastery(
+      masteryClassCode: 'bt',
+      masteryDetails:
+          'Have your bear summon deal DAMAGE 10 or more in three consecutive rounds',
+    ),
+    Mastery(
+      masteryClassCode: 'bt',
+      masteryDetails:
+          'You or your summons must apply a negative condition to at least 10 different enemies',
+    ),
+    Mastery(
+      masteryClassCode: 'bs',
+      masteryDetails:
+          'Perform two different summon actions on your first turn and keep all summons from those actions alive for the entire scenario',
+    ),
+    Mastery(
+      masteryClassCode: 'bs',
+      masteryDetails:
+          'Perform three different non-summon persistent loss actions before your first rest',
+    ),
+    Mastery(
+      masteryClassCode: 'dv',
+      masteryDetails:
+          'During one round, have at least four monsters move into four different Rifts that affect those monsters',
+    ),
+    Mastery(
+      masteryClassCode: 'dv',
+      masteryDetails:
+          'Reveal at least one card from at least one ability card deck or attack modifier deck each round',
+    ),
+    Mastery(
+      masteryClassCode: 'dl',
+      masteryDetails:
+          'Deal DAMAGE 10 or more with each of three different attack actions',
+    ),
+    Mastery(
+      masteryClassCode: 'dl',
+      masteryDetails:
+          'Destroy at least six obstacles. End the scenario with no obstacles on the map other than ones placed by allies',
+    ),
+    Mastery(
+      masteryClassCode: 'rg',
+      masteryDetails: 'Kill at least five enemies during their turns',
+    ),
+    Mastery(
+      masteryClassCode: 'rg',
+      masteryDetails:
+          'Force each enemy in the scenario to move at least one hex, forcing at least six enemies to move',
+    ),
+    Mastery(
+      masteryClassCode: 'hc',
+      masteryDetails: 'AIR or consume_AIR during each of your turns',
+    ),
+    Mastery(
+      masteryClassCode: 'hc',
+      masteryDetails:
+          'During each round in which there is at least one enemy on the map at the start of your turn, either place one of your tokens on an ability card of yours or on an enemy',
+    ),
+    Mastery(
+      masteryClassCode: 'vw',
+      masteryDetails:
+          'Cause enemies to suffer DAMAGE 20 or more in a single turn with granted or commanded attacks',
+    ),
+    Mastery(
+      masteryClassCode: 'vw',
+      masteryDetails:
+          'Give at least one ally or enemy POISON, STRENGTHEN, BLESS, or WARD each round',
+    ),
     Mastery(
       masteryClassCode: 'incarnate',
       masteryDetails:

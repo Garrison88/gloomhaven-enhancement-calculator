@@ -99,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       : Colors.white,
                 ),
               );
+              widget.charactersModel.updateTheme();
             },
           ),
           const SettingsDivider(),
@@ -262,13 +263,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SettingsDivider(),
           SwitchListTile(
-            // subtitle: const Text('Show retired characters in the list view'),
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {
-              // int index = widget.charactersModel.characters.indexOf(
-              //   widget.charactersModel.currentCharacter,
-              // );
               context.read<AppModel>().updateTheme();
               setState(() {
                 widget.charactersModel.toggleShowRetired();
