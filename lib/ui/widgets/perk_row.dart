@@ -7,7 +7,6 @@ import '../../models/perk.dart';
 import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
-// import '../../viewmodels/character_model.dart';
 
 class PerkRow extends StatefulWidget {
   final Character character;
@@ -30,7 +29,6 @@ class _PerkRowState extends State<PerkRow> {
 
   @override
   Widget build(BuildContext context) {
-    // CharactersModel charactersModel = context.watch<CharactersModel>();
     CharactersModel charactersModel = context.watch<CharactersModel>();
     for (final Perk perk in widget.perks) {
       perkIds.add(perk.perkId);

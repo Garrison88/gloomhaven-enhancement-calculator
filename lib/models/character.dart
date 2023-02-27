@@ -3,6 +3,7 @@ import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
 import '../data/character_data.dart';
 import 'player_class.dart';
@@ -75,6 +76,8 @@ class Character {
   List<CharacterPerk> characterPerks = [];
   List<Mastery> masteries = [];
   List<CharacterMastery> characterMasteries = [];
+  List<PerkRow> perkRows = [];
+  List<Perk> perkRowPerks = [];
 
   Character.fromMap(Map<String, dynamic> map) {
     id = map[columnCharacterId];
@@ -135,25 +138,25 @@ class Character {
               ),
             );
 
-  int level() => CharacterData.levelXp.entries
+  static int level(int xp) => CharacterData.levelXp.entries
       .lastWhere(
         (entry) => entry.value <= xp,
       )
       .key;
 
-  int nextLevelXp() => CharacterData.levelXp.entries
+  static int nextLevelXp(int level) => CharacterData.levelXp.entries
       .firstWhere(
-        (entry) => entry.key > level(),
+        (entry) => entry.key > level,
         orElse: () => CharacterData.levelXp.entries.last,
       )
       .value;
 
-  int maximumPerks() {
+  static int maximumPerks(Character character) {
     int sum = 0;
-    sum += level() - 1;
-    sum += ((checkMarks - 1) / 3).round();
-    sum += previousRetirements;
-    sum += characterMasteries.fold(
+    sum += level(character.xp) - 1;
+    sum += ((character.checkMarks - 1) / 3).round();
+    sum += character.previousRetirements;
+    sum += character.characterMasteries.fold(
       0,
       (previousValue, mastery) =>
           previousValue + (mastery.characterMasteryAchieved ? 1 : 0),

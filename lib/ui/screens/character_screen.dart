@@ -34,7 +34,7 @@ class CharacterScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             // RETIREMENTS and POCKET ITEMS
-            RetirementsAndPocketItemsSection(
+            _RetirementsAndPocketItemsSection(
               character: character,
             ),
             // NAME and CLASS
@@ -42,7 +42,7 @@ class CharacterScreen extends StatelessWidget {
               padding: const EdgeInsets.all(
                 smallPadding,
               ),
-              child: NameAndClassSection(
+              child: _NameAndClassSection(
                 character: character,
               ),
             ),
@@ -51,25 +51,27 @@ class CharacterScreen extends StatelessWidget {
               padding: const EdgeInsets.all(
                 smallPadding,
               ),
-              child: StatsSection(
+              child: _StatsSection(
                 character: character,
               ),
             ),
             // RESOURCES
-            ResourcesSection(
+            _ResourcesSection(
               character: character,
             ),
             // NOTES
             Padding(
               padding: const EdgeInsets.all(smallPadding),
-              child: NotesSection(
+              child: _NotesSection(
                 character: character,
               ),
             ),
             // BATTLE GOAL CHECKMARKS
-            BattleGoalCheckmarksSection(
-              character: character,
-            ),
+            if (context.read<CharactersModel>().isEditMode &&
+                !character.isRetired)
+              _BattleGoalCheckmarksSection(
+                character: character,
+              ),
             // PERKS
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: smallPadding),
@@ -101,8 +103,8 @@ class CharacterScreen extends StatelessWidget {
   }
 }
 
-class RetirementsAndPocketItemsSection extends StatelessWidget {
-  const RetirementsAndPocketItemsSection({
+class _RetirementsAndPocketItemsSection extends StatelessWidget {
+  const _RetirementsAndPocketItemsSection({
     @required this.character,
     Key key,
   }) : super(key: key);
@@ -160,7 +162,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
         ),
         Tooltip(
           message:
-              '${(character.level() / 2).round()} Pocket Item${(character.level() / 2).round() > 1 ? 's' : ''} Allowed',
+              '${(Character.level(character.xp) / 2).round()} Pocket Item${(Character.level(character.xp) / 2).round() > 1 ? 's' : ''} Allowed',
           child: Padding(
             padding: const EdgeInsets.only(
               right: smallPadding,
@@ -185,7 +187,7 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
                       __,
                     ) =>
                         Text(
-                      '${(character.level() / 2).round()}',
+                      '${(Character.level(character.xp) / 2).round()}',
                       style: Theme.of(context).textTheme.bodyMedium.copyWith(
                             fontSize: 15,
                             color:
@@ -208,8 +210,8 @@ class RetirementsAndPocketItemsSection extends StatelessWidget {
   }
 }
 
-class NameAndClassSection extends StatelessWidget {
-  NameAndClassSection({
+class _NameAndClassSection extends StatelessWidget {
+  _NameAndClassSection({
     @required this.character,
     Key key,
   }) : super(key: key);
@@ -262,7 +264,7 @@ class NameAndClassSection extends StatelessWidget {
                     __,
                   ) =>
                       Text(
-                    '${character.level()}',
+                    '${Character.level(character.xp)}',
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.black87
@@ -296,8 +298,8 @@ class NameAndClassSection extends StatelessWidget {
   }
 }
 
-class StatsSection extends StatelessWidget {
-  const StatsSection({
+class _StatsSection extends StatelessWidget {
+  const _StatsSection({
     @required this.character,
     Key key,
   }) : super(key: key);
@@ -378,7 +380,7 @@ class StatsSection extends StatelessWidget {
                   __,
                 ) =>
                     Text(
-                  ' / ${character.nextLevelXp()}',
+                  ' / ${Character.nextLevelXp(Character.level(character.xp))}',
                   style: Theme.of(context).textTheme.bodyMedium.copyWith(
                         fontSize:
                             Theme.of(context).textTheme.bodyMedium.fontSize / 2,
@@ -490,17 +492,17 @@ class StatsSection extends StatelessWidget {
   }
 }
 
-class ResourcesSection extends StatefulWidget {
-  const ResourcesSection({
+class _ResourcesSection extends StatefulWidget {
+  const _ResourcesSection({
     this.character,
     Key key,
   }) : super(key: key);
   final Character character;
   @override
-  State<ResourcesSection> createState() => _ResourcesSectionState();
+  State<_ResourcesSection> createState() => _ResourcesSectionState();
 }
 
-class _ResourcesSectionState extends State<ResourcesSection> {
+class _ResourcesSectionState extends State<_ResourcesSection> {
   @override
   Widget build(BuildContext context) {
     CharactersModel charactersModel = context.read<CharactersModel>();
@@ -567,6 +569,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                         widget.character
                           ..resourceHide = widget.character.resourceHide - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[1],
@@ -579,6 +583,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                         widget.character
                           ..resourceMetal = widget.character.resourceMetal - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[2],
@@ -593,6 +599,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceLumber =
                               widget.character.resourceLumber - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[3],
@@ -607,6 +615,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceArrowvine =
                               widget.character.resourceArrowvine - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[4],
@@ -621,6 +631,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceAxenut =
                               widget.character.resourceAxenut - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[5],
@@ -635,6 +647,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceRockroot =
                               widget.character.resourceRockroot - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[6],
@@ -649,6 +663,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceFlamefruit =
                               widget.character.resourceFlamefruit - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[7],
@@ -663,6 +679,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceCorpsecap =
                               widget.character.resourceCorpsecap - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[8],
@@ -677,6 +695,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
                           ..resourceSnowthistle =
                               widget.character.resourceSnowthistle - 1,
                       ),
+                      canEdit: charactersModel.isEditMode &&
+                          !widget.character.isRetired,
                     ),
                   ],
                 ),
@@ -689,8 +709,8 @@ class _ResourcesSectionState extends State<ResourcesSection> {
   }
 }
 
-class NotesSection extends StatelessWidget {
-  const NotesSection({
+class _NotesSection extends StatelessWidget {
+  const _NotesSection({
     @required this.character,
     Key key,
   }) : super(key: key);
@@ -731,8 +751,8 @@ class NotesSection extends StatelessWidget {
   }
 }
 
-class BattleGoalCheckmarksSection extends StatelessWidget {
-  const BattleGoalCheckmarksSection({
+class _BattleGoalCheckmarksSection extends StatelessWidget {
+  const _BattleGoalCheckmarksSection({
     @required this.character,
     Key key,
   }) : super(key: key);

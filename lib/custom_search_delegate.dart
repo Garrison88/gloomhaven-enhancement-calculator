@@ -6,7 +6,6 @@ import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
 import 'data/character_data.dart';
-import 'main.dart';
 
 class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   CustomSearchDelegate(
@@ -149,34 +148,30 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     }),
                     label: const Text('Jaws of the Lion'),
                   ),
-                  if (includeFrosthaven)
-                    FilterChip(
-                      labelStyle: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          .copyWith(
-                            color: fh
-                                ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .primary) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black
-                                : Theme.of(context).textTheme.bodyLarge.color,
-                          ),
-                      checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).colorScheme.primary) ==
-                              Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      visualDensity: VisualDensity.compact,
-                      selected: fh,
-                      onSelected: (value) => stateSetter(() {
-                        fh = value;
-                      }),
-                      label: const Text('Frosthaven'),
-                    ),
+                  FilterChip(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
+                          color: fh
+                              ? ThemeData.estimateBrightnessForColor(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .primary) ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black
+                              : Theme.of(context).textTheme.bodyLarge.color,
+                        ),
+                    checkmarkColor: ThemeData.estimateBrightnessForColor(
+                                Theme.of(context).colorScheme.primary) ==
+                            Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    visualDensity: VisualDensity.compact,
+                    selected: fh,
+                    onSelected: (value) => stateSetter(() {
+                      fh = value;
+                    }),
+                    label: const Text('Frosthaven'),
+                  ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
                       labelStyle: Theme.of(context)

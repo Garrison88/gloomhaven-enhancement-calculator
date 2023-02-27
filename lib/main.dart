@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'gloomhaven_companion.dart';
 import 'shared_prefs.dart';
 
-bool includeFrosthaven = true;
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();

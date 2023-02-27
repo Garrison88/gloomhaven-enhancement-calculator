@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 3.7.0+147
+version: 3.7.0+152
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -12,7 +12,7 @@ dependencies:
   shared_preferences: ^2.0.17
   auto_size_text: ^3.0.0
   sqflite: ^2.2.4
-  path_provider: ^2.0.12
+  path_provider: ^2.0.13
   provider: ^6.0.5
   flutter_svg: ^1.1.6
   flutter_svg_provider: ^1.0.3

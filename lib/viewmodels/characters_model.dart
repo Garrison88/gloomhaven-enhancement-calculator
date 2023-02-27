@@ -3,6 +3,7 @@ import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 import 'package:uuid/uuid.dart';
 import '../data/character_data.dart';
 import '../data/database_helpers.dart';
@@ -35,6 +36,8 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool isEditMode = false;
 
+  // bool canEdit() => isEditMode && !currentCharacter.isRetired;
+
   void toggleShowRetired({
     int index,
   }) {
@@ -46,13 +49,13 @@ class CharactersModel with ChangeNotifier {
         : _characters.indexOf(currentCharacter);
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    if (theIndex >= 1) {
+    if (!theIndex.isNegative) {
       jumpToPage(
         theIndex,
       );
     }
     _setCurrentCharacter(
-      index: theIndex == -1 ? 0 : theIndex,
+      index: theIndex,
     );
     notifyListeners();
   }
@@ -71,22 +74,16 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<List<Character>> loadCharacters() async {
-    characters = await databaseHelper.queryAllCharacters();
-    for (Character character in characters) {
+    List<Character> loadedCharacters =
+        await databaseHelper.queryAllCharacters();
+    for (Character character in loadedCharacters) {
       character.characterPerks = await _loadPerks(
         character,
       );
       character.characterMasteries = await _loadMasteries(
-        character.uuid,
+        character,
       );
-      List<Map<String, Object>> masteries = await databaseHelper.queryMasteries(
-        character.playerClass.classCode,
-      );
-      for (var masteryMap in masteries) {
-        character.masteries.add(
-          Mastery.fromMap(masteryMap),
-        );
-      }
+      characters = loadedCharacters;
     }
 
     _setCurrentCharacter(
@@ -139,15 +136,8 @@ class CharactersModel with ChangeNotifier {
     );
 
     character.characterMasteries = await _loadMasteries(
-      character.uuid,
+      character,
     );
-    List<Map<String, Object>> masteries =
-        await databaseHelper.queryMasteries(character.playerClass.classCode);
-    for (var masteryMap in masteries) {
-      character.masteries.add(
-        Mastery.fromMap(masteryMap),
-      );
-    }
     _characters.add(character);
     if (characters.length > 1) {
       _animateToPage(
@@ -164,7 +154,7 @@ class CharactersModel with ChangeNotifier {
     isEditMode = false;
     int index = characters.indexOf(currentCharacter);
     await databaseHelper.deleteCharacter(currentCharacter);
-    _characters.remove(currentCharacter);
+    characters.remove(currentCharacter);
     _setCurrentCharacter(
       index: index,
     );
@@ -185,9 +175,6 @@ class CharactersModel with ChangeNotifier {
         currentCharacter = characters[index];
         SharedPrefs().initialPage = index;
       }
-      currentCharacter = index > characters.length - 1 || index == -1
-          ? characters.last
-          : characters[index];
       previousRetirementsController.text =
           currentCharacter.previousRetirements != 0
               ? '${currentCharacter.previousRetirements}'
@@ -285,13 +272,54 @@ class CharactersModel with ChangeNotifier {
         Perk.fromMap(perkMap),
       );
     }
+    String details = '';
+    for (Perk perk in character.perks) {
+      if (details.isEmpty) {
+        details = perk.perkDetails;
+        character.perkRowPerks.add(perk);
+        continue;
+      }
+      if (details == perk.perkDetails) {
+        character.perkRowPerks.add(perk);
+        continue;
+      }
+      if (details != perk.perkDetails) {
+        character.perkRows.add(
+          PerkRow(
+            character: character,
+            perks: character.perkRowPerks,
+          ),
+        );
+        character.perkRowPerks = [perk];
+        details = perk.perkDetails;
+      }
+    }
+    character.perkRows.add(
+      PerkRow(
+        character: character,
+        perks: character.perkRowPerks,
+      ),
+    );
     return await databaseHelper.queryCharacterPerks(
       character.uuid,
     );
   }
 
-  Future<List<CharacterMastery>> _loadMasteries(String uuid) async =>
-      await databaseHelper.queryCharacterMasteries(uuid);
+  Future<List<CharacterMastery>> _loadMasteries(
+    Character character,
+  ) async {
+    List<Map<String, Object>> masteries = await databaseHelper.queryMasteries(
+      character.playerClass.classCode,
+    );
+    for (var masteryMap in masteries) {
+      character.masteries.add(
+        Mastery.fromMap(masteryMap),
+      );
+    }
+    return await databaseHelper.queryCharacterMasteries(
+      character.uuid,
+    );
+  }
 
   Future<void> togglePerk({
     List<CharacterPerk> characterPerks,

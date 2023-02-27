@@ -1,50 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import '../../models/resource.dart';
 import '../../data/constants.dart';
-import 'package:provider/provider.dart';
 
 class ResourceCard extends StatelessWidget {
   final Resource resource;
   final int count;
   final Function() increaseCount;
   final Function() decreaseCount;
+  final bool canEdit;
   const ResourceCard({
     Key key,
     this.resource,
     this.count,
     this.increaseCount,
     this.decreaseCount,
+    this.canEdit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.watch<CharactersModel>();
     return SizedBox(
-      height: charactersModel.isEditMode ? 90 : 70,
+      height: canEdit ? 90 : 70,
       width: 100,
       child: Stack(
-        alignment: charactersModel.isEditMode
-            ? AlignmentDirectional.topStart
-            : Alignment.centerRight,
+        alignment:
+            canEdit ? AlignmentDirectional.topStart : Alignment.centerRight,
         children: <Widget>[
           ResourceDetails(
             name: resource.name,
             count: count,
             decreaseCount: decreaseCount,
             increaseCount: increaseCount,
+            canEdit: canEdit,
           ),
           Align(
-            alignment: charactersModel.isEditMode
-                ? Alignment.topLeft
-                : Alignment.centerLeft,
-            child: charactersModel.isEditMode
+            alignment: canEdit ? Alignment.topLeft : Alignment.centerLeft,
+            child: canEdit
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      ResourceIcon(
-                        iconPath: resource.icon,
+                      SvgPicture.asset(
+                        resource.icon,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black87,
+                        height: iconSize,
+                        width: iconSize,
                       ),
                       Text(
                         resource.name,
@@ -55,32 +57,17 @@ class ResourceCard extends StatelessWidget {
                       const SizedBox(),
                     ],
                   )
-                : ResourceIcon(
-                    iconPath: resource.icon,
+                : SvgPicture.asset(
+                    resource.icon,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                    height: iconSize,
+                    width: iconSize,
                   ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class ResourceIcon extends StatelessWidget {
-  final String iconPath;
-  const ResourceIcon({
-    Key key,
-    this.iconPath,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      iconPath,
-      color: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : Colors.black87,
-      height: iconSize,
-      width: iconSize,
     );
   }
 }
@@ -90,19 +77,20 @@ class ResourceDetails extends StatelessWidget {
   final int count;
   final Function() decreaseCount;
   final Function() increaseCount;
+  final bool canEdit;
   const ResourceDetails({
     Key key,
     this.name,
     this.count,
     this.decreaseCount,
     this.increaseCount,
+    this.canEdit,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.watch<CharactersModel>();
     return SizedBox(
-      width: charactersModel.isEditMode ? 100 : 80,
+      width: canEdit ? 100 : 80,
       child: Card(
         child: Stack(
           alignment: Alignment.bottomCenter,
@@ -111,7 +99,7 @@ class ResourceDetails extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (!charactersModel.isEditMode)
+                  if (!canEdit)
                     Text(
                       name,
                       style: const TextStyle(fontSize: 12),
@@ -120,7 +108,7 @@ class ResourceDetails extends StatelessWidget {
                 ],
               ),
             ),
-            if (charactersModel.isEditMode) ...[
+            if (canEdit) ...[
               Positioned(
                 bottom: -smallPadding,
                 left: -2,

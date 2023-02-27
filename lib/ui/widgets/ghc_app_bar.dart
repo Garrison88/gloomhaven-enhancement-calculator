@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/main.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
@@ -114,7 +113,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                     : Colors.white,
               ),
             )
-          : context.watch<AppModel>().page == 1 && includeFrosthaven
+          : context.watch<AppModel>().page == 1
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -145,9 +144,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
               : Container(),
       actions: <Widget>[
         if (charactersModel.isEditMode)
-          // ScaleTransition(
-          //   scale: charactersModel.hideRetireCharacterAnimationController,
-          // child:
           Tooltip(
             message: charactersModel.currentCharacter.isRetired
                 ? 'Unretire'
@@ -161,7 +157,9 @@ class _GHCAppBarState extends State<GHCAppBar> {
               onPressed: () async {
                 final String message =
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                // int index =
+                int index = charactersModel.characters.indexOf(
+                  charactersModel.currentCharacter,
+                );
                 await charactersModel.retireCurrentCharacter();
                 context.read<AppModel>().updateTheme();
                 ScaffoldMessenger.of(context)
@@ -175,9 +173,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                               label: 'Show',
                               onPressed: () {
                                 charactersModel.toggleShowRetired(
-                                  index: charactersModel.characters.indexOf(
-                                    charactersModel.currentCharacter,
-                                  ),
+                                  index: index,
                                 );
                               },
                             ),
@@ -186,7 +182,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
               },
             ),
           ),
-        // ),
         if (appModel.page == 0)
           Tooltip(
             message: charactersModel.isEditMode ? 'Delete' : 'New Character',
