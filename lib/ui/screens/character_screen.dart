@@ -211,13 +211,11 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
 }
 
 class _NameAndClassSection extends StatelessWidget {
-  _NameAndClassSection({
+  const _NameAndClassSection({
     @required this.character,
     Key key,
   }) : super(key: key);
   final Character character;
-  final TextEditingController controller =
-      TextEditingController(text: 'My First Guy');
   @override
   Widget build(BuildContext context) {
     CharactersModel charactersModel = context.read<CharactersModel>();
@@ -288,6 +286,9 @@ class _NameAndClassSection extends StatelessWidget {
             ),
           ],
         ),
+        if (character.playerClass.traits.isNotEmpty)
+          Text(
+              '${character.playerClass.traits[0]} ᛫ ${character.playerClass.traits[1]} ᛫ ${character.playerClass.traits[2]}'),
         if (character.isRetired)
           const Text(
             '(retired)',
@@ -351,21 +352,27 @@ class _StatsSection extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.exposure),
-                          onPressed: () => showDialog<int>(
-                              context: context,
-                              builder: (_) => AddSubtractDialog(
-                                    character.xp,
-                                    'XP',
-                                  )).then(
-                            (value) {
-                              if (value != null) {
+                          onPressed: () async {
+                            int value = await showDialog<int>(
+                                context: context,
+                                builder: (_) => AddSubtractDialog(
+                                      character.xp,
+                                      'XP',
+                                    ));
+                            if (value != null) {
+                              if (value < 1) {
+                                charactersModel.updateCharacter(
+                                  character..xp = 0,
+                                );
+                                charactersModel.xpController.clear();
+                              } else {
                                 charactersModel.updateCharacter(
                                   character..xp = value,
                                 );
                                 charactersModel.xpController.text = '$value';
                               }
-                            },
-                          ),
+                            }
+                          },
                         ),
                       ],
                     )
@@ -430,21 +437,24 @@ class _StatsSection extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.exposure),
-                          onPressed: () => showDialog<int>(
-                              context: context,
-                              builder: (_) => AddSubtractDialog(
-                                    character.gold,
-                                    'Gold',
-                                  )).then(
-                            (value) {
-                              if (value != null) {
-                                charactersModel.updateCharacter(
-                                  character..gold = value,
-                                );
+                          onPressed: () async {
+                            int value = await showDialog<int>(
+                                context: context,
+                                builder: (_) => AddSubtractDialog(
+                                      character.gold,
+                                      'Gold',
+                                    ));
+                            if (value != null) {
+                              charactersModel.updateCharacter(
+                                character..gold = value,
+                              );
+                              if (value == 0) {
+                                charactersModel.goldController.clear();
+                              } else {
                                 charactersModel.goldController.text = '$value';
                               }
-                            },
-                          ),
+                            }
+                          },
                         ),
                       ],
                     )

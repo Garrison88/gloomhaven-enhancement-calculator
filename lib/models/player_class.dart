@@ -8,6 +8,7 @@ const String columnClassName = 'Name';
 const String columnClassIconUrl = 'IconUrl';
 const String columnClassIsLocked = 'IsLocked';
 const String columnClassColor = 'Color';
+const String columnClassTraits = 'Traits';
 
 class PlayerClass {
   String race;
@@ -17,6 +18,7 @@ class PlayerClass {
   ClassCategory classCategory;
   bool locked;
   String classColor;
+  List<String> traits;
 
   PlayerClass({
     this.race,
@@ -26,6 +28,7 @@ class PlayerClass {
     this.classCategory = ClassCategory.gloomhaven,
     this.locked = true,
     this.classColor,
+    this.traits = const [],
   });
 
   // convenience constructor to create a PlayerClass object
@@ -36,6 +39,7 @@ class PlayerClass {
     classIconUrl = map[columnClassIconUrl];
     locked = map[locked] == 1 ? true : false;
     classColor = map[columnClassColor];
+    traits = map[traits];
   }
 
   // convenience method to create a Map from this PlayerClass object
@@ -46,7 +50,8 @@ class PlayerClass {
       columnClassName: className,
       columnClassIconUrl: classIconUrl,
       columnClassIsLocked: locked ? 1 : 0,
-      columnClassColor: classColor
+      columnClassColor: classColor,
+      columnClassTraits: traits
     };
     return map;
   }

@@ -318,16 +318,18 @@ class Utils {
           case 'consume_FIRE/ICE':
             assetPath = 'elem_fire_or_ice.svg';
             break;
-          // TODO: get this icon
-          // case 'FIRE/AIR':
-          // case 'consume_FIRE/AIR':
-          //   assetPath = 'elem_fire_or_air.svg';
-          //   break;
+          case 'FIRE/AIR':
+          case 'consume_FIRE/AIR':
+            assetPath = 'elem_fire_or_air.svg';
+            break;
           case 'Any_Element':
           case 'Consume_Any_Element':
             assetPath = 'elem_any.svg';
             break;
           case 'plusone':
+            assetPath = null;
+            break;
+          case 'plustwo':
             assetPath = null;
             break;
           //TODO: get the RESONANCE icon
@@ -338,9 +340,10 @@ class Utils {
           // case 'INFUSION':
           //   assetPath = 'infusion.svg';
           //   break;
-          //TODO: get the Item Minus One icon
+          // TODO: fix the Item Minus One icon
           // case 'item_minus_one':
-          //   assetPath = 'item_minus_one.svg';
+          //   assetPath =
+          //       darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg';
           //   break;
         }
       }
@@ -428,6 +431,10 @@ class Utils {
       } else if (element == 'plusone') {
         inlineList.add(
           const TextSpan(text: '+1'),
+        );
+      } else if (element == 'plustwo') {
+        inlineList.add(
+          const TextSpan(text: '+2'),
         );
       } else {
         inlineList.add(
