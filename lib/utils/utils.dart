@@ -282,6 +282,10 @@ class Utils {
           case 'consume_AIR':
             assetPath = 'elem_air.svg';
             break;
+          case 'AIR/DARK':
+          case 'consume_AIR/DARK':
+            assetPath = 'elem_air_or_dark.svg';
+            break;
           case 'DARK':
           case 'consume_DARK':
             assetPath = 'elem_dark.svg';
@@ -302,6 +306,10 @@ class Utils {
           case 'consume_EARTH/FIRE':
             assetPath = 'elem_earth_or_fire.svg';
             break;
+          case 'EARTH/AIR':
+          case 'consume_EARTH/AIR':
+            assetPath = 'elem_earth_or_air.svg';
+            break;
           case 'EARTH/DARK':
           case 'consume_EARTH/DARK':
             assetPath = 'elem_earth_or_dark.svg';
@@ -310,10 +318,30 @@ class Utils {
           case 'consume_FIRE/ICE':
             assetPath = 'elem_fire_or_ice.svg';
             break;
+          // TODO: get this icon
+          // case 'FIRE/AIR':
+          // case 'consume_FIRE/AIR':
+          //   assetPath = 'elem_fire_or_air.svg';
+          //   break;
           case 'Any_Element':
           case 'Consume_Any_Element':
             assetPath = 'elem_any.svg';
             break;
+          case 'plusone':
+            assetPath = null;
+            break;
+          //TODO: get the RESONANCE icon
+          // case 'RESONANCE':
+          //   assetPath = 'resonance.svg';
+          //   break;
+          //TODO: get the INFUSION icon
+          // case 'INFUSION':
+          //   assetPath = 'infusion.svg';
+          //   break;
+          //TODO: get the Item Minus One icon
+          // case 'item_minus_one':
+          //   assetPath = 'item_minus_one.svg';
+          //   break;
         }
       }
       if (assetPath != null) {
@@ -392,6 +420,15 @@ class Utils {
             const TextSpan(text: ')'),
           );
         }
+        // this is specific to the Infuser character sheet
+      } else if (element == '"plusone') {
+        inlineList.add(
+          const TextSpan(text: '"+1'),
+        );
+      } else if (element == 'plusone') {
+        inlineList.add(
+          const TextSpan(text: '+1'),
+        );
       } else {
         inlineList.add(
           TextSpan(text: element),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
@@ -157,9 +158,10 @@ class _GHCAppBarState extends State<GHCAppBar> {
               onPressed: () async {
                 final String message =
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                int index = charactersModel.characters.indexOf(
-                  charactersModel.currentCharacter,
-                );
+                // int index = charactersModel.characters.indexOf(
+                //   charactersModel.currentCharacter,
+                // );
+                Character character = charactersModel.currentCharacter;
                 await charactersModel.retireCurrentCharacter();
                 context.read<AppModel>().updateTheme();
                 ScaffoldMessenger.of(context)
@@ -173,7 +175,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                               label: 'Show',
                               onPressed: () {
                                 charactersModel.toggleShowRetired(
-                                  index: index,
+                                  character: character,
                                 );
                               },
                             ),

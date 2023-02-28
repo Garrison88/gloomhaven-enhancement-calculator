@@ -36,26 +36,56 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool isEditMode = false;
 
-  // bool canEdit() => isEditMode && !currentCharacter.isRetired;
-
   void toggleShowRetired({
-    int index,
+    Character character,
   }) {
-    int theIndex = index ??= showRetired
-        ? _characters
+    // HERE THERE BE DRAGONS
+    if (_characters.isEmpty) {
+      showRetired = !showRetired;
+      notifyListeners();
+      return;
+    }
+    int _index = 0;
+    if (character != null) {
+      _index = _characters.indexOf(character);
+    } else if (retiredCharactersAreHidden && currentCharacter == null) {
+      _index = 0;
+    } else if (currentCharacter.isRetired) {
+      List<Character> tempList = characters;
+      int tempIndex = tempList.indexOf(currentCharacter);
+      do {
+        tempIndex++;
+      } while (tempIndex < tempList.length &&
+          tempList.elementAt(tempIndex).isRetired);
+      try {
+        _index = characters
             .where((character) => !character.isRetired)
             .toList()
-            .indexOf(currentCharacter)
-        : _characters.indexOf(currentCharacter);
+            .indexOf(tempList.elementAt(tempIndex));
+      } on RangeError catch (_) {
+        _index = characters
+                .where((character) => !character.isRetired)
+                .toList()
+                .length -
+            1;
+      }
+    } else if (!currentCharacter.isRetired && showRetired) {
+      _index = characters
+          .where((character) => !character.isRetired)
+          .toList()
+          .indexOf(currentCharacter);
+    } else {
+      _index = _characters.indexOf(currentCharacter);
+    }
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    if (!theIndex.isNegative) {
+    if (!_index.isNegative) {
       jumpToPage(
-        theIndex,
+        _index,
       );
     }
     _setCurrentCharacter(
-      index: theIndex,
+      index: _index,
     );
     notifyListeners();
   }
@@ -154,7 +184,7 @@ class CharactersModel with ChangeNotifier {
     isEditMode = false;
     int index = characters.indexOf(currentCharacter);
     await databaseHelper.deleteCharacter(currentCharacter);
-    characters.remove(currentCharacter);
+    _characters.remove(currentCharacter);
     _setCurrentCharacter(
       index: index,
     );
@@ -226,18 +256,13 @@ class CharactersModel with ChangeNotifier {
 
   Future<void> retireCurrentCharacter() async {
     isEditMode = false;
-    // int trueIndex = _characters.indexOf(character);
     int index = characters.indexOf(currentCharacter);
     currentCharacter.isRetired = !currentCharacter.isRetired;
     await databaseHelper.updateCharacter(currentCharacter);
-    // if (!showRetired) {
-    //   characters.remove(character,);
-    // }
     _setCurrentCharacter(
       index: index,
     );
     notifyListeners();
-    // return trueIndex;
   }
 
   Future<void> updateCharacter(Character character) async {
