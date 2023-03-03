@@ -78,6 +78,7 @@ class Character {
   List<CharacterMastery> characterMasteries = [];
   List<PerkRow> perkRows = [];
   List<Perk> perkRowPerks = [];
+  bool includeMasteries = true;
 
   Character.fromMap(Map<String, dynamic> map) {
     id = map[columnCharacterId];

@@ -18,6 +18,7 @@ class DatabaseHelper {
   // This is the actual database filename that is saved in the docs directory.
   static const _databaseName = "GloomhavenCompanion.db";
 
+  // TODO: BEFORE RELEASE< INCREASE THIS TO 7
   // Increment this version when you need to change the schema.
   static const _databaseVersion = 7;
 
@@ -239,21 +240,23 @@ class DatabaseHelper {
         );
       },
     );
-    final masteries = await queryMasteries(
-      character.playerClass.classCode,
-    );
-    masteries.asMap().forEach(
-      (key, mastery) async {
-        await db.insert(
-          tableCharacterMasteries,
-          {
-            columnAssociatedCharacterUuid: character.uuid,
-            columnAssociatedMasteryId: mastery[columnMasteryId],
-            columnCharacterMasteryAchieved: 0,
-          },
-        );
-      },
-    );
+    if (character.includeMasteries) {
+      final masteries = await queryMasteries(
+        character.playerClass.classCode,
+      );
+      masteries.asMap().forEach(
+        (key, mastery) async {
+          await db.insert(
+            tableCharacterMasteries,
+            {
+              columnAssociatedCharacterUuid: character.uuid,
+              columnAssociatedMasteryId: mastery[columnMasteryId],
+              columnCharacterMasteryAchieved: 0,
+            },
+          );
+        },
+      );
+    }
     return id;
   }
 

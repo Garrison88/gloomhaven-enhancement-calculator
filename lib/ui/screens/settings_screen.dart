@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:provider/provider.dart';
@@ -74,12 +74,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Theme.of(context).brightness == Brightness.dark
                 ? const Text('Dark')
                 : const Text('Light'),
-            activeThumbImage: const Svg('images/elem_dark.svg'),
+            // activeThumbImage: const Svg('images/elem_dark.svg'),
             activeColor: const Color(0xff1f272e),
             inactiveThumbColor: const Color(0xffeda50b),
             inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
             activeTrackColor: Colors.white30,
-            inactiveThumbImage: const Svg('images/elem_light.svg'),
+            // inactiveThumbImage: const Svg('images/elem_light.svg'),
             value: widget.appModel.themeMode == ThemeMode.dark,
             onChanged: (val) {
               SharedPrefs().darkTheme = val;
@@ -138,6 +138,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 const Text('Enter the solution to the puzzle'),
                                 TextField(
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                   autofocus: true,
                                   onChanged: (String val) {
                                     setState(() {
@@ -154,7 +156,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Text(
                                   'Cancel',
                                   style: TextStyle(
-                                    color: SharedPrefs().darkTheme
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
                                         ? Colors.grey[300]
                                         : Colors.black87,
                                   ),
@@ -169,9 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   style: TextStyle(
                                     color: envelopeXSolved
                                         ? Theme.of(context).colorScheme.primary
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .surfaceTint,
+                                        : Theme.of(context).disabledColor,
                                   ),
                                 ),
                                 onPressed: envelopeXSolved
@@ -203,10 +204,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   'images/class_icons/bladeswarm.svg',
                                   width: iconSize,
                                   height: iconSize,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.black
-                                      : Colors.white,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Color(
+                                            int.parse(
+                                              '0xff424242',
+                                            ),
+                                          ),
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: smallPadding,

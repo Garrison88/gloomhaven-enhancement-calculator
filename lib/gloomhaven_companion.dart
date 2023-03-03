@@ -103,20 +103,21 @@ class GloomhavenCompanion extends StatelessWidget {
               SharedPrefs().themeColor,
             ),
           ),
-          surfaceTint: Colors.white54,
-        ),
-        navigationBarTheme: AppTheme.darkTheme.navigationBarTheme.copyWith(
-          elevation: 0,
-          indicatorColor: Color(
+          surfaceTint: Color(
             int.parse(
               SharedPrefs().themeColor,
             ),
-          ).withOpacity(.25),
-          backgroundColor: Color(
-            int.parse(
-              '0xff424242',
-            ),
           ),
+        ),
+        bottomNavigationBarTheme:
+            AppTheme.darkTheme.bottomNavigationBarTheme.copyWith(
+          backgroundColor: appModel.themeMode == ThemeMode.dark
+              ? Color(
+                  int.parse(
+                    '0xff424242',
+                  ),
+                )
+              : Colors.white,
         ),
         appBarTheme: AppTheme.darkTheme.appBarTheme.copyWith(
           color: AppTheme.darkTheme.scaffoldBackgroundColor,
@@ -178,9 +179,11 @@ class GloomhavenCompanion extends StatelessWidget {
               SharedPrefs().themeColor,
             ),
           ),
-          surfaceTint: AppTheme.lightTheme.brightness == Brightness.dark
-              ? Colors.white54
-              : Colors.black54,
+          surfaceTint: Color(
+            int.parse(
+              SharedPrefs().themeColor,
+            ),
+          ),
         ),
         checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.resolveWith(

@@ -20,6 +20,8 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   bool _disableMultiTargetsSwitch = SharedPrefs().disableMultiTargetSwitch;
 
+  bool _temporaryEnhancementMode = SharedPrefs().temporaryEnhancementMode;
+
   bool showCost = false;
 
   int enhancementCost = 0;
@@ -61,6 +63,14 @@ class EnhancementCalculatorModel with ChangeNotifier {
   set disableMultiTargetsSwitch(bool value) {
     SharedPrefs().disableMultiTargetSwitch = value;
     _disableMultiTargetsSwitch = value;
+  }
+
+  bool get temporaryEnhancementMode => _temporaryEnhancementMode;
+
+  set temporaryEnhancementMode(bool value) {
+    SharedPrefs().temporaryEnhancementMode = value;
+    _temporaryEnhancementMode = value;
+    calculateCost();
   }
 
   bool get lostNonPersistent => _lostNonPersistent;
@@ -139,6 +149,16 @@ class EnhancementCalculatorModel with ChangeNotifier {
     enhancementCost +=
         (previousEnhancements != null ? previousEnhancements * 75 : 0);
 
+    /// Temporary Enhancement: if there is at least one previous enhancement,
+    /// reduce the cost by 20 gold. Then reduce the entire cost by 20%, rouded up
+
+    if (temporaryEnhancementMode) {
+      if (previousEnhancements != null && previousEnhancements > 0) {
+        enhancementCost -= 20;
+      }
+      enhancementCost = (enhancementCost * 0.8).ceil();
+    }
+
     /// only show cost if there's a price to display
     showCost =
         cardLevel != 0 || previousEnhancements != 0 || enhancement != null;
@@ -156,8 +176,9 @@ class EnhancementCalculatorModel with ChangeNotifier {
   }
 
   void enhancementSelected(Enhancement selectedEnhancement) {
-    if (!SharedPrefs().gloomhavenMode &&
-        selectedEnhancement?.name == 'Disarm') {
+    if ((!SharedPrefs().gloomhavenMode &&
+            selectedEnhancement?.name == 'Disarm') ||
+        (SharedPrefs().gloomhavenMode && selectedEnhancement?.name == 'Ward')) {
       _enhancement = null;
       SharedPrefs().remove('enhancementType');
       notifyListeners();

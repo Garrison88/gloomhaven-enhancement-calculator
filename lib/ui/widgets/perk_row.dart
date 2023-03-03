@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
 import '../../models/perk.dart';
-import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
 
@@ -140,7 +139,7 @@ class _PerkRowState extends State<PerkRow> {
                       ),
                   children: Utils.generateCheckRowDetails(
                     widget.perks.first.perkDetails,
-                    SharedPrefs().darkTheme,
+                    Theme.of(context).brightness == Brightness.dark,
                   ),
                 ),
               ),

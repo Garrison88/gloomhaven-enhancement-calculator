@@ -18,31 +18,31 @@ class _GHCBottomNavigationBarState extends State<GHCBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.history_edu_outlined,
+    return SizedBox(
+      child: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.history_edu_outlined,
+            ),
+            label: 'CHARACTERS',
           ),
-          label: 'CHARACTERS',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.auto_awesome_outlined,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.auto_awesome_outlined,
+            ),
+            label: 'ENHANCEMENTS',
           ),
-          label: 'ENHANCEMENTS',
-        ),
-      ],
-      currentIndex: appModel.page,
-      onTap: (value) {
-        appModel.page = value;
-        appModel.pageController.animateToPage(
-          value,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.ease,
-        );
-        context.read<CharactersModel>().isScrolledToTop = true;
-      },
+        ],
+        currentIndex: appModel.page,
+        onTap: (value) {
+          appModel.page = value;
+          appModel.pageController.jumpToPage(
+            value,
+          );
+          context.read<CharactersModel>().isScrolledToTop = true;
+        },
+      ),
     );
   }
 }

@@ -53,7 +53,7 @@ abstract class CharacterData {
   static const _sunkeeper = 'sk';
   static const _quartermaster = 'qm';
   static const _summoner = 'su';
-  static const _nightshround = 'ns';
+  static const _nightshroud = 'ns';
   static const _plagueherald = 'ph';
   static const _berserker = 'be';
   static const _soothsinger = 'ss';
@@ -85,16 +85,16 @@ abstract class CharacterData {
   static const _rootwhisperer = 'rw';
   static const _ruinmaw = 'rm';
 
+  static const _arcane = 'Arcane';
+  static const _armored = 'Armored';
+  static const _chaotic = 'Chaotic';
+  static const _educated = 'Educated';
+  static const _intimidating = 'Intimidating';
+  static const _nimble = 'Nimble';
   static const _outcast = 'Outcast';
+  static const _persuasive = 'Persuasive';
   static const _resourceful = 'Resourceful';
   static const _strong = 'Strong';
-  static const _educated = 'Educated';
-  static const _nimble = 'Nimble';
-  static const _armored = 'Armored';
-  static const _persuasive = 'Persuasive';
-  static const _arcane = 'Arcane';
-  static const _intimidating = 'Intimidating';
-  static const _chaotic = 'Chaotic';
 
   static final List<PlayerClass> playerClasses = [
     PlayerClass(
@@ -169,7 +169,7 @@ abstract class CharacterData {
     PlayerClass(
       race: _aesther,
       className: 'Nightshroud',
-      classCode: _nightshround,
+      classCode: _nightshroud,
       classIconUrl: 'nightshroud.svg',
       classColor: '0xff9f9fcf',
     ),
@@ -370,6 +370,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xff7bc144',
+      traits: [
+        _arcane,
+        _educated,
+        _strong,
+      ],
     ),
     PlayerClass(
       race: _savvas,
@@ -379,6 +384,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffff4a1d',
+      traits: [
+        _arcane,
+        _chaotic,
+        _intimidating,
+      ],
     ),
     PlayerClass(
       race: _savvas,
@@ -388,6 +398,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffc2c5c9',
+      traits: [
+        _educated,
+        _outcast,
+        _persuasive,
+      ],
     ),
     PlayerClass(
       race: _vermling,
@@ -397,6 +412,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffd1b38d',
+      traits: [
+        _nimble,
+        _outcast,
+        _resourceful,
+      ],
     ),
     PlayerClass(
       race: _aesther,
@@ -406,6 +426,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffbec5e4',
+      traits: [
+        _chaotic,
+        _intimidating,
+        _outcast,
+      ],
     ),
     PlayerClass(
       race: _algox,
@@ -415,6 +440,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xff7cd1e7',
+      traits: [
+        _chaotic,
+        _nimble,
+        _persuasive,
+      ],
     ),
     PlayerClass(
       race: _algox,
@@ -424,6 +454,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xff88bee7',
+      traits: [
+        _intimidating,
+        _persuasive,
+        _strong,
+      ],
     ),
     PlayerClass(
       race: _unfettered,
@@ -433,6 +468,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffecb633',
+      traits: [
+        _armored,
+        _educated,
+        _resourceful,
+      ],
     ),
     PlayerClass(
       race: _unfettered,
@@ -442,6 +482,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffddb586',
+      traits: [
+        _armored,
+        _resourceful,
+        _strong,
+      ],
     ),
     PlayerClass(
       race: _lurker,
@@ -451,6 +496,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xffac427d',
+      traits: [
+        _armored,
+        _intimidating,
+        _nimble,
+      ],
     ),
     PlayerClass(
       race: _lurker,
@@ -460,6 +510,11 @@ abstract class CharacterData {
       classCategory: ClassCategory.frosthaven,
       locked: true,
       classColor: '0xff59c0a1',
+      traits: [
+        _armored,
+        _chaotic,
+        _strong,
+      ],
     ),
     // CRIMSON SCALES
     PlayerClass(
@@ -742,7 +797,7 @@ abstract class CharacterData {
     Perk(_quartermaster, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
     Perk(_quartermaster, 1, '$_add $_one $_rolling STUN $_card'),
     Perk(_quartermaster, 1, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_quartermaster, 3, '$_add $_one +0 "REFRESH an item" $_card'),
+    Perk(_quartermaster, 3, '$_add $_one +0 "RECOVER an item" $_card'),
     Perk(_quartermaster, 1,
         'Ignore $_negative item $_effects and $_addL $_two +1 $_cards'),
     // SUMMONER
@@ -760,17 +815,17 @@ abstract class CharacterData {
     Perk(_summoner, 1,
         'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
     // NIGHTSHROUD
-    Perk(_nightshround, 2, '$_remove $_two -1 $_cards'),
-    Perk(_nightshround, 1, '$_remove four +0 $_cards'),
-    Perk(_nightshround, 2, '$_add $_one -1 DARK $_card'),
-    Perk(_nightshround, 2,
+    Perk(_nightshroud, 2, '$_remove $_two -1 $_cards'),
+    Perk(_nightshroud, 1, '$_remove four +0 $_cards'),
+    Perk(_nightshroud, 2, '$_add $_one -1 DARK $_card'),
+    Perk(_nightshroud, 2,
         '$_replace $_one -1 DARK $_card with $_one +1 DARK $_card'),
-    Perk(_nightshround, 2, '$_add $_one +1 INVISIBLE $_card'),
-    Perk(_nightshround, 2, '$_add $_three $_rolling MUDDLE $_cards'),
-    Perk(_nightshround, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_nightshround, 1, '$_add $_two $_rolling CURSE $_cards'),
-    Perk(_nightshround, 1, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_nightshround, 1,
+    Perk(_nightshroud, 2, '$_add $_one +1 INVISIBLE $_card'),
+    Perk(_nightshroud, 2, '$_add $_three $_rolling MUDDLE $_cards'),
+    Perk(_nightshroud, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
+    Perk(_nightshroud, 1, '$_add $_two $_rolling CURSE $_cards'),
+    Perk(_nightshroud, 1, '$_add $_one $_rolling ADD TARGET $_card'),
+    Perk(_nightshroud, 1,
         'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
     // PLAGUEHERALD
     Perk(_plagueherald, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
@@ -796,7 +851,7 @@ abstract class CharacterData {
     Perk(_berserker, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
     Perk(_berserker, 2, '$_add $_one +2 FIRE $_card'),
     Perk(_berserker, 1, 'Ignore $_negative item $_effects'),
-    //SOOTHSAYER
+    //SOOTHSINGER
     Perk(_soothsinger, 2, '$_remove $_two -1 $_cards'),
     Perk(_soothsinger, 1, '$_remove $_one -2 $_card'),
     Perk(_soothsinger, 2, '$_replace $_two +1 $_cards with $_one +4 $_card'),
@@ -836,7 +891,7 @@ abstract class CharacterData {
     Perk(_sawbones, 2, '$_add $_two $_rolling WOUND $_cards'),
     Perk(_sawbones, 1, '$_add $_one $_rolling STUN $_card'),
     Perk(_sawbones, 2, '$_add $_one $_rolling HEAL 3 $_card'),
-    Perk(_sawbones, 1, '$_add $_one +0 "REFRESH an item" $_card'),
+    Perk(_sawbones, 1, '$_add $_one +0 "RECOVER an item" $_card'),
     // ELEMENTALIST
     Perk(_elementalist, 2, '$_remove $_two -1 $_cards'),
     Perk(_elementalist, 1, '$_replace $_one -1 $_card with $_one +1 $_card'),
@@ -964,7 +1019,7 @@ abstract class CharacterData {
         '$_add $_one $_rolling "HEAL 1, Self" $_card and $_one $_rolling "SHIELD 1, Self" $_card'),
     Perk(_amberAegis, 2,
         '$_add $_one $_rolling "RETALIATE 1, RANGE 3, Self" $_card'),
-    Perk(_amberAegis, 1, '$_add $_one +2 EARTH/FIRE $_card'),
+    Perk(_amberAegis, 1, '$_add $_one +2 FIRE/EARTH $_card'),
     Perk(_amberAegis, 1,
         'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
     Perk(_amberAegis, 1,
@@ -979,7 +1034,7 @@ abstract class CharacterData {
     Perk(
         _artificer, 2, '$_replace $_one -1 $_card with $_one +1 PULL 1 $_card'),
     Perk(_artificer, 2,
-        '$_replace $_one +0 $_card with $_one +0 "REFRESH a spent item" $_card'),
+        '$_replace $_one +0 $_card with $_one +0 "RECOVER a spent item" $_card'),
     Perk(_artificer, 2,
         '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Self" $_card'),
     Perk(_artificer, 2,
@@ -1028,7 +1083,7 @@ abstract class CharacterData {
     Perk(_brightspark, 3,
         '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element to $_addL +2 ATTACK" $_card'),
     Perk(_brightspark, 1,
-        '$_replace $_one -2 $_card with $_one -2 "Recover $_one random $_card from your discard pile" $_card'),
+        '$_replace $_one -2 $_card with $_one -2 "RECOVER $_one random $_card from your discard pile" $_card'),
     Perk(_brightspark, 2,
         '$_replace $_two +0 $_cards with $_one +1 "HEAL 1, Affect $_one Ally within RANGE 2" $_card'),
     Perk(_brightspark, 1,
@@ -1201,7 +1256,7 @@ abstract class CharacterData {
     Perk(_luminary, 2, '$_add $_one +0 Any_Element $_card'),
     Perk(_luminary, 2, '$_add $_one $_rolling +1 "HEAL 1, Self" $_card'),
     Perk(_luminary, 2,
-        '$_add $_one "POISON, target all enemies in the depicted HEX area" $_card'),
+        '$_add $_one "POISON, target all enemies in the depicted LUMINARY_HEXES area" $_card'),
     Perk(_luminary, 1,
         'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
     Perk(_luminary, 1,
@@ -1286,7 +1341,7 @@ abstract class CharacterData {
         'At the end of each of your long rests, generate LIGHT'),
     // INCARNATE
     Perk('incarnate', 1,
-        '$_replace $_one -2 $_card with $_one RITUALIST / CONQUEROR / REAVER $_rolling $_card'),
+        '$_replace $_one -2 $_card with $_one ALL_STANCES $_rolling $_card'),
     Perk('incarnate', 1,
         '$_replace $_one -1 $_card with $_one PIERCE 2 FIRE $_rolling $_card'),
     Perk('incarnate', 1,
@@ -1303,70 +1358,33 @@ abstract class CharacterData {
         '$_replace $_four +1 $_cards with $_four +1 "RETALIATE 1" $_cards'),
     Perk('incarnate', 2, '$_add one +3 $_card'),
     Perk('incarnate', 1,
-        '$_add $_one REFRESH $_one One_Hand or Two_Hand item $_rolling $_card'),
+        '$_add $_one RECOVER $_one One_Hand or Two_Hand item $_rolling $_card'),
     Perk('incarnate', 1, 'Ignore item -1 effects and $_removeL one -1 $_card'),
     Perk('incarnate', 1,
-        'Whenever you short rest, REFRESH one spent One_Hand item'),
-    Perk('incarnate', 1,
-        'Whenever you long rest, perform RITUALIST / CONQUEROR / REAVER'),
+        'Whenever you short rest, RECOVER one spent One_Hand item'),
+    Perk('incarnate', 1, 'Whenever you long rest, perform ALL_STANCES'),
     Perk('incarnate', 1,
         'You may bring one additional One_Hand item into each scenario'),
     // RIMEHEARTH
-    Perk(
-      'rimehearth',
-      2,
-      '$_replace $_one -1 $_card with $_one $_rolling WOUND $_card',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      '$_replace $_one +0 $_card with $_one $_rolling HEAL 3, WOUND, Self $_card',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      '$_replace $_two +0 $_cards with $_two $_rolling FIRE $_cards',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 WOUND $_card, and $_one +1 HEAL 1, Self $_card',
-    ),
-    Perk(
-      'rimehearth',
-      2,
-      '$_replace $_one +0 $_card with $_one +1 ICE $_card',
-    ),
-    Perk(
-      'rimehearth',
-      2,
-      '$_replace $_one -1 $_card with $_one +0 CHILL $_card',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      '$_replace $_one +2 $_card with $_one +3 CHILL $_card',
-    ),
-    Perk(
-      'rimehearth',
-      2,
-      '$_add $_one +2 FIRE/ICE $_card',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      '$_add $_one +0 BRITTLE $_card',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      'At the start of each $_scenario you may either gain WOUND to generate FIRE or gain CHILL to generate ICE',
-    ),
-    Perk(
-      'rimehearth',
-      1,
-      'Ignore negative item effects and $_add $_one $_rolling FIRE/ICE $_card',
-    ),
+    Perk('rimehearth', 2,
+        '$_replace $_one -1 $_card with $_one $_rolling WOUND $_card'),
+    Perk('rimehearth', 1,
+        '$_replace $_one +0 $_card with $_one $_rolling HEAL 3, WOUND, Self $_card'),
+    Perk('rimehearth', 1,
+        '$_replace $_two +0 $_cards with $_two $_rolling FIRE $_cards'),
+    Perk('rimehearth', 1,
+        '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 WOUND $_card, and $_one +1 HEAL 1, Self $_card'),
+    Perk('rimehearth', 2, '$_replace $_one +0 $_card with $_one +1 ICE $_card'),
+    Perk('rimehearth', 2,
+        '$_replace $_one -1 $_card with $_one +0 CHILL $_card'),
+    Perk('rimehearth', 1,
+        '$_replace $_one +2 $_card with $_one +3 CHILL $_card'),
+    Perk('rimehearth', 2, '$_add $_one +2 FIRE/ICE $_card'),
+    Perk('rimehearth', 1, '$_add $_one +0 BRITTLE $_card'),
+    Perk('rimehearth', 1,
+        'At the start of each $_scenario you may either gain WOUND to generate FIRE or gain CHILL to generate ICE'),
+    Perk('rimehearth', 1,
+        'Ignore negative item effects and $_add $_one $_rolling FIRE/ICE $_card'),
     // DRIFTER
     Perk('drifter', 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
     Perk('drifter', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
@@ -1402,9 +1420,8 @@ abstract class CharacterData {
     Perk('blinkblade', 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
     Perk('blinkblade', 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
     Perk('blinkblade', 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
-    // TODO: get this Spendable icon in dark and light versions
     Perk('blinkblade', 1,
-        'Whenever you short rest, you may spend $_one unspent Spendable item for no effect to Recover a different spent item'),
+        'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
     Perk('blinkblade', 1,
         'At the start of your first turn each $_scenario, you may perform MOVE 3'),
     Perk('blinkblade', 1,
@@ -1421,7 +1438,7 @@ abstract class CharacterData {
     Perk('bannerspear', 1,
         'Ignore item item_minus_one $_effects and $_removeL $_one -1 $_card'),
     Perk('bannerspear', 1,
-        'At the end of each of your long rests, grant $_one ally withing RANGE 3: MOVE 2'),
+        'At the end of each of your long rests, grant $_one ally within RANGE 3: MOVE 2'),
     Perk('bannerspear', 1,
         'Whenever you open a door with a move ability, $_addL +3 MOVE'),
     Perk('bannerspear', 2,
@@ -1483,12 +1500,12 @@ abstract class CharacterData {
     Perk('geminate', 1,
         'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
     Perk('geminate', 2,
-        'Whenever you perform an action with a lost icon, you may discard $_one $_card to Recover $_one card from your discard pile of equal or lower level',
+        'Whenever you perform an action with a lost icon, you may discard $_one $_card to RECOVER $_one card from your discard pile of equal or lower level',
         perkIsGrouped: true),
     // INFUSER
     Perk('infuser', 1,
         'Replace one -2 card with one -1 and one -1 AIR EARTH DARK card'),
-    Perk('infuser', 2, 'Replace one -1 card with one +0 EARTH/AIR card'),
+    Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/EARTH card'),
     Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/DARK card'),
     Perk('infuser', 2, 'Replace one -1 card with one +0 EARTH/DARK card'),
     Perk('infuser', 2, 'Replace one +0 card with one +2 card'),
@@ -1500,7 +1517,7 @@ abstract class CharacterData {
     Perk('infuser', 1,
         'Ignore item item_minus_one effects. Whenever you become exhausted, keep all your active bonuses in play, with your summons acting on initiative 99 each round'),
     Perk('infuser', 1,
-        'Whenever you short rest, you may Consume_Any_Element to Recover one spent One_Hand or Two_Hand item'),
+        'Whenever you short rest, you may Consume_Any_Element to RECOVER one spent One_Hand or Two_Hand item'),
     Perk('infuser', 1,
         'Once each scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
     // PYROCLAST
@@ -1511,7 +1528,7 @@ abstract class CharacterData {
         'Replace one -1 card with one +0 "Create one 1-hex hazardous terrain tile in a featureless hex adjacent to the target" card'),
     Perk('pyroclast', 2, 'Replace two +0 cards with two PUSH 2 Rolling cards'),
     Perk('pyroclast', 1, 'Replace two +1 cards with two +2 cards'),
-    Perk('pyroclast', 2, 'Add two +1 EARTH/FIRE cards'),
+    Perk('pyroclast', 2, 'Add two +1 FIRE/EARTH cards'),
     Perk('pyroclast', 1, 'Add two +1 MUDDLE Rolling cards'),
     Perk('pyroclast', 1, 'Ignore scenario effects'),
     Perk('pyroclast', 1,
@@ -1530,7 +1547,6 @@ abstract class CharacterData {
     Perk('shattersong', 2, 'Replace two +1 cards with two +2 AIR/LIGHT cards'),
     Perk('shattersong', 2,
         'Add one "HEAL 2, BLESS, Target 1 ally" Rolling card'),
-    // TODO: get this RESONANCE icon
     Perk('shattersong', 3, 'Add one +1 "Gain 1 RESONANCE" card'),
     Perk('shattersong', 1, 'Ignore scenario effects'),
     Perk('shattersong', 2,
@@ -1603,9 +1619,9 @@ abstract class CharacterData {
     Perk('frozenfist', 1, 'Add one +3 card'),
     Perk('frozenfist', 3, 'Add two "HEAL 1, self" Rolling cards'),
     Perk('frozenfist', 1,
-        'Ignore item item_minus_one effects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add +1 MOVE'),
+        'Ignore item item_minus_one effects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
     Perk('frozenfist', 1,
-        'Whenever you heal from a long rest, you may consume_ICE/EARTH to add +2 HEAL'),
+        'Whenever you heal from a long rest, you may consume_ICE/EARTH to add plustwo HEAL'),
     Perk('frozenfist', 2,
         'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
         perkIsGrouped: true),
@@ -1613,7 +1629,6 @@ abstract class CharacterData {
     Perk('hive', 1, 'Remove one -2 card and one +1 card'),
     Perk('hive', 3,
         'Replace one -1 card with one +0 "After this attack ability, grant one of your summons: MOVE 2" card'),
-    // TODO: get this TRANSFER icon
     Perk('hive', 3,
         'Replace one +0 card with one +1 "After this attack ability, TRANSFER" card'),
     Perk('hive', 3, 'Add one +1 "HEAL 1, self" card'),
@@ -1626,9 +1641,8 @@ abstract class CharacterData {
     Perk('hive', 1, 'At the end of each of your short rests, you may TRANSFER'),
     Perk('hive', 1, 'Whenever you would gain WOUND, prevent the condition'),
     // METAL MOSAIC
-    // TODO: get these icons PRESSUREUP and PRESSUREDOWN
     Perk('metalmosaic', 3,
-        'Replace one -1 card with one +0 "PRESSUREUP or PRESSUREDOWN" card'),
+        'Replace one -1 card with one +0 "PRESSURE_GAIN or PRESSURE_LOSE" card'),
     Perk('metalmosaic', 2,
         'Replace one -1 card with one "SHIELD 1" Rolling card'),
     Perk('metalmosaic', 2,
@@ -1640,11 +1654,11 @@ abstract class CharacterData {
     Perk('metalmosaic', 1,
         'Ignore item item_minus_one effects and add two +1 cards'),
     Perk('metalmosaic', 1,
-        'Whenever you long rest, you may PRESSUREUP or PRESSUREDOWN'),
+        'Whenever you long rest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
     Perk('metalmosaic', 1,
         'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
     Perk('metalmosaic', 3,
-        'Once each scenario, when you would become exhausted, instead gain STUN and INVISIBLE, lose all your cards, Refresh four lost cards, and then discard the recovered cards',
+        'Once each scenario, when you would become exhausted, instead gain STUN and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
         perkIsGrouped: true),
     // DEEPWRAITH
     Perk('deepwraith', 1, 'Remove two -1 cards'),
@@ -1656,7 +1670,6 @@ abstract class CharacterData {
         'Replace two +0 cards with two PIERCE 3 Rolling cards'),
     Perk('deepwraith', 1, 'Replace two +1 cards with two +2 cards'),
     Perk('deepwraith', 1, 'Replace three +1 cards with three +1 CURSE cards'),
-    // TODO: get this TROPHY icon
     Perk('deepwraith', 3, 'Add two +1 "Gain 1 TROPHY" cards'),
     Perk('deepwraith', 1, 'Ignore scenario effects and remove two +0 cards'),
     Perk('deepwraith', 1,
@@ -1672,7 +1685,6 @@ abstract class CharacterData {
         'Replace one -1 card with one +0 "plusone Target" card'),
     Perk('crashingtide', 2,
         'Replace one +0 card with one +1 "SHIELD 1" Rolling card'),
-    // TODO: get this TIDE icon
     Perk('crashingtide', 2,
         'Add two +1 "If you performed a TIDE action this round, +2 instead" cards'),
     Perk('crashingtide', 2, 'Add one +2 MUDDLE card'),
@@ -1773,12 +1785,12 @@ abstract class CharacterData {
           'Perform the summon action of five different ability cards',
     ),
     Mastery(
-      masteryClassCode: _nightshround,
+      masteryClassCode: _nightshroud,
       masteryDetails:
           'Have INVISIBLE at the start or end of each of your turns',
     ),
     Mastery(
-      masteryClassCode: _nightshround,
+      masteryClassCode: _nightshroud,
       masteryDetails: 'DARK or consume_DARK during each of your turns',
     ),
     Mastery(
@@ -1981,14 +1993,13 @@ abstract class CharacterData {
     ),
     Mastery(
       masteryClassCode: 'shattersong',
-      // TODO: add this icon
       masteryDetails:
           'Always have 0 RESONANCE directly before you gain RESONANCE at the end of each of your turns',
     ),
     Mastery(
       masteryClassCode: 'shattersong',
       masteryDetails:
-          'Spend 5 RESONANCE of each of five different wave abilities',
+          'Spend 5 RESONANCE on each of five different Wave abilities',
     ),
     Mastery(
       masteryClassCode: 'trapper',
@@ -2008,7 +2019,6 @@ abstract class CharacterData {
     Mastery(
       masteryClassCode: 'painconduit',
       masteryDetails:
-          // TODO: get this BANE icon
           'Start a turn with WOUND, BRITTLE, BANE, POISON, IMMOBILIZE, DISARM, STUN, and MUDDLE',
     ),
     Mastery(
@@ -2021,19 +2031,9 @@ abstract class CharacterData {
           'Ensure the first ally to suffer DAMAGE each round, directly before suffering the DAMAGE, has at least one condition you applied',
     ),
     Mastery(
-      masteryClassCode: 'fozenfist',
-      masteryDetails:
-          'Recover at least one card from your discard pile each round',
-    ),
-    Mastery(
       masteryClassCode: 'frozenfist',
       masteryDetails:
-          'Enter at least ten different hexes with one move ability, then cause one enemy to suffer at least DAMAGE 10 with one attack ability in the same turn',
-    ),
-    Mastery(
-      masteryClassCode: 'fozenfist',
-      masteryDetails:
-          'Recover at least one card from your discard pile each round',
+          'RECOVER at least one card from your discard pile each round',
     ),
     Mastery(
       masteryClassCode: 'frozenfist',
@@ -2055,8 +2055,7 @@ abstract class CharacterData {
     Mastery(
       masteryClassCode: 'metalmosaic',
       masteryDetails:
-          //TODO: get this icon
-          'For four consecutive rounds, move the pressure gauge up or down three levels from where it started the round(PRESSURELOW to PRESSUREHIGH, or vice versa)',
+          'For four consecutive rounds, move the pressure gauge up or down three levels from where it started the round (PRESSURE_LOW to PRESSURE_HIGH, or vice versa)',
     ),
     Mastery(
       masteryClassCode: 'deepwraith',
@@ -2091,47 +2090,38 @@ abstract class CharacterData {
 
   static final List<Resource> resources = [
     Resource(
-      // 'hide',
       'Hide',
       'images/resources/hide.svg',
     ),
     Resource(
-      // 'metal',
       'Metal',
       'images/resources/metal.svg',
     ),
     Resource(
-      // 'lumber',
       'Lumber',
       'images/resources/lumber.svg',
     ),
     Resource(
-      // 'arrowvine',
       'Arrowvine',
       'images/resources/arrow_vine.svg',
     ),
     Resource(
-      // 'axenut',
       'Axenut',
       'images/resources/axe_nut.svg',
     ),
     Resource(
-      // 'rockroot',
       'Rockroot',
       'images/resources/rock_root.svg',
     ),
     Resource(
-      // 'flamefruit',
       'Flamefruit',
       'images/resources/flame_fruit.svg',
     ),
     Resource(
-      // 'corpsecap',
       'Corpsecap',
       'images/resources/corpse_cap.svg',
     ),
     Resource(
-      // 'snowthistle',
       'Snowthistle',
       'images/resources/snow_thistle.svg',
     ),

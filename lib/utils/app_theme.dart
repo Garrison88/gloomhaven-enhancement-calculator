@@ -22,40 +22,37 @@ class AppTheme {
     ),
     fontFamily: highTower,
     textTheme: const TextTheme(
-      labelLarge: TextStyle(
-        fontSize: 20,
-      ),
+      // This is used
       titleMedium: TextStyle(
         fontSize: 23.0,
       ),
-      titleSmall: TextStyle(
-        fontSize: 15.0,
-      ),
+      // This is used
       bodyMedium: TextStyle(
         fontSize: 25.0,
         letterSpacing: 0.7,
         fontFamily: nyala,
       ),
+      // Name
       displayLarge: TextStyle(
+        fontSize: 40,
         fontFamily: pirataOne,
-        color: Colors.black87,
       ),
-      displaySmall: TextStyle(
-        fontFamily: pirataOne,
-        color: Colors.black87,
-        letterSpacing: 1.5,
-      ),
+      // Notes, Perks, and Masteries titles
       headlineMedium: TextStyle(
         fontFamily: pirataOne,
-        color: Colors.black87,
         letterSpacing: 1.5,
       ),
     ),
-    snackBarTheme: const SnackBarThemeData(
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.white,
       contentTextStyle: TextStyle(
         fontFamily: highTower,
         fontSize: 20,
-        color: Colors.white,
+        color: Color(
+          int.parse(
+            '0xff424242',
+          ),
+        ),
       ),
     ),
     brightness: Brightness.light,
@@ -80,40 +77,37 @@ class AppTheme {
     ),
     fontFamily: highTower,
     textTheme: const TextTheme(
-      labelLarge: TextStyle(
-        fontSize: 20,
-      ),
+      // This is used
       titleMedium: TextStyle(
         fontSize: 23.0,
       ),
-      titleSmall: TextStyle(
-        fontSize: 15.0,
-      ),
+      // This is used
       bodyMedium: TextStyle(
         fontSize: 25.0,
         letterSpacing: 0.7,
         fontFamily: nyala,
       ),
+      // Name
       displayLarge: TextStyle(
+        fontSize: 40,
         fontFamily: pirataOne,
-        color: Colors.white,
       ),
-      displaySmall: TextStyle(
-        fontFamily: pirataOne,
-        color: Colors.white,
-        letterSpacing: 1.5,
-      ),
+      // Notes, Perks, and Masteries titles
       headlineMedium: TextStyle(
         fontFamily: pirataOne,
-        color: Colors.white,
         letterSpacing: 1.5,
       ),
     ),
-    snackBarTheme: const SnackBarThemeData(
-      contentTextStyle: TextStyle(
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Color(
+        int.parse(
+          '0xff424242',
+        ),
+      ),
+      contentTextStyle: const TextStyle(
         fontFamily: highTower,
         fontSize: 20,
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
     brightness: Brightness.dark,

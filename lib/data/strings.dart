@@ -73,6 +73,23 @@ class Strings {
     );
   }
 
+  // temporary enhancement variant
+  static String temporaryEnhancement = "Temporary Enhancement Variant";
+  static RichText temporaryEnhancementInfoBody(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+          style: Theme.of(context).textTheme.bodyMedium,
+          children: const <TextSpan>[
+            TextSpan(
+                text:
+                    "Temporary enhancements don't persist between playthroughs and have a reduced cost. First, calculate the"
+                    " normal enhancement cost, including any discounts. Next, if "
+                    "the card has at least one previous enhancement, reduce the cost "
+                    "by 20 gold. Finally, reduce the entire cost by 20 percent (rounded up)."),
+          ]),
+    );
+  }
+
   // card level information
   static String cardLevelInfoTitle = "Card Level Fee";
   static RichText cardLevelInfoBody(BuildContext context) {

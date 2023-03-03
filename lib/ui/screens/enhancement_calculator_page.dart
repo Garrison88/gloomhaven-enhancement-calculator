@@ -70,18 +70,62 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ),
                         label: Text(
                           'General Guidelines',
-                          style: TextStyle(
-                            color: ThemeData.estimateBrightnessForColor(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .primary) ==
-                                    Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium.copyWith(
+                                    color: ThemeData.estimateBrightnessForColor(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary) ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                         ),
                       ),
                     ],
+                  ),
+                  // TEMPORARY ENHANCEMENT
+                  Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                          icon: const Icon(
+                            Icons.info_outline,
+                          ),
+                          onPressed: () => showDialog<void>(
+                            context: context,
+                            builder: (_) {
+                              return InfoDialog(
+                                title: Strings.temporaryEnhancement,
+                                message: Strings.temporaryEnhancementInfoBody(
+                                    context),
+                              );
+                            },
+                          ),
+                        ),
+                        const Expanded(
+                          child: AutoSizeText(
+                            'Variant: Temporary Enhancement',
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            right: smallPadding,
+                          ),
+                        ),
+                        Switch(
+                          value: enhancementCalculatorModel
+                              .temporaryEnhancementMode,
+                          onChanged: (bool value) {
+                            enhancementCalculatorModel
+                                .temporaryEnhancementMode = value;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   // CARD LEVEL
                   Card(
@@ -278,7 +322,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             ),
                           ),
                           SvgPicture.asset(
-                            SharedPrefs().darkTheme
+                            Theme.of(context).brightness == Brightness.dark
                                 ? 'images/loss.svg'
                                 : 'images/loss_light.svg',
                             width: iconSize,
@@ -291,7 +335,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               children: [
                                 Positioned(
                                   child: SvgPicture.asset(
-                                    SharedPrefs().darkTheme
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
                                         ? 'images/persistent.svg'
                                         : 'images/persistent_light.svg',
                                     width: iconSize,
@@ -342,7 +387,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             ),
                           ),
                           SvgPicture.asset(
-                            SharedPrefs().darkTheme
+                            Theme.of(context).brightness == Brightness.dark
                                 ? 'images/persistent.svg'
                                 : 'images/persistent_light.svg',
                             width: iconSize,

@@ -42,13 +42,16 @@ class InfoDialog extends StatelessWidget {
           Padding(
             child: SharedPrefs().darkTheme && enhancement.invertIconColor
                 ? SvgPicture.asset(
-                    'images/${enhancement.icon}',
+                    'images/${enhancement.iconPath}',
                     height: iconSize,
                     width: iconSize,
-                    color: Colors.white,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   )
                 : SvgPicture.asset(
-                    'images/${enhancement.icon}',
+                    'images/${enhancement.iconPath}',
                     height: iconSize,
                     width: iconSize,
                   ),
@@ -102,9 +105,14 @@ class InfoDialog extends StatelessWidget {
                 (element) => element.category == EnhancementCategory.negEffect,
               )
               .toList()
+            // remove Disarm if we're using Frosthaven rules
             ..removeWhere(
               (element) =>
                   element.name == 'Disarm' && !SharedPrefs().gloomhavenMode,
+            )
+            ..removeWhere(
+              (element) =>
+                  element.name == 'Ward' && SharedPrefs().gloomhavenMode,
             );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
@@ -116,7 +124,12 @@ class InfoDialog extends StatelessWidget {
               )
               .toList()
             ..add(
-              Enhancement(EnhancementCategory.negEffect, 0, 'stun.svg', 'Stun'),
+              Enhancement(
+                EnhancementCategory.negEffect,
+                'Stun',
+                ghCost: 0,
+                iconPath: 'stun.svg',
+              ),
             );
           break;
         // positive enhancement selected
@@ -135,17 +148,22 @@ class InfoDialog extends StatelessWidget {
                       'Heal',
                       'Retaliate',
                       'Shield',
+                      'Ward',
                     ].contains(element.name),
               )
-              .toList();
-          _eligibleForIcons.add(
-            Enhancement(
-              EnhancementCategory.posEffect,
-              0,
-              'invisible.svg',
-              'Invisible',
-            ),
-          );
+              .toList()
+            ..removeWhere(
+              (element) =>
+                  element.name == 'Ward' && SharedPrefs().gloomhavenMode,
+            )
+            ..add(
+              Enhancement(
+                EnhancementCategory.posEffect,
+                'Invisible',
+                ghCost: 0,
+                iconPath: 'invisible.svg',
+              ),
+            );
           break;
         // jump selected
         case EnhancementCategory.jump:
@@ -172,39 +190,39 @@ class InfoDialog extends StatelessWidget {
           _titleIcons = [
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_air.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_air.svg',
             ),
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_earth.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_earth.svg',
             ),
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_fire.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_fire.svg',
             ),
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_ice.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_ice.svg',
             ),
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_dark.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_dark.svg',
             ),
             Enhancement(
               EnhancementCategory.specElem,
-              100,
-              'elem_light.svg',
               'Specific Element',
+              ghCost: 100,
+              iconPath: 'elem_light.svg',
             )
           ];
           _eligibleForIcons = EnhancementData.enhancements
@@ -227,9 +245,9 @@ class InfoDialog extends StatelessWidget {
           _eligibleForIcons.add(
             Enhancement(
               EnhancementCategory.posEffect,
-              0,
-              'invisible.svg',
               'Invisible',
+              ghCost: 0,
+              iconPath: 'invisible.svg',
             ),
           );
           break;
@@ -264,9 +282,9 @@ class InfoDialog extends StatelessWidget {
           _eligibleForIcons.add(
             Enhancement(
               EnhancementCategory.posEffect,
-              0,
-              'invisible.svg',
               'Invisible',
+              ghCost: 0,
+              iconPath: 'invisible.svg',
             ),
           );
           break;
@@ -306,6 +324,7 @@ class InfoDialog extends StatelessWidget {
                   fontSize: 28.0,
                   fontFamily: pirataOne,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
       content: SingleChildScrollView(

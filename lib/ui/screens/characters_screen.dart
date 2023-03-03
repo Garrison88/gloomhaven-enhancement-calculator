@@ -95,9 +95,12 @@ class _CharactersScreenState extends State<CharactersScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
                       'images/class_icons/${charactersModel.characters[index].playerClass.classIconUrl}',
-                      color: charactersModel.characters[index]
-                          .classColor(context)
-                          .withOpacity(0.1),
+                      colorFilter: ColorFilter.mode(
+                        charactersModel.characters[index]
+                            .classColor(context)
+                            .withOpacity(0.1),
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),

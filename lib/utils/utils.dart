@@ -47,7 +47,7 @@ class Utils {
           ),
         );
       } else {
-        switch (element.replaceAll(RegExp(r'[",:()]'), '')) {
+        switch (element.replaceAll(RegExp(r'[",.:()]'), '')) {
           case '-2':
             assetPath = 'attack_modifiers/minus_2.png';
             break;
@@ -140,15 +140,13 @@ class Utils {
             assetPath = 'attack.svg';
             invertColor = true;
             break;
-          case 'Recover':
-          case 'REFRESH':
+          case 'RECOVER':
             assetPath =
                 darkTheme ? 'recover_card.svg' : 'recover_card_light.svg';
             break;
-          // case 'REFRESH':
-          //   assetPath =
-          //       darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg';
-          //   break;
+          case 'SPENT':
+            assetPath = darkTheme ? 'spent.svg' : 'spent_light.svg';
+            break;
           case 'PUSH':
             assetPath = 'push.svg';
             break;
@@ -203,16 +201,17 @@ class Utils {
           case 'IMPAIR':
             assetPath = 'impair.svg';
             break;
-          case 'HEX':
+          case 'BANE':
+            assetPath = 'bane.svg';
+            break;
+          case 'LUMINARY_HEXES':
             assetPath = 'luminary_hexes.svg';
             break;
           case 'SHADOW':
             assetPath = 'shadow.svg';
-            invertColor = true;
             break;
           case 'TIME_TOKEN':
             assetPath = 'time_token.svg';
-            invertColor = true;
             break;
           case 'DAMAGE':
             assetPath = darkTheme ? 'damage.svg' : 'damage_light.svg';
@@ -231,8 +230,7 @@ class Utils {
             invertColor = true;
             break;
           case 'Glow':
-            assetPath = 'class_icons/luminary.svg';
-            invertColor = true;
+            assetPath = 'glow.svg';
             break;
           case 'Spirit':
             assetPath = 'class_icons/spirit_caller.svg';
@@ -273,6 +271,9 @@ class Utils {
           case 'RITUALIST':
             assetPath = 'ritualist.svg';
             break;
+          case 'ALL_STANCES':
+            assetPath = 'incarnate_all_stances.svg';
+            break;
           // ELEMENTS
           case 'EARTH':
           case 'consume_EARTH':
@@ -281,10 +282,6 @@ class Utils {
           case 'AIR':
           case 'consume_AIR':
             assetPath = 'elem_air.svg';
-            break;
-          case 'AIR/DARK':
-          case 'consume_AIR/DARK':
-            assetPath = 'elem_air_or_dark.svg';
             break;
           case 'DARK':
           case 'consume_DARK':
@@ -302,29 +299,69 @@ class Utils {
           case 'consume_FIRE':
             assetPath = 'elem_fire.svg';
             break;
-          case 'EARTH/FIRE':
-          case 'consume_EARTH/FIRE':
-            assetPath = 'elem_earth_or_fire.svg';
+          case 'Any_Element':
+          case 'Consume_Any_Element':
+            assetPath = 'elem_any.svg';
             break;
-          case 'EARTH/AIR':
-          case 'consume_EARTH/AIR':
-            assetPath = 'elem_earth_or_air.svg';
+          case 'AIR/DARK':
+          case 'consume_AIR/DARK':
+            assetPath = 'elem_air_or_dark.svg';
+            break;
+          case 'AIR/EARTH':
+          case 'consume_AIR/EARTH':
+            assetPath = 'elem_air_or_earth.svg';
+            break;
+          case 'AIR/LIGHT':
+          case 'consume_AIR/LIGHT':
+            assetPath = 'elem_air_or_light.svg';
             break;
           case 'EARTH/DARK':
           case 'consume_EARTH/DARK':
             assetPath = 'elem_earth_or_dark.svg';
             break;
-          case 'FIRE/ICE':
-          case 'consume_FIRE/ICE':
-            assetPath = 'elem_fire_or_ice.svg';
+          case 'EARTH/LIGHT':
+          case 'consume_EARTH/LIGHT':
+            assetPath = 'elem_earth_or_light.svg';
             break;
           case 'FIRE/AIR':
           case 'consume_FIRE/AIR':
             assetPath = 'elem_fire_or_air.svg';
             break;
-          case 'Any_Element':
-          case 'Consume_Any_Element':
-            assetPath = 'elem_any.svg';
+          case 'FIRE/DARK':
+          case 'consume_FIRE/DARK':
+            assetPath = 'elem_fire_or_dark.svg';
+            break;
+          case 'FIRE/EARTH':
+          case 'consume_FIRE/EARTH':
+            assetPath = 'elem_fire_or_earth.svg';
+            break;
+          case 'FIRE/ICE':
+          case 'consume_FIRE/ICE':
+            assetPath = 'elem_fire_or_ice.svg';
+            break;
+          case 'FIRE/LIGHT':
+          case 'consume_FIRE/LIGHT':
+            assetPath = 'elem_fire_or_light.svg';
+            break;
+          case 'ICE/AIR':
+          case 'consume_ICE/AIR':
+            assetPath = 'elem_ice_or_air.svg';
+            break;
+          case 'ICE/DARK':
+          case 'consume_ICE/DARK':
+            assetPath = 'elem_ice_or_dark.svg';
+            break;
+          case 'ICE/EARTH':
+          case 'consume_ICE/EARTH':
+            assetPath = 'elem_ice_or_earth.svg';
+            break;
+          case 'ICE/LIGHT':
+          case 'consume_ICE/LIGHT':
+            assetPath = 'elem_ice_or_light.svg';
+            break;
+          case 'LIGHT/DARK':
+          case 'consume_LIGHT/DARK':
+            assetPath = 'elem_light_or_dark.svg';
             break;
           case 'plusone':
             assetPath = null;
@@ -332,32 +369,59 @@ class Utils {
           case 'plustwo':
             assetPath = null;
             break;
-          //TODO: get the RESONANCE icon
-          // case 'RESONANCE':
-          //   assetPath = 'resonance.svg';
-          //   break;
-          //TODO: get the INFUSION icon
-          // case 'INFUSION':
-          //   assetPath = 'infusion.svg';
-          //   break;
-          // TODO: fix the Item Minus One icon
-          // case 'item_minus_one':
-          //   assetPath =
-          //       darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg';
-          //   break;
+          case 'RESONANCE':
+            assetPath = 'resonance.svg';
+            break;
+          case 'INFUSION':
+            assetPath = 'infusion.svg';
+            break;
+          case 'TRANSFER':
+            assetPath = 'transfer.svg';
+            break;
+          case 'TIDE':
+            assetPath = 'tide.svg';
+            break;
+          case 'TROPHY':
+            assetPath = 'trophy.svg';
+            break;
+          case 'PRESSURE_LOSE':
+            assetPath = 'pressure_lose.svg';
+            break;
+          case 'PRESSURE_GAIN':
+            assetPath = 'pressure_gain.svg';
+            break;
+          case 'PRESSURE_LOW':
+            assetPath = 'pressure_low.svg';
+            break;
+          case 'PRESSURE_HIGH':
+            assetPath = 'pressure_high.svg';
+            break;
+          case 'item_minus_one':
+            assetPath =
+                darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg';
+            break;
         }
       }
       if (assetPath != null) {
-        if (element.startsWith('"')) {
+        if (['"', '('].contains(element.characters.first)) {
           inlineList.add(
-            const TextSpan(text: '"'),
+            TextSpan(
+              text: element.characters.first,
+            ),
           );
         }
-        if (element.startsWith('(')) {
-          inlineList.add(
-            const TextSpan(text: '('),
-          );
-        }
+        final double sizedBoxWidth =
+            // Asset is 1.5x wide
+            assetPath.contains('luminary_hexes') ||
+                    assetPath.contains('item_minus_one')
+                ? (iconSize - 2.5) * 1.5
+                // Asset is double wide
+                : assetPath.contains('_or_') || assetPath.contains('transfer')
+                    ? (iconSize - 2.5) * 2
+                    // Asset is triple wide
+                    : assetPath.contains('incarnate_all_stances')
+                        ? (iconSize - 2.5) * 3
+                        : iconSize - 2.5;
         inlineList.add(
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
@@ -369,12 +433,15 @@ class Utils {
                   .toTitleCase,
               child: SizedBox(
                 height: iconSize - 2.5,
-                width: iconSize - 2.5,
+                width: sizedBoxWidth,
                 child: invertColor && darkTheme
                     ? assetPath.contains('.svg')
                         ? SvgPicture.asset(
                             'images/$assetPath',
-                            color: Colors.white,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
                           )
                         : Image.asset(
                             'images/$assetPath',
@@ -384,16 +451,20 @@ class Utils {
                         ? element.toLowerCase().contains('consume')
                             // Stack a Consume icon ontop of the Element icon
                             ? Stack(
-                                alignment: Alignment.bottomRight,
+                                fit: StackFit.expand,
                                 children: [
                                   SvgPicture.asset(
                                     'images/$assetPath',
                                   ),
-                                  SizedBox(
-                                    height: 15,
-                                    width: 15,
-                                    child: SvgPicture.asset(
-                                      'images/consume.svg',
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: SizedBox(
+                                      height: 12,
+                                      width: 12,
+                                      child: SvgPicture.asset(
+                                        'images/consume.svg',
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -408,19 +479,11 @@ class Utils {
             ),
           ),
         );
-        if (element.endsWith('"')) {
+        if (['"', ',', ')', '.'].contains(element.characters.last)) {
           inlineList.add(
-            const TextSpan(text: '"'),
-          );
-        }
-        if (element.endsWith(',')) {
-          inlineList.add(
-            const TextSpan(text: ','),
-          );
-        }
-        if (element.endsWith(')')) {
-          inlineList.add(
-            const TextSpan(text: ')'),
+            TextSpan(
+              text: element.characters.last,
+            ),
           );
         }
         // this is specific to the Infuser character sheet

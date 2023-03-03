@@ -42,9 +42,12 @@ class ResourceCard extends StatelessWidget {
                     children: [
                       SvgPicture.asset(
                         resource.icon,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black87,
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black87,
+                          BlendMode.srcIn,
+                        ),
                         height: iconSize,
                         width: iconSize,
                       ),
@@ -59,9 +62,12 @@ class ResourceCard extends StatelessWidget {
                   )
                 : SvgPicture.asset(
                     resource.icon,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black87,
+                      BlendMode.srcIn,
+                    ),
                     height: iconSize,
                     width: iconSize,
                   ),

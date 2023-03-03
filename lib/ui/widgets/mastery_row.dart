@@ -4,7 +4,6 @@ import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
-import '../../shared_prefs.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
 
@@ -86,12 +85,11 @@ class _MasteryRowState extends State<MasteryRow> {
                 child: RichText(
                   text: TextSpan(
                     style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                          fontSize: 22,
                           letterSpacing: 0.7,
                         ),
                     children: Utils.generateCheckRowDetails(
                       widget.mastery.masteryDetails,
-                      SharedPrefs().darkTheme,
+                      Theme.of(context).brightness == Brightness.dark,
                     ),
                   ),
                 ),

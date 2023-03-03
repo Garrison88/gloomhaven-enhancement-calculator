@@ -333,10 +333,13 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                   'images/class_icons/${selectedPlayerClass.classIconUrl}',
                   width: iconSize + 5,
                   height: iconSize + 5,
-                  color: Color(
-                    int.parse(
-                      selectedPlayerClass.classColor,
+                  colorFilter: ColorFilter.mode(
+                    Color(
+                      int.parse(
+                        selectedPlayerClass.classColor,
+                      ),
                     ),
+                    BlendMode.srcIn,
                   ),
                 ),
                 title: Text(
@@ -437,7 +440,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  color: SharedPrefs().darkTheme
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? Colors.grey[300]
                                       : Colors.black87,
                                 ),

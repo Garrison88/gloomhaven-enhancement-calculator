@@ -105,6 +105,13 @@ class SharedPrefs {
     _sharedPrefs.setBool('disableMultiTargetsSwitch', value);
   }
 
+  bool get temporaryEnhancementMode =>
+      _sharedPrefs.getBool('temporaryEnhancementMode') ?? false;
+
+  set temporaryEnhancementMode(bool value) {
+    _sharedPrefs.setBool('temporaryEnhancementMode', value);
+  }
+
   bool get showRetiredCharacters =>
       _sharedPrefs.getBool('showRetiredCharacters') ?? true;
 

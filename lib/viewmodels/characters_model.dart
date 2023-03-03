@@ -158,6 +158,12 @@ class CharactersModel with ChangeNotifier {
           .value,
       gold: 15 * (initialLevel + 1),
     );
+    /* TODO: change this to use V2 or something when done adding GH and JotL - FH
+    crossover character sheets */
+    if (selectedClass.classCategory == ClassCategory.gloomhaven ||
+        selectedClass.classCategory == ClassCategory.jawsOfTheLion) {
+      character.includeMasteries = false;
+    }
     character.id = await databaseHelper.insertCharacter(
       character,
     );
@@ -238,7 +244,7 @@ class CharactersModel with ChangeNotifier {
     if (pageController.hasClients) {
       pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeIn,
       );
     }

@@ -49,6 +49,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       key: scaffoldMessengerKey,
       appBar: const GHCAppBar(),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           FutureBuilder<List<Character>>(
             future: future,

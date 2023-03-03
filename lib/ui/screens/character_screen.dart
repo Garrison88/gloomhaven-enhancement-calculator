@@ -56,12 +56,19 @@ class CharacterScreen extends StatelessWidget {
               ),
             ),
             // RESOURCES
-            _ResourcesSection(
-              character: character,
+            Padding(
+              padding: const EdgeInsets.all(
+                smallPadding,
+              ),
+              child: _ResourcesSection(
+                character: character,
+              ),
             ),
             // NOTES
             Padding(
-              padding: const EdgeInsets.all(smallPadding),
+              padding: const EdgeInsets.all(
+                smallPadding,
+              ),
               child: _NotesSection(
                 character: character,
               ),
@@ -74,7 +81,9 @@ class CharacterScreen extends StatelessWidget {
               ),
             // PERKS
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+              padding: const EdgeInsets.symmetric(
+                horizontal: smallPadding,
+              ),
               child: PerksSection(
                 character: character,
               ),
@@ -85,8 +94,9 @@ class CharacterScreen extends StatelessWidget {
             // MASTERIES
             if (character.characterMasteries.isNotEmpty)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: smallPadding - 3),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: smallPadding - 3,
+                ),
                 child: MasteriesSection(
                   character: character,
                   charactersModel: context.watch<CharactersModel>(),
@@ -94,7 +104,7 @@ class CharacterScreen extends StatelessWidget {
               ),
             // PADDING FOR FAB
             Container(
-              height: MediaQuery.of(context).padding.bottom + 72,
+              height: MediaQuery.of(context).padding.bottom + 82,
             ),
           ],
         ),
@@ -122,6 +132,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
               child: context.watch<CharactersModel>().isEditMode &&
                       !character.isRetired
                   ? TextField(
+                      style: Theme.of(context).textTheme.titleMedium,
                       enableInteractiveSelection: false,
                       onChanged: (String value) =>
                           charactersModel.updateCharacter(
@@ -129,7 +140,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                           ..previousRetirements =
                               value.isEmpty ? 0 : int.parse(value),
                       ),
-                      style: Theme.of(context).textTheme.titleSmall,
+                      // style: Theme.of(context).textTheme.titleSmall,
                       textAlign: TextAlign.center,
                       controller: charactersModel.previousRetirementsController,
                       inputFormatters: [
@@ -140,6 +151,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                     )
                   : Text(
                       'Retirements: ${character.previousRetirements}',
+                      // style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
@@ -174,9 +186,12 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                 SvgPicture.asset(
                   'images/equipment_slots/pocket.svg',
                   width: iconSize,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 3.5),
@@ -232,14 +247,14 @@ class _NameAndClassSection extends StatelessWidget {
                 minLines: 1,
                 maxLines: 2,
                 controller: charactersModel.nameController,
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context).textTheme.displayLarge,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
               )
             : AutoSizeText(
                 character.name,
                 maxLines: 2,
-                style: Theme.of(context).textTheme.displaySmall,
+                style: Theme.of(context).textTheme.displayLarge,
                 textAlign: TextAlign.center,
               ),
         Row(
@@ -251,9 +266,12 @@ class _NameAndClassSection extends StatelessWidget {
                 SvgPicture.asset(
                   'images/level.svg',
                   width: iconSize * 1.5,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 Consumer<CharactersModel>(
                   builder: (
@@ -286,9 +304,54 @@ class _NameAndClassSection extends StatelessWidget {
             ),
           ],
         ),
-        if (character.playerClass.traits.isNotEmpty)
-          Text(
-              '${character.playerClass.traits[0]} ᛫ ${character.playerClass.traits[1]} ᛫ ${character.playerClass.traits[2]}'),
+        if (character.playerClass.traits.isNotEmpty) ...[
+          const SizedBox(
+            height: smallPadding,
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     Chip(
+          //       label: Text(
+          //         character.playerClass.traits[0],
+          //       ),
+
+          //     ),
+          //     Chip(
+          //       label: Text(
+          //         character.playerClass.traits[1],
+          //       ),
+          //     ),
+          //     Chip(
+          //       label: Text(
+          //         character.playerClass.traits[2],
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'images/trait.svg',
+                width: iconSize,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(
+                width: smallPadding,
+              ),
+              Text(
+                '${character.playerClass.traits[0]} · ${character.playerClass.traits[1]} · ${character.playerClass.traits[2]}',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ],
         if (character.isRetired)
           const Text(
             '(retired)',
@@ -318,9 +381,12 @@ class _StatsSection extends StatelessWidget {
               SvgPicture.asset(
                 'images/xp.svg',
                 width: iconSize + 5,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87,
+                  BlendMode.srcIn,
+                ),
               ),
               const SizedBox(
                 width: smallPadding,
@@ -404,9 +470,12 @@ class _StatsSection extends StatelessWidget {
               SvgPicture.asset(
                 'images/gold.svg',
                 width: iconSize + 5,
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black87,
+                  BlendMode.srcIn,
+                ),
               ),
               const SizedBox(
                 width: 5,
@@ -475,9 +544,12 @@ class _StatsSection extends StatelessWidget {
                 SvgPicture.asset(
                   'images/goal.svg',
                   width: iconSize,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 SizedBox(
                   width: 5,
@@ -740,6 +812,7 @@ class _NotesSection extends StatelessWidget {
         ),
         context.watch<CharactersModel>().isEditMode && !character.isRetired
             ? TextField(
+                style: Theme.of(context).textTheme.titleMedium,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 onChanged: (String value) {

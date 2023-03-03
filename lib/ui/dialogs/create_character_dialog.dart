@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 import '../../custom_search_delegate.dart';
@@ -184,6 +183,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      style: Theme.of(context).textTheme.titleMedium,
                       readOnly: true,
                       controller: _classTextFieldController,
                       decoration: const InputDecoration(
@@ -214,10 +214,13 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       padding: const EdgeInsets.all(8),
                       child: SvgPicture.asset(
                         'images/class_icons/${_selectedClass.classIconUrl}',
-                        color: Color(
-                          int.parse(
-                            _selectedClass.classColor,
+                        colorFilter: ColorFilter.mode(
+                          Color(
+                            int.parse(
+                              _selectedClass.classColor,
+                            ),
                           ),
+                          BlendMode.srcIn,
                         ),
                       ),
                     ),
@@ -225,6 +228,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 ],
               ),
               TextFormField(
+                style: Theme.of(context).textTheme.titleMedium,
                 enableInteractiveSelection: false,
                 key: _levelKey,
                 controller: _levelTextFieldController,
@@ -276,6 +280,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               //   ),
               // ),
               TextFormField(
+                style: Theme.of(context).textTheme.titleMedium,
                 enableInteractiveSelection: false,
                 controller: _previousRetirementsTextFieldController,
                 decoration: const InputDecoration(
@@ -294,9 +299,10 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         TextButton(
           style: Theme.of(context).textButtonTheme.style.copyWith(
                 foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) => SharedPrefs().darkTheme
-                      ? Colors.grey[300]
-                      : Colors.black87,
+                  (Set<MaterialState> states) =>
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[300]
+                          : Colors.black87,
                 ),
               ),
           onPressed: () => Navigator.pop(context, false),

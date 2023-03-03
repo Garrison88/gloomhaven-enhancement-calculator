@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 3.7.0+159
+version: 3.7.0+171
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -14,8 +14,7 @@ dependencies:
   sqflite: ^2.2.4
   path_provider: ^2.0.13
   provider: ^6.0.5
-  flutter_svg: ^1.1.6
-  flutter_svg_provider: ^1.0.3
+  flutter_svg: ^2.0.2
   share_plus: ^6.3.1
   file_picker: ^5.2.5
   intl: ^0.18.0
@@ -27,11 +26,8 @@ dependencies:
   faker: ^2.1.0
   # maybe URL launcher is problematic
   font_awesome_flutter: ^10.4.0
-  # flutter_statusbarcolor_ns: ^0.4.0
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.3
+  cupertino_icons: ^1.0.5
 
 dev_dependencies:
   flutter_launcher_icons: ^0.12.0
@@ -48,17 +44,9 @@ flutter_icons:
   adaptive_icon_foreground: "icons/android/foreground.png"
   remove_alpha_ios: true
 
-# For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     # - icons/
     - images/
@@ -74,16 +62,9 @@ flutter:
     - family: PirataOne
       fonts:
         - asset: fonts/pirata_one.ttf
-    #       - asset: fonts/Schyler-Italic.ttf
-    #         style: italic
     - family: HighTower
       fonts:
         - asset: fonts/high_tower.ttf
-    #       - asset: fonts/TrajanPro_Bold.ttf
-    #         weight: 700
     - family: Nyala
       fonts:
         - asset: fonts/nyala.ttf
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages

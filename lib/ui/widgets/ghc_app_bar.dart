@@ -118,9 +118,22 @@ class _GHCAppBarState extends State<GHCAppBar> {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // hack to center Switch
+                    const Visibility(
+                      maintainAnimation: true,
+                      maintainState: true,
+                      maintainSize: true,
+                      visible: false,
+                      child: IconButton(
+                        onPressed: null,
+                        icon: Icon(
+                          Icons.settings,
+                        ),
+                      ),
+                    ),
                     Image.asset(
                       'images/titles/gloomhaven.png',
-                      scale: 7,
+                      scale: 6.25,
                     ),
                     Switch(
                       inactiveThumbColor: const Color(0xff4b2c20),
@@ -158,9 +171,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
               onPressed: () async {
                 final String message =
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                // int index = charactersModel.characters.indexOf(
-                //   charactersModel.currentCharacter,
-                // );
                 Character character = charactersModel.currentCharacter;
                 await charactersModel.retireCurrentCharacter();
                 context.read<AppModel>().updateTheme();
@@ -172,6 +182,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                       action: charactersModel.showRetired
                           ? null
                           : SnackBarAction(
+                              textColor: Colors.yellow,
                               label: 'Show',
                               onPressed: () {
                                 charactersModel.toggleShowRetired(
@@ -216,7 +227,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                       foregroundColor: MaterialStateProperty
                                           .resolveWith<Color>(
                                         (Set<MaterialState> states) =>
-                                            SharedPrefs().darkTheme
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
                                                 ? Colors.grey[300]
                                                 : Colors.black87,
                                       ),
