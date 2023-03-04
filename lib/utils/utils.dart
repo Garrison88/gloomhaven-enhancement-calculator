@@ -49,31 +49,31 @@ class Utils {
       } else {
         switch (element.replaceAll(RegExp(r'[",.:()]'), '')) {
           case '-2':
-            assetPath = 'attack_modifiers/minus_2.png';
+            assetPath = 'attack_modifiers/minus_2.svg';
             break;
           case '-1':
-            assetPath = 'attack_modifiers/minus_1.png';
+            assetPath = 'attack_modifiers/minus_1.svg';
             break;
           case '+0':
-            assetPath = 'attack_modifiers/plus_0.png';
+            assetPath = 'attack_modifiers/plus_0.svg';
             break;
           case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
           case '2x':
-            assetPath = 'attack_modifiers/2_x.png';
+            assetPath = 'attack_modifiers/2_x.svg';
             break;
           case '+1':
-            assetPath = 'attack_modifiers/plus_1.png';
+            assetPath = 'attack_modifiers/plus_1.svg';
             break;
           case '+2':
-            assetPath = 'attack_modifiers/plus_2.png';
+            assetPath = 'attack_modifiers/plus_2.svg';
             break;
           case '+3':
-            assetPath = 'attack_modifiers/plus_3.png';
+            assetPath = 'attack_modifiers/plus_3.svg';
             break;
           case '+4':
-            assetPath = 'attack_modifiers/plus_4.png';
+            assetPath = 'attack_modifiers/plus_4.svg';
             break;
           case 'One_Hand':
             assetPath = 'equipment_slots/one_handed.svg';

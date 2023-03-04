@@ -36,6 +36,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       const Padding(
                         padding: EdgeInsets.only(left: smallPadding / 2),

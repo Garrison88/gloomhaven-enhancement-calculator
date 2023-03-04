@@ -93,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   systemNavigationBarColor: val
                       ? Color(
                           int.parse(
-                            '0xff424242',
+                            '0xff1c1b1f',
                           ),
                         )
                       : Colors.white,
@@ -303,6 +303,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           const Text(
                               'If another backup file already exists in the Downloads folder with the same name, it will be overwritten'),
                         TextField(
+                          style: Theme.of(context).textTheme.titleMedium,
                           decoration:
                               const InputDecoration(labelText: 'filename'),
                           controller: titleController,

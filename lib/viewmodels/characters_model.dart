@@ -254,8 +254,12 @@ class CharactersModel with ChangeNotifier {
     int index,
   ) {
     if (pageController.hasClients) {
+      SharedPrefs().initialPage = index;
       pageController.jumpToPage(
         index,
+      );
+      _setCurrentCharacter(
+        index: index,
       );
     }
   }

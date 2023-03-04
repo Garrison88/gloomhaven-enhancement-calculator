@@ -28,7 +28,7 @@ main() async {
       systemNavigationBarColor: SharedPrefs().darkTheme
           ? Color(
               int.parse(
-                '0xff424242',
+                '0xff1c1b1f',
               ),
             )
           : Colors.white,

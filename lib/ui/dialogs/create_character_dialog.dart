@@ -156,6 +156,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      style: Theme.of(context).textTheme.titleMedium,
                       autofocus: true,
                       textCapitalization: TextCapitalization.words,
                       autocorrect: false,

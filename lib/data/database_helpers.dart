@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 import 'database_migrations.dart';
 import 'package:path/path.dart';

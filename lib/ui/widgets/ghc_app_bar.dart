@@ -182,7 +182,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
                       action: charactersModel.showRetired
                           ? null
                           : SnackBarAction(
-                              textColor: Colors.yellow,
                               label: 'Show',
                               onPressed: () {
                                 charactersModel.toggleShowRetired(

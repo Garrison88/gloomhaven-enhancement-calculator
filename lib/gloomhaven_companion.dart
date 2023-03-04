@@ -12,36 +12,26 @@ class GloomhavenCompanion extends StatelessWidget {
   const GloomhavenCompanion({
     Key key,
   }) : super(key: key);
+
+  Color getThemeColor() => Color(
+        int.parse(
+          SharedPrefs().themeColor,
+        ),
+      );
+
   Color getSwitchThumbColor(Set<MaterialState> states) =>
-      states.contains(MaterialState.selected)
-          ? Color(
-              int.parse(
-                SharedPrefs().themeColor,
-              ),
-            ).withOpacity(
-              SharedPrefs().darkTheme ? 0.75 : 1,
-            )
-          : null;
+      states.contains(MaterialState.selected) ? getThemeColor() : null;
 
   Color getSwitchTrackColor(Set<MaterialState> states) =>
       states.contains(MaterialState.selected)
-          ? Color(
-              int.parse(
-                SharedPrefs().themeColor,
-              ),
-            ).withOpacity(0.5)
+          ? getThemeColor().withOpacity(0.5)
           : null;
 
   Color getCheckboxColor(Set<MaterialState> states) =>
-      states.contains(MaterialState.selected)
-          ? Color(
-              int.parse(
-                SharedPrefs().themeColor,
-              ),
-            ).withOpacity(
-              SharedPrefs().darkTheme ? 0.75 : 1,
-            )
-          : null;
+      states.contains(MaterialState.selected) ? getThemeColor() : null;
+
+  Color getCheckColor(Set<MaterialState> states) =>
+      states.contains(MaterialState.selected) ? Colors.black87 : null;
 
   @override
   Widget build(BuildContext context) {
@@ -66,65 +56,27 @@ class GloomhavenCompanion extends StatelessWidget {
       themeMode: appModel.themeMode,
       darkTheme: AppTheme.darkTheme.copyWith(
         buttonTheme: AppTheme.darkTheme.buttonTheme.copyWith(
-          buttonColor: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          buttonColor: getThemeColor(),
         ),
         iconTheme: AppTheme.darkTheme.iconTheme.copyWith(
-          color: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          color: getThemeColor(),
         ),
         floatingActionButtonTheme:
             AppTheme.darkTheme.floatingActionButtonTheme.copyWith(
-          backgroundColor: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          backgroundColor: getThemeColor(),
         ),
         colorScheme: AppTheme.darkTheme.colorScheme.copyWith(
-          primary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          secondary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          tertiary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          surfaceTint: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-        ),
-        bottomNavigationBarTheme:
-            AppTheme.darkTheme.bottomNavigationBarTheme.copyWith(
-          backgroundColor: appModel.themeMode == ThemeMode.dark
-              ? Color(
-                  int.parse(
-                    '0xff424242',
-                  ),
-                )
-              : Colors.white,
-        ),
-        appBarTheme: AppTheme.darkTheme.appBarTheme.copyWith(
-          color: AppTheme.darkTheme.scaffoldBackgroundColor,
+          primary: getThemeColor(),
+          secondary: getThemeColor(),
+          tertiary: getThemeColor(),
+          surfaceTint: getThemeColor(),
         ),
         checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.resolveWith(
             getCheckboxColor,
+          ),
+          checkColor: MaterialStateProperty.resolveWith(
+            getCheckColor,
           ),
         ),
         switchTheme: SwitchThemeData(
@@ -136,54 +88,27 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
         ),
         chipTheme: ChipThemeData(
-          selectedColor: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          selectedColor: getThemeColor(),
         ),
       ),
       theme: AppTheme.lightTheme.copyWith(
-        iconTheme: AppTheme.darkTheme.iconTheme.copyWith(
-          color: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+        bottomNavigationBarTheme:
+            AppTheme.lightTheme.bottomNavigationBarTheme.copyWith(
+          backgroundColor: Colors.white,
+        ),
+        iconTheme: AppTheme.lightTheme.iconTheme.copyWith(
+          color: getThemeColor(),
         ),
         floatingActionButtonTheme:
             AppTheme.lightTheme.floatingActionButtonTheme.copyWith(
-                backgroundColor: Color(
-          int.parse(
-            SharedPrefs().themeColor,
-          ),
-        )),
-        primaryColor: Color(
-          int.parse(
-            SharedPrefs().themeColor,
-          ),
+          backgroundColor: getThemeColor(),
         ),
+        primaryColor: getThemeColor(),
         colorScheme: AppTheme.lightTheme.colorScheme.copyWith(
-          primary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          secondary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          tertiary: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
-          surfaceTint: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          primary: getThemeColor(),
+          secondary: getThemeColor(),
+          tertiary: getThemeColor(),
+          surfaceTint: getThemeColor(),
         ),
         checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.resolveWith(
@@ -199,11 +124,7 @@ class GloomhavenCompanion extends StatelessWidget {
           ),
         ),
         chipTheme: ChipThemeData(
-          selectedColor: Color(
-            int.parse(
-              SharedPrefs().themeColor,
-            ),
-          ),
+          selectedColor: getThemeColor(),
         ),
       ),
     );
