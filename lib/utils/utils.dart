@@ -4,10 +4,26 @@ import '../data/constants.dart';
 
 class Utils {
   static List<InlineSpan> generateCheckRowDetails(
+    BuildContext context,
     String details,
     bool darkTheme,
   ) {
     List<InlineSpan> inlineList = [];
+    // This makes Perk description text bold if it's [surrounded in square brackets]
+    if (details.contains('[') && details.contains('[')) {
+      String perkDescription =
+          details.substring(details.indexOf('[') + 1, details.lastIndexOf(']'));
+      details = details.substring(details.lastIndexOf(']') + 1);
+      inlineList.add(
+        TextSpan(
+          text: perkDescription,
+          style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                letterSpacing: 0.7,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      );
+    }
     List<String> list = details.split(' ');
     for (String element in list) {
       String assetPath;
@@ -47,7 +63,7 @@ class Utils {
           ),
         );
       } else {
-        switch (element.replaceAll(RegExp(r'[",.:()]'), '')) {
+        switch (element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '')) {
           case '-2':
             assetPath = 'attack_modifiers/minus_2.svg';
             break;
@@ -403,7 +419,11 @@ class Utils {
         }
       }
       if (assetPath != null) {
-        if (['"', '('].contains(element.characters.first)) {
+        if ([
+          '"',
+          "'",
+          '(',
+        ].contains(element.characters.first)) {
           inlineList.add(
             TextSpan(
               text: element.characters.first,
@@ -479,7 +499,12 @@ class Utils {
             ),
           ),
         );
-        if (['"', ',', ')', '.'].contains(element.characters.last)) {
+        if ([
+          '"',
+          ',',
+          ')',
+          '.',
+        ].contains(element.characters.last)) {
           inlineList.add(
             TextSpan(
               text: element.characters.last,

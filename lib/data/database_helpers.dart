@@ -2,7 +2,6 @@ import 'dart:convert' as convert;
 import 'dart:io';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 import 'database_migrations.dart';
 import 'package:path/path.dart';
@@ -19,7 +18,6 @@ class DatabaseHelper {
   // This is the actual database filename that is saved in the docs directory.
   static const _databaseName = "GloomhavenCompanion.db";
 
-  // TODO: BEFORE RELEASE< INCREASE THIS TO 7
   // Increment this version when you need to change the schema.
   static const _databaseVersion = 7;
 
@@ -60,6 +58,7 @@ class DatabaseHelper {
   static const String textType = 'TEXT NOT NULL';
   static const String boolType = 'BOOL NOT NULL';
   static const String integerType = 'INTEGER NOT NULL';
+  // static const String integerType = 'INTEGER';
   static const String createTable = 'CREATE TABLE';
 
   // SQL string to create the database
@@ -153,7 +152,8 @@ class DatabaseHelper {
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
         if (oldVersion <= 6) {
-          // Include Frosthaven classes
+          // Include Thornreaper, Incarnate, and Rimehearth perks
+          // Include all Frosthaven class perks
           await DatabaseMigrations.regeneratePerksTable(txn);
           // Include class Masteries
           await DatabaseMigrations.includeClassMasteries(txn);
@@ -185,9 +185,12 @@ class DatabaseHelper {
   Future<void> restoreBackup(
     String backup,
   ) async {
+    // Backup the current data incase of an error and restore it
+    String fallBack = await generateBackup();
+
     var dbs = await database;
 
-    await clearAllTables();
+    await _clearAllTables();
 
     Batch batch = dbs.batch();
 
@@ -195,6 +198,20 @@ class DatabaseHelper {
 
     for (var i = 0; i < json[0].length; i++) {
       for (var k = 0; k < json[1][i].length; k++) {
+        // This handles the case where a user tries to restore a backup
+        // from a database version before Resources
+        if (i < 1) {
+          json[1][i][k][columnResourceHide] ??= 0;
+          json[1][i][k][columnResourceMetal] ??= 0;
+          json[1][i][k][columnResourceLumber] ??= 0;
+          json[1][i][k][columnResourceArrowvine] ??= 0;
+          json[1][i][k][columnResourceAxenut] ??= 0;
+          json[1][i][k][columnResourceRockroot] ??= 0;
+          json[1][i][k][columnResourceFlamefruit] ??= 0;
+          json[1][i][k][columnResourceCorpsecap] ??= 0;
+          json[1][i][k][columnResourceSnowthistle] ??= 0;
+        }
+
         batch.insert(
           json[0][i],
           json[1][i][k],
@@ -202,20 +219,27 @@ class DatabaseHelper {
       }
     }
 
-    await batch.commit(
+    await batch
+        .commit(
       continueOnError: false,
       noResult: true,
-    );
+    )
+        .onError((error, stackTrace) async {
+      await restoreBackup(fallBack);
+      throw error;
+    });
   }
 
-  Future clearAllTables() async {
+  Future _clearAllTables() async {
     try {
       Database dbs = await database;
       for (String table in tables) {
         await dbs.delete(table);
         await dbs.rawQuery('DELETE FROM sqlite_sequence where name="$table"');
       }
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<int> insertCharacter(

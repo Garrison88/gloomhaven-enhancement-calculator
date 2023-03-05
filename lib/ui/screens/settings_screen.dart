@@ -455,17 +455,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 allowedExtensions: ['txt'],
               ).then(
                 (result) async {
-                  String contents;
                   if (result != null) {
+                    String contents;
                     File file = File(result.files.single.path);
                     contents = file.readAsStringSync();
                     if (contents != null) {
                       _showLoaderDialog(context);
-                      await DatabaseHelper.instance.restoreBackup(
-                        contents,
-                      );
-                      await widget.charactersModel.loadCharacters();
-                      widget.charactersModel.jumpToPage(0);
+                      try {
+                        await DatabaseHelper.instance.restoreBackup(
+                          contents,
+                        );
+                        SharedPrefs().initialPage = 0;
+                        await widget.charactersModel.loadCharacters();
+                        widget.charactersModel.jumpToPage(0);
+                      } catch (e) {
+                        await showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title:
+                                  const Text('Error During Restore Operation'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('Ok'),
+                                ),
+                              ],
+                              content: SingleChildScrollView(
+                                child: Text(
+                                  'There was an error during the restoration. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer with your backup file and this information:\n${e.toString()}',
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }

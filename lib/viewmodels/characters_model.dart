@@ -160,6 +160,7 @@ class CharactersModel with ChangeNotifier {
     );
     /* TODO: change this to use V2 or something when done adding GH and JotL - FH
     crossover character sheets */
+    // TODO: Also here, consider displaying or not displaying Traits if using old system
     if (selectedClass.classCategory == ClassCategory.gloomhaven ||
         selectedClass.classCategory == ClassCategory.jawsOfTheLion) {
       character.includeMasteries = false;
@@ -254,7 +255,6 @@ class CharactersModel with ChangeNotifier {
     int index,
   ) {
     if (pageController.hasClients) {
-      SharedPrefs().initialPage = index;
       pageController.jumpToPage(
         index,
       );

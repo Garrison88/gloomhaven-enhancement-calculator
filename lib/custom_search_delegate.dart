@@ -55,8 +55,8 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
         BuildContext context,
         StateSetter stateSetter,
       ) {
-        final Iterable<PlayerClass> playerClass =
-            _playerClasses.where((playerClass) {
+        final Iterable<PlayerClass> playerClass = _playerClasses
+            .where((playerClass) {
           if (!gh && !jotl && !fh && !cs && !cc) {
             return playerClass.className
                 .toLowerCase()
@@ -87,7 +87,9 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       .contains(query.toLowerCase()) &&
                   playerClass.classCategory == ClassCategory.custom &&
                   cc);
-        }).toList();
+        }).toList()
+          // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
+          ..removeWhere((element) => element.classCode == 'rw');
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

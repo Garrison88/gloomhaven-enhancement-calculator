@@ -88,6 +88,7 @@ class _MasteryRowState extends State<MasteryRow> {
                           letterSpacing: 0.7,
                         ),
                     children: Utils.generateCheckRowDetails(
+                      context,
                       widget.mastery.masteryDetails,
                       Theme.of(context).brightness == Brightness.dark,
                     ),

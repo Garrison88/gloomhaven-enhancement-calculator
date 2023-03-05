@@ -92,15 +92,15 @@ class Character {
     gold = map[columnCharacterGold];
     notes = map[columnCharacterNotes];
     checkMarks = map[columnCharacterCheckMarks];
-    resourceHide = map[columnResourceHide];
-    resourceMetal = map[columnResourceMetal];
-    resourceLumber = map[columnResourceLumber];
-    resourceArrowvine = map[columnResourceArrowvine];
-    resourceAxenut = map[columnResourceAxenut];
-    resourceRockroot = map[columnResourceRockroot];
-    resourceFlamefruit = map[columnResourceFlamefruit];
-    resourceCorpsecap = map[columnResourceCorpsecap];
-    resourceSnowthistle = map[columnResourceSnowthistle];
+    resourceHide = map[columnResourceHide] ?? 0;
+    resourceMetal = map[columnResourceMetal] ?? 0;
+    resourceLumber = map[columnResourceLumber] ?? 0;
+    resourceArrowvine = map[columnResourceArrowvine] ?? 0;
+    resourceAxenut = map[columnResourceAxenut] ?? 0;
+    resourceRockroot = map[columnResourceRockroot] ?? 0;
+    resourceFlamefruit = map[columnResourceFlamefruit] ?? 0;
+    resourceCorpsecap = map[columnResourceCorpsecap] ?? 0;
+    resourceSnowthistle = map[columnResourceSnowthistle] ?? 0;
     isRetired = map[columnIsRetired] == 1 ? true : false;
   }
 

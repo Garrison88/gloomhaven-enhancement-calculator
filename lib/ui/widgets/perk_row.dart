@@ -138,6 +138,7 @@ class _PerkRowState extends State<PerkRow> {
                         letterSpacing: 0.7,
                       ),
                   children: Utils.generateCheckRowDetails(
+                    context,
                     widget.perks.first.perkDetails,
                     Theme.of(context).brightness == Brightness.dark,
                   ),
