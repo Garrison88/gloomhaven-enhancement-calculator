@@ -59,6 +59,12 @@ class SharedPrefs {
     _sharedPrefs.setBool('envelopeX', value);
   }
 
+  bool get envelopeV => _sharedPrefs.getBool('envelopeV') ?? false;
+
+  set envelopeV(bool value) {
+    _sharedPrefs.setBool('envelopeV', value);
+  }
+
   int get initialPage => _sharedPrefs.getInt('initialPage') ?? 0;
 
   set initialPage(int value) {
@@ -156,5 +162,12 @@ class SharedPrefs {
 
   set hideCustomClassesWarningMessage(bool value) {
     _sharedPrefs.setBool('hideCustomClassesWarningMessage', value);
+  }
+
+  bool get showUpdate4Dialog =>
+      _sharedPrefs.getBool('showUpdate4Dialog') ?? true;
+
+  set showUpdate4Dialog(bool value) {
+    _sharedPrefs.setBool('showUpdate4Dialog', value);
   }
 }

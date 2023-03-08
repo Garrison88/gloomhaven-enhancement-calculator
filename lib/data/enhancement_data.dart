@@ -23,7 +23,7 @@ class EnhancementData {
     // plus one
     Enhancement(
       EnhancementCategory.title,
-      ' For Character',
+      'For Character',
       iconPath: 'plus_one.svg',
     ),
     Enhancement(
@@ -106,7 +106,7 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.title,
-      ' For Summon',
+      'For Summon',
       iconPath: 'plus_one.svg',
     ),
     Enhancement(
@@ -235,7 +235,7 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.title,
-      ' Hex',
+      'Hex',
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -248,6 +248,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '3 Current Hexes',
       ghCost: 66,
+      fhCost: 67,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -272,6 +273,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '7 Current Hexes',
       ghCost: 28,
+      fhCost: 29,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -302,6 +304,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '12 Current Hexes',
       ghCost: 16,
+      fhCost: 17,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -360,9 +363,14 @@ class EnhancementData {
                     // if there is an icon beside the title, display it and add a spacer
                     children: enhancement.iconPath != null
                         ? <Widget>[
-                            SvgPicture.asset('images/${enhancement.iconPath}',
-                                width: iconSize, height: iconSize),
-
+                            SvgPicture.asset(
+                              'images/${enhancement.iconPath}',
+                              width: iconSize,
+                              height: iconSize,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
                             Text(
                               enhancement.name,
                               style: const TextStyle(
@@ -371,7 +379,9 @@ class EnhancementData {
                               ),
                             ),
                             // add an empty spacer to the right to center the title
-                            Container(width: iconSize),
+                            const SizedBox(
+                              width: iconSize,
+                            ),
                           ]
                         : <Widget>[
                             Text(

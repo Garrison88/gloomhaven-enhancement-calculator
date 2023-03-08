@@ -69,9 +69,12 @@ class CharacterScreen extends StatelessWidget {
               padding: const EdgeInsets.all(
                 smallPadding,
               ),
-              child: _NotesSection(
-                character: character,
-              ),
+              child: character.notes.isNotEmpty ||
+                      context.read<CharactersModel>().isEditMode
+                  ? _NotesSection(
+                      character: character,
+                    )
+                  : const SizedBox(),
             ),
             // BATTLE GOAL CHECKMARKS
             if (context.read<CharactersModel>().isEditMode &&

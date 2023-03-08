@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
-import 'data/character_data.dart';
 
 class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   CustomSearchDelegate(
@@ -195,7 +194,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                               Brightness.dark
                           ? Colors.white
                           : Colors.black,
-                      visualDensity: VisualDensity.compact,
+                      visualDensity: VisualDensity.comfortable,
                       selected: cs,
                       onSelected: (value) => stateSetter(() {
                         cs = value;
@@ -275,6 +274,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       ) {
         if ((!SharedPrefs().envelopeX &&
                 widget.suggestions[index].classCode == 'bs') ||
+            (!SharedPrefs().envelopeV &&
+                widget.suggestions[index].classCode == 'vanquisher') ||
             !SharedPrefs().customClasses &&
                 (widget.suggestions[index].classCategory ==
                         ClassCategory.custom ||
@@ -297,6 +298,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         final PlayerClass selectedPlayerClass = widget.suggestions[index];
         if ((!SharedPrefs().envelopeX &&
                 selectedPlayerClass.classCode == 'bs') ||
+            (!SharedPrefs().envelopeV &&
+                selectedPlayerClass.classCode == 'vanquisher') ||
             !SharedPrefs().customClasses &&
                 (selectedPlayerClass.classCategory == ClassCategory.custom ||
                     selectedPlayerClass.classCategory ==
@@ -351,9 +354,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                 ),
                 onTap: () {
                   if ((selectedPlayerClass.classCategory ==
-                              ClassCategory.custom ||
-                          selectedPlayerClass.classCategory ==
-                              ClassCategory.crimsonScales) &&
+                          ClassCategory.custom) &&
                       !hideMessage) {
                     showDialog<bool>(
                       context: context,

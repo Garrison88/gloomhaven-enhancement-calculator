@@ -152,8 +152,8 @@ class DatabaseHelper {
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
         if (oldVersion <= 6) {
-          // Include Thornreaper, Incarnate, and Rimehearth perks
           // Include all Frosthaven class perks
+          // Include Thornreaper, Incarnate, and Rimehearth perks
           await DatabaseMigrations.regeneratePerksTable(txn);
           // Include class Masteries
           await DatabaseMigrations.includeClassMasteries(txn);
@@ -199,7 +199,7 @@ class DatabaseHelper {
     for (var i = 0; i < json[0].length; i++) {
       for (var k = 0; k < json[1][i].length; k++) {
         // This handles the case where a user tries to restore a backup
-        // from a database version before Resources
+        // from a database version before 7 (Resources)
         if (i < 1) {
           json[1][i][k][columnResourceHide] ??= 0;
           json[1][i][k][columnResourceMetal] ??= 0;

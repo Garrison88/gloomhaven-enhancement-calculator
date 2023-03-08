@@ -73,6 +73,7 @@ class Utils {
           case '+0':
             assetPath = 'attack_modifiers/plus_0.svg';
             break;
+          // TODO: replace with SVG
           case '+X':
             assetPath = 'attack_modifiers/plus_x.png';
             break;
@@ -237,6 +238,10 @@ class Utils {
             assetPath = 'class_icons/chainguard.svg';
             invertColor = true;
             break;
+          case 'Cultivate':
+            assetPath = 'cultivate.svg';
+            invertColor = true;
+            break;
           case 'Chieftain':
             assetPath = 'class_icons/chieftain.svg';
             invertColor = true;
@@ -257,7 +262,6 @@ class Utils {
             break;
           case 'SATED':
             assetPath = 'sated.svg';
-            invertColor = true;
             break;
           case 'Ladder':
             assetPath = 'ladder.svg';
@@ -289,6 +293,19 @@ class Utils {
             break;
           case 'ALL_STANCES':
             assetPath = 'incarnate_all_stances.svg';
+            break;
+          case 'CRYSTALLIZE':
+            assetPath = 'crystallize.svg';
+            invertColor = true;
+            break;
+          case 'SPARK':
+          case 'consume_SPARK':
+            assetPath = 'spark.svg';
+            invertColor = true;
+            break;
+          case 'RAGE':
+            assetPath = 'class_icons/vanquisher.svg';
+            invertColor = true;
             break;
           // ELEMENTS
           case 'EARTH':
@@ -379,6 +396,10 @@ class Utils {
           case 'consume_LIGHT/DARK':
             assetPath = 'elem_light_or_dark.svg';
             break;
+          case 'PERSIST':
+            assetPath = 'persist.svg';
+            invertColor = true;
+            break;
           case 'plusone':
             assetPath = null;
             break;
@@ -454,28 +475,38 @@ class Utils {
               child: SizedBox(
                 height: iconSize - 2.5,
                 width: sizedBoxWidth,
-                child: invertColor && darkTheme
-                    ? assetPath.contains('.svg')
-                        ? SvgPicture.asset(
-                            'images/$assetPath',
-                            colorFilter: const ColorFilter.mode(
-                              Colors.white,
-                              BlendMode.srcIn,
-                            ),
-                          )
-                        : Image.asset(
-                            'images/$assetPath',
-                            color: Colors.white,
-                          )
-                    : assetPath.contains('.svg')
+                child:
+
+                    // ? assetPath.contains('.svg')
+                    //     ? SvgPicture.asset(
+                    //         'images/$assetPath',
+                    //         colorFilter: const ColorFilter.mode(
+                    //           Colors.white,
+                    //           BlendMode.srcIn,
+                    //         ),
+                    //       )
+                    //     : Image.asset(
+                    //         'images/$assetPath',
+                    //         color: Colors.white,
+                    //       )
+                    // :
+                    assetPath.contains('.svg')
                         ? element.toLowerCase().contains('consume')
                             // Stack a Consume icon ontop of the Element icon
                             ? Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  SvgPicture.asset(
-                                    'images/$assetPath',
-                                  ),
+                                  invertColor && darkTheme
+                                      ? SvgPicture.asset(
+                                          'images/$assetPath',
+                                          colorFilter: const ColorFilter.mode(
+                                            Colors.white,
+                                            BlendMode.srcIn,
+                                          ),
+                                        )
+                                      : SvgPicture.asset(
+                                          'images/$assetPath',
+                                        ),
                                   Positioned(
                                     bottom: 0,
                                     right: 0,
@@ -489,9 +520,17 @@ class Utils {
                                   ),
                                 ],
                               )
-                            : SvgPicture.asset(
-                                'images/$assetPath',
-                              )
+                            : invertColor && darkTheme
+                                ? SvgPicture.asset(
+                                    'images/$assetPath',
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'images/$assetPath',
+                                  )
                         : Image.asset(
                             'images/$assetPath',
                           ),

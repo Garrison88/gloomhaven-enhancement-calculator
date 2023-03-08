@@ -271,6 +271,134 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SettingsDivider(),
           SwitchListTile(
+            title: const Text("Unlock 'Envelope V'"),
+            subtitle: Row(
+              children: const [
+                Icon(Icons.warning),
+                SizedBox(
+                  width: smallPadding,
+                ),
+                Expanded(
+                  child: Text('Crimson Scales spoilers'),
+                ),
+              ],
+            ),
+            value: SharedPrefs().envelopeV,
+            onChanged: (val) {
+              if (!val) {
+                setState(() {
+                  SharedPrefs().envelopeV = false;
+                });
+              } else {
+                showDialog<bool>(
+                    context: context,
+                    builder: (_) {
+                      bool envelopeVSolved = false;
+                      return StatefulBuilder(
+                        builder: (
+                          BuildContext context,
+                          StateSetter setState,
+                        ) {
+                          return AlertDialog(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                    'What is the password for unlocking this envelope?'),
+                                TextField(
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
+                                  autofocus: true,
+                                  onChanged: (String val) {
+                                    setState(() {
+                                      envelopeVSolved =
+                                          val.toLowerCase().trim() == 'ashes';
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.grey[300]
+                                        : Colors.black87,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                              ),
+                              TextButton(
+                                child: Text(
+                                  'Unlock',
+                                  style: TextStyle(
+                                    color: envelopeVSolved
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).disabledColor,
+                                  ),
+                                ),
+                                onPressed: envelopeVSolved
+                                    ? () {
+                                        Navigator.of(context).pop(true);
+                                      }
+                                    : null,
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }).then(
+                  (value) {
+                    if (value) {
+                      setState(
+                        () {
+                          SharedPrefs().envelopeV = val;
+                        },
+                      );
+                      ScaffoldMessenger.of(context)
+                        ..clearSnackBars()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                flutter_svg.SvgPicture.asset(
+                                  'images/class_icons/vanquisher.svg',
+                                  width: iconSize,
+                                  height: iconSize,
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Color(
+                                            int.parse(
+                                              '0xff424242',
+                                            ),
+                                          ),
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: smallPadding,
+                                ),
+                                const Text('Vanquisher unlocked'),
+                              ],
+                            ),
+                          ),
+                        );
+                    }
+                  },
+                );
+              }
+            },
+          ),
+          const SettingsDivider(),
+          SwitchListTile(
             title: const Text('Show Retired Characters'),
             value: widget.charactersModel.showRetired,
             onChanged: (val) {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_navigation_bar.dart';
 import '../../data/constants.dart';
@@ -28,6 +31,62 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    // if (SharedPrefs().showUpdate4Dialog) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      showDialog<void>(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: const Text(
+              'New in version 4.0.0',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const <Widget>[
+                  Text("1. Added all 'Frosthaven' classes"),
+                  Text(
+                      "2. Added all remaining 'Crimson Scales', add-on, and 'Trail of Ashes' classes (show Custom Classes in the Settings menu)"),
+                  Text('3. Added Resources section'),
+                  Text(
+                      "4. Added a toggle for the Enhancement Calculator to use 'Gloomhaven' or 'Frosthaven' rules"),
+                  Text(
+                      '5. Optional random name generator in Create Character dialog'),
+                  Text(
+                      "6. Added support for 'Temporary Enhancement' Variant mode in Enhancement Calculator"),
+                  Text(
+                      '7. Replaced many icons, UI/UX improvements, and many behind-the-scenes performance improvements'),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text('Upcoming:'),
+                  Text(
+                      'Frosthaven crossover variants of Gloomhaven and Crimson Scales classes'),
+                  SizedBox(height: 16),
+                  Text(
+                      'Please reach out to the developer through the Settings menu with any comments, critiques, or questions'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(
+                  'Got it!',
+                ),
+              )
+            ],
+          );
+        },
+      );
+      // SharedPrefs().showUpdate4Dialog = false;
+    });
+    // }
 
     context.read<CharactersModel>().hideRetireCharacterAnimationController =
         AnimationController(
