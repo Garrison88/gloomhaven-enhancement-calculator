@@ -126,18 +126,23 @@ class Character {
         columnIsRetired: isRetired ? 1 : 0,
       };
 
-  Color classColor(
-    BuildContext context,
+  Color primaryClassColor(
+    Brightness brightness,
   ) =>
       isRetired
-          ? Theme.of(context).brightness == Brightness.dark
+          ? brightness == Brightness.dark
               ? Colors.white
               : Colors.black
           : Color(
-              int.parse(
-                playerClass.classColor,
-              ),
+              playerClass.primaryColor,
             );
+
+  Color secondaryClassColor(
+    Brightness brightness,
+  ) =>
+      Color(
+        playerClass.secondaryColor ?? playerClass.primaryColor,
+      );
 
   static int level(int xp) => CharacterData.levelXp.entries
       .lastWhere(

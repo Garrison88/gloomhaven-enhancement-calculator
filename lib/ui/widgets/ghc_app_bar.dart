@@ -135,19 +135,31 @@ class _GHCAppBarState extends State<GHCAppBar> {
                       'images/titles/gloomhaven.png',
                       scale: 6.25,
                     ),
-                    Switch(
-                      inactiveThumbColor: const Color(0xff4b2c20),
-                      inactiveTrackColor: const Color(0xffa98274),
-                      activeColor: const Color(0xff005cb2),
-                      activeTrackColor: const Color(0xff6ab7ff),
-                      value: !SharedPrefs().gloomhavenMode,
-                      onChanged: (value) {
-                        SharedPrefs().gloomhavenMode = !value;
-                        Provider.of<EnhancementCalculatorModel>(context,
-                                listen: false)
-                            .gameVersionToggled(value);
-                        setState(() {});
-                      },
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: Theme.of(context).colorScheme.copyWith(
+                              outline: Colors.transparent,
+                            ),
+                      ),
+                      child: Switch(
+                        inactiveThumbImage: const AssetImage(
+                          'images/switch_gh.png',
+                        ),
+                        activeColor: const Color(0xff005cb2),
+                        trackColor: MaterialStateProperty.resolveWith(
+                          (states) => states.contains(MaterialState.selected)
+                              ? const Color(0xff6ab7ff)
+                              : const Color(0xffa98274),
+                        ),
+                        value: !SharedPrefs().gloomhavenMode,
+                        onChanged: (value) {
+                          SharedPrefs().gloomhavenMode = !value;
+                          Provider.of<EnhancementCalculatorModel>(context,
+                                  listen: false)
+                              .gameVersionToggled(value);
+                          setState(() {});
+                        },
+                      ),
                     ),
                     Image.asset(
                       'images/titles/frosthaven.png',
@@ -173,7 +185,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                     '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
                 Character character = charactersModel.currentCharacter;
                 await charactersModel.retireCurrentCharacter();
-                context.read<AppModel>().updateTheme();
+                appModel.updateTheme();
                 ScaffoldMessenger.of(context)
                   ..clearSnackBars()
                   ..showSnackBar(

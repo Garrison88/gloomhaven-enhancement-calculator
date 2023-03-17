@@ -161,7 +161,7 @@ class CharactersModel with ChangeNotifier {
     /* TODO: change this to use V2 or something when done adding GH and JotL - FH
     crossover character sheets */
     // TODO: Also here, consider displaying or not displaying Traits if using old system
-    if (selectedClass.classCategory != ClassCategory.frosthaven) {
+    if (selectedClass.category != ClassCategory.frosthaven) {
       character.includeMasteries = false;
     }
     character.id = await databaseHelper.insertCharacter(
@@ -227,14 +227,16 @@ class CharactersModel with ChangeNotifier {
 
   void updateTheme() {
     if (characters.isEmpty) {
-      SharedPrefs().themeColor = '0xff4e7ec1';
-      SharedPrefs().initialPage = 0;
+      SharedPrefs().primaryClassColor = 0xff4e7ec1;
+      // SharedPrefs().initialPage = 0;
     } else {
-      SharedPrefs().themeColor = currentCharacter.isRetired
-          ? SharedPrefs().darkTheme
-              ? '0xffffffff'
-              : '0xff111111'
-          : currentCharacter.playerClass.classColor;
+      if (currentCharacter.isRetired) {
+        SharedPrefs().primaryClassColor =
+            SharedPrefs().darkTheme ? 0xffffffff : 0xff000000;
+      } else {
+        SharedPrefs().primaryClassColor =
+            currentCharacter.playerClass.primaryColor;
+      }
     }
   }
 

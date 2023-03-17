@@ -13,7 +13,7 @@ class MasteryRow extends StatefulWidget {
 
   const MasteryRow({
     Key key,
-    this.character,
+    @required this.character,
     @required this.mastery,
   }) : super(key: key);
 

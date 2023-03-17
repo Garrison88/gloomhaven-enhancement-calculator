@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import '../../data/constants.dart';
-import '../../shared_prefs.dart';
 import 'character_screen.dart';
 import '../../viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
@@ -72,14 +71,6 @@ class _CharactersScreenState extends State<CharactersScreen>
           charactersModel.onPageChanged(
             index,
           );
-          Theme.of(context).colorScheme.copyWith(
-                primary: Color(
-                  int.parse(
-                    SharedPrefs().themeColor,
-                  ),
-                ),
-              );
-
           context.read<AppModel>().updateTheme();
         },
         itemCount: charactersModel.characters.length,
@@ -94,10 +85,12 @@ class _CharactersScreenState extends State<CharactersScreen>
                     height: 500,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
-                      'images/class_icons/${charactersModel.characters[index].playerClass.classIconUrl}',
+                      'images/class_icons/${charactersModel.characters[index].playerClass.icon}',
                       colorFilter: ColorFilter.mode(
-                        charactersModel.characters[index]
-                            .classColor(context)
+                        context
+                            .watch<CharactersModel>()
+                            .characters[index]
+                            .primaryClassColor(Theme.of(context).brightness)
                             .withOpacity(0.1),
                         BlendMode.srcIn,
                       ),

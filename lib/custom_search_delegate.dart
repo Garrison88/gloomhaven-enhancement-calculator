@@ -38,9 +38,10 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       icon: const Icon(
         Icons.arrow_back,
       ),
-      onPressed: () {
-        close(context, null);
-      },
+      onPressed: () => close(
+        context,
+        null,
+      ),
     );
   }
 
@@ -57,34 +58,24 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
         final Iterable<PlayerClass> playerClass = _playerClasses
             .where((playerClass) {
           if (!gh && !jotl && !fh && !cs && !cc) {
-            return playerClass.className
-                .toLowerCase()
-                .contains(query.toLowerCase());
+            return playerClass.name.toLowerCase().contains(query.toLowerCase());
           }
-          return (playerClass.className
+          return (playerClass.name
                       .toLowerCase()
                       .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.gloomhaven &&
+                  playerClass.category == ClassCategory.gloomhaven &&
                   gh) ||
-              (playerClass.className
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.jawsOfTheLion &&
+              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+                  playerClass.category == ClassCategory.jawsOfTheLion &&
                   jotl) ||
-              (playerClass.className
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.frosthaven &&
+              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+                  playerClass.category == ClassCategory.frosthaven &&
                   fh) ||
-              (playerClass.className
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.crimsonScales &&
+              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+                  playerClass.category == ClassCategory.crimsonScales &&
                   cs) ||
-              (playerClass.className
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) &&
-                  playerClass.classCategory == ClassCategory.custom &&
+              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+                  playerClass.category == ClassCategory.custom &&
                   cc);
         }).toList()
           // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
@@ -113,12 +104,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                   : Colors.black
                               : Theme.of(context).textTheme.bodyLarge.color,
                         ),
-                    checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                Theme.of(context).colorScheme.primary) ==
-                            Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    visualDensity: VisualDensity.compact,
                     selected: gh,
                     onSelected: (value) => stateSetter(() {
                       gh = value;
@@ -137,12 +122,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                   : Colors.black
                               : Theme.of(context).textTheme.bodyLarge.color,
                         ),
-                    checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                Theme.of(context).colorScheme.primary) ==
-                            Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    visualDensity: VisualDensity.compact,
                     selected: jotl,
                     onSelected: (value) => stateSetter(() {
                       jotl = value;
@@ -161,12 +140,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                   : Colors.black
                               : Theme.of(context).textTheme.bodyLarge.color,
                         ),
-                    checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                Theme.of(context).colorScheme.primary) ==
-                            Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    visualDensity: VisualDensity.compact,
                     selected: fh,
                     onSelected: (value) => stateSetter(() {
                       fh = value;
@@ -189,12 +162,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                     : Colors.black
                                 : Theme.of(context).textTheme.bodyLarge.color,
                           ),
-                      checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).colorScheme.primary) ==
-                              Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      visualDensity: VisualDensity.comfortable,
                       selected: cs,
                       onSelected: (value) => stateSetter(() {
                         cs = value;
@@ -217,12 +184,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                     : Colors.black
                                 : Theme.of(context).textTheme.bodyLarge.color,
                           ),
-                      checkmarkColor: ThemeData.estimateBrightnessForColor(
-                                  Theme.of(context).colorScheme.primary) ==
-                              Brightness.dark
-                          ? Colors.white
-                          : Colors.black,
-                      visualDensity: VisualDensity.compact,
                       selected: cc,
                       onSelected: (value) => stateSetter(() {
                         cc = value;
@@ -277,9 +238,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
             (!SharedPrefs().envelopeV &&
                 widget.suggestions[index].classCode == 'vanquisher') ||
             !SharedPrefs().customClasses &&
-                (widget.suggestions[index].classCategory ==
-                        ClassCategory.custom ||
-                    widget.suggestions[index].classCategory ==
+                (widget.suggestions[index].category == ClassCategory.custom ||
+                    widget.suggestions[index].category ==
                         ClassCategory.crimsonScales)) {
           return Container();
         } else {
@@ -301,8 +261,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
             (!SharedPrefs().envelopeV &&
                 selectedPlayerClass.classCode == 'vanquisher') ||
             !SharedPrefs().customClasses &&
-                (selectedPlayerClass.classCategory == ClassCategory.custom ||
-                    selectedPlayerClass.classCategory ==
+                (selectedPlayerClass.category == ClassCategory.custom ||
+                    selectedPlayerClass.category ==
                         ClassCategory.crimsonScales)) {
           return Container();
         } else {
@@ -335,26 +295,23 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                   ],
                 ),
                 leading: SvgPicture.asset(
-                  'images/class_icons/${selectedPlayerClass.classIconUrl}',
+                  'images/class_icons/${selectedPlayerClass.icon}',
                   width: iconSize + 5,
                   height: iconSize + 5,
                   colorFilter: ColorFilter.mode(
                     Color(
-                      int.parse(
-                        selectedPlayerClass.classColor,
-                      ),
+                      selectedPlayerClass.primaryColor,
                     ),
                     BlendMode.srcIn,
                   ),
                 ),
                 title: Text(
                   showHidden || !selectedPlayerClass.locked
-                      ? selectedPlayerClass.className
+                      ? selectedPlayerClass.name
                       : '???',
                 ),
                 onTap: () {
-                  if ((selectedPlayerClass.classCategory ==
-                          ClassCategory.custom) &&
+                  if ((selectedPlayerClass.category == ClassCategory.custom) &&
                       !hideMessage) {
                     showDialog<bool>(
                       context: context,
@@ -443,10 +400,9 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                               child: Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.grey[300]
-                                      : Colors.black87,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
                                 ),
                               ),
                               onPressed: () => Navigator.pop(context, false),

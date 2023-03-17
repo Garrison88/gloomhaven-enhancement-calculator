@@ -23,12 +23,6 @@ class SharedPrefs {
     _sharedPrefs.setBool('clearOldPrefs', value);
   }
 
-  // bool get showPerkImages => _sharedPrefs.getBool('showPerkImages') ?? true;
-
-  // set showPerkImages(bool value) {
-  //   _sharedPrefs.setBool('showPerkImages', value);
-  // }
-
   bool get partyBoon => _sharedPrefs.getBool('partyBoon') ?? false;
 
   set partyBoon(bool value) {
@@ -47,10 +41,11 @@ class SharedPrefs {
     _sharedPrefs.setBool('darkTheme', value);
   }
 
-  String get themeColor => _sharedPrefs.getString('themeColor') ?? '0xff4e7ec1';
+  int get primaryClassColor =>
+      _sharedPrefs.getInt('primaryClassColor') ?? 0xff4e7ec1;
 
-  set themeColor(String value) {
-    _sharedPrefs.setString('themeColor', value);
+  set primaryClassColor(int value) {
+    _sharedPrefs.setInt('primaryClassColor', value);
   }
 
   bool get envelopeX => _sharedPrefs.getBool('envelopeX') ?? false;
@@ -77,13 +72,6 @@ class SharedPrefs {
   set resourcesExpanded(bool value) {
     _sharedPrefs.setBool('resourcesExpanded', value);
   }
-
-  // int get bottomNavInitialPage =>
-  //     _sharedPrefs.getInt('bottomNavInitialPage') ?? 0;
-
-  // set bottomNavInitialPage(int value) {
-  //   _sharedPrefs.setInt('bottomNavInitialPage', value);
-  // }
 
   int get targetCardLvl => _sharedPrefs.getInt('targetCardLvl') ?? 0;
 

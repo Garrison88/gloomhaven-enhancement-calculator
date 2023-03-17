@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
-class GHCBottomNavigationBar extends StatefulWidget {
+class GHCBottomNavigationBar extends StatelessWidget {
   const GHCBottomNavigationBar({
     Key key,
   }) : super(
@@ -11,38 +12,39 @@ class GHCBottomNavigationBar extends StatefulWidget {
         );
 
   @override
-  State<GHCBottomNavigationBar> createState() => _GHCBottomNavigationBarState();
-}
-
-class _GHCBottomNavigationBarState extends State<GHCBottomNavigationBar> {
-  @override
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
-    return SizedBox(
-      child: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: SizedBox(
+            height: 35,
+            child: Icon(
               Icons.history_edu_outlined,
+              size: iconSize,
             ),
-            label: 'CHARACTERS',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
+          label: 'CHARACTERS',
+        ),
+        BottomNavigationBarItem(
+          icon: SizedBox(
+            height: 35,
+            child: Icon(
               Icons.auto_awesome_outlined,
+              size: iconSize,
             ),
-            label: 'ENHANCEMENTS',
           ),
-        ],
-        currentIndex: appModel.page,
-        onTap: (value) {
-          appModel.page = value;
-          appModel.pageController.jumpToPage(
-            value,
-          );
-          context.read<CharactersModel>().isScrolledToTop = true;
-        },
-      ),
+          label: 'ENHANCEMENTS',
+        ),
+      ],
+      currentIndex: appModel.page,
+      onTap: (value) {
+        appModel.page = value;
+        appModel.pageController.jumpToPage(
+          value,
+        );
+        context.read<CharactersModel>().isScrolledToTop = true;
+      },
     );
   }
 }

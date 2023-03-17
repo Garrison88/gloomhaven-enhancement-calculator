@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 4.0.0+187
+version: 4.0.1+205
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -14,7 +14,7 @@ dependencies:
   sqflite: ^2.2.4
   path_provider: ^2.0.13
   provider: ^6.0.5
-  flutter_svg: ^2.0.2
+  flutter_svg: ^2.0.4
   share_plus: ^6.3.1
   file_picker: ^5.2.5
   intl: ^0.18.0
@@ -22,7 +22,7 @@ dependencies:
   permission_handler: ^10.2.0
   uuid: ^3.0.7
   package_info_plus: ^3.0.3
-  url_launcher: ^6.1.9
+  url_launcher: ^6.1.10
   faker: ^2.1.0
   # maybe URL launcher is problematic
   font_awesome_flutter: ^10.4.0
@@ -49,6 +49,7 @@ flutter:
 
   assets:
     # - icons/
+    # - icons/android/
     - images/
     - images/attack_modifiers/
     - images/class_icons/

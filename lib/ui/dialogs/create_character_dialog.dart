@@ -41,7 +41,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     super.initState();
     faker = Faker();
     _selectedClass = CharacterData.playerClasses[0];
-    _classTextFieldController.text = _selectedClass.className;
+    _classTextFieldController.text = _selectedClass.name;
     _levelTextFieldController.text = '${_levels[0]}';
     placeholderName = _generateRandomName();
   }
@@ -201,7 +201,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                           if (value != null) {
                             setState(() {
                               _selectedClass = value;
-                              _classTextFieldController.text = value.className;
+                              _classTextFieldController.text = value.name;
                             });
                           }
                         });
@@ -214,12 +214,10 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: SvgPicture.asset(
-                        'images/class_icons/${_selectedClass.classIconUrl}',
+                        'images/class_icons/${_selectedClass.icon}',
                         colorFilter: ColorFilter.mode(
                           Color(
-                            int.parse(
-                              _selectedClass.classColor,
-                            ),
+                            _selectedClass.primaryColor,
                           ),
                           BlendMode.srcIn,
                         ),
@@ -301,9 +299,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           style: Theme.of(context).textButtonTheme.style.copyWith(
                 foregroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) =>
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[300]
-                          : Colors.black87,
+                      Theme.of(context).colorScheme.onBackground,
                 ),
               ),
           onPressed: () => Navigator.pop(context, false),

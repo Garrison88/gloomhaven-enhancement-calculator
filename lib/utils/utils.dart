@@ -73,9 +73,8 @@ class Utils {
           case '+0':
             assetPath = 'attack_modifiers/plus_0.svg';
             break;
-          // TODO: replace with SVG
           case '+X':
-            assetPath = 'attack_modifiers/plus_x.png';
+            assetPath = 'attack_modifiers/plus_x.svg';
             break;
           case '2x':
             assetPath = 'attack_modifiers/2_x.svg';
@@ -475,63 +474,44 @@ class Utils {
               child: SizedBox(
                 height: iconSize - 2.5,
                 width: sizedBoxWidth,
-                child:
-
-                    // ? assetPath.contains('.svg')
-                    //     ? SvgPicture.asset(
-                    //         'images/$assetPath',
-                    //         colorFilter: const ColorFilter.mode(
-                    //           Colors.white,
-                    //           BlendMode.srcIn,
-                    //         ),
-                    //       )
-                    //     : Image.asset(
-                    //         'images/$assetPath',
-                    //         color: Colors.white,
-                    //       )
-                    // :
-                    assetPath.contains('.svg')
-                        ? element.toLowerCase().contains('consume')
-                            // Stack a Consume icon ontop of the Element icon
-                            ? Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  invertColor && darkTheme
-                                      ? SvgPicture.asset(
-                                          'images/$assetPath',
-                                          colorFilter: const ColorFilter.mode(
-                                            Colors.white,
-                                            BlendMode.srcIn,
-                                          ),
-                                        )
-                                      : SvgPicture.asset(
-                                          'images/$assetPath',
-                                        ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: SizedBox(
-                                      height: 12,
-                                      width: 12,
-                                      child: SvgPicture.asset(
-                                        'images/consume.svg',
-                                      ),
-                                    ),
+                child: element.toLowerCase().contains('consume')
+                    // Stack a Consume icon ontop of the Element icon
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          invertColor && darkTheme
+                              ? SvgPicture.asset(
+                                  'images/$assetPath',
+                                  colorFilter: const ColorFilter.mode(
+                                    Colors.white,
+                                    BlendMode.srcIn,
                                   ),
-                                ],
-                              )
-                            : invertColor && darkTheme
-                                ? SvgPicture.asset(
-                                    'images/$assetPath',
-                                    colorFilter: const ColorFilter.mode(
-                                      Colors.white,
-                                      BlendMode.srcIn,
-                                    ),
-                                  )
-                                : SvgPicture.asset(
-                                    'images/$assetPath',
-                                  )
-                        : Image.asset(
+                                )
+                              : SvgPicture.asset(
+                                  'images/$assetPath',
+                                ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: SizedBox(
+                              height: 12,
+                              width: 12,
+                              child: SvgPicture.asset(
+                                'images/consume.svg',
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : invertColor && darkTheme
+                        ? SvgPicture.asset(
+                            'images/$assetPath',
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          )
+                        : SvgPicture.asset(
                             'images/$assetPath',
                           ),
               ),

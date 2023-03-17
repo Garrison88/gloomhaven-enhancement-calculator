@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class AppModel extends ChangeNotifier {
-  AppModel(
-    this.pageController,
-    this._themeMode,
-  );
-  final PageController pageController;
-  ThemeMode _themeMode;
+  AppModel();
+  final PageController pageController = PageController();
+  ThemeMode _themeMode =
+      SharedPrefs().darkTheme ? ThemeMode.dark : ThemeMode.light;
 
   ThemeMode get themeMode => _themeMode;
 
@@ -20,6 +20,17 @@ class AppModel extends ChangeNotifier {
   }) {
     if (themeMode != null) {
       _themeMode = themeMode;
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          systemNavigationBarIconBrightness:
+              themeMode == ThemeMode.dark ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: themeMode == ThemeMode.dark
+              ? const Color(
+                  0xff1c1b1f,
+                )
+              : Colors.white,
+        ),
+      );
     }
     notifyListeners();
   }

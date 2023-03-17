@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart' as flutter_svg;
-// import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:provider/provider.dart';
@@ -69,38 +68,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          SwitchListTile(
-            title: const Text('Theme'),
-            subtitle: Theme.of(context).brightness == Brightness.dark
-                ? const Text('Dark')
-                : const Text('Light'),
-            // activeThumbImage: const Svg('images/elem_dark.svg'),
-            activeColor: const Color(0xff1f272e),
-            inactiveThumbColor: const Color(0xffeda50b),
-            inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
-            activeTrackColor: Colors.white30,
-            // inactiveThumbImage: const Svg('images/elem_light.svg'),
-            value: widget.appModel.themeMode == ThemeMode.dark,
-            onChanged: (val) {
-              SharedPrefs().darkTheme = val;
-              widget.appModel.updateTheme(
-                themeMode: val ? ThemeMode.dark : ThemeMode.light,
-              );
-              SystemChrome.setSystemUIOverlayStyle(
-                SystemUiOverlayStyle(
-                  systemNavigationBarIconBrightness:
-                      val ? Brightness.light : Brightness.dark,
-                  systemNavigationBarColor: val
-                      ? Color(
-                          int.parse(
-                            '0xff1c1b1f',
-                          ),
-                        )
-                      : Colors.white,
-                ),
-              );
-              widget.charactersModel.updateTheme();
-            },
+          Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: Theme.of(context)
+                    .colorScheme
+                    .copyWith(outline: Colors.transparent)),
+            child: SwitchListTile(
+              title: const Text('Theme'),
+              subtitle: Theme.of(context).brightness == Brightness.dark
+                  ? const Text('Dark')
+                  : const Text('Light'),
+              activeThumbImage: const AssetImage('images/elem_dark.png'),
+              activeColor: const Color(0xff1f272e),
+              inactiveThumbColor: const Color(0xffeda50b),
+              inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
+              activeTrackColor: const Color(0xff1f272e),
+              inactiveThumbImage: const AssetImage('images/elem_light.png'),
+              value: widget.appModel.themeMode == ThemeMode.dark,
+              onChanged: (val) {
+                SharedPrefs().darkTheme = val;
+                widget.appModel.updateTheme(
+                  themeMode: val ? ThemeMode.dark : ThemeMode.light,
+                );
+                widget.charactersModel.updateTheme();
+              },
+            ),
           ),
           const SettingsDivider(),
           SwitchListTile(
@@ -205,14 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   width: iconSize,
                                   height: iconSize,
                                   colorFilter: ColorFilter.mode(
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Color(
-                                            int.parse(
-                                              '0xff424242',
-                                            ),
-                                          ),
+                                    Theme.of(context).colorScheme.onBackground,
                                     BlendMode.srcIn,
                                   ),
                                 ),
@@ -260,7 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SettingsDivider(),
           SwitchListTile(
             subtitle: const Text(
-                "Include Crimson Scales classes and 'released' custom classes created by the community"),
+                "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community"),
             title: const Text('Custom Content'),
             value: SharedPrefs().customClasses,
             onChanged: (val) {
@@ -372,14 +357,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   width: iconSize,
                                   height: iconSize,
                                   colorFilter: ColorFilter.mode(
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Color(
-                                            int.parse(
-                                              '0xff424242',
-                                            ),
-                                          ),
+                                    Theme.of(context).colorScheme.onBackground,
                                     BlendMode.srcIn,
                                   ),
                                 ),
@@ -763,16 +741,13 @@ void _showLoaderDialog(BuildContext context) {
 }
 
 Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
-    ? await launchUrl(uri)
-    : throw 'Could not launch $uri';
-
-String encodeQueryParameters(Map<String, String> params) {
-  return params.entries
-      .map(
-        (e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+    ? await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
       )
-      .join('&');
-}
+    : await launchUrl(
+        uri,
+      );
 
 class SettingsDivider extends StatelessWidget {
   const SettingsDivider({
@@ -781,9 +756,6 @@ class SettingsDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   padding: const EdgeInsets.only(bottom: smallPadding + 1),
-    // );
     return const Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
       child: Divider(

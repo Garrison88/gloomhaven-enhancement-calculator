@@ -106,8 +106,8 @@ class CharacterScreen extends StatelessWidget {
                 ),
               ),
             // PADDING FOR FAB
-            Container(
-              height: MediaQuery.of(context).padding.bottom + 82,
+            const SizedBox(
+              height: 82,
             ),
           ],
         ),
@@ -190,9 +190,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                   'images/equipment_slots/pocket.svg',
                   width: iconSize,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
+                    Theme.of(context).colorScheme.onBackground,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -207,11 +205,9 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                         Text(
                       '${(Character.level(character.xp) / 2).round()}',
                       style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
                             fontSize: 15,
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.black
-                                    : Colors.white,
+                            color: Theme.of(context).colorScheme.background,
                           ),
                     ),
                   ),
@@ -270,9 +266,7 @@ class _NameAndClassSection extends StatelessWidget {
                   'images/level.svg',
                   width: iconSize * 1.5,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
+                    Theme.of(context).colorScheme.onBackground,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -285,9 +279,7 @@ class _NameAndClassSection extends StatelessWidget {
                       Text(
                     '${Character.level(character.xp)}',
                     style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.black87
-                          : Colors.white,
+                      color: Theme.of(context).colorScheme.background,
                       fontSize: titleFontSize - 7,
                       fontFamily: pirataOne,
                     ),
@@ -300,7 +292,7 @@ class _NameAndClassSection extends StatelessWidget {
             ),
             Flexible(
               child: AutoSizeText(
-                '${character.playerClass.race} ${character.playerClass.className}',
+                '${character.playerClass.race} ${character.playerClass.name}',
                 maxLines: 1,
                 style: const TextStyle(fontSize: titleFontSize),
               ),
@@ -332,6 +324,7 @@ class _NameAndClassSection extends StatelessWidget {
           //     ),
           //   ],
           // ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -339,18 +332,19 @@ class _NameAndClassSection extends StatelessWidget {
                 'images/trait.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  Theme.of(context).colorScheme.onBackground,
                   BlendMode.srcIn,
                 ),
               ),
               const SizedBox(
                 width: smallPadding,
               ),
-              Text(
-                '${character.playerClass.traits[0]} · ${character.playerClass.traits[1]} · ${character.playerClass.traits[2]}',
-                textAlign: TextAlign.center,
+              Flexible(
+                child: AutoSizeText(
+                  '${character.playerClass.traits[0]} · ${character.playerClass.traits[1]} · ${character.playerClass.traits[2]}',
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
@@ -385,9 +379,7 @@ class _StatsSection extends StatelessWidget {
                 'images/xp.svg',
                 width: iconSize + 5,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  Theme.of(context).colorScheme.onBackground,
                   BlendMode.srcIn,
                 ),
               ),
@@ -474,9 +466,7 @@ class _StatsSection extends StatelessWidget {
                 'images/gold.svg',
                 width: iconSize + 5,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white
-                      : Colors.black87,
+                  Theme.of(context).colorScheme.onBackground,
                   BlendMode.srcIn,
                 ),
               ),
@@ -548,9 +538,7 @@ class _StatsSection extends StatelessWidget {
                   'images/goal.svg',
                   width: iconSize,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
+                    Theme.of(context).colorScheme.onBackground,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -595,9 +583,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white54
-              : Colors.black54,
+          color: Theme.of(context).colorScheme.onBackground,
         ),
         borderRadius: BorderRadius.circular(4),
       ),
@@ -645,14 +631,16 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                     // ),
                     ResourceCard(
                       resource: CharacterData.resources[0],
-                      count: widget.character.resourceHide,
+                      count: widget.character.resourceLumber,
                       increaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceHide = widget.character.resourceHide + 1,
+                          ..resourceLumber =
+                              widget.character.resourceLumber + 1,
                       ),
                       decreaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceHide = widget.character.resourceHide - 1,
+                          ..resourceLumber =
+                              widget.character.resourceLumber - 1,
                       ),
                       canEdit: charactersModel.isEditMode &&
                           !widget.character.isRetired,
@@ -673,16 +661,14 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[2],
-                      count: widget.character.resourceLumber,
+                      count: widget.character.resourceHide,
                       increaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceLumber =
-                              widget.character.resourceLumber + 1,
+                          ..resourceHide = widget.character.resourceHide + 1,
                       ),
                       decreaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceLumber =
-                              widget.character.resourceLumber - 1,
+                          ..resourceHide = widget.character.resourceHide - 1,
                       ),
                       canEdit: charactersModel.isEditMode &&
                           !widget.character.isRetired,
@@ -721,16 +707,16 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[5],
-                      count: widget.character.resourceRockroot,
+                      count: widget.character.resourceCorpsecap,
                       increaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceRockroot =
-                              widget.character.resourceRockroot + 1,
+                          ..resourceCorpsecap =
+                              widget.character.resourceCorpsecap + 1,
                       ),
                       decreaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceRockroot =
-                              widget.character.resourceRockroot - 1,
+                          ..resourceCorpsecap =
+                              widget.character.resourceCorpsecap - 1,
                       ),
                       canEdit: charactersModel.isEditMode &&
                           !widget.character.isRetired,
@@ -753,16 +739,16 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                     ),
                     ResourceCard(
                       resource: CharacterData.resources[7],
-                      count: widget.character.resourceCorpsecap,
+                      count: widget.character.resourceRockroot,
                       increaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceCorpsecap =
-                              widget.character.resourceCorpsecap + 1,
+                          ..resourceRockroot =
+                              widget.character.resourceRockroot + 1,
                       ),
                       decreaseCount: () => charactersModel.updateCharacter(
                         widget.character
-                          ..resourceCorpsecap =
-                              widget.character.resourceCorpsecap - 1,
+                          ..resourceRockroot =
+                              widget.character.resourceRockroot - 1,
                       ),
                       canEdit: charactersModel.isEditMode &&
                           !widget.character.isRetired,

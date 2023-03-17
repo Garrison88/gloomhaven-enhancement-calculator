@@ -74,9 +74,6 @@ class _PerkRowState extends State<PerkRow> {
                                     ),
                                     value: value,
                                   );
-                                  // value
-                                  //     ? widget.character.numOfSelectedPerks++
-                                  //     : widget.character.numOfSelectedPerks--;
                                 }
                               : null,
                         );
@@ -105,9 +102,6 @@ class _PerkRowState extends State<PerkRow> {
                                         widget.perks[index].perkId),
                                 value: value,
                               );
-                              // value
-                              //     ? widget.character.numOfSelectedPerks++
-                              //     : widget.character.numOfSelectedPerks--;
                             }
                           : null,
                     ),
@@ -120,7 +114,7 @@ class _PerkRowState extends State<PerkRow> {
               : Container(
                   height: height,
                   width: 1,
-                  color: Theme.of(context).dividerColor,
+                  color: Theme.of(context).dividerTheme.color,
                   margin: const EdgeInsets.only(right: 12),
                 ),
           SizeProviderWidget(
