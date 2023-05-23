@@ -327,39 +327,45 @@ class InfoDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-      content: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            // if title isn't provided, display eligible enhancements
-            title == null
-                ? Column(children: <Widget>[
-                    const Text(
-                      'Eligible For:',
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        top: smallPadding,
-                        bottom: smallPadding,
+      content: Container(
+        constraints: const BoxConstraints(
+          maxWidth: 400,
+          minWidth: maxDialogWidth,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              // if title isn't provided, display eligible enhancements
+              title == null
+                  ? Column(children: <Widget>[
+                      const Text(
+                        'Eligible For:',
+                        style: TextStyle(decoration: TextDecoration.underline),
                       ),
-                    ),
-                    Wrap(
-                      runSpacing: smallPadding,
-                      spacing: smallPadding,
-                      alignment: WrapAlignment.center,
-                      children: _createIconsListForDialog(_eligibleForIcons),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(
-                        top: smallPadding,
-                        bottom: smallPadding,
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          top: smallPadding,
+                          bottom: smallPadding,
+                        ),
                       ),
-                    ),
-                  ])
-                // if title isn't provided, display an empty container
-                : Container(),
-            message ?? _bodyText,
-          ],
+                      Wrap(
+                        runSpacing: smallPadding,
+                        spacing: smallPadding,
+                        alignment: WrapAlignment.center,
+                        children: _createIconsListForDialog(_eligibleForIcons),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          top: smallPadding,
+                          bottom: smallPadding,
+                        ),
+                      ),
+                    ])
+                  // if title isn't provided, display an empty container
+                  : Container(),
+              message ?? _bodyText,
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

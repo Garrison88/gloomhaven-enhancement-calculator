@@ -2,18 +2,17 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/masteries_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perks_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/resource_card.dart';
-import '../../data/constants.dart';
-import '../../data/strings.dart';
-import '../dialogs/add_subtract_dialog.dart';
-import '../dialogs/info_dialog.dart';
-import '../../viewmodels/characters_model.dart';
-import 'package:provider/provider.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class CharacterScreen extends StatelessWidget {
   const CharacterScreen({
@@ -34,25 +33,36 @@ class CharacterScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             // RETIREMENTS and POCKET ITEMS
-            _RetirementsAndPocketItemsSection(
-              character: character,
-            ),
-            // NAME and CLASS
             Padding(
               padding: const EdgeInsets.all(
                 smallPadding,
               ),
-              child: _NameAndClassSection(
+              child: _RetirementsAndPocketItemsSection(
                 character: character,
+              ),
+            ),
+            // NAME and CLASS
+            Container(
+              constraints: const BoxConstraints(maxWidth: maxWidth),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  smallPadding,
+                ),
+                child: _NameAndClassSection(
+                  character: character,
+                ),
               ),
             ),
             // STATS
-            Padding(
-              padding: const EdgeInsets.all(
-                smallPadding,
-              ),
-              child: _StatsSection(
-                character: character,
+            Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  smallPadding,
+                ),
+                child: _StatsSection(
+                  character: character,
+                ),
               ),
             ),
             // RESOURCES
@@ -65,16 +75,19 @@ class CharacterScreen extends StatelessWidget {
               ),
             ),
             // NOTES
-            Padding(
-              padding: const EdgeInsets.all(
-                smallPadding,
+            Container(
+              constraints: const BoxConstraints(maxWidth: maxWidth),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                  smallPadding,
+                ),
+                child: character.notes.isNotEmpty ||
+                        context.read<CharactersModel>().isEditMode
+                    ? _NotesSection(
+                        character: character,
+                      )
+                    : const SizedBox(),
               ),
-              child: character.notes.isNotEmpty ||
-                      context.read<CharactersModel>().isEditMode
-                  ? _NotesSection(
-                      character: character,
-                    )
-                  : const SizedBox(),
             ),
             // BATTLE GOAL CHECKMARKS
             if (context.read<CharactersModel>().isEditMode &&
@@ -130,11 +143,20 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
       children: <Widget>[
         Row(
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 4,
-              child: context.watch<CharactersModel>().isEditMode &&
-                      !character.isRetired
-                  ? TextField(
+            (!context.watch<CharactersModel>().isEditMode &&
+                        charactersModel.currentCharacter.previousRetirements ==
+                            0) ||
+                    (charactersModel.currentCharacter.isRetired &&
+                        charactersModel.currentCharacter.previousRetirements ==
+                            0)
+                ? Container()
+                : Container(
+                    constraints: const BoxConstraints(maxWidth: 175),
+                    child: TextFormField(
+                      textAlign: context.watch<CharactersModel>().isEditMode &&
+                              !character.isRetired
+                          ? TextAlign.center
+                          : TextAlign.start,
                       style: Theme.of(context).textTheme.titleMedium,
                       enableInteractiveSelection: false,
                       onChanged: (String value) =>
@@ -143,36 +165,44 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                           ..previousRetirements =
                               value.isEmpty ? 0 : int.parse(value),
                       ),
-                      // style: Theme.of(context).textTheme.titleSmall,
-                      textAlign: TextAlign.center,
+                      enabled: context.watch<CharactersModel>().isEditMode &&
+                          !character.isRetired,
+                      decoration: InputDecoration(
+                        labelText: 'Previous Retirements',
+                        border: context.watch<CharactersModel>().isEditMode &&
+                                !character.isRetired
+                            ? null
+                            : InputBorder.none,
+                      ),
+                      // textAlign: TextAlign.center,
                       controller: charactersModel.previousRetirementsController,
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
                             RegExp('[\\.|\\,|\\ |\\-]'))
                       ],
                       keyboardType: TextInputType.number,
-                    )
-                  : Text(
-                      'Retirements: ${character.previousRetirements}',
-                      // style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleSmall,
                     ),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.info_outline,
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) {
-                  return InfoDialog(
-                    title: Strings.previousRetirementsInfoTitle,
-                    message: Strings.previousRetirementsInfoBody(context),
-                  );
-                },
-              ),
-            ),
+                  ),
+            // : Text(
+            //     'Retirements: ${character.previousRetirements}',
+            //     // style: Theme.of(context).textTheme.titleMedium,
+            //     textAlign: TextAlign.center,
+            //     // style: Theme.of(context).textTheme.titleSmall,
+            //   ),
+            // IconButton(
+            //   icon: const Icon(
+            //     Icons.info_outline,
+            //   ),
+            //   onPressed: () => showDialog<void>(
+            //     context: context,
+            //     builder: (_) {
+            //       return InfoDialog(
+            //         title: Strings.previousRetirementsInfoTitle,
+            //         message: Strings.previousRetirementsInfoBody(context),
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
         Tooltip(
@@ -388,11 +418,14 @@ class _StatsSection extends StatelessWidget {
               ),
               context.watch<CharactersModel>().isEditMode &&
                       !character.isRetired
-                  ? Column(
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 6,
-                          child: TextField(
+                  ? Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 75,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          TextField(
                             enableInteractiveSelection: false,
                             onChanged: (String value) {
                               charactersModel.updateCharacter(
@@ -410,32 +443,32 @@ class _StatsSection extends StatelessWidget {
                             ],
                             keyboardType: TextInputType.number,
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.exposure),
-                          onPressed: () async {
-                            int value = await showDialog<int>(
-                                context: context,
-                                builder: (_) => AddSubtractDialog(
-                                      character.xp,
-                                      'XP',
-                                    ));
-                            if (value != null) {
-                              if (value < 1) {
-                                charactersModel.updateCharacter(
-                                  character..xp = 0,
-                                );
-                                charactersModel.xpController.clear();
-                              } else {
-                                charactersModel.updateCharacter(
-                                  character..xp = value,
-                                );
-                                charactersModel.xpController.text = '$value';
+                          IconButton(
+                            icon: const Icon(Icons.exposure),
+                            onPressed: () async {
+                              int value = await showDialog<int>(
+                                  context: context,
+                                  builder: (_) => AddSubtractDialog(
+                                        character.xp,
+                                        'XP',
+                                      ));
+                              if (value != null) {
+                                if (value < 1) {
+                                  charactersModel.updateCharacter(
+                                    character..xp = 0,
+                                  );
+                                  charactersModel.xpController.clear();
+                                } else {
+                                  charactersModel.updateCharacter(
+                                    character..xp = value,
+                                  );
+                                  charactersModel.xpController.text = '$value';
+                                }
                               }
-                            }
-                          },
-                        ),
-                      ],
+                            },
+                          ),
+                        ],
+                      ),
                     )
                   : Text(
                       character.xp.toString(),
@@ -448,7 +481,7 @@ class _StatsSection extends StatelessWidget {
                   __,
                 ) =>
                     Text(
-                  ' / ${Character.nextLevelXp(Character.level(character.xp))}',
+                  ' / ${Character.xpForNextLevel(Character.level(character.xp))}',
                   style: Theme.of(context).textTheme.bodyMedium.copyWith(
                         fontSize:
                             Theme.of(context).textTheme.bodyMedium.fontSize / 2,
@@ -475,11 +508,13 @@ class _StatsSection extends StatelessWidget {
               ),
               context.watch<CharactersModel>().isEditMode &&
                       !character.isRetired
-                  ? Column(
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 6,
-                          child: TextField(
+                  ? Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 75,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          TextField(
                             enableInteractiveSelection: false,
                             onChanged: (String value) =>
                                 charactersModel.updateCharacter(
@@ -496,29 +531,30 @@ class _StatsSection extends StatelessWidget {
                             ],
                             keyboardType: TextInputType.number,
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.exposure),
-                          onPressed: () async {
-                            int value = await showDialog<int>(
-                                context: context,
-                                builder: (_) => AddSubtractDialog(
-                                      character.gold,
-                                      'Gold',
-                                    ));
-                            if (value != null) {
-                              charactersModel.updateCharacter(
-                                character..gold = value,
-                              );
-                              if (value == 0) {
-                                charactersModel.goldController.clear();
-                              } else {
-                                charactersModel.goldController.text = '$value';
+                          IconButton(
+                            icon: const Icon(Icons.exposure),
+                            onPressed: () async {
+                              int value = await showDialog<int>(
+                                  context: context,
+                                  builder: (_) => AddSubtractDialog(
+                                        character.gold,
+                                        'Gold',
+                                      ));
+                              if (value != null) {
+                                charactersModel.updateCharacter(
+                                  character..gold = value,
+                                );
+                                if (value == 0) {
+                                  charactersModel.goldController.clear();
+                                } else {
+                                  charactersModel.goldController.text =
+                                      '$value';
+                                }
                               }
-                            }
-                          },
-                        ),
-                      ],
+                            },
+                          ),
+                        ],
+                      ),
                     )
                   : Text(
                       ' ${character.gold}',
@@ -605,7 +641,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                 bottom: smallPadding,
               ),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                // width: MediaQuery.of(context).size.width,
                 child: Wrap(
                   runSpacing: smallPadding,
                   spacing: smallPadding,

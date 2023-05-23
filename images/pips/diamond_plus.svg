@@ -1,16 +1,7 @@
-<svg viewBox="0 0 5.47 5.47" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <clipPath id="a" transform="translate(-1.42 -1.42)">
-        <path d="m0 0h8.3v8.3h-8.3z" />
-    </clipPath>
-    <clipPath id="b" transform="translate(-1.42 -1.42)">
-        <path d="m1.96 1.96h4.39v4.39h-4.39z" />
-    </clipPath>
-    <g clip-path="url(#a)" opacity=".75">
-        <path d="m2.58.52-2.06 2.06-.17.17.17.17 2.03 2.03.17.18.17-.18 2.06-2.06.17-.17-.17-.17-2.03-2.03-.17-.17z"
-            fill="none" stroke="#fff" stroke-width=".49" />
-    </g>
-    <g clip-path="url(#b)" fill="none" opacity=".75" stroke="#fff" stroke-width=".5">
-        <path d="m1.54 2.74h2.39" />
-        <path d="m2.74 1.54v2.39" />
+<svg enable-background="new 0 0 5.5 5.5" viewBox="0 0 5.5 5.5" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="#9E9E9E">
+        <path d="m2.6.5-2.1 2.1-.2.2.2.1 2 2 .2.2.2-.2 2-2 .2-.2-.2-.2-2-2-.1-.2z" stroke-width=".5" />
+        <path d="m1.5 2.7h2.4" stroke-width=".5" />
+        <path d="m2.7 1.5v2.4" stroke-width=".5" />
     </g>
 </svg>

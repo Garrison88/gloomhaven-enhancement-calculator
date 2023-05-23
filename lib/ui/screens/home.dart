@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_navigation_bar.dart';
-import '../../data/constants.dart';
-import '../../models/character.dart';
-import '../../viewmodels/app_model.dart';
-import '../../viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../viewmodels/characters_model.dart';
-import '../dialogs/create_character_dialog.dart';
-import 'characters_screen.dart';
-import 'enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/characters_screen.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/enhancement_calculator_page.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_bottom_navigation_bar.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
 class Home extends StatefulWidget {
   const Home({

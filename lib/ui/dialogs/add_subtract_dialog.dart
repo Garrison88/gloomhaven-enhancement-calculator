@@ -22,17 +22,22 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        padding: const EdgeInsets.only(top: smallPadding, bottom: smallPadding),
+    return AlertDialog(
+      content: Container(
+        constraints: const BoxConstraints(
+          maxWidth: maxDialogWidth,
+          minWidth: maxDialogWidth,
+        ),
+        // padding: const EdgeInsets.all(
+        //   smallPadding,
+        //   // top: smallPadding,
+        //   // bottom: smallPadding,
+        // ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(smallPadding),
-              child: Text(
-                  'Enter a value, then tap the minus button to subtract it from your current ${widget.hintText}, or the plus button to add it to your current ${widget.hintText}'),
-            ),
+            Text(
+                'Enter a value, then tap the minus button to subtract it from your current ${widget.hintText}, or the plus button to add it to your current ${widget.hintText}'),
             Row(
               children: <Widget>[
                 Expanded(

@@ -12,11 +12,14 @@ class AppTheme {
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
         textTheme: const TextTheme(
-          // This is used
+          // This is used for TextFormField
           titleMedium: TextStyle(
             fontSize: 23.0,
           ),
-          // This is used
+          // subtitle1: TextStyle(
+          //   fontSize: 50.0,
+          // ),
+          // This is used as the default text (Text, AutoSizeText)
           bodyMedium: TextStyle(
             fontSize: 25.0,
             letterSpacing: 0.7,
@@ -97,11 +100,11 @@ class AppTheme {
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
         textTheme: const TextTheme(
-          // This is used
+          // This is used for InputDecoration
           titleMedium: TextStyle(
-            fontSize: 23.0,
+            fontSize: 25.0,
           ),
-          // This is used
+          // This is used as the default text (Text, AutoSizeText)
           bodyMedium: TextStyle(
             fontSize: 25.0,
             letterSpacing: 0.7,

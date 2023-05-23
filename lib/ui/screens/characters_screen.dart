@@ -76,6 +76,7 @@ class _CharactersScreenState extends State<CharactersScreen>
         itemCount: charactersModel.characters.length,
         itemBuilder: (context, int index) {
           return Stack(
+            alignment: Alignment.center,
             children: <Widget>[
               Center(
                 child: Padding(
@@ -98,8 +99,11 @@ class _CharactersScreenState extends State<CharactersScreen>
                   ),
                 ),
               ),
-              CharacterScreen(
-                character: charactersModel.characters[index],
+              Container(
+                constraints: const BoxConstraints(maxWidth: 700),
+                child: CharacterScreen(
+                  character: charactersModel.characters[index],
+                ),
               ),
             ],
           );

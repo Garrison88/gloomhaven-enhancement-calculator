@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
-import 'package:uuid/uuid.dart';
-import '../data/character_data.dart';
-import '../data/database_helpers.dart';
-import '../models/character.dart';
-import '../models/player_class.dart';
-import '../shared_prefs.dart';
 
 class CharactersModel with ChangeNotifier {
   CharactersModel({
@@ -147,18 +148,19 @@ class CharactersModel with ChangeNotifier {
     PlayerClass selectedClass, {
     int initialLevel = 1,
     int previousRetirements = 0,
+    bool gloomhavenMode = true,
+    int prosperityLevel = 0,
   }) async {
     Character character = Character(
       uuid: const Uuid().v1(),
       name: name,
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
-      xp: CharacterData.levelXp.entries
-          .lastWhere((entry) => entry.key == initialLevel)
-          .value,
-      gold: 15 * (initialLevel + 1),
+      xp: CharacterData.xpByLevel(initialLevel),
+      gold:
+          gloomhavenMode ? 15 * (initialLevel + 1) : 10 * prosperityLevel + 20,
     );
-    /* TODO: change this to use V2 or something when done adding GH and JotL - FH
+    /* TODO: change this to use V2 or something when done adding GH and JotL to FH
     crossover character sheets */
     // TODO: Also here, consider displaying or not displaying Traits if using old system
     if (selectedClass.category != ClassCategory.frosthaven) {

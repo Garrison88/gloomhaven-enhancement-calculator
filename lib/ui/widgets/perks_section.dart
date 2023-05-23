@@ -28,9 +28,7 @@ class PerksSection extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium.copyWith(
                     color: Character.maximumPerks(character) >=
                             character.numOfSelectedPerks()
-                        ? Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black87
+                        ? null
                         : Colors.red,
                   ),
             ),

@@ -1,15 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import '../../viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
-import '../../data/constants.dart';
-import '../../data/enhancement_data.dart';
-import '../../data/strings.dart';
-import '../../models/enhancement.dart';
-import '../../shared_prefs.dart';
-import '../dialogs/info_dialog.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
 class EnhancementCalculatorPage extends StatelessWidget {
   const EnhancementCalculatorPage({
@@ -24,6 +25,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
 
     return Center(
       child: Container(
+        constraints: const BoxConstraints(maxWidth: maxWidth),
         padding: const EdgeInsets.symmetric(horizontal: smallPadding),
         child: SingleChildScrollView(
           controller:
@@ -47,13 +49,22 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           builder: (_) {
                             return InfoDialog(
                               title: Strings.generalInfoTitle,
-                              message: Strings.generalInfoBody(context),
+                              message: Strings.generalInfoBody(
+                                context,
+                                gloomhavenMode: SharedPrefs().gloomhavenMode,
+                                darkMode: Theme.of(context).brightness ==
+                                    Brightness.dark,
+                              ),
                             );
                           },
                         ),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).colorScheme.primary,
+                            Color(
+                              SharedPrefs().gloomhavenMode
+                                  ? 0xffa98274
+                                  : 0xff6ab7ff,
+                            ),
                           ),
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
@@ -63,21 +74,15 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ),
                         icon: Icon(
                           Icons.info_outlined,
-                          color: ThemeData.estimateBrightnessForColor(
-                                      Theme.of(context).colorScheme.primary) ==
-                                  Brightness.dark
+                          color: SharedPrefs().gloomhavenMode
                               ? Colors.white
                               : Colors.black,
                         ),
                         label: Text(
-                          'General Guidelines',
+                          '${SharedPrefs().gloomhavenMode ? 'Gloomhaven' : 'Frosthaven'} Guidelines',
                           style:
                               Theme.of(context).textTheme.titleMedium.copyWith(
-                                    color: ThemeData.estimateBrightnessForColor(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary) ==
-                                            Brightness.dark
+                                    color: SharedPrefs().gloomhavenMode
                                         ? Colors.white
                                         : Colors.black,
                                   ),
@@ -107,7 +112,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ),
                         const Expanded(
                           child: AutoSizeText(
-                            'Variant: Temporary Enhancement',
+                            'Variant: Temporary Enhancement*',
                             maxLines: 2,
                             textAlign: TextAlign.center,
                           ),
@@ -152,7 +157,12 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           child: DropdownButton<int>(
                             value: enhancementCalculatorModel.cardLevel,
                             items: EnhancementData.cardLevels(
-                                SharedPrefs().partyBoon),
+                              context,
+                              partyBoon: SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().partyBoon,
+                              enhancerLvl3: !SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().enhancerLvl3,
+                            ),
                             onChanged: (int value) {
                               enhancementCalculatorModel.cardLevel = value;
                             },
@@ -176,7 +186,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               return InfoDialog(
                                 title: Strings.previousEnhancementsInfoTitle,
                                 message: Strings.previousEnhancementsInfoBody(
-                                    context),
+                                  context,
+                                ),
                               );
                             },
                           ),
@@ -200,7 +211,11 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             ),
                             value:
                                 enhancementCalculatorModel.previousEnhancements,
-                            items: EnhancementData.previousEnhancements(),
+                            items: EnhancementData.previousEnhancements(
+                              context,
+                              enhancerLvl4: !SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().enhancerLvl4,
+                            ),
                             onChanged: (int value) {
                               enhancementCalculatorModel.previousEnhancements =
                                   value;
@@ -253,7 +268,9 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             ),
                             value: enhancementCalculatorModel.enhancement,
                             items: EnhancementData.enhancementTypes(
-                              SharedPrefs().gloomhavenMode,
+                              context,
+                              gloomhavenMode: SharedPrefs().gloomhavenMode,
+                              enhancerLvl2: SharedPrefs().enhancerLvl2,
                             ),
                             onChanged: (Enhancement selectedEnhancement) {
                               enhancementCalculatorModel
@@ -280,13 +297,16 @@ class EnhancementCalculatorPage extends StatelessWidget {
                                 title: Strings.multipleTargetsInfoTitle,
                                 message: Strings.multipleTargetsInfoBody(
                                   context,
-                                  SharedPrefs().gloomhavenMode,
+                                  gloomhavenMode: SharedPrefs().gloomhavenMode,
+                                  enhancerLvl2: !SharedPrefs().gloomhavenMode &&
+                                      SharedPrefs().enhancerLvl2,
+                                  darkMode: SharedPrefs().darkTheme,
                                 ),
                               );
                             },
                           ),
                         ),
-                        const AutoSizeText('Multiple Targets?'),
+                        const AutoSizeText('Multiple Targets?'), // \u2020
                         Switch(
                           value: enhancementCalculatorModel.multipleTargets,
                           onChanged: !enhancementCalculatorModel
@@ -300,8 +320,8 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // LOSS NON-PERSISTENT
-                  if (!SharedPrefs().gloomhavenMode)
+                  if (!SharedPrefs().gloomhavenMode) ...[
+                    // LOSS NON-PERSISTENT
                     Card(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -365,8 +385,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                  // PERSISTENT
-                  if (!SharedPrefs().gloomhavenMode)
+                    // PERSISTENT
                     Card(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -408,6 +427,49 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // BUILDING 44
+                    // Card(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: <Widget>[
+                    //       IconButton(
+                    //         icon: const Icon(
+                    //           Icons.info_outline,
+                    //         ),
+                    //         onPressed: () => showDialog<void>(
+                    //           context: context,
+                    //           builder: (_) {
+                    //             return InfoDialog(
+                    //               title: Strings.persistentInfoTitle,
+                    //               message: Strings.persistentInfoBody(
+                    //                 context,
+                    //               ),
+                    //             );
+                    //           },
+                    //         ),
+                    //       ),
+                    //       SvgPicture.asset(
+                    //         Theme.of(context).brightness == Brightness.dark
+                    //             ? 'images/persistent.svg'
+                    //             : 'images/persistent_light.svg',
+                    //         width: iconSize,
+                    //       ),
+                    //       Switch(
+                    //         value: enhancementCalculatorModel.persistent,
+                    //         onChanged: enhancementCalculatorModel
+                    //                         .enhancement?.category ==
+                    //                     EnhancementCategory.summonPlusOne ||
+                    //                 enhancementCalculatorModel.lostNonPersistent
+                    //             ? null
+                    //             : (bool value) {
+                    //                 enhancementCalculatorModel.persistent =
+                    //                     value;
+                    //               },
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
                 ],
               ),
               Opacity(
@@ -424,12 +486,28 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
                     ),
-                    Text(
-                      '${enhancementCalculatorModel.enhancementCost} g',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayLarge
-                          .copyWith(fontSize: 80),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (enhancementCalculatorModel.temporaryEnhancementMode)
+                          const Text(
+                            ' ',
+                            style: TextStyle(fontSize: 40),
+                          ),
+                        Text(
+                          '${enhancementCalculatorModel.totalCost}g',
+                          style:
+                              Theme.of(context).textTheme.displayLarge.copyWith(
+                                    fontSize: 80,
+                                    letterSpacing: 4,
+                                  ),
+                        ),
+                        if (enhancementCalculatorModel.temporaryEnhancementMode)
+                          const Text(
+                            '*',
+                            style: TextStyle(fontSize: 40),
+                          ),
+                      ],
                     )
                   ],
                 ),

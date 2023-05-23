@@ -17,6 +17,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   bool fh = false;
   bool cs = false;
   bool cc = false;
+  bool hideLockedClasses = false;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -55,31 +56,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
         BuildContext context,
         StateSetter stateSetter,
       ) {
-        final Iterable<PlayerClass> playerClass = _playerClasses
-            .where((playerClass) {
-          if (!gh && !jotl && !fh && !cs && !cc) {
-            return playerClass.name.toLowerCase().contains(query.toLowerCase());
-          }
-          return (playerClass.name
-                      .toLowerCase()
-                      .contains(query.toLowerCase()) &&
-                  playerClass.category == ClassCategory.gloomhaven &&
-                  gh) ||
-              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-                  playerClass.category == ClassCategory.jawsOfTheLion &&
-                  jotl) ||
-              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-                  playerClass.category == ClassCategory.frosthaven &&
-                  fh) ||
-              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-                  playerClass.category == ClassCategory.crimsonScales &&
-                  cs) ||
-              (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-                  playerClass.category == ClassCategory.custom &&
-                  cc);
-        }).toList()
-          // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
-          ..removeWhere((element) => element.classCode == 'rw');
+        // List<PlayerClass> filteredPlayerClasses = ;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -193,10 +170,28 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                 ],
               ),
             ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Hide Locked Classes',
+                  // style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Checkbox(
+                  onChanged: (value) => {
+                    stateSetter(() {
+                      hideLockedClasses = value;
+                    }),
+                  },
+                  value: hideLockedClasses,
+                ),
+              ],
+            ),
             Expanded(
               child: _WordSuggestionList(
                 query: query,
-                suggestions: playerClass,
+                suggestions: filteredList(_playerClasses),
                 onSelected: (String suggestion) {
                   query = suggestion;
                   showResults(context);
@@ -208,6 +203,55 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       },
     );
   }
+
+  List<PlayerClass> filteredList(List<PlayerClass> playerClasses) {
+    return playerClasses.where((playerClass) {
+      if (doNotRenderPlayerClass(playerClass, hideLockedClass: hideLockedClasses
+          //  &&
+          //     !SharedPrefs().getPlayerClassIsUnlocked(
+          //       playerClass.classCode,
+          //     ),
+          )) {
+        return false;
+      }
+      if (!gh && !jotl && !fh && !cs && !cc) {
+        return playerClass.name.toLowerCase().contains(query.toLowerCase());
+      }
+
+      return (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+              playerClass.category == ClassCategory.gloomhaven &&
+              gh) ||
+          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+              playerClass.category == ClassCategory.jawsOfTheLion &&
+              jotl) ||
+          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+              playerClass.category == ClassCategory.frosthaven &&
+              fh) ||
+          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+              playerClass.category == ClassCategory.crimsonScales &&
+              cs) ||
+          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
+              playerClass.category == ClassCategory.custom &&
+              cc);
+    }).toList()
+      // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
+      ..removeWhere((element) => element.classCode == 'rw');
+  }
+
+  bool doNotRenderPlayerClass(
+    PlayerClass playerClass, {
+    bool hideLockedClass,
+  }) =>
+      (!SharedPrefs().envelopeX && playerClass.classCode == 'bs') ||
+      (!SharedPrefs().envelopeV && playerClass.classCode == 'vanquisher') ||
+      (!SharedPrefs().customClasses &&
+          (playerClass.category == ClassCategory.custom ||
+              playerClass.category == ClassCategory.crimsonScales)) ||
+      (hideLockedClass &&
+          playerClass.locked &&
+          !SharedPrefs().getPlayerClassIsUnlocked(
+            playerClass.classCode,
+          ));
 }
 
 class _WordSuggestionList extends StatefulWidget {
@@ -232,100 +276,93 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       separatorBuilder: (
         BuildContext _,
         int index,
-      ) {
-        if ((!SharedPrefs().envelopeX &&
-                widget.suggestions[index].classCode == 'bs') ||
-            (!SharedPrefs().envelopeV &&
-                widget.suggestions[index].classCode == 'vanquisher') ||
-            !SharedPrefs().customClasses &&
-                (widget.suggestions[index].category == ClassCategory.custom ||
-                    widget.suggestions[index].category ==
-                        ClassCategory.crimsonScales)) {
-          return Container();
-        } else {
-          return const Divider(
-            indent: 8,
-            endIndent: 8,
-            height: 3,
-          );
-        }
-      },
+      ) =>
+          const Divider(
+        indent: 8,
+        endIndent: 8,
+        height: 3,
+      ),
       itemCount: widget.suggestions.length,
       itemBuilder: (
         BuildContext context,
         int index,
       ) {
         final PlayerClass selectedPlayerClass = widget.suggestions[index];
-        if ((!SharedPrefs().envelopeX &&
-                selectedPlayerClass.classCode == 'bs') ||
-            (!SharedPrefs().envelopeV &&
-                selectedPlayerClass.classCode == 'vanquisher') ||
-            !SharedPrefs().customClasses &&
-                (selectedPlayerClass.category == ClassCategory.custom ||
-                    selectedPlayerClass.category ==
-                        ClassCategory.crimsonScales)) {
-          return Container();
-        } else {
-          bool showHidden = false;
-          return StatefulBuilder(
-            builder: (
-              thisLowerContext,
-              innerSetState,
-            ) {
-              bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
-              return ListTile(
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    selectedPlayerClass.locked
-                        ? IconButton(
-                            onPressed: () {
-                              innerSetState(() {
-                                showHidden = !showHidden;
-                              });
-                            },
-                            icon: Icon(
-                              showHidden
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.grey,
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
-                leading: SvgPicture.asset(
-                  'images/class_icons/${selectedPlayerClass.icon}',
-                  width: iconSize + 5,
-                  height: iconSize + 5,
-                  colorFilter: ColorFilter.mode(
-                    Color(
-                      selectedPlayerClass.primaryColor,
-                    ),
-                    BlendMode.srcIn,
-                  ),
-                ),
-                title: Text(
-                  showHidden || !selectedPlayerClass.locked
-                      ? selectedPlayerClass.name
-                      : '???',
-                ),
-                onTap: () {
-                  if ((selectedPlayerClass.category == ClassCategory.custom) &&
-                      !hideMessage) {
-                    showDialog<bool>(
-                      context: context,
-                      builder: (_) {
-                        return AlertDialog(
-                          title: const Center(
-                            child: Text('Custom Content'),
+        bool showHidden = SharedPrefs().getPlayerClassIsUnlocked(
+          selectedPlayerClass.classCode,
+        );
+        return StatefulBuilder(
+          builder: (
+            thisLowerContext,
+            innerSetState,
+          ) {
+            bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
+            return ListTile(
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  selectedPlayerClass.locked
+                      ? IconButton(
+                          onPressed: () {
+                            SharedPrefs().setPlayerClassIsUnlocked(
+                              selectedPlayerClass.classCode,
+                              !showHidden,
+                            );
+                            innerSetState(() {
+                              showHidden = !showHidden;
+                            });
+                          },
+                          icon: Icon(
+                            showHidden
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                          content: StatefulBuilder(
-                            builder: (
-                              thisLowerContext,
-                              innerSetState,
-                            ) {
-                              return SingleChildScrollView(
+                        )
+                      : Container(),
+                ],
+              ),
+              leading: SvgPicture.asset(
+                'images/class_icons/${selectedPlayerClass.icon}',
+                width: iconSize + 5,
+                height: iconSize + 5,
+                colorFilter: ColorFilter.mode(
+                  Color(
+                    selectedPlayerClass.primaryColor,
+                  ),
+                  BlendMode.srcIn,
+                ),
+              ),
+              title: Text(
+                showHidden || !selectedPlayerClass.locked
+                    ? selectedPlayerClass.name
+                    : '???',
+                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      color: showHidden || !selectedPlayerClass.locked
+                          ? null
+                          : Theme.of(context).disabledColor,
+                    ),
+              ),
+              onTap: () {
+                if ((selectedPlayerClass.category == ClassCategory.custom) &&
+                    !hideMessage) {
+                  showDialog<bool>(
+                    context: context,
+                    builder: (_) {
+                      return AlertDialog(
+                        title: const Center(
+                          child: Text('Custom Content'),
+                        ),
+                        content: StatefulBuilder(
+                          builder: (
+                            thisLowerContext,
+                            innerSetState,
+                          ) {
+                            return Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: maxDialogWidth,
+                                minWidth: maxDialogWidth,
+                              ),
+                              child: SingleChildScrollView(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -392,52 +429,51 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                                     )
                                   ],
                                 ),
-                              );
-                            },
+                              ),
+                            );
+                          },
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context, false),
                           ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground,
-                                ),
+                          TextButton(
+                            child: Text(
+                              'Got it!',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                              onPressed: () => Navigator.pop(context, false),
                             ),
-                            TextButton(
-                              child: Text(
-                                'Got it!',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                              onPressed: () => Navigator.pop(context, true),
-                            ),
-                          ],
-                        );
-                      },
-                    ).then((value) {
-                      if (value) {
-                        Navigator.pop<PlayerClass>(
-                          context,
-                          selectedPlayerClass,
-                        );
-                      }
-                    });
-                  } else {
-                    Navigator.pop<PlayerClass>(
-                      context,
-                      selectedPlayerClass,
-                    );
-                  }
-                },
-              );
-            },
-          );
-        }
+                            onPressed: () => Navigator.pop(context, true),
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((value) {
+                    if (value) {
+                      Navigator.pop<PlayerClass>(
+                        context,
+                        selectedPlayerClass,
+                      );
+                    }
+                  });
+                } else {
+                  Navigator.pop<PlayerClass>(
+                    context,
+                    selectedPlayerClass,
+                  );
+                }
+              },
+            );
+          },
+        );
       },
     );
   }

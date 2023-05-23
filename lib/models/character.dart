@@ -144,18 +144,9 @@ class Character {
         playerClass.secondaryColor ?? playerClass.primaryColor,
       );
 
-  static int level(int xp) => CharacterData.levelXp.entries
-      .lastWhere(
-        (entry) => entry.value <= xp,
-      )
-      .key;
+  static int level(int xp) => CharacterData.levelByXp(xp);
 
-  static int nextLevelXp(int level) => CharacterData.levelXp.entries
-      .firstWhere(
-        (entry) => entry.key > level,
-        orElse: () => CharacterData.levelXp.entries.last,
-      )
-      .value;
+  static int xpForNextLevel(int level) => CharacterData.nextXpByLevel(level);
 
   static int maximumPerks(Character character) {
     int sum = 0;

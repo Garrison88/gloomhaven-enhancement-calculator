@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/enhancement_data.dart';
-import '../models/enhancement.dart';
-import '../shared_prefs.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class EnhancementCalculatorModel with ChangeNotifier {
   int _cardLevel = SharedPrefs().targetCardLvl;
@@ -24,7 +25,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   bool showCost = false;
 
-  int enhancementCost = 0;
+  int totalCost = 0;
 
   int get cardLevel => _cardLevel;
 
@@ -32,6 +33,23 @@ class EnhancementCalculatorModel with ChangeNotifier {
     SharedPrefs().targetCardLvl = cardLevel;
     _cardLevel = cardLevel;
     calculateCost();
+  }
+
+  int cardLevelPenalty(
+    int level,
+  ) {
+    if (level == 0) {
+      return 0;
+    }
+    int penalty = 25 * level;
+    if (SharedPrefs().gloomhavenMode) {
+      if (SharedPrefs().partyBoon) {
+        penalty -= 5 * level;
+      }
+    } else if (SharedPrefs().enhancerLvl3) {
+      penalty -= 10 * level;
+    }
+    return penalty;
   }
 
   int get previousEnhancements => _previousEnhancements;
@@ -42,12 +60,62 @@ class EnhancementCalculatorModel with ChangeNotifier {
     calculateCost();
   }
 
+  int previousEnhancementsPenalty(
+    int previousEnhancements,
+  ) {
+    if (previousEnhancements == 0) {
+      return 0;
+    }
+    int penalty = 75 * previousEnhancements;
+    if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl4) {
+      penalty -= 25 * previousEnhancements;
+    }
+    if (temporaryEnhancementMode) {
+      penalty -= 20;
+    }
+    return penalty;
+  }
+
+  int _temporaryEnhancementMutator(
+    int cost,
+  ) {
+    return (cost * 0.8).ceil();
+  }
+
   Enhancement get enhancement => _enhancement;
 
   set enhancement(Enhancement enhancement) {
     SharedPrefs().enhancementTypeIndex =
         EnhancementData.enhancements.indexOf(enhancement);
     _enhancement = enhancement;
+  }
+
+  /// Multiply the cost by 2 if [_multipleTargets]
+  /// Halve the cost if [_lostNonPersistent]
+  /// Triple the cost if [_persistent]
+  /// Subtract 10 gold if [_enhancerLvl2]
+  int enhancementCost(
+    Enhancement enhancement,
+  ) {
+    int enhancementCost = enhancement.cost(
+      gloomhavenMode: SharedPrefs().gloomhavenMode,
+    );
+    if (multipleTargets &&
+        eligibleForMultipleTargets(
+          enhancement,
+          gloomhavenMode: SharedPrefs().gloomhavenMode,
+        )) {
+      enhancementCost *= 2;
+    }
+    if (!SharedPrefs().gloomhavenMode) {
+      enhancementCost =
+          lostNonPersistent ? (enhancementCost / 2).round() : enhancementCost;
+      enhancementCost = persistent ? enhancementCost * 3 : enhancementCost;
+    }
+    if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl2) {
+      enhancementCost -= 10;
+    }
+    return enhancementCost;
   }
 
   bool get multipleTargets => _multipleTargets;
@@ -101,7 +169,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     _enhancement = null;
     multipleTargets = false;
     disableMultiTargetsSwitch = false;
-    enhancementCost = 0;
+    totalCost = 0;
     showCost = false;
     lostNonPersistent = false;
     persistent = false;
@@ -121,42 +189,21 @@ class EnhancementCalculatorModel with ChangeNotifier {
     bool notify = true,
   }) {
     /// get the base cost of the selected enhancement
-    enhancementCost = enhancement != null && enhancement.ghCost != null
-        ? SharedPrefs().gloomhavenMode
-            ? enhancement.ghCost
-            : enhancement.fhCost ?? enhancement.ghCost
-        : 0;
+    totalCost = enhancement != null ? enhancementCost(enhancement) : 0;
 
-    /// multiply [baseCost] x2 if [multipleTargets]
-    enhancementCost = multipleTargets ? enhancementCost * 2 : enhancementCost;
-
-    /// if Frosthaven
-    if (!SharedPrefs().gloomhavenMode) {
-      /// halve the cost if [lostNonPersistent]
-      enhancementCost =
-          lostNonPersistent ? (enhancementCost / 2).round() : enhancementCost;
-
-      /// triple the cost if [persistent]
-      enhancementCost = persistent ? enhancementCost * 3 : enhancementCost;
-    }
-
-    /// add 25g for each [cardLevel] beyond 1 (20 if 'Party Boon' is enabled)
-    enhancementCost += (cardLevel != null && cardLevel > 0
-        ? cardLevel * (SharedPrefs().partyBoon ? 20 : 25)
-        : 0);
+    /// add 25g for each [cardLevel] beyond 1
+    totalCost += cardLevelPenalty(cardLevel);
 
     /// add 75g for each [previousEnhancement]
-    enhancementCost +=
-        (previousEnhancements != null ? previousEnhancements * 75 : 0);
+    totalCost += previousEnhancementsPenalty(previousEnhancements);
 
     /// Temporary Enhancement: if there is at least one previous enhancement,
-    /// reduce the cost by 20 gold. Then reduce the entire cost by 20%, rouded up
-
+    /// reduce the cost by 20 gold. Then reduce the entire cost by 20%, rouded
+    /// up
     if (temporaryEnhancementMode) {
-      if (previousEnhancements != null && previousEnhancements > 0) {
-        enhancementCost -= 20;
-      }
-      enhancementCost = (enhancementCost * 0.8).ceil();
+      totalCost = _temporaryEnhancementMutator(
+        totalCost,
+      );
     }
 
     /// only show cost if there's a price to display
@@ -214,5 +261,16 @@ class EnhancementCalculatorModel with ChangeNotifier {
     }
     enhancement = selectedEnhancement;
     calculateCost();
+  }
+
+  static bool eligibleForMultipleTargets(
+    Enhancement enhancement, {
+    bool gloomhavenMode,
+  }) {
+    return gloomhavenMode && !enhancement.name.toLowerCase().contains('hex') ||
+        (!gloomhavenMode &&
+            (!enhancement.name.toLowerCase().contains('hex') &&
+                (!enhancement.name.toLowerCase().contains('target') &&
+                    (!enhancement.name.toLowerCase().contains('element')))));
   }
 }

@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:provider/provider.dart';
+
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/home.dart';
 import 'package:gloomhaven_enhancement_calc/utils/app_theme.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
-import 'package:provider/provider.dart';
-import 'shared_prefs.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,4 @@
-import '../data/enhancement_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 
 class Enhancement {
   final EnhancementCategory category;
@@ -16,4 +16,9 @@ class Enhancement {
     this.fhCost,
     this.invertIconColor = false,
   });
+
+  int cost({
+    bool gloomhavenMode,
+  }) =>
+      gloomhavenMode ? ghCost : fhCost ?? ghCost;
 }

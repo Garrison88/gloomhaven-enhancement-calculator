@@ -58,6 +58,8 @@ abstract class CharacterData {
   static const _hatchet = 'hc';
   static const _redGuard = 'rg';
   static const _voidwarden = 'vw';
+  static const _drifter = 'drifter';
+  static const _blinkblade = 'blinkblade';
   static const _bombard = 'bb';
   static const _brightspark = 'bp';
   static const _chainguard = 'cg';
@@ -291,7 +293,7 @@ abstract class CharacterData {
     PlayerClass(
       race: _inox,
       name: 'Drifter',
-      classCode: 'drifter',
+      classCode: _drifter,
       icon: 'drifter.svg',
       category: ClassCategory.frosthaven,
       locked: false,
@@ -305,7 +307,7 @@ abstract class CharacterData {
     PlayerClass(
       race: _quatryl,
       name: 'Blink Blade',
-      classCode: 'blinkblade',
+      classCode: _blinkblade,
       icon: 'blink_blade.svg',
       category: ClassCategory.frosthaven,
       locked: false,
@@ -747,7 +749,7 @@ abstract class CharacterData {
         (playerClass) => playerClass.classCode == classCode,
       );
 
-  static final Map<int, int> levelXp = {
+  static final Map<int, int> _levelXp = {
     1: 0,
     2: 45,
     3: 95,
@@ -758,6 +760,22 @@ abstract class CharacterData {
     8: 420,
     9: 500
   };
+
+  static int xpByLevel(int level) =>
+      _levelXp.entries.lastWhere((entry) => entry.key == level).value;
+
+  static int nextXpByLevel(int level) => _levelXp.entries
+      .firstWhere(
+        (entry) => entry.key > level,
+        orElse: () => _levelXp.entries.last,
+      )
+      .value;
+
+  static int levelByXp(int xp) => _levelXp.entries
+      .lastWhere(
+        (entry) => entry.value <= xp,
+      )
+      .key;
 
   static final List<Perk> perks = [
     // BRUTE
@@ -1381,45 +1399,44 @@ abstract class CharacterData {
         'Ignore $_negative $_scenario $_effects, and $_removeL $_one -1 $_card'),
     // ************** ^^ THIS IS AS FAR AS RELEASE 3.7.0 GOES ^^ **************
     // DRIFTER
-    Perk('drifter', 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk('drifter', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk('drifter', 2,
+    Perk(_drifter, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    Perk(_drifter, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    Perk(_drifter, 2,
         '$_replace $_one +1 $_card with $_two +0 "Move $_one of your character tokens backward $_one slot" $_cards'),
-    Perk('drifter', 1,
+    Perk(_drifter, 1,
         '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
-    Perk('drifter', 1,
+    Perk(_drifter, 1,
         '$_replace $_two +0 $_cards with $_two PUSH 2 $_rolling $_cards'),
-    Perk('drifter', 1, '$_add $_one +3 $_card'),
-    Perk('drifter', 2, '$_add $_one +2 IMMOBILIZE $_card'),
-    Perk('drifter', 1, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
-    Perk(
-        'drifter', 1, 'Ignore $_scenario $_effects and $_addL $_one +1 $_card'),
-    Perk('drifter', 1,
+    Perk(_drifter, 1, '$_add $_one +3 $_card'),
+    Perk(_drifter, 2, '$_add $_one +2 IMMOBILIZE $_card'),
+    Perk(_drifter, 1, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
+    Perk(_drifter, 1, 'Ignore $_scenario $_effects and $_addL $_one +1 $_card'),
+    Perk(_drifter, 1,
         'Ignore item item_minus_one $_effects and $_addL $_one +1 $_card'),
-    Perk('drifter', 2,
+    Perk(_drifter, 2,
         'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
         perkIsGrouped: true),
-    Perk('drifter', 1,
+    Perk(_drifter, 1,
         'You may bring $_one additional One_Hand item into each $_scenario'),
-    Perk('drifter', 1,
+    Perk(_drifter, 1,
         "At the end of each $_scenario, you may discard up to $_two loot $_cards, except 'Random Item', to draw that many new loot $_cards"),
     // BLINK BLADE
-    Perk('blinkblade', 1, '$_remove $_one -2 $_card'),
-    Perk('blinkblade', 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk('blinkblade', 2,
-        '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
-    Perk('blinkblade', 2,
+    Perk(_blinkblade, 1, '$_remove $_one -2 $_card'),
+    Perk(_blinkblade, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    Perk(
+        _blinkblade, 2, '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
+    Perk(_blinkblade, 2,
         '$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-    Perk('blinkblade', 3,
+    Perk(_blinkblade, 3,
         '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addL plustwo ATTACK" $_rolling $_card'),
-    Perk('blinkblade', 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
-    Perk('blinkblade', 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
-    Perk('blinkblade', 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
-    Perk('blinkblade', 1,
+    Perk(_blinkblade, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
+    Perk(_blinkblade, 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
+    Perk(_blinkblade, 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
+    Perk(_blinkblade, 1,
         'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
-    Perk('blinkblade', 1,
+    Perk(_blinkblade, 1,
         'At the start of your first turn each $_scenario, you may perform MOVE 3'),
-    Perk('blinkblade', 1,
+    Perk(_blinkblade, 1,
         'Whenever you would gain IMMOBILIZE, prevent the condition'),
     // BANNER SPEAR
     Perk('bannerspear', 3,
@@ -2061,21 +2078,21 @@ abstract class CharacterData {
     ),
     // FROSTHAVEN
     Mastery(
-      masteryClassCode: 'drifter',
+      masteryClassCode: _drifter,
       masteryDetails:
           'End a scenario with your character tokens on the last use slots of four persistent abilities',
     ),
     Mastery(
-      masteryClassCode: 'drifter',
+      masteryClassCode: _drifter,
       masteryDetails:
           'Never perform a move or attack ability with a value less than 4, and perform at least one move or attack ability every round',
     ),
     Mastery(
-      masteryClassCode: 'blinkblade',
+      masteryClassCode: _blinkblade,
       masteryDetails: 'Declare Fast seven rounds in a row',
     ),
     Mastery(
-      masteryClassCode: 'blinkblade',
+      masteryClassCode: _blinkblade,
       masteryDetails: 'Never be targeted by an attack',
     ),
     Mastery(

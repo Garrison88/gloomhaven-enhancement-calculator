@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
@@ -6,8 +12,6 @@ import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
-import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GHCAppBar({
@@ -206,6 +210,21 @@ class _GHCAppBarState extends State<GHCAppBar> {
               },
             ),
           ),
+        // if (appModel.page == 0 && !charactersModel.isEditMode)
+        //   IconButton(
+        //     icon: const Icon(
+        //       Icons.info_outline,
+        //     ),
+        //     onPressed: () => showDialog<void>(
+        //       context: context,
+        //       builder: (_) {
+        //         return InfoDialog(
+        //           title: Strings.previousRetirementsInfoTitle,
+        //           message: Strings.previousRetirementsInfoBody(context),
+        //         );
+        //       },
+        //     ),
+        //   ),
         if (appModel.page == 0)
           Tooltip(
             message: charactersModel.isEditMode ? 'Delete' : 'New Character',
@@ -226,8 +245,14 @@ class _GHCAppBarState extends State<GHCAppBar> {
                         context: context,
                         builder: (_) {
                           return AlertDialog(
-                            content: const Text(
-                              'Are you sure? This cannot be undone',
+                            content: Container(
+                              constraints: const BoxConstraints(
+                                maxWidth: maxDialogWidth,
+                                minWidth: maxDialogWidth,
+                              ),
+                              child: const Text(
+                                'Are you sure? This cannot be undone',
+                              ),
                             ),
                             actions: <Widget>[
                               TextButton(

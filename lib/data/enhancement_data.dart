@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
+import 'package:provider/provider.dart';
 
 import '../models/enhancement.dart';
 import '../shared_prefs.dart';
@@ -111,7 +113,7 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
-      'Summon HP',
+      'HP',
       ghCost: 50,
       iconPath: 'hp.svg',
       fhCost: 40,
@@ -119,7 +121,7 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
-      'Summon Move',
+      'Move',
       ghCost: 100,
       iconPath: 'move.svg',
       fhCost: 60,
@@ -127,14 +129,14 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
-      'Summon Attack',
+      'Attack',
       ghCost: 100,
       iconPath: 'attack.svg',
       invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
-      'Summon Range',
+      'Range',
       ghCost: 50,
       iconPath: 'range.svg',
       invertIconColor: true,
@@ -235,93 +237,132 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.title,
-      'Hex',
+      'Current Hexes',
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '2 Current Hexes',
+      '2 Hexes',
       ghCost: 100,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '3 Current Hexes',
+      '3 Hexes',
       ghCost: 66,
       fhCost: 67,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '4 Current Hexes',
+      '4 Hexes',
       ghCost: 50,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '5 Current Hexes',
+      '5 Hexes',
       ghCost: 40,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '6 Current Hexes',
+      '6 Hexes',
       ghCost: 33,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '7 Current Hexes',
+      '7 Hexes',
       ghCost: 28,
       fhCost: 29,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '8 Current Hexes',
+      '8 Hexes',
       ghCost: 25,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '9 Current Hexes',
+      '9 Hexes',
       ghCost: 22,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '10 Current Hexes',
+      '10 Hexes',
       ghCost: 20,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '11 Current Hexes',
+      '11 Hexes',
       ghCost: 18,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '12 Current Hexes',
+      '12 Hexes',
       ghCost: 16,
       fhCost: 17,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '13 Current Hexes',
+      '13 Hexes',
       ghCost: 15,
       iconPath: 'hex.svg',
     ),
   ];
 
-  static List<DropdownMenuItem<int>> cardLevels(bool partyBoon) {
+  static List<DropdownMenuItem<int>> cardLevels(
+    BuildContext context, {
+    bool partyBoon,
+    bool enhancerLvl3,
+  }) {
+    EnhancementCalculatorModel enhancementCalculatorModel =
+        Provider.of(context, listen: false);
     List<DropdownMenuItem<int>> list = [];
     for (int x = 0; x <= 8; x++) {
       list.add(
         DropdownMenuItem(
-          child: Text(
-            x == 0 ? '1 / x' : '${x + 1} (${(x * (partyBoon ? 20 : 25))}g)',
+          child: RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: <TextSpan>[
+                if (x == 0)
+                  const TextSpan(text: '1 / x')
+                else ...[
+                  TextSpan(text: '${x + 1} ('),
+                  if (enhancerLvl3 || (!enhancerLvl3 && partyBoon)) ...[
+                    TextSpan(
+                      text: '${25 * x}g',
+                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.grey,
+                          ),
+                    ),
+                    const TextSpan(
+                      text: ' ',
+                    ),
+                    TextSpan(
+                      text:
+                          '${enhancementCalculatorModel.cardLevelPenalty(x)}g',
+                      // style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      //       color: Colors.green,
+                      //     ),
+                    ),
+                    const TextSpan(text: ')'),
+                  ] else ...[
+                    TextSpan(
+                      text: '${25 * x}g)',
+                    ),
+                  ],
+                ],
+              ],
+            ),
           ),
           value: x,
         ),
@@ -330,13 +371,48 @@ class EnhancementData {
     return list;
   }
 
-  static List<DropdownMenuItem<int>> previousEnhancements() {
+  static List<DropdownMenuItem<int>> previousEnhancements(
+    BuildContext context, {
+    enhancerLvl4,
+  }) {
+    EnhancementCalculatorModel enhancementCalculatorModel =
+        Provider.of(context, listen: false);
     List<DropdownMenuItem<int>> list = [];
     for (int x = 0; x <= 3; x++) {
       list.add(
         DropdownMenuItem(
-          child: Text(
-            x == 0 ? 'None' : '$x (${(x * 75)}g)',
+          child: RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: <TextSpan>[
+                if (x == 0)
+                  const TextSpan(text: 'None')
+                else ...[
+                  TextSpan(text: '$x ('),
+                  if (enhancerLvl4) ...[
+                    TextSpan(
+                      text: '${75 * x}g',
+                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.grey,
+                          ),
+                    ),
+                    const TextSpan(
+                      text: ' ',
+                    ),
+                    TextSpan(
+                      text:
+                          '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g',
+                    ),
+                    const TextSpan(text: ')'),
+                  ] else ...[
+                    TextSpan(
+                      text: '${75 * x}g)',
+                    ),
+                  ],
+                ],
+              ],
+            ),
           ),
           value: x,
         ),
@@ -346,8 +422,12 @@ class EnhancementData {
   }
 
   static List<DropdownMenuItem<Enhancement>> enhancementTypes(
+    BuildContext context, {
     bool gloomhavenMode,
-  ) {
+    bool enhancerLvl2,
+  }) {
+    EnhancementCalculatorModel enhancementCalculatorModel =
+        Provider.of(context, listen: false);
     List<DropdownMenuItem<Enhancement>> list = [];
     for (final Enhancement enhancement in enhancements) {
       if ((!gloomhavenMode && enhancement.name == 'Disarm') ||
@@ -360,7 +440,8 @@ class EnhancementData {
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // if there is an icon beside the title, display it and add a spacer
+                    // if there is an icon beside the title, display it and add
+                    // a spacer
                     children: enhancement.iconPath != null
                         ? <Widget>[
                             SvgPicture.asset(
@@ -378,7 +459,8 @@ class EnhancementData {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            // add an empty spacer to the right to center the title
+                            // add an empty spacer to the right to center the
+                            // title
                             const SizedBox(
                               width: iconSize,
                             ),
@@ -406,7 +488,10 @@ class EnhancementData {
                             enhancement.category ==
                                 EnhancementCategory.summonPlusOne
                         ? Stack(
-                            alignment: const Alignment(1.75, -1.75),
+                            alignment: const Alignment(
+                              1.75,
+                              -1.75,
+                            ),
                             children: <Widget>[
                               enhancement.invertIconColor &&
                                       SharedPrefs().darkTheme
@@ -502,12 +587,60 @@ class EnhancementData {
                                     'images/${enhancement.iconPath}',
                                     width: iconSize,
                                   ),
-                    Text(
-                      ' ${enhancement.name} (${gloomhavenMode ? enhancement.ghCost : enhancement.fhCost ?? enhancement.ghCost}g)',
-                    )
+                    RichText(
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ' ${enhancement.name} ',
+                          ),
+                          const TextSpan(text: '('),
+                          if ((EnhancementCalculatorModel
+                                      .eligibleForMultipleTargets(
+                                    enhancement,
+                                    gloomhavenMode: gloomhavenMode,
+                                  ) &&
+                                  enhancementCalculatorModel.multipleTargets) ||
+                              (!gloomhavenMode &&
+                                  (enhancerLvl2 ||
+                                      enhancementCalculatorModel
+                                          .lostNonPersistent ||
+                                      enhancementCalculatorModel
+                                          .persistent))) ...[
+                            TextSpan(
+                              text:
+                                  '${enhancement.cost(gloomhavenMode: gloomhavenMode)}g',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  .copyWith(
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: Colors.grey,
+                                    color: Colors.grey,
+                                    decorationThickness: .75,
+                                  ),
+                            ),
+                            const TextSpan(
+                              text: ' ',
+                            ),
+                            TextSpan(
+                              text:
+                                  '${enhancementCalculatorModel.enhancementCost(enhancement)}g',
+                            ),
+                            const TextSpan(text: ')'),
+                          ] else ...[
+                            TextSpan(
+                              text:
+                                  '${enhancement.cost(gloomhavenMode: gloomhavenMode)}g)',
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                value: enhancement),
+                value: enhancement,
+              ),
       );
     }
     return list;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 
 class Utils {
   static List<InlineSpan> generateCheckRowDetails(
@@ -91,6 +91,21 @@ class Utils {
           case '+4':
             assetPath = 'attack_modifiers/plus_4.svg';
             break;
+          case 'pip_square':
+            assetPath = 'pips/square.svg';
+            break;
+          case 'pip_circle':
+            assetPath = 'pips/circle.svg';
+            break;
+          case 'pip_diamond_plus':
+            assetPath = 'pips/diamond_plus.svg';
+            break;
+          case 'pip_diamond':
+            assetPath = 'pips/diamond.svg';
+            break;
+          case 'pip_hex':
+            assetPath = 'pips/hex.svg';
+            break;
           case 'One_Hand':
             assetPath = 'equipment_slots/one_handed.svg';
             invertColor = true;
@@ -100,13 +115,19 @@ class Utils {
             invertColor = true;
             break;
           case 'MOVE':
+          case 'MOVE+1':
             assetPath = 'move.svg';
+            invertColor = true;
+            break;
+          case 'JUMP':
+            assetPath = 'jump.svg';
             invertColor = true;
             break;
           case 'Rolling':
             assetPath = 'rolling.svg';
             break;
           case 'HEAL':
+          case 'HEAL+1':
             assetPath = darkTheme ? 'heal.svg' : 'heal_light.svg';
             break;
           case 'SHIELD':
@@ -138,9 +159,11 @@ class Utils {
             assetPath = 'target.svg';
             break;
           case 'Target':
+          case 'Target+1':
             assetPath = darkTheme ? 'target_alt.svg' : 'target_alt_light.svg';
             break;
           case 'RANGE':
+          case 'RANGE+1':
             assetPath = 'range.svg';
             invertColor = true;
             break;
@@ -153,6 +176,7 @@ class Utils {
             invertColor = true;
             break;
           case 'ATTACK':
+          case 'ATTACK+1':
             assetPath = 'attack.svg';
             invertColor = true;
             break;
@@ -402,6 +426,9 @@ class Utils {
           case 'plusone':
             assetPath = null;
             break;
+          case 'pip_plus_one':
+            assetPath = 'pips/pip_plus_one.svg';
+            break;
           case 'plustwo':
             assetPath = null;
             break;
@@ -503,17 +530,47 @@ class Utils {
                           ),
                         ],
                       )
-                    : invertColor && darkTheme
-                        ? SvgPicture.asset(
-                            'images/$assetPath',
-                            colorFilter: const ColorFilter.mode(
-                              Colors.white,
-                              BlendMode.srcIn,
+                    : [
+                        'ATTACK+1',
+                        'MOVE+1',
+                        'HEAL+1',
+                        'Target+1,',
+                      ].contains(element)
+                        ? Stack(
+                            alignment: const Alignment(
+                              1.75,
+                              -1.75,
                             ),
+                            children: <Widget>[
+                              invertColor && darkTheme
+                                  ? SvgPicture.asset(
+                                      'images/$assetPath',
+                                      colorFilter: const ColorFilter.mode(
+                                        Colors.white,
+                                        BlendMode.srcIn,
+                                      ),
+                                    )
+                                  : SvgPicture.asset(
+                                      'images/$assetPath',
+                                    ),
+                              SvgPicture.asset(
+                                'images/plus_one.svg',
+                                width: iconSize * .5,
+                                height: iconSize * .5,
+                              ),
+                            ],
                           )
-                        : SvgPicture.asset(
-                            'images/$assetPath',
-                          ),
+                        : invertColor && darkTheme
+                            ? SvgPicture.asset(
+                                'images/$assetPath',
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                'images/$assetPath',
+                              ),
               ),
             ),
           ),
@@ -592,5 +649,80 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+}
+
+class HighlightedWidget extends StatefulWidget {
+  final Widget child;
+  final Color color;
+  final Duration duration;
+  final bool animateBorder;
+
+  const HighlightedWidget({
+    Key key,
+    @required this.child,
+    this.color = Colors.grey,
+    this.duration = const Duration(milliseconds: 350),
+    this.animateBorder = false,
+  }) : super(key: key);
+
+  @override
+  _HighlightedWidgetState createState() => _HighlightedWidgetState();
+}
+
+class _HighlightedWidgetState extends State<HighlightedWidget>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Color> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Create an animation controller with a duration of 500 milliseconds
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+
+    // Create a color tween animation to interpolate between the starting color and the target color
+    _colorAnimation = ColorTween(
+      begin: widget.animateBorder ? Colors.transparent : null,
+      end: widget.color.withOpacity(0.5),
+    ).animate(_controller);
+
+    // Start the animation when the widget is created
+    _controller.forward().then((_) {
+      _controller.reverse();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          decoration: widget.animateBorder
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _colorAnimation.value,
+                    width: 2,
+                  ),
+                )
+              : BoxDecoration(
+                  color: _colorAnimation.value,
+                ),
+          child: widget.child,
+        );
+      },
+    );
   }
 }

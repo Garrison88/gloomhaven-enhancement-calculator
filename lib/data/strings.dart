@@ -1,47 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 
 class Strings {
   // developer website url
   static String devWebsiteUrl = 'https://www.tomkatcreative.com/contact';
 
   // general info
-  static String generalInfoTitle = "Enhancements";
+  static String generalInfoTitle = 'Enhancements';
 
-  static RichText generalInfoBody(BuildContext context) {
+  static RichText generalInfoBody(
+    BuildContext context, {
+    @required bool gloomhavenMode,
+    bool darkMode,
+  }) {
     return RichText(
       text: TextSpan(
         style: Theme.of(context).textTheme.bodyMedium,
-        children: <TextSpan>[
-          const TextSpan(
-              text: "Congratulations! Now that your company has earned"),
+        children: [
           TextSpan(
-            text: " 'The Power of Enhancement' ",
+              text:
+                  'Congratulations! Now that your company has ${gloomhavenMode ? 'earned' : 'built'}'),
+          TextSpan(
+            text:
+                " ${gloomhavenMode ? 'The Power of Enhancement global achievement' : 'The Enhancer (Building 44)'}",
             style: Theme.of(context).textTheme.bodyMedium.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const TextSpan(
-              text: "global achievement, its members can purchase enhancements "
+          TextSpan(
+              text: ', its members can purchase enhancements '
                   "to permanently augment their class's cards. This is done by paying the associated "
-                  "cost (determined by card level, previous enhancements, type of enhancement, and number of targets) "
-                  "and adding a sticker to the card. Players can only enhance a number of cards"),
+                  "cost (determined by card level, number of previous enhancements, type of enhancement, etc.) "
+                  "and adding a sticker to the card. ${gloomhavenMode ? 'Players can only enhance a number of cards' : ''}"),
+          if (gloomhavenMode)
+            TextSpan(
+              text: ' less than or equal to ',
+              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
           TextSpan(
-            text: " less than or equal to ",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            text:
+                "${gloomhavenMode ? 'the Prosperity level of Gloomhaven. ' : ''}\nOnly abilities with a "
+                "small translucent icon beside them can be enhanced, and only one "
+                "enhancement per icon can be added.",
           ),
+          if (!gloomhavenMode) ...[
+            const TextSpan(text: '\n'),
+            ...Utils.generateCheckRowDetails(
+              context,
+              "A pip_square symbol can hold a pip_plus_one sticker. If the action is MOVE and is not a summon ability, it can hold either a pip_plus_one sticker or a JUMP sticker.\nA pip_circle symbol can hold anything a pip_square can hold, or an Element sticker.\nA pip_diamond symbol can hold anything a pip_circle can hold, or a negative condition sticker.\nA pip_diamond_plus symbol can hold anything a pip_circle can hold, or a positive condition sticker.\nA pip_hex symbol can only hold a Hex sticker.\n",
+              darkMode,
+            ),
+          ],
           const TextSpan(
-              text: "the Prosperity level of Gloomhaven. Only abilities with a "
-                  "small translucent icon beside them can be enhanced, and only one "
-                  "enhancement per icon can be added. Once an enhancement is placed,"),
+            text: "Once an enhancement is placed,",
+          ),
           TextSpan(
             text: " it persists through subsequent playthroughs ",
             style: Theme.of(context).textTheme.bodyMedium.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const TextSpan(text: "with that class. A "),
+          const TextSpan(
+              text:
+                  "with that class (unless you have chosen to use the 'Temporary Enhancement' variant). A "),
           TextSpan(
               text: "main ",
               style: Theme.of(context).textTheme.bodyMedium.copyWith(
@@ -63,11 +86,22 @@ class Strings {
                   )),
           const TextSpan(text: "ability. A summon's stats can"),
           TextSpan(
-              text: " only ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  )),
-          const TextSpan(text: "be augmented with +1 enhancements.")
+            text: " only ",
+            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          ...Utils.generateCheckRowDetails(
+            context,
+            "be augmented with pip_plus_one enhancements.",
+            darkMode,
+          ),
+          if (!gloomhavenMode)
+            ...Utils.generateCheckRowDetails(
+              context,
+              "\nSome enhancements do not fall neatly into the categories on the cost chart. When determining their base cost, treat damage traps as ATTACK+1 enhancements (50g), healing traps as HEAL+1 enhancements (30g), and the movement of tokens and tiles as MOVE+1 enhancements (30g).",
+              darkMode,
+            ),
         ],
       ),
     );
@@ -85,7 +119,7 @@ class Strings {
                     "Temporary enhancements don't persist between playthroughs and have a reduced cost. First, calculate the"
                     " normal enhancement cost, including any discounts. Next, if "
                     "the card has at least one previous enhancement, reduce the cost "
-                    "by 20 gold. Finally, reduce the entire cost by 20 percent (rounded up)."),
+                    "by 20 gold (as indicated by the trailing * character beside the penalty cost). Finally, reduce the entire cost by 20 percent, rounded up (as indicated by the trailing * character on the total Enhancement cost)."),
           ]),
     );
   }
@@ -165,7 +199,7 @@ class Strings {
                   .bodyMedium
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            const TextSpan(text: "subject to the multiple targets multiplier.")
+            const TextSpan(text: "subject to the multiple targets multiplier."),
           ]),
     );
   }
@@ -383,51 +417,70 @@ class Strings {
 
   // multiple targets
   static RichText multipleTargetsInfoBody(
-    BuildContext context,
+    BuildContext context, {
     bool gloomhavenMode,
-  ) {
+    bool enhancerLvl2,
+    bool darkMode,
+  }) {
     return RichText(
       text: TextSpan(
         style: Theme.of(context).textTheme.bodyMedium,
-        children: <TextSpan>[
+        children: <InlineSpan>[
           const TextSpan(
               text:
                   "If an ability targets multiple enemies or allies, the enhancement base cost "
                   "is"),
           TextSpan(
-              text: " doubled. ",
+            text: " doubled",
+            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const TextSpan(
+            text:
+                " (as indicated by the trailing \u2020 character beside the Enhancement type cost). This includes abilities that target 'All adjacent enemies' or "
+                "'All allies within",
+          ),
+          ...Utils.generateCheckRowDetails(
+            context,
+            " RANGE 3', for example.",
+            darkMode,
+          ),
+          if (gloomhavenMode) ...[
+            const TextSpan(text: "This will"),
+            TextSpan(
+              text: " always ",
               style: Theme.of(context).textTheme.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,
-                  )),
-          const TextSpan(
-              text:
-                  "This includes abilities that target 'All adjacent enemies' or "
-                  "'All allies within range 3', for example."),
-          if (gloomhavenMode) ...[
-            const TextSpan(text: " This will"),
+                  ),
+            ),
+            ...Utils.generateCheckRowDetails(
+              context,
+              "apply to adding Target+1, and it will",
+              darkMode,
+            ),
+            // const TextSpan(text: "apply to adding +1 Target, and it will"),
             TextSpan(
-                text: " always ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            const TextSpan(text: "apply to adding +1 Target, and it will"),
-            TextSpan(
-                text: " never ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
+              text: "never ",
+              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
             const TextSpan(text: "apply to adding a Hex."),
-          ],
-          if (!gloomhavenMode) ...[
-            const TextSpan(text: " This will"),
+          ] else ...[
+            const TextSpan(text: "This will"),
             TextSpan(
-                text: " never ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )),
-            const TextSpan(
-                text:
-                    "apply to adding +1 Target, enhancing an ability with an Element, or adding a Hex."),
+              text: " never ",
+              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            ...Utils.generateCheckRowDetails(
+              context,
+              "apply to adding Target+1, enhancing an ability with an Element, "
+              "or adding a Hex.${enhancerLvl2 ? '\nThis multiplier is applied before the discount applied by upgrading the Enhancer (Building 44) to lvl 2. For example, adding WOUND with the Enhancer lvl 2 upgrade will cost 140 gold, calculated as (75x2)-10.' : ''}",
+              darkMode,
+            ),
           ],
         ],
       ),
@@ -477,15 +530,15 @@ class Strings {
     );
   }
 
-  static String previousRetirementsInfoTitle = "Previous Retirements";
-  static RichText previousRetirementsInfoBody(BuildContext context) {
+  static String newCharacterInfoTitle = "New Character";
+  static RichText newCharacterInfoBody(BuildContext context) {
     return RichText(
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyMedium,
           children: <TextSpan>[
             const TextSpan(
                 text:
-                    "When starting a new character, you are alloted an amount of gold"
+                    "When starting a new character in Gloomhaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city, gaining the benefits for each level in sequence. You are also alloted an amount of gold"
                     " equal to"),
             TextSpan(
               text: " 15x(L+1)",
@@ -494,10 +547,21 @@ class Strings {
                   ),
             ),
             const TextSpan(
-                text: ", where L is your character's level. For instance, "
-                    "a level 3 character would start with 60 gold.\nYou are "
-                    "also awarded 1 bonus perk for each previously retired character"
-                    " in addition to the standard perk for each level beyond 1."),
+                text:
+                    ", where L is your character's starting level. For example, "
+                    "if the city is at Prosperity Level 3, you could start a character at level 1, 2, or 3, and would be alloted 30, 45, or 60 gold, respectively.\n\nWhen starting a new character in Frosthaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city divided by 2 (rounded up), gaining the benefits for each level in sequence."
+                    " You are also alloted an amount of gold equal to"),
+            TextSpan(
+              text: " 10xP+20",
+              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const TextSpan(
+                text:
+                    ", where 'P' is the current Prosperity Level. For example, if the city is at Prosperity Level 3, you could start a character at level 1 or 2, and would be alloted 40 gold. Unique to Frosthaven, this gold must be spent "
+                    "immediately on items in the available purchasable supply, and any "
+                    "unspent gold is forfeited."),
           ]),
     );
   }
