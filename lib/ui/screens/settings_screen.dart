@@ -27,10 +27,10 @@ class SettingsScreen extends StatefulWidget {
   final EnhancementCalculatorModel enhancementCalculatorModel;
 
   const SettingsScreen({
-    Key key,
-    this.appModel,
-    this.charactersModel,
-    this.enhancementCalculatorModel,
+    Key? key,
+    required this.appModel,
+    required this.charactersModel,
+    required this.enhancementCalculatorModel,
   }) : super(key: key);
 
   @override
@@ -38,16 +38,16 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String downloadPath;
+  late String downloadPath;
 
-  Future<PackageInfo> _packageInfoFuture;
+  final Future<PackageInfo> _packageInfoFuture = PackageInfo.fromPlatform();
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    _packageInfoFuture = PackageInfo.fromPlatform();
-  }
+  //   _packageInfoFuture = PackageInfo.fromPlatform();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +101,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SettingsDivider(),
               SwitchListTile(
                 title: const Text("Solve 'Envelope X'"),
-                subtitle: Row(
-                  children: const [
+                subtitle: const Row(
+                  children: [
                     Icon(Icons.warning),
                     SizedBox(
                       width: smallPadding,
@@ -191,8 +191,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           );
                         }).then(
-                      (value) {
-                        if (value) {
+                      (bool? value) {
+                        if (value != null && value) {
                           setState(
                             () {
                               SharedPrefs().envelopeX = val;
@@ -233,8 +233,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SettingsDivider(),
               SwitchListTile(
                 title: const Text('Scenario 114 Reward'),
-                subtitle: Row(
-                  children: const [
+                subtitle: const Row(
+                  children: [
                     Icon(Icons.warning),
                     SizedBox(
                       width: smallPadding,
@@ -263,8 +263,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   ListTile(
                     title: const Text('Building 44'),
-                    subtitle: Row(
-                      children: const [
+                    subtitle: const Row(
+                      children: [
                         Icon(Icons.warning),
                         SizedBox(
                           width: smallPadding,
@@ -307,7 +307,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium
-                                                  .copyWith(color: null)),
+                                                  ?.copyWith(color: null)),
                                           value: true,
                                           onChanged: (_) => {},
                                         ),
@@ -316,7 +316,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium
-                                              .copyWith(
+                                              ?.copyWith(
                                                 color:
                                                     SharedPrefs().enhancerLvl1
                                                         ? null
@@ -327,16 +327,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         CheckboxListTile(
                                           title: const Text('Lvl 2'),
                                           value: SharedPrefs().enhancerLvl2,
-                                          onChanged: (val) {
-                                            innerSetState(
-                                              () {
-                                                SharedPrefs().enhancerLvl2 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              },
-                                            );
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl2 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
                                           },
                                         ),
                                         Text(
@@ -344,7 +346,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium
-                                              .copyWith(
+                                              ?.copyWith(
                                                 color:
                                                     SharedPrefs().enhancerLvl2
                                                         ? null
@@ -355,16 +357,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         CheckboxListTile(
                                           title: const Text('Lvl 3'),
                                           value: SharedPrefs().enhancerLvl3,
-                                          onChanged: (val) {
-                                            innerSetState(
-                                              () {
-                                                SharedPrefs().enhancerLvl3 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              },
-                                            );
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl3 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
                                           },
                                         ),
                                         Text(
@@ -372,7 +376,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium
-                                              .copyWith(
+                                              ?.copyWith(
                                                 color:
                                                     SharedPrefs().enhancerLvl3
                                                         ? null
@@ -383,16 +387,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         CheckboxListTile(
                                           title: const Text('Lvl 4'),
                                           value: SharedPrefs().enhancerLvl4,
-                                          onChanged: (val) {
-                                            innerSetState(
-                                              () {
-                                                SharedPrefs().enhancerLvl4 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              },
-                                            );
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl4 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
                                           },
                                         ),
                                         Text(
@@ -400,7 +406,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium
-                                              .copyWith(
+                                              ?.copyWith(
                                                 color:
                                                     SharedPrefs().enhancerLvl4
                                                         ? null
@@ -469,8 +475,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SettingsDivider(),
               SwitchListTile(
                 title: const Text("Unlock 'Envelope V'"),
-                subtitle: Row(
-                  children: const [
+                subtitle: const Row(
+                  children: [
                     Icon(Icons.warning),
                     SizedBox(
                       width: smallPadding,
@@ -559,8 +565,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           );
                         }).then(
-                      (value) {
-                        if (value) {
+                      (bool? value) {
+                        if (value != null && value) {
                           setState(
                             () {
                               SharedPrefs().envelopeV = val;
@@ -752,7 +758,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle:
                     const Text('Restore your characters from a backup file'),
                 onTap: () async {
-                  final bool choice = await showDialog<bool>(
+                  final bool? choice = await showDialog<bool?>(
                     barrierDismissible: false,
                     context: context,
                     builder: (context) {
@@ -797,7 +803,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   );
-                  if (!choice) {
+                  if (choice != null && !choice) {
                     return;
                   }
                   await FilePicker.platform.pickFiles(
@@ -805,52 +811,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     allowMultiple: false,
                     allowedExtensions: ['txt'],
                   ).then(
-                    (result) async {
+                    (FilePickerResult? result) async {
                       if (result != null) {
                         String contents;
-                        File file = File(result.files.single.path);
+                        String? path = result.files.single.path;
+                        if (path == null) {
+                          return;
+                        }
+                        File file = File(path);
                         contents = file.readAsStringSync();
-                        if (contents != null) {
-                          _showLoaderDialog(context);
-                          try {
-                            await DatabaseHelper.instance.restoreBackup(
-                              contents,
-                            );
-                            SharedPrefs().initialPage = 0;
-                            await widget.charactersModel.loadCharacters();
-                            widget.charactersModel.jumpToPage(0);
-                          } catch (e) {
-                            await showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text(
-                                      'Error During Restore Operation'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Ok'),
-                                    ),
-                                  ],
-                                  content: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: maxDialogWidth,
-                                    ),
-                                    child: SingleChildScrollView(
-                                      child: Text(
-                                        'There was an error during the restoration. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer with your backup file and this information:\n${e.toString()}',
-                                      ),
+
+                        _showLoaderDialog(context);
+                        try {
+                          await DatabaseHelper.instance.restoreBackup(
+                            contents,
+                          );
+                          SharedPrefs().initialPage = 0;
+                          await widget.charactersModel.loadCharacters();
+                          widget.charactersModel.jumpToPage(0);
+                        } catch (e) {
+                          await showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text(
+                                    'Error During Restore Operation'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('Ok'),
+                                  ),
+                                ],
+                                content: Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: maxDialogWidth,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      'There was an error during the restoration. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer with your backup file and this information:\n${e.toString()}',
                                     ),
                                   ),
-                                );
-                              },
-                            );
-                          }
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                                ),
+                              );
+                            },
+                          );
                         }
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       }
                     },
                   );
@@ -918,10 +927,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               Uri(
                                 scheme: 'mailto',
                                 path: 'tomkatcreative@gmail.com',
-                                queryParameters: {
-                                  'subject':
-                                      'GHC support - v${snapshot.data.version}+${snapshot.data.buildNumber}'
-                                },
+                                queryParameters: snapshot.data != null
+                                    ? {
+                                        'subject':
+                                            'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
+                                      }
+                                    : null,
                               ),
                             );
                           },
@@ -935,13 +946,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           bottom: smallPadding,
                           right: smallPadding,
                         ),
-                        child: Text(
-                          'v${snapshot.data.version}+${snapshot.data.buildNumber}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: snapshot.data != null
+                            ? Text(
+                                'v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : const SizedBox(),
                       ),
                     )
                   ],
@@ -1006,7 +1019,7 @@ Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
 
 class SettingsDivider extends StatelessWidget {
   const SettingsDivider({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

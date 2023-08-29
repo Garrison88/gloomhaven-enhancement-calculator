@@ -17,7 +17,7 @@ class Utils {
       inlineList.add(
         TextSpan(
           text: perkDescription,
-          style: Theme.of(context).textTheme.bodyMedium.copyWith(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 letterSpacing: 0.7,
                 fontWeight: FontWeight.bold,
               ),
@@ -26,7 +26,7 @@ class Utils {
     }
     List<String> list = details.split(' ');
     for (String element in list) {
-      String assetPath;
+      String? assetPath;
       bool invertColor = false;
       if (element.contains('&')) {
         // Stack both Elements
@@ -624,12 +624,12 @@ extension StringCasingExtension on String {
 
 class SizeProviderWidget extends StatefulWidget {
   final Widget child;
-  final Function(Size) onChildSize;
+  final Function(Size?) onChildSize;
 
   const SizeProviderWidget({
-    Key key,
-    this.onChildSize,
-    this.child,
+    Key? key,
+    required this.onChildSize,
+    required this.child,
   }) : super(key: key);
   @override
   _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
@@ -639,7 +639,7 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
   @override
   void initState() {
     super.initState();
-    if (context != null && context.mounted) {
+    if (context.mounted) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         widget.onChildSize(context.size);
       });
@@ -659,8 +659,8 @@ class HighlightedWidget extends StatefulWidget {
   final bool animateBorder;
 
   const HighlightedWidget({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.color = Colors.grey,
     this.duration = const Duration(milliseconds: 350),
     this.animateBorder = false,
@@ -672,8 +672,8 @@ class HighlightedWidget extends StatefulWidget {
 
 class _HighlightedWidgetState extends State<HighlightedWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<Color> _colorAnimation;
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
@@ -709,11 +709,11 @@ class _HighlightedWidgetState extends State<HighlightedWidget>
       animation: _controller,
       builder: (context, child) {
         return Container(
-          decoration: widget.animateBorder
+          decoration: widget.animateBorder && _colorAnimation.value != null
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _colorAnimation.value,
+                    color: _colorAnimation.value!,
                     width: 2,
                   ),
                 )

@@ -14,17 +14,16 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
 class CharactersModel with ChangeNotifier {
   CharactersModel({
-    this.databaseHelper,
-    this.showRetired,
+    required this.databaseHelper,
+    required this.showRetired,
   });
 
   List<Character> _characters = [];
-  Character currentCharacter;
+  Character? currentCharacter;
   DatabaseHelper databaseHelper;
   PageController pageController = PageController(
     initialPage: SharedPrefs().initialPage,
   );
-  AnimationController hideRetireCharacterAnimationController;
   bool isScrolledToTop = true;
   ScrollController charScreenScrollController = ScrollController();
   ScrollController enhancementCalcScrollController = ScrollController();
@@ -38,7 +37,7 @@ class CharactersModel with ChangeNotifier {
   bool isEditMode = false;
 
   void toggleShowRetired({
-    Character character,
+    Character? character,
   }) {
     // HERE THERE BE DRAGONS
     if (_characters.isEmpty) {
@@ -51,9 +50,9 @@ class CharactersModel with ChangeNotifier {
       _index = _characters.indexOf(character);
     } else if (retiredCharactersAreHidden && currentCharacter == null) {
       _index = 0;
-    } else if (currentCharacter.isRetired) {
+    } else if (currentCharacter != null && currentCharacter!.isRetired) {
       List<Character> tempList = characters;
-      int tempIndex = tempList.indexOf(currentCharacter);
+      int tempIndex = tempList.indexOf(currentCharacter!);
       do {
         tempIndex++;
       } while (tempIndex < tempList.length &&
@@ -70,13 +69,17 @@ class CharactersModel with ChangeNotifier {
                 .length -
             1;
       }
-    } else if (!currentCharacter.isRetired && showRetired) {
+    } else if (currentCharacter != null &&
+        !currentCharacter!.isRetired &&
+        showRetired) {
       _index = characters
           .where((character) => !character.isRetired)
           .toList()
-          .indexOf(currentCharacter);
+          .indexOf(currentCharacter!);
     } else {
-      _index = _characters.indexOf(currentCharacter);
+      if (currentCharacter != null) {
+        _index = _characters.indexOf(currentCharacter!);
+      }
     }
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
@@ -190,8 +193,8 @@ class CharactersModel with ChangeNotifier {
 
   Future<void> deleteCurrentCharacter() async {
     isEditMode = false;
-    int index = characters.indexOf(currentCharacter);
-    await databaseHelper.deleteCharacter(currentCharacter);
+    int index = characters.indexOf(currentCharacter!);
+    await databaseHelper.deleteCharacter(currentCharacter!);
     _characters.remove(currentCharacter);
     _setCurrentCharacter(
       index: index,
@@ -200,7 +203,7 @@ class CharactersModel with ChangeNotifier {
   }
 
   void _setCurrentCharacter({
-    int index,
+    required int index,
   }) {
     if (characters.isEmpty) {
       currentCharacter = null;
@@ -213,16 +216,18 @@ class CharactersModel with ChangeNotifier {
         currentCharacter = characters[index];
         SharedPrefs().initialPage = index;
       }
-      previousRetirementsController.text =
-          currentCharacter.previousRetirements != 0
-              ? '${currentCharacter.previousRetirements}'
-              : '';
-      nameController.text = currentCharacter.name;
-      xpController.text =
-          currentCharacter.xp != 0 ? '${currentCharacter.xp}' : '';
-      goldController.text =
-          currentCharacter.gold != 0 ? '${currentCharacter.gold}' : '';
-      notesController.text = currentCharacter.notes;
+      if (currentCharacter != null) {
+        previousRetirementsController.text =
+            currentCharacter!.previousRetirements != 0
+                ? '${currentCharacter!.previousRetirements}'
+                : '';
+        nameController.text = currentCharacter!.name;
+        xpController.text =
+            currentCharacter!.xp != 0 ? '${currentCharacter!.xp}' : '';
+        goldController.text =
+            currentCharacter!.gold != 0 ? '${currentCharacter!.gold}' : '';
+        notesController.text = currentCharacter!.notes;
+      }
     }
     updateTheme();
   }
@@ -230,14 +235,13 @@ class CharactersModel with ChangeNotifier {
   void updateTheme() {
     if (characters.isEmpty) {
       SharedPrefs().primaryClassColor = 0xff4e7ec1;
-      // SharedPrefs().initialPage = 0;
-    } else {
-      if (currentCharacter.isRetired) {
+    } else if (currentCharacter != null) {
+      if (currentCharacter != null && currentCharacter!.isRetired) {
         SharedPrefs().primaryClassColor =
             SharedPrefs().darkTheme ? 0xffffffff : 0xff000000;
       } else {
         SharedPrefs().primaryClassColor =
-            currentCharacter.playerClass.primaryColor;
+            currentCharacter!.playerClass.primaryColor;
       }
     }
   }
@@ -268,14 +272,16 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<void> retireCurrentCharacter() async {
-    isEditMode = false;
-    int index = characters.indexOf(currentCharacter);
-    currentCharacter.isRetired = !currentCharacter.isRetired;
-    await databaseHelper.updateCharacter(currentCharacter);
-    _setCurrentCharacter(
-      index: index,
-    );
-    notifyListeners();
+    if (currentCharacter != null) {
+      isEditMode = false;
+      int index = characters.indexOf(currentCharacter!);
+      currentCharacter!.isRetired = !currentCharacter!.isRetired;
+      await databaseHelper.updateCharacter(currentCharacter!);
+      _setCurrentCharacter(
+        index: index,
+      );
+      notifyListeners();
+    }
   }
 
   Future<void> updateCharacter(Character character) async {
@@ -302,7 +308,7 @@ class CharactersModel with ChangeNotifier {
   Future<List<CharacterPerk>> _loadPerks(
     Character character,
   ) async {
-    List<Map<String, Object>> perks = await databaseHelper.queryPerks(
+    List<Map<String, Object?>> perks = await databaseHelper.queryPerks(
       character.playerClass.classCode,
     );
     for (var perkMap in perks) {
@@ -346,7 +352,7 @@ class CharactersModel with ChangeNotifier {
   Future<List<CharacterMastery>> _loadMasteries(
     Character character,
   ) async {
-    List<Map<String, Object>> masteries = await databaseHelper.queryMasteries(
+    List<Map<String, Object?>> masteries = await databaseHelper.queryMasteries(
       character.playerClass.classCode,
     );
     for (var masteryMap in masteries) {
@@ -360,9 +366,9 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<void> togglePerk({
-    List<CharacterPerk> characterPerks,
-    CharacterPerk perk,
-    bool value,
+    required List<CharacterPerk> characterPerks,
+    required CharacterPerk perk,
+    required bool value,
   }) async {
     for (CharacterPerk characterPerk in characterPerks) {
       if (characterPerk.associatedPerkId == perk.associatedPerkId) {
@@ -377,9 +383,9 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<void> toggleMastery({
-    List<CharacterMastery> characterMasteries,
-    CharacterMastery mastery,
-    bool value,
+    required List<CharacterMastery> characterMasteries,
+    required CharacterMastery mastery,
+    required bool value,
   }) async {
     for (CharacterMastery characterMastery in characterMasteries) {
       if (characterMastery.associatedMasteryId == mastery.associatedMasteryId) {

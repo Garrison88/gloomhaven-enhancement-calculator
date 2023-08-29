@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -15,7 +13,7 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GHCAppBar({
-    Key key,
+    Key? key,
   }) : super(
           key: key,
         );
@@ -160,7 +158,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           SharedPrefs().gloomhavenMode = !value;
                           Provider.of<EnhancementCalculatorModel>(context,
                                   listen: false)
-                              .gameVersionToggled(value);
+                              .gameVersionToggled();
                           setState(() {});
                         },
                       ),
@@ -175,19 +173,19 @@ class _GHCAppBarState extends State<GHCAppBar> {
       actions: <Widget>[
         if (charactersModel.isEditMode)
           Tooltip(
-            message: charactersModel.currentCharacter.isRetired
+            message: charactersModel.currentCharacter!.isRetired
                 ? 'Unretire'
                 : 'Retire',
             child: IconButton(
               icon: Icon(
-                charactersModel.currentCharacter.isRetired
+                charactersModel.currentCharacter!.isRetired
                     ? Icons.unarchive_outlined
                     : Icons.archive_outlined,
               ),
               onPressed: () async {
                 final String message =
-                    '${charactersModel.currentCharacter.name} ${charactersModel.currentCharacter.isRetired ? 'unretired' : 'retired'}';
-                Character character = charactersModel.currentCharacter;
+                    '${charactersModel.currentCharacter!.name} ${charactersModel.currentCharacter!.isRetired ? 'unretired' : 'retired'}';
+                Character? character = charactersModel.currentCharacter;
                 await charactersModel.retireCurrentCharacter();
                 appModel.updateTheme();
                 ScaffoldMessenger.of(context)
@@ -241,7 +239,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
               ),
               onPressed: charactersModel.isEditMode
                   ? () {
-                      showDialog<bool>(
+                      showDialog<bool?>(
                         context: context,
                         builder: (_) {
                           return AlertDialog(
@@ -259,9 +257,9 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                 style: Theme.of(context)
                                     .textButtonTheme
                                     .style
-                                    .copyWith(
+                                    ?.copyWith(
                                       foregroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
+                                          .resolveWith<Color?>(
                                         (Set<MaterialState> states) =>
                                             Theme.of(context).brightness ==
                                                     Brightness.dark
@@ -278,7 +276,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                 style: Theme.of(context)
                                     .textButtonTheme
                                     .style
-                                    .copyWith(
+                                    ?.copyWith(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color>(
                                         (Set<MaterialState> states) =>
@@ -301,10 +299,10 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           );
                         },
                       ).then(
-                        (result) async {
-                          if (result) {
+                        (bool? result) async {
+                          if (result != null && result) {
                             final String characterName =
-                                charactersModel.currentCharacter.name;
+                                charactersModel.currentCharacter!.name;
                             await charactersModel.deleteCurrentCharacter();
                             context.read<AppModel>().updateTheme();
                             ScaffoldMessenger.of(context)
@@ -328,7 +326,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           );
                         },
                       ).then((value) {
-                        if (value) {
+                        if (value != null && value) {
                           appModel.updateTheme();
                         }
                       });

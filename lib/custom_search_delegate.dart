@@ -39,15 +39,9 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       icon: const Icon(
         Icons.arrow_back,
       ),
-      onPressed: () => close(
-        context,
-        null,
-      ),
+      onPressed: () => Navigator.of(context).pop(),
     );
   }
-
-  @override
-  Widget buildResults(BuildContext context) => null;
 
   @override
   Widget buildSuggestions(BuildContext context) {
@@ -70,7 +64,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                 spacing: smallPadding,
                 children: [
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: gh
                               ? ThemeData.estimateBrightnessForColor(
                                           Theme.of(context)
@@ -79,7 +73,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge.color,
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                     selected: gh,
                     onSelected: (value) => stateSetter(() {
@@ -88,7 +82,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     label: const Text('Gloomhaven'),
                   ),
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: jotl
                               ? ThemeData.estimateBrightnessForColor(
                                           Theme.of(context)
@@ -97,7 +91,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge.color,
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                     selected: jotl,
                     onSelected: (value) => stateSetter(() {
@@ -106,7 +100,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                     label: const Text('Jaws of the Lion'),
                   ),
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge.copyWith(
+                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: fh
                               ? ThemeData.estimateBrightnessForColor(
                                           Theme.of(context)
@@ -115,7 +109,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge.color,
+                              : Theme.of(context).textTheme.bodyLarge?.color,
                         ),
                     selected: fh,
                     onSelected: (value) => stateSetter(() {
@@ -128,7 +122,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       labelStyle: Theme.of(context)
                           .textTheme
                           .bodyLarge
-                          .copyWith(
+                          ?.copyWith(
                             color: cs
                                 ? ThemeData.estimateBrightnessForColor(
                                             Theme.of(context)
@@ -137,7 +131,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                         Brightness.dark
                                     ? Colors.white
                                     : Colors.black
-                                : Theme.of(context).textTheme.bodyLarge.color,
+                                : Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                       selected: cs,
                       onSelected: (value) => stateSetter(() {
@@ -150,7 +144,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                       labelStyle: Theme.of(context)
                           .textTheme
                           .bodyLarge
-                          .copyWith(
+                          ?.copyWith(
                             color: cc
                                 ? ThemeData.estimateBrightnessForColor(
                                             Theme.of(context)
@@ -159,7 +153,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                                         Brightness.dark
                                     ? Colors.white
                                     : Colors.black
-                                : Theme.of(context).textTheme.bodyLarge.color,
+                                : Theme.of(context).textTheme.bodyLarge?.color,
                           ),
                       selected: cc,
                       onSelected: (value) => stateSetter(() {
@@ -174,14 +168,14 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
+                const Text(
                   'Hide Locked Classes',
                   // style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Checkbox(
-                  onChanged: (value) => {
+                  onChanged: (bool? value) => {
                     stateSetter(() {
-                      hideLockedClasses = value;
+                      hideLockedClasses = value ?? false;
                     }),
                   },
                   value: hideLockedClasses,
@@ -240,7 +234,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
 
   bool doNotRenderPlayerClass(
     PlayerClass playerClass, {
-    bool hideLockedClass,
+    required bool hideLockedClass,
   }) =>
       (!SharedPrefs().envelopeX && playerClass.classCode == 'bs') ||
       (!SharedPrefs().envelopeV && playerClass.classCode == 'vanquisher') ||
@@ -252,13 +246,19 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
           !SharedPrefs().getPlayerClassIsUnlocked(
             playerClass.classCode,
           ));
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    throw UnimplementedError();
+  }
 }
 
 class _WordSuggestionList extends StatefulWidget {
   const _WordSuggestionList({
-    this.suggestions,
-    this.query,
-    this.onSelected,
+    required this.suggestions,
+    required this.query,
+    required this.onSelected,
   });
 
   final List<PlayerClass> suggestions;
@@ -336,7 +336,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                 showHidden || !selectedPlayerClass.locked
                     ? selectedPlayerClass.name
                     : '???',
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: showHidden || !selectedPlayerClass.locked
                           ? null
                           : Theme.of(context).disabledColor,
@@ -377,7 +377,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
-                                                .copyWith(
+                                                ?.copyWith(
                                                   color: Colors.blue,
                                                   decoration:
                                                       TextDecoration.underline,
@@ -416,15 +416,17 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                                           overflow: TextOverflow.visible,
                                         ),
                                         Checkbox(
-                                          value: hideMessage,
-                                          onChanged: (value) =>
-                                              innerSetState(() {
-                                            SharedPrefs()
-                                                    .hideCustomClassesWarningMessage =
-                                                value;
-                                            hideMessage = !hideMessage;
-                                          }),
-                                        ),
+                                            value: hideMessage,
+                                            onChanged: (bool? value) {
+                                              if (value != null) {
+                                                innerSetState(() {
+                                                  SharedPrefs()
+                                                          .hideCustomClassesWarningMessage =
+                                                      value;
+                                                  hideMessage = !hideMessage;
+                                                });
+                                              }
+                                            }),
                                       ],
                                     )
                                   ],
@@ -456,8 +458,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                         ],
                       );
                     },
-                  ).then((value) {
-                    if (value) {
+                  ).then((bool? value) {
+                    if (value != null && value) {
                       Navigator.pop<PlayerClass>(
                         context,
                         selectedPlayerClass,

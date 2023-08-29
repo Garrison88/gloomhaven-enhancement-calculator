@@ -5,8 +5,8 @@ const String columnAssociatedMasteryId = 'MasteryID';
 const String columnCharacterMasteryAchieved = 'MasteryAchieved';
 
 class CharacterMastery {
-  String associatedCharacterUuid;
-  int associatedMasteryId;
+  late String associatedCharacterUuid;
+  late int associatedMasteryId;
   bool characterMasteryAchieved = false;
 
   CharacterMastery(

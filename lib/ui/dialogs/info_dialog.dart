@@ -6,22 +6,30 @@ import '../../data/strings.dart';
 import '../../models/enhancement.dart';
 import '../../shared_prefs.dart';
 
-class InfoDialog extends StatelessWidget {
-  final String title;
-  final RichText message;
-  final EnhancementCategory category;
-  RichText _bodyText;
-  List<Enhancement> _titleIcons;
-  List<Enhancement> _eligibleForIcons;
+class InfoDialog extends StatefulWidget {
+  final String? title;
+  final RichText? message;
+  final EnhancementCategory? category;
 
-  InfoDialog({
-    Key key,
+  const InfoDialog({
+    Key? key,
     this.title,
     this.message,
     this.category,
   }) : super(key: key);
 
-  List<Widget> _createIconsListForDialog(List<Enhancement> list) {
+  @override
+  State<InfoDialog> createState() => _InfoDialogState();
+}
+
+class _InfoDialogState extends State<InfoDialog> {
+  late final RichText _bodyText;
+
+  List<Enhancement> _titleIcons = [];
+
+  late final List<Enhancement> _eligibleForIcons;
+
+  List<Widget> _createIconsListForDialog(List<Enhancement>? list) {
     List<Widget> icons = [];
     if (list == null) {
       icons.add(
@@ -67,8 +75,8 @@ class InfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (category != null) {
-      switch (category) {
+    if (widget.category != null) {
+      switch (widget.category) {
         // plus one for character enhancement selected
         case EnhancementCategory.charPlusOne:
         case EnhancementCategory.target:
@@ -104,16 +112,14 @@ class InfoDialog extends StatelessWidget {
               .where(
                 (element) => element.category == EnhancementCategory.negEffect,
               )
-              .toList()
-            // remove Disarm if we're using Frosthaven rules
-            ..removeWhere(
-              (element) =>
-                  element.name == 'Disarm' && !SharedPrefs().gloomhavenMode,
-            )
-            ..removeWhere(
-              (element) =>
-                  element.name == 'Ward' && SharedPrefs().gloomhavenMode,
-            );
+              .toList();
+          // remove Disarm if we're using Frosthaven rules or Ward if we're using Gloomhaven rules
+          _titleIcons.removeWhere(
+            (element) => SharedPrefs().gloomhavenMode
+                ? element.name == 'Ward'
+                : element.name == 'Disarm',
+          );
+
           _eligibleForIcons = EnhancementData.enhancements
               .where(
                 (enhancement) =>
@@ -226,30 +232,30 @@ class InfoDialog extends StatelessWidget {
             )
           ];
           _eligibleForIcons = EnhancementData.enhancements
-              .where(
-                (element) =>
-                    element.category == EnhancementCategory.negEffect ||
-                    element.category == EnhancementCategory.posEffect ||
-                    [
-                          'Move',
-                          'Attack',
-                          'Shield',
-                          'Heal',
-                          'Retaliate',
-                          'Push',
-                          'Pull',
-                        ].contains(element.name) &&
-                        element.category != EnhancementCategory.summonPlusOne,
-              )
-              .toList();
-          _eligibleForIcons.add(
-            Enhancement(
-              EnhancementCategory.posEffect,
-              'Invisible',
-              ghCost: 0,
-              iconPath: 'invisible.svg',
-            ),
-          );
+            ..where(
+              (element) =>
+                  element.category == EnhancementCategory.negEffect ||
+                  element.category == EnhancementCategory.posEffect ||
+                  [
+                        'Move',
+                        'Attack',
+                        'Shield',
+                        'Heal',
+                        'Retaliate',
+                        'Push',
+                        'Pull',
+                      ].contains(element.name) &&
+                      element.category != EnhancementCategory.summonPlusOne,
+            )
+            ..toList()
+            ..add(
+              Enhancement(
+                EnhancementCategory.posEffect,
+                'Invisible',
+                ghCost: 0,
+                iconPath: 'invisible.svg',
+              ),
+            );
           break;
         // any element selected
         case EnhancementCategory.anyElem:
@@ -262,7 +268,7 @@ class InfoDialog extends StatelessWidget {
                 (element) => element.category == EnhancementCategory.anyElem,
               )
               .toList();
-          _eligibleForIcons = _eligibleForIcons = EnhancementData.enhancements
+          _eligibleForIcons = EnhancementData.enhancements
               .where(
                 (element) =>
                     element.category == EnhancementCategory.negEffect ||
@@ -307,7 +313,7 @@ class InfoDialog extends StatelessWidget {
     }
     return AlertDialog(
       // no title provided - this will be an enhancement dialog with icons
-      title: title == null
+      title: widget.title == null
           ? Center(
               child: Wrap(
                 runSpacing: smallPadding,
@@ -319,7 +325,7 @@ class InfoDialog extends StatelessWidget {
           // title provided - this will be an info dialog with a text title
           : Center(
               child: Text(
-                title,
+                widget.title!,
                 style: const TextStyle(
                   fontSize: 28.0,
                   fontFamily: pirataOne,
@@ -336,7 +342,7 @@ class InfoDialog extends StatelessWidget {
           child: Column(
             children: <Widget>[
               // if title isn't provided, display eligible enhancements
-              title == null
+              widget.title == null
                   ? Column(children: <Widget>[
                       const Text(
                         'Eligible For:',
@@ -363,7 +369,7 @@ class InfoDialog extends StatelessWidget {
                     ])
                   // if title isn't provided, display an empty container
                   : Container(),
-              message ?? _bodyText,
+              widget.message ?? _bodyText,
             ],
           ),
         ),

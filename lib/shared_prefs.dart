@@ -1,14 +1,14 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static SharedPreferences _sharedPrefs;
+  static late SharedPreferences _sharedPrefs;
 
   factory SharedPrefs() => SharedPrefs._internal();
 
   SharedPrefs._internal();
 
   Future<void> init() async =>
-      _sharedPrefs ??= await SharedPreferences.getInstance();
+      _sharedPrefs = await SharedPreferences.getInstance();
 
   void remove(String key) => _sharedPrefs.remove(key);
 
@@ -28,8 +28,7 @@ class SharedPrefs {
         value,
       );
 
-  bool get enhancerLvl1 =>
-      _sharedPrefs.getBool('enhancerLvl1') ?? enhancerLvl2 ?? false;
+  bool get enhancerLvl1 => _sharedPrefs.getBool('enhancerLvl1') ?? enhancerLvl2;
 
   set enhancerLvl1(bool value) {
     if (!value) {
@@ -43,8 +42,7 @@ class SharedPrefs {
     );
   }
 
-  bool get enhancerLvl2 =>
-      _sharedPrefs.getBool('enhancerLvl2') ?? enhancerLvl3 ?? false;
+  bool get enhancerLvl2 => _sharedPrefs.getBool('enhancerLvl2') ?? enhancerLvl3;
 
   set enhancerLvl2(bool value) {
     if (value) {
@@ -59,8 +57,7 @@ class SharedPrefs {
     );
   }
 
-  bool get enhancerLvl3 =>
-      _sharedPrefs.getBool('enhancerLvl3') ?? enhancerLvl4 ?? false;
+  bool get enhancerLvl3 => _sharedPrefs.getBool('enhancerLvl3') ?? enhancerLvl4;
 
   set enhancerLvl3(bool value) {
     if (value) {

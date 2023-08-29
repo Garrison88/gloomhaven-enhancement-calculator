@@ -14,7 +14,7 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class EnhancementCalculatorPage extends StatelessWidget {
   const EnhancementCalculatorPage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -81,7 +81,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                         label: Text(
                           '${SharedPrefs().gloomhavenMode ? 'Gloomhaven' : 'Frosthaven'} Guidelines',
                           style:
-                              Theme.of(context).textTheme.titleMedium.copyWith(
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: SharedPrefs().gloomhavenMode
                                         ? Colors.white
                                         : Colors.black,
@@ -163,8 +163,10 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               enhancerLvl3: !SharedPrefs().gloomhavenMode &&
                                   SharedPrefs().enhancerLvl3,
                             ),
-                            onChanged: (int value) {
-                              enhancementCalculatorModel.cardLevel = value;
+                            onChanged: (int? value) {
+                              if (value != null) {
+                                enhancementCalculatorModel.cardLevel = value;
+                              }
                             },
                           ),
                         ),
@@ -216,9 +218,11 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               enhancerLvl4: !SharedPrefs().gloomhavenMode &&
                                   SharedPrefs().enhancerLvl4,
                             ),
-                            onChanged: (int value) {
-                              enhancementCalculatorModel.previousEnhancements =
-                                  value;
+                            onChanged: (int? value) {
+                              if (value != null) {
+                                enhancementCalculatorModel
+                                    .previousEnhancements = value;
+                              }
                             },
                           ),
                         ),
@@ -233,23 +237,23 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             IconButton(
-                                icon: const Icon(
-                                  Icons.info_outline,
-                                ),
-                                onPressed:
-                                    enhancementCalculatorModel.enhancement !=
-                                            null
-                                        ? () => showDialog<void>(
-                                              context: context,
-                                              builder: (_) {
-                                                return InfoDialog(
-                                                  category:
-                                                      enhancementCalculatorModel
-                                                          .enhancement.category,
-                                                );
-                                              },
-                                            )
-                                        : null),
+                              icon: const Icon(
+                                Icons.info_outline,
+                              ),
+                              onPressed:
+                                  enhancementCalculatorModel.enhancement != null
+                                      ? () => showDialog<void>(
+                                            context: context,
+                                            builder: (_) {
+                                              return InfoDialog(
+                                                category:
+                                                    enhancementCalculatorModel
+                                                        .enhancement!.category,
+                                              );
+                                            },
+                                          )
+                                      : null,
+                            ),
                             const Text(
                               'Enhancement Type:',
                             ),
@@ -272,9 +276,11 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               gloomhavenMode: SharedPrefs().gloomhavenMode,
                               enhancerLvl2: SharedPrefs().enhancerLvl2,
                             ),
-                            onChanged: (Enhancement selectedEnhancement) {
-                              enhancementCalculatorModel
-                                  .enhancementSelected(selectedEnhancement);
+                            onChanged: (Enhancement? selectedEnhancement) {
+                              if (selectedEnhancement != null) {
+                                enhancementCalculatorModel
+                                    .enhancementSelected(selectedEnhancement);
+                              }
                             },
                           ),
                         ),
@@ -496,11 +502,13 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           ),
                         Text(
                           '${enhancementCalculatorModel.totalCost}g',
-                          style:
-                              Theme.of(context).textTheme.displayLarge.copyWith(
-                                    fontSize: 80,
-                                    letterSpacing: 4,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge
+                              ?.copyWith(
+                                fontSize: 80,
+                                letterSpacing: 4,
+                              ),
                         ),
                         if (enhancementCalculatorModel.temporaryEnhancementMode)
                           const Text(

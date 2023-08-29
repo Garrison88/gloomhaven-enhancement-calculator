@@ -24,7 +24,7 @@ class PersonalGoal {
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnPersonalGoalId: id,
-      columnSubGoals: subGoals?.map((x) => x.toMap()),
+      columnSubGoals: subGoals.map((x) => x.toMap()),
       columnPersonalGoalTitle: title,
       rewardClassCode: rewardClassCode,
     };

@@ -7,8 +7,8 @@ class PerksSection extends StatelessWidget {
   final Character character;
 
   const PerksSection({
-    this.character,
-    Key key,
+    Key? key,
+    required this.character,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class PerksSection extends StatelessWidget {
             Text(
               '${character.numOfSelectedPerks()}',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineMedium.copyWith(
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: Character.maximumPerks(character) >=
                             character.numOfSelectedPerks()
                         ? null

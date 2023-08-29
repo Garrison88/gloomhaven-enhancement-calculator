@@ -6,7 +6,7 @@ class AddSubtractDialog extends StatefulWidget {
   const AddSubtractDialog(
     this.currentValue,
     this.hintText, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final int currentValue;
@@ -70,7 +70,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                     autofocus: true,
                     decoration: InputDecoration(hintText: widget.hintText),
                     controller: _addSubtractTextEditingController,
-                    style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontSize: titleFontSize,
                         ),
                   ),

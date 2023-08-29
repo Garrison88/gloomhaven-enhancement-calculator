@@ -189,7 +189,7 @@ Color getPrimaryThemeColor() => Color(SharedPrefs().primaryClassColor);
 //       ).secondaryColor,
 //     );
 
-Color getCheckboxColor(Set<MaterialState> states) =>
+Color? getCheckboxColor(Set<MaterialState> states) =>
     states.contains(MaterialState.selected) &&
             states.contains(MaterialState.disabled)
         ? lighten(getPrimaryThemeColor(), 30)
@@ -197,7 +197,7 @@ Color getCheckboxColor(Set<MaterialState> states) =>
             ? getPrimaryThemeColor()
             : null;
 
-Color getCheckColor(Set<MaterialState> states) =>
+Color? getCheckColor(Set<MaterialState> states) =>
     states.contains(MaterialState.selected) ? Colors.black87 : null;
 
 /// Darken a color by [percent] amount (100 = black)

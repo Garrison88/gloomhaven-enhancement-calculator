@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum ClassCategory {
   gloomhaven,
   jawsOfTheLion,
@@ -15,17 +13,17 @@ class PlayerClass {
   String icon;
   ClassCategory category;
   int primaryColor;
-  int secondaryColor;
+  int? secondaryColor;
   bool locked;
   List<String> traits;
 
   PlayerClass({
-    @required this.race,
-    @required this.name,
-    @required this.classCode,
-    @required this.icon,
-    @required this.category,
-    @required this.primaryColor,
+    required this.race,
+    required this.name,
+    required this.classCode,
+    required this.icon,
+    required this.category,
+    required this.primaryColor,
     this.secondaryColor = 0xff4e7ec1,
     this.locked = true,
     this.traits = const [],

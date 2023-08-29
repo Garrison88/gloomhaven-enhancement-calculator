@@ -16,7 +16,7 @@ class AppModel extends ChangeNotifier {
   }
 
   void updateTheme({
-    ThemeMode themeMode,
+    ThemeMode? themeMode,
   }) {
     if (themeMode != null) {
       _themeMode = themeMode;

@@ -7,7 +7,7 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class GHCBottomNavigationBar extends StatelessWidget {
   const GHCBottomNavigationBar({
-    Key key,
+    Key? key,
   }) : super(
           key: key,
         );

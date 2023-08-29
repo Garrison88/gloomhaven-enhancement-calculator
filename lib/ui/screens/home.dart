@@ -16,20 +16,23 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class Home extends StatefulWidget {
   const Home({
-    Key key,
-  }) : super(key: key);
+    Key? key,
+  }) : super(
+          key: key,
+        );
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  Future<List<Character>> future;
+  late Future<List<Character>> future;
   final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
     super.initState();
+    future = context.read<CharactersModel>().loadCharacters();
     if (SharedPrefs().showUpdate4Dialog) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         showDialog<void>(
@@ -44,10 +47,10 @@ class _HomeState extends State<Home> {
                   fontSize: 30,
                 ),
               ),
-              content: SingleChildScrollView(
+              content: const SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text("1. Added all 'Frosthaven' classes"),
                     Text(
                         "2. Added all remaining 'Crimson Scales', add-on, and 'Trail of Ashes' classes (show Custom Classes in the Settings menu)"),
@@ -86,7 +89,6 @@ class _HomeState extends State<Home> {
         SharedPrefs().showUpdate4Dialog = false;
       });
     }
-    future = context.read<CharactersModel>().loadCharacters();
   }
 
   @override
@@ -113,10 +115,10 @@ class _HomeState extends State<Home> {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Text('Please wait...'),
                       SizedBox(height: smallPadding),
                       CircularProgressIndicator(),
@@ -163,21 +165,17 @@ class _HomeState extends State<Home> {
               ? () => context.read<EnhancementCalculatorModel>().resetCost()
               // must watch
               : context.watch<CharactersModel>().characters.isEmpty
-                  ? () async {
-                      return await showDialog<bool>(
+                  ? () => showDialog<bool>(
                         barrierDismissible: false,
                         context: context,
-                        builder: (_) {
-                          return CreateCharacterDialog(
-                            charactersModel: charactersModel,
-                          );
-                        },
+                        builder: (_) => CreateCharacterDialog(
+                          charactersModel: charactersModel,
+                        ),
                       ).then((value) {
-                        if (value) {
+                        if (value != null && value) {
                           context.read<AppModel>().updateTheme();
                         }
-                      });
-                    }
+                      })
                   : () => charactersModel.toggleEditMode(),
         );
       }),

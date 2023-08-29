@@ -18,8 +18,8 @@ class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
   const CreateCharacterDialog({
-    Key key,
-    this.charactersModel,
+    Key? key,
+    required this.charactersModel,
   }) : super(key: key);
 
   @override
@@ -41,12 +41,22 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       TextEditingController();
   final List<int> _levels = List.generate(9, (index) => index + 1);
   bool _gloomhavenMode = true;
+  PlayerClass _selectedClass = CharacterData.playerClasses[0];
+  Faker faker = Faker();
+  late String placeholderName;
+  FocusNode nameFocusNode = FocusNode();
+
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
+  late OverlayEntry _overlayEntry;
+  late Size buttonSize;
+  late Offset buttonPosition;
+  bool isLevelMenuOpen = false;
+  bool isPersonalGoalMenuOpen = false;
 
   @override
   void initState() {
     super.initState();
-    faker = Faker();
-    _selectedClass = CharacterData.playerClasses[0];
     _classTextFieldController.text = _selectedClass.name;
     _levelTextFieldController.text = '${_levels[0]}';
     placeholderName = _generateRandomName();
@@ -130,22 +140,9 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
     isLevelMenuOpen = !isLevelMenuOpen;
   }
 
-  PlayerClass _selectedClass;
-  Faker faker;
-  String placeholderName;
-  FocusNode nameFocusNode = FocusNode();
-
-  final _formKey = GlobalKey<FormState>();
-  final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
-
-  OverlayEntry _overlayEntry;
-  Size buttonSize;
-  Offset buttonPosition;
-  bool isLevelMenuOpen = false;
-  bool isPersonalGoalMenuOpen = false;
-
   findButton() {
-    RenderBox renderBox = _levelKey.currentContext.findRenderObject();
+    RenderBox renderBox =
+        _levelKey.currentContext?.findRenderObject() as RenderBox;
     buttonSize = renderBox.size;
     buttonPosition = renderBox.localToGlobal(Offset.zero);
   }
@@ -362,7 +359,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       child: AutoSizeText(
                         'Gloomhaven',
                         maxLines: 1,
-                        style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontSize: 20,
                               color: _gloomhavenMode ? null : Colors.grey,
                             ),
@@ -394,7 +391,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       child: AutoSizeText(
                         'Frosthaven',
                         maxLines: 1,
-                        style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontSize: 20,
                               color: _gloomhavenMode ? Colors.grey : null,
                             ),
@@ -427,7 +424,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          style: Theme.of(context).textButtonTheme.style.copyWith(
+          style: Theme.of(context).textButtonTheme.style?.copyWith(
                 foregroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) =>
                       Theme.of(context).colorScheme.onBackground,
@@ -439,7 +436,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           ),
         ),
         ElevatedButton.icon(
-          style: Theme.of(context).textButtonTheme.style.copyWith(
+          style: Theme.of(context).textButtonTheme.style?.copyWith(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (Set<MaterialState> states) => Colors.green.withOpacity(0.75),
                 ),

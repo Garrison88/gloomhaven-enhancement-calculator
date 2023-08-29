@@ -16,8 +16,8 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class CharacterScreen extends StatelessWidget {
   const CharacterScreen({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(
           key: key,
         );
@@ -131,8 +131,8 @@ class CharacterScreen extends StatelessWidget {
 
 class _RetirementsAndPocketItemsSection extends StatelessWidget {
   const _RetirementsAndPocketItemsSection({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
   @override
@@ -143,11 +143,12 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
       children: <Widget>[
         Row(
           children: [
+            // TODO: problematic to use null assertions here?
             (!context.watch<CharactersModel>().isEditMode &&
-                        charactersModel.currentCharacter.previousRetirements ==
+                        charactersModel.currentCharacter!.previousRetirements ==
                             0) ||
-                    (charactersModel.currentCharacter.isRetired &&
-                        charactersModel.currentCharacter.previousRetirements ==
+                    (charactersModel.currentCharacter!.isRetired &&
+                        charactersModel.currentCharacter!.previousRetirements ==
                             0)
                 ? Container()
                 : Container(
@@ -234,7 +235,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                     ) =>
                         Text(
                       '${(Character.level(character.xp) / 2).round()}',
-                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                             color: Theme.of(context).colorScheme.background,
@@ -256,8 +257,8 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
 
 class _NameAndClassSection extends StatelessWidget {
   const _NameAndClassSection({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
   @override
@@ -391,8 +392,8 @@ class _NameAndClassSection extends StatelessWidget {
 
 class _StatsSection extends StatelessWidget {
   const _StatsSection({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
   @override
@@ -446,12 +447,13 @@ class _StatsSection extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.exposure),
                             onPressed: () async {
-                              int value = await showDialog<int>(
-                                  context: context,
-                                  builder: (_) => AddSubtractDialog(
-                                        character.xp,
-                                        'XP',
-                                      ));
+                              int? value = await showDialog<int?>(
+                                context: context,
+                                builder: (_) => AddSubtractDialog(
+                                  character.xp,
+                                  'XP',
+                                ),
+                              );
                               if (value != null) {
                                 if (value < 1) {
                                   charactersModel.updateCharacter(
@@ -482,9 +484,18 @@ class _StatsSection extends StatelessWidget {
                 ) =>
                     Text(
                   ' / ${Character.xpForNextLevel(Character.level(character.xp))}',
-                  style: Theme.of(context).textTheme.bodyMedium.copyWith(
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium.fontSize / 2,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize !=
+                                null
+                            ? Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .fontSize! /
+                                2
+                            : Theme.of(context).textTheme.bodyMedium?.fontSize,
                       ),
                 ),
               ),
@@ -534,12 +545,13 @@ class _StatsSection extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.exposure),
                             onPressed: () async {
-                              int value = await showDialog<int>(
-                                  context: context,
-                                  builder: (_) => AddSubtractDialog(
-                                        character.gold,
-                                        'Gold',
-                                      ));
+                              int? value = await showDialog<int?>(
+                                context: context,
+                                builder: (_) => AddSubtractDialog(
+                                  character.gold,
+                                  'Gold',
+                                ),
+                              );
                               if (value != null) {
                                 charactersModel.updateCharacter(
                                   character..gold = value,
@@ -590,7 +602,7 @@ class _StatsSection extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      .copyWith(letterSpacing: 4),
+                      ?.copyWith(letterSpacing: 4),
                 ),
               ],
             ),
@@ -603,8 +615,8 @@ class _StatsSection extends StatelessWidget {
 
 class _ResourcesSection extends StatefulWidget {
   const _ResourcesSection({
-    this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
   @override
@@ -818,8 +830,8 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
 
 class _NotesSection extends StatelessWidget {
   const _NotesSection({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
   @override
@@ -861,8 +873,8 @@ class _NotesSection extends StatelessWidget {
 
 class _BattleGoalCheckmarksSection extends StatelessWidget {
   const _BattleGoalCheckmarksSection({
-    @required this.character,
-    Key key,
+    required this.character,
+    Key? key,
   }) : super(key: key);
   final Character character;
 

@@ -9,7 +9,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   int _previousEnhancements = SharedPrefs().previousEnhancements;
 
-  Enhancement _enhancement = SharedPrefs().enhancementTypeIndex != 0
+  Enhancement? _enhancement = SharedPrefs().enhancementTypeIndex != 0
       ? EnhancementData.enhancements[SharedPrefs().enhancementTypeIndex]
       : null;
 
@@ -82,11 +82,13 @@ class EnhancementCalculatorModel with ChangeNotifier {
     return (cost * 0.8).ceil();
   }
 
-  Enhancement get enhancement => _enhancement;
+  Enhancement? get enhancement => _enhancement;
 
-  set enhancement(Enhancement enhancement) {
-    SharedPrefs().enhancementTypeIndex =
-        EnhancementData.enhancements.indexOf(enhancement);
+  set enhancement(Enhancement? enhancement) {
+    if (enhancement != null) {
+      SharedPrefs().enhancementTypeIndex =
+          EnhancementData.enhancements.indexOf(enhancement);
+    }
     _enhancement = enhancement;
   }
 
@@ -95,8 +97,11 @@ class EnhancementCalculatorModel with ChangeNotifier {
   /// Triple the cost if [_persistent]
   /// Subtract 10 gold if [_enhancerLvl2]
   int enhancementCost(
-    Enhancement enhancement,
+    Enhancement? enhancement,
   ) {
+    if (enhancement == null) {
+      return 0;
+    }
     int enhancementCost = enhancement.cost(
       gloomhavenMode: SharedPrefs().gloomhavenMode,
     );
@@ -189,7 +194,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     bool notify = true,
   }) {
     /// get the base cost of the selected enhancement
-    totalCost = enhancement != null ? enhancementCost(enhancement) : 0;
+    totalCost = enhancementCost(enhancement);
 
     /// add 25g for each [cardLevel] beyond 1
     totalCost += cardLevelPenalty(cardLevel);
@@ -214,18 +219,19 @@ class EnhancementCalculatorModel with ChangeNotifier {
     }
   }
 
-  void gameVersionToggled(bool value) {
-    if (enhancement == null) {
-      notifyListeners();
-    } else {
-      enhancementSelected(enhancement);
+  void gameVersionToggled() {
+    if (enhancement != null) {
+      enhancementSelected(enhancement!);
     }
+    notifyListeners();
   }
 
   void enhancementSelected(Enhancement selectedEnhancement) {
+    // This is to handle the case where the user has disarm or ward selected,
+    // and flips the game version switch
     if ((!SharedPrefs().gloomhavenMode &&
-            selectedEnhancement?.name == 'Disarm') ||
-        (SharedPrefs().gloomhavenMode && selectedEnhancement?.name == 'Ward')) {
+            selectedEnhancement.name == 'Disarm') ||
+        (SharedPrefs().gloomhavenMode && selectedEnhancement.name == 'Ward')) {
       _enhancement = null;
       SharedPrefs().remove('enhancementType');
       notifyListeners();
@@ -265,7 +271,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   static bool eligibleForMultipleTargets(
     Enhancement enhancement, {
-    bool gloomhavenMode,
+    required bool gloomhavenMode,
   }) {
     return gloomhavenMode && !enhancement.name.toLowerCase().contains('hex') ||
         (!gloomhavenMode &&

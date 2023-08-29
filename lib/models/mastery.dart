@@ -4,13 +4,13 @@ const String columnMasteryClass = 'Class';
 const String columnMasteryDetails = 'Details';
 
 class Mastery {
-  int masteryId;
-  String masteryClassCode;
-  String masteryDetails;
+  late int masteryId;
+  late String masteryClassCode;
+  late String masteryDetails;
 
   Mastery({
-    this.masteryClassCode,
-    this.masteryDetails,
+    required this.masteryClassCode,
+    required this.masteryDetails,
   });
 
   Mastery.fromMap(Map<String, dynamic> map) {

@@ -31,30 +31,30 @@ const String columnResourceSnowthistle = 'ResourceSnowThistle';
 const String columnIsRetired = 'IsRetired';
 
 class Character {
-  int id;
-  String uuid;
-  String name;
-  PlayerClass playerClass;
-  int previousRetirements;
-  int xp;
-  int gold;
-  String notes;
-  int checkMarks;
-  int resourceHide;
-  int resourceMetal;
-  int resourceLumber;
-  int resourceArrowvine;
-  int resourceAxenut;
-  int resourceRockroot;
-  int resourceFlamefruit;
-  int resourceCorpsecap;
-  int resourceSnowthistle;
-  bool isRetired;
+  int? id;
+  late String uuid;
+  late String name;
+  late PlayerClass playerClass;
+  late int previousRetirements;
+  late int xp;
+  late int gold;
+  late String notes;
+  late int checkMarks;
+  late int resourceHide;
+  late int resourceMetal;
+  late int resourceLumber;
+  late int resourceArrowvine;
+  late int resourceAxenut;
+  late int resourceRockroot;
+  late int resourceFlamefruit;
+  late int resourceCorpsecap;
+  late int resourceSnowthistle;
+  bool isRetired = false;
   Character({
     this.id,
-    this.uuid,
-    this.name,
-    this.playerClass,
+    required this.uuid,
+    required this.name,
+    required this.playerClass,
     this.previousRetirements = 0,
     this.xp = 0,
     this.gold = 0,
@@ -81,17 +81,18 @@ class Character {
   bool includeMasteries = true;
 
   Character.fromMap(Map<String, dynamic> map) {
-    id = map[columnCharacterId];
+    id = map[columnCharacterId] ?? '';
+    // This handles for legacy characters that don't have a uuid
     uuid = map[columnCharacterUuid] ?? map[columnCharacterId].toString();
     name = map[columnCharacterName];
     playerClass = CharacterData.playerClassByClassCode(
       map[columnCharacterClassCode].toLowerCase(),
     );
     previousRetirements = map[columnPreviousRetirements];
-    xp = map[columnCharacterXp];
-    gold = map[columnCharacterGold];
-    notes = map[columnCharacterNotes];
-    checkMarks = map[columnCharacterCheckMarks];
+    xp = map[columnCharacterXp] ?? 0;
+    gold = map[columnCharacterGold] ?? 0;
+    notes = map[columnCharacterNotes] ?? '';
+    checkMarks = map[columnCharacterCheckMarks] ?? 0;
     resourceHide = map[columnResourceHide] ?? 0;
     resourceMetal = map[columnResourceMetal] ?? 0;
     resourceLumber = map[columnResourceLumber] ?? 0;
@@ -106,7 +107,7 @@ class Character {
 
   Map<String, dynamic> toMap() => {
         columnCharacterId: id,
-        columnCharacterUuid: uuid ?? id,
+        columnCharacterUuid: uuid,
         columnCharacterName: name,
         columnCharacterClassCode: playerClass.classCode.toLowerCase(),
         columnPreviousRetirements: previousRetirements,

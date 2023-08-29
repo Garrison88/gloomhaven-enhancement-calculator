@@ -4,21 +4,21 @@ class Enhancement {
   final EnhancementCategory category;
   final String name;
   final int ghCost;
-  final int fhCost;
-  final String iconPath;
+  final int? fhCost;
+  String? iconPath;
   final bool invertIconColor;
 
   Enhancement(
     this.category,
     this.name, {
-    this.ghCost,
     this.iconPath,
+    this.ghCost = 0,
     this.fhCost,
     this.invertIconColor = false,
   });
 
   int cost({
-    bool gloomhavenMode,
+    required bool gloomhavenMode,
   }) =>
       gloomhavenMode ? ghCost : fhCost ?? ghCost;
 }

@@ -27,8 +27,8 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // Only allow a single open connection to the database.
-  static Database _database;
-  String databasePath;
+  static Database? _database;
+  // String? databasePath;
   List<String> tables = [
     tableCharacters,
     tableCharacterPerks,
@@ -41,7 +41,7 @@ class DatabaseHelper {
   _initDatabase() async {
     // The path_provider plugin gets the right directory for Android or iOS.
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    databasePath = join(
+    String databasePath = join(
       documentsDirectory.path,
       _databaseName,
     );
@@ -226,7 +226,7 @@ class DatabaseHelper {
     )
         .onError((error, stackTrace) async {
       await restoreBackup(fallBack);
-      throw error;
+      throw error ?? 'Error restoring backup';
     });
   }
 
@@ -377,7 +377,7 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<List> queryPerks(
+  Future<List<Map<String, Object?>>> queryPerks(
     String classCode,
   ) async {
     Database db = await database;
@@ -389,7 +389,7 @@ class DatabaseHelper {
     return result.toList();
   }
 
-  Future<List> queryMasteries(
+  Future<List<Map<String, Object?>>> queryMasteries(
     String classCode,
   ) async {
     Database db = await database;
@@ -401,7 +401,7 @@ class DatabaseHelper {
     return result.toList();
   }
 
-  Future<List> queryAllCharacters() async {
+  Future<List<Character>> queryAllCharacters() async {
     Database db = await database;
     List<Character> list = [];
     await db.query(tableCharacters).then(

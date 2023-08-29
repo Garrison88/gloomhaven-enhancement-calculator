@@ -12,9 +12,9 @@ class MasteryRow extends StatefulWidget {
   final Mastery mastery;
 
   const MasteryRow({
-    Key key,
-    @required this.character,
-    @required this.mastery,
+    Key? key,
+    required this.character,
+    required this.mastery,
   }) : super(key: key);
 
   @override
@@ -50,14 +50,17 @@ class _MasteryRowState extends State<MasteryRow> {
                     mastery.associatedMasteryId == widget.mastery.masteryId)
                 .characterMasteryAchieved,
             onChanged: charactersModel.isEditMode && !widget.character.isRetired
-                ? (value) => charactersModel.toggleMastery(
-                      characterMasteries: widget.character.characterMasteries,
-                      mastery: widget.character.characterMasteries.firstWhere(
+                ? (bool? value) => value != null
+                    ? charactersModel.toggleMastery(
+                        characterMasteries: widget.character.characterMasteries,
+                        mastery: widget.character.characterMasteries.firstWhere(
                           (mastery) =>
                               mastery.associatedMasteryId ==
-                              widget.mastery.masteryId),
-                      value: value,
-                    )
+                              widget.mastery.masteryId,
+                        ),
+                        value: value,
+                      )
+                    : null
                 : null,
           ),
           Container(
@@ -72,10 +75,10 @@ class _MasteryRowState extends State<MasteryRow> {
             margin: const EdgeInsets.only(right: 12),
           ),
           SizeProviderWidget(
-            onChildSize: (val) {
-              if (context != null && context.mounted) {
+            onChildSize: (Size? size) {
+              if (size != null && context.mounted) {
                 setState(() {
-                  height = val.height * 0.9;
+                  height = size.height * 0.9;
                 });
               }
             },
@@ -84,7 +87,7 @@ class _MasteryRowState extends State<MasteryRow> {
                 padding: const EdgeInsets.only(right: smallPadding),
                 child: RichText(
                   text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           letterSpacing: 0.7,
                         ),
                     children: Utils.generateCheckRowDetails(

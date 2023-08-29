@@ -12,9 +12,9 @@ class PerkRow extends StatefulWidget {
   final List<Perk> perks;
 
   const PerkRow({
-    Key key,
-    @required this.character,
-    @required this.perks,
+    Key? key,
+    required this.character,
+    required this.perks,
   }) : super(key: key);
 
   @override
@@ -62,18 +62,20 @@ class _PerkRowState extends State<PerkRow> {
                               .characterPerkIsSelected,
                           onChanged: charactersModel.isEditMode &&
                                   !widget.character.isRetired
-                              ? (value) {
-                                  charactersModel.togglePerk(
-                                    characterPerks:
-                                        widget.character.characterPerks,
-                                    perk: widget.character.characterPerks
-                                        .firstWhere(
-                                      (element) =>
-                                          element.associatedPerkId ==
-                                          widget.perks[index].perkId,
-                                    ),
-                                    value: value,
-                                  );
+                              ? (bool? value) {
+                                  if (value != null) {
+                                    charactersModel.togglePerk(
+                                      characterPerks:
+                                          widget.character.characterPerks,
+                                      perk: widget.character.characterPerks
+                                          .firstWhere(
+                                        (element) =>
+                                            element.associatedPerkId ==
+                                            widget.perks[index].perkId,
+                                      ),
+                                      value: value,
+                                    );
+                                  }
                                 }
                               : null,
                         );
@@ -93,15 +95,18 @@ class _PerkRowState extends State<PerkRow> {
                           .characterPerkIsSelected,
                       onChanged: charactersModel.isEditMode &&
                               !widget.character.isRetired
-                          ? (value) {
-                              charactersModel.togglePerk(
-                                characterPerks: widget.character.characterPerks,
-                                perk: widget.character.characterPerks
-                                    .firstWhere((element) =>
-                                        element.associatedPerkId ==
-                                        widget.perks[index].perkId),
-                                value: value,
-                              );
+                          ? (bool? value) {
+                              if (value != null) {
+                                charactersModel.togglePerk(
+                                  characterPerks:
+                                      widget.character.characterPerks,
+                                  perk: widget.character.characterPerks
+                                      .firstWhere((element) =>
+                                          element.associatedPerkId ==
+                                          widget.perks[index].perkId),
+                                  value: value,
+                                );
+                              }
                             }
                           : null,
                     ),
@@ -118,17 +123,17 @@ class _PerkRowState extends State<PerkRow> {
                   margin: const EdgeInsets.only(right: 12),
                 ),
           SizeProviderWidget(
-            onChildSize: (val) {
-              if (context != null && context.mounted) {
+            onChildSize: (Size? size) {
+              if (size != null && context.mounted) {
                 setState(() {
-                  height = val.height * 0.9;
+                  height = size.height * 0.9;
                 });
               }
             },
             child: Expanded(
               child: RichText(
                 text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         letterSpacing: 0.7,
                       ),
                   children: Utils.generateCheckRowDetails(

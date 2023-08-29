@@ -319,8 +319,8 @@ class EnhancementData {
 
   static List<DropdownMenuItem<int>> cardLevels(
     BuildContext context, {
-    bool partyBoon,
-    bool enhancerLvl3,
+    required bool partyBoon,
+    required bool enhancerLvl3,
   }) {
     EnhancementCalculatorModel enhancementCalculatorModel =
         Provider.of(context, listen: false);
@@ -339,7 +339,7 @@ class EnhancementData {
                   if (enhancerLvl3 || (!enhancerLvl3 && partyBoon)) ...[
                     TextSpan(
                       text: '${25 * x}g',
-                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             decoration: TextDecoration.lineThrough,
                             color: Colors.grey,
                           ),
@@ -392,7 +392,7 @@ class EnhancementData {
                   if (enhancerLvl4) ...[
                     TextSpan(
                       text: '${75 * x}g',
-                      style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             decoration: TextDecoration.lineThrough,
                             color: Colors.grey,
                           ),
@@ -423,8 +423,8 @@ class EnhancementData {
 
   static List<DropdownMenuItem<Enhancement>> enhancementTypes(
     BuildContext context, {
-    bool gloomhavenMode,
-    bool enhancerLvl2,
+    required bool gloomhavenMode,
+    required bool enhancerLvl2,
   }) {
     EnhancementCalculatorModel enhancementCalculatorModel =
         Provider.of(context, listen: false);
@@ -613,7 +613,7 @@ class EnhancementData {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  .copyWith(
+                                  ?.copyWith(
                                     decoration: TextDecoration.lineThrough,
                                     decorationColor: Colors.grey,
                                     color: Colors.grey,

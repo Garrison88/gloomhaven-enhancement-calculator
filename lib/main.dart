@@ -46,15 +46,18 @@ main() async {
           ),
         )
       ],
-      child: Builder(builder: (context) {
-        return MaterialApp(
-          title: Platform.isIOS ? 'Gloomhaven Utility' : 'Gloomhaven Companion',
-          home: const Home(),
-          themeMode: context.watch<AppModel>().themeMode,
-          darkTheme: AppTheme.darkTheme(),
-          theme: AppTheme.lightTheme(),
-        );
-      }),
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            title:
+                Platform.isIOS ? 'Gloomhaven Utility' : 'Gloomhaven Companion',
+            home: const Home(),
+            themeMode: context.watch<AppModel>().themeMode,
+            darkTheme: AppTheme.darkTheme(),
+            theme: AppTheme.lightTheme(),
+          );
+        },
+      ),
     ),
   );
 }

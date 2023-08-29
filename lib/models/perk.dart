@@ -5,11 +5,11 @@ const String columnPerkDetails = 'Details';
 const String columnPerkIsGrouped = 'IsGrouped';
 
 class Perk {
-  int perkId;
-  String perkClassCode;
-  int numOfPerks;
-  String perkDetails;
-  bool perkIsGrouped;
+  late int perkId;
+  late String perkClassCode;
+  late int numOfPerks;
+  late String perkDetails;
+  late bool perkIsGrouped = false;
 
   Perk(
     this.perkClassCode,

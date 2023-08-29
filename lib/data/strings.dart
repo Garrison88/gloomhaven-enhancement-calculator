@@ -10,8 +10,8 @@ class Strings {
 
   static RichText generalInfoBody(
     BuildContext context, {
-    @required bool gloomhavenMode,
-    bool darkMode,
+    required bool gloomhavenMode,
+    required bool darkMode,
   }) {
     return RichText(
       text: TextSpan(
@@ -23,7 +23,7 @@ class Strings {
           TextSpan(
             text:
                 " ${gloomhavenMode ? 'The Power of Enhancement global achievement' : 'The Enhancer (Building 44)'}",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -35,7 +35,7 @@ class Strings {
           if (gloomhavenMode)
             TextSpan(
               text: ' less than or equal to ',
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -58,7 +58,7 @@ class Strings {
           ),
           TextSpan(
             text: " it persists through subsequent playthroughs ",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -67,7 +67,7 @@ class Strings {
                   "with that class (unless you have chosen to use the 'Temporary Enhancement' variant). A "),
           TextSpan(
               text: "main ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
           const TextSpan(
@@ -75,19 +75,19 @@ class Strings {
                   "whereas a"),
           TextSpan(
               text: " non-main ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
           const TextSpan(text: "ability is written in a smaller font below a"),
           TextSpan(
               text: " main ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
           const TextSpan(text: "ability. A summon's stats can"),
           TextSpan(
             text: " only ",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -150,7 +150,7 @@ class Strings {
                     "enhancement on the"),
             TextSpan(
               text: " same action. ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -159,7 +159,7 @@ class Strings {
                     "or bottom half of a card. This fee"),
             TextSpan(
               text: " does not ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -187,7 +187,7 @@ class Strings {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  .copyWith(fontWeight: FontWeight.bold),
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const TextSpan(
                 text:
@@ -197,7 +197,7 @@ class Strings {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  .copyWith(fontWeight: FontWeight.bold),
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const TextSpan(text: "subject to the multiple targets multiplier."),
           ]),
@@ -218,7 +218,7 @@ class Strings {
                   " with a"),
           TextSpan(
               text: " numerical value. ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
           const TextSpan(text: "That value is increased by 1."),
@@ -226,7 +226,7 @@ class Strings {
             const TextSpan(text: " Summon stat enhancements are"),
             TextSpan(
               text: " never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -246,7 +246,7 @@ class Strings {
             const TextSpan(text: "These enhancements can be placed on any"),
             TextSpan(
                 text: " main ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
             const TextSpan(
@@ -256,7 +256,7 @@ class Strings {
                     "added multiple times to the same ability line. Summon abilities"),
             TextSpan(
                 text: " cannot ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
             const TextSpan(text: "be enhanced with effects.")
@@ -273,7 +273,7 @@ class Strings {
             const TextSpan(text: "These enhancements can be placed on any"),
             TextSpan(
                 text: " main ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
             const TextSpan(
@@ -282,7 +282,7 @@ class Strings {
                     "Bless can be added multiple times to the same ability line. Summon abilities"),
             TextSpan(
                 text: " cannot ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
             const TextSpan(text: "be enhanced with effects.")
@@ -302,7 +302,7 @@ class Strings {
                     "The movement is now considered a Jump. A summon's Move"),
             TextSpan(
                 text: " cannot ",
-                style: Theme.of(context).textTheme.bodyMedium.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     )),
             const TextSpan(text: "be enhanced with Jump.")
@@ -322,7 +322,7 @@ class Strings {
           const TextSpan(text: "These enhancements can be placed on any"),
           TextSpan(
             text: " main ",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -333,7 +333,7 @@ class Strings {
             const TextSpan(text: " Element enhancements are"),
             TextSpan(
               text: " never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -356,7 +356,7 @@ class Strings {
           const TextSpan(text: "This enhancement can be placed on any"),
           TextSpan(
               text: " main ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   )),
           const TextSpan(
@@ -367,7 +367,7 @@ class Strings {
             const TextSpan(text: " Element enhancements are"),
             TextSpan(
               text: " never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -392,7 +392,7 @@ class Strings {
                     "depiction of an"),
             TextSpan(
               text: " area attack. ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -401,7 +401,7 @@ class Strings {
                     "the attack. Adding a Hex is"),
             TextSpan(
               text: " never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -418,9 +418,9 @@ class Strings {
   // multiple targets
   static RichText multipleTargetsInfoBody(
     BuildContext context, {
-    bool gloomhavenMode,
-    bool enhancerLvl2,
-    bool darkMode,
+    required bool gloomhavenMode,
+    required bool enhancerLvl2,
+    required bool darkMode,
   }) {
     return RichText(
       text: TextSpan(
@@ -432,7 +432,7 @@ class Strings {
                   "is"),
           TextSpan(
             text: " doubled",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -450,7 +450,7 @@ class Strings {
             const TextSpan(text: "This will"),
             TextSpan(
               text: " always ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -462,7 +462,7 @@ class Strings {
             // const TextSpan(text: "apply to adding +1 Target, and it will"),
             TextSpan(
               text: "never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -471,7 +471,7 @@ class Strings {
             const TextSpan(text: "This will"),
             TextSpan(
               text: " never ",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -520,7 +520,7 @@ class Strings {
                   "If the action has a Persistent icon, whether or not there is a Lost icon, triple the base cost. This"),
           TextSpan(
             text: " does not ",
-            style: Theme.of(context).textTheme.bodyMedium.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -542,7 +542,7 @@ class Strings {
                     " equal to"),
             TextSpan(
               text: " 15x(L+1)",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -553,7 +553,7 @@ class Strings {
                     " You are also alloted an amount of gold equal to"),
             TextSpan(
               text: " 10xP+20",
-              style: Theme.of(context).textTheme.bodyMedium.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
