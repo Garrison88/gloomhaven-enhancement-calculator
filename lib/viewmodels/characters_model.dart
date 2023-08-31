@@ -218,9 +218,7 @@ class CharactersModel with ChangeNotifier {
       }
       if (currentCharacter != null) {
         previousRetirementsController.text =
-            currentCharacter!.previousRetirements != 0
-                ? '${currentCharacter!.previousRetirements}'
-                : '';
+            currentCharacter!.previousRetirements.toString();
         nameController.text = currentCharacter!.name;
         xpController.text =
             currentCharacter!.xp != 0 ? '${currentCharacter!.xp}' : '';

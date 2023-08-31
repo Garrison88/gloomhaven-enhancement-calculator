@@ -23,11 +23,11 @@ class InfoDialog extends StatefulWidget {
 }
 
 class _InfoDialogState extends State<InfoDialog> {
-  late final RichText _bodyText;
+  late RichText _bodyText;
 
   List<Enhancement> _titleIcons = [];
 
-  late final List<Enhancement> _eligibleForIcons;
+  late List<Enhancement> _eligibleForIcons;
 
   List<Widget> _createIconsListForDialog(List<Enhancement>? list) {
     List<Widget> icons = [];
@@ -326,10 +326,7 @@ class _InfoDialogState extends State<InfoDialog> {
           : Center(
               child: Text(
                 widget.title!,
-                style: const TextStyle(
-                  fontSize: 28.0,
-                  fontFamily: pirataOne,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
             ),

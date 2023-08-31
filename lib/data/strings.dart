@@ -41,7 +41,7 @@ class Strings {
             ),
           TextSpan(
             text:
-                "${gloomhavenMode ? 'the Prosperity level of Gloomhaven. ' : ''}\nOnly abilities with a "
+                "${gloomhavenMode ? 'the Prosperity level of Gloomhaven. ' : ''}\n\nOnly abilities with a "
                 "small translucent icon beside them can be enhanced, and only one "
                 "enhancement per icon can be added.",
           ),
@@ -54,7 +54,7 @@ class Strings {
             ),
           ],
           const TextSpan(
-            text: "Once an enhancement is placed,",
+            text: "\nOnce an enhancement is placed,",
           ),
           TextSpan(
             text: " it persists through subsequent playthroughs ",
@@ -64,7 +64,7 @@ class Strings {
           ),
           const TextSpan(
               text:
-                  "with that class (unless you have chosen to use the 'Temporary Enhancement' variant). A "),
+                  "with that class (unless you have chosen to use the 'Temporary Enhancement' variant).\n\nA "),
           TextSpan(
               text: "main ",
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -99,7 +99,7 @@ class Strings {
           if (!gloomhavenMode)
             ...Utils.generateCheckRowDetails(
               context,
-              "\nSome enhancements do not fall neatly into the categories on the cost chart. When determining their base cost, treat damage traps as ATTACK+1 enhancements (50g), healing traps as HEAL+1 enhancements (30g), and the movement of tokens and tiles as MOVE+1 enhancements (30g).",
+              "\n\nSome enhancements do not fall neatly into the categories on the cost chart. When determining their base cost, treat damage traps as ATTACK+1 enhancements (50g), healing traps as HEAL+1 enhancements (30g), and the movement of tokens and tiles as MOVE+1 enhancements (30g).",
               darkMode,
             ),
         ],
@@ -438,7 +438,8 @@ class Strings {
           ),
           const TextSpan(
             text:
-                " (as indicated by the trailing \u2020 character beside the Enhancement type cost). This includes abilities that target 'All adjacent enemies' or "
+                // " (as indicated by the trailing \u2020 character beside the Enhancement type cost)
+                ". This includes abilities that target 'All adjacent enemies' or "
                 "'All allies within",
           ),
           ...Utils.generateCheckRowDetails(
@@ -478,7 +479,7 @@ class Strings {
             ...Utils.generateCheckRowDetails(
               context,
               "apply to adding Target+1, enhancing an ability with an Element, "
-              "or adding a Hex.${enhancerLvl2 ? '\nThis multiplier is applied before the discount applied by upgrading the Enhancer (Building 44) to lvl 2. For example, adding WOUND with the Enhancer lvl 2 upgrade will cost 140 gold, calculated as (75x2)-10.' : ''}",
+              "or adding a Hex.${enhancerLvl2 ? '\nThis multiplier is applied before the discount applied by upgrading the Enhancer (Building 44) to lvl 2.\nFor example, with the Enhancer lvl 2 upgrade, adding WOUND to an action that has multiple targets will cost 140 gold, calculated as (75x2)-10.' : ''}",
               darkMode,
             ),
           ],
@@ -531,38 +532,49 @@ class Strings {
   }
 
   static String newCharacterInfoTitle = "New Character";
-  static RichText newCharacterInfoBody(BuildContext context) {
+  static RichText newCharacterInfoBody(
+    BuildContext context, {
+    required bool gloomhavenMode,
+  }) {
     return RichText(
       text: TextSpan(
           style: Theme.of(context).textTheme.bodyMedium,
-          children: <TextSpan>[
-            const TextSpan(
-                text:
-                    "When starting a new character in Gloomhaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city, gaining the benefits for each level in sequence. You are also alloted an amount of gold"
-                    " equal to"),
-            TextSpan(
-              text: " 15x(L+1)",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+          children: gloomhavenMode
+              ? <TextSpan>[
+                  const TextSpan(
+                      text:
+                          "When starting a new character in Gloomhaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city, gaining the benefits for each level in sequence.\nYou are also alloted an amount of gold"
+                          " equal to"),
+                  TextSpan(
+                    text: " 15x(L+1)",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-            ),
-            const TextSpan(
-                text:
-                    ", where L is your character's starting level. For example, "
-                    "if the city is at Prosperity Level 3, you could start a character at level 1, 2, or 3, and would be alloted 30, 45, or 60 gold, respectively.\n\nWhen starting a new character in Frosthaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city divided by 2 (rounded up), gaining the benefits for each level in sequence."
-                    " You are also alloted an amount of gold equal to"),
-            TextSpan(
-              text: " 10xP+20",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  const TextSpan(
+                      text:
+                          ", where L is your character's starting level.\nFor example, "
+                          "if the city is at Prosperity Level 3, you could start a character at level 1, 2, or 3, and would be alloted 30, 45, or 60 gold, respectively."),
+                ]
+              : <TextSpan>[
+                  const TextSpan(
+                    text:
+                        "When starting a new character in Frosthaven, you can choose to immediately level up to any level less than or equal to the current Prosperity Level of the city divided by 2 (rounded up), gaining the benefits for each level in sequence."
+                        "\nYou are also alloted an amount of gold equal to",
                   ),
-            ),
-            const TextSpan(
-                text:
-                    ", where 'P' is the current Prosperity Level. For example, if the city is at Prosperity Level 3, you could start a character at level 1 or 2, and would be alloted 40 gold. Unique to Frosthaven, this gold must be spent "
-                    "immediately on items in the available purchasable supply, and any "
-                    "unspent gold is forfeited."),
-          ]),
+                  TextSpan(
+                    text: " 10xP+20",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const TextSpan(
+                    text:
+                        ", where 'P' is the current Prosperity Level.\nFor example, if the city is at Prosperity Level 3, you could start a character at level 1 or 2, and would be alloted 40 gold. This gold must be spent "
+                        "immediately on items in the available purchasable supply, and any "
+                        "unspent gold is forfeited.",
+                  ),
+                ]),
     );
   }
 }

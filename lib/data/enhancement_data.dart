@@ -454,10 +454,13 @@ class EnhancementData {
                             ),
                             Text(
                               enhancement.name,
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             // add an empty spacer to the right to center the
                             // title
@@ -468,10 +471,13 @@ class EnhancementData {
                         : <Widget>[
                             Text(
                               enhancement.name,
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ],
                   ),

@@ -8,57 +8,19 @@ class AppTheme {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        fontFamily: highTower,
+        fontFamily: SharedPrefs().useDefaultFonts ? openSans : nyala,
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
-        textTheme: const TextTheme(
-          // This is used for TextFormField
-          titleMedium: TextStyle(
-            fontSize: 23.0,
-          ),
-          // subtitle1: TextStyle(
-          //   fontSize: 50.0,
-          // ),
-          // This is used as the default text (Text, AutoSizeText)
-          bodyMedium: TextStyle(
-            fontSize: 25.0,
-            letterSpacing: 0.7,
-            fontFamily: nyala,
-          ),
-          // Name
-          displayLarge: TextStyle(
-            fontSize: 40,
-            fontFamily: pirataOne,
-          ),
-          // Notes, Perks, and Masteries titles
-          headlineMedium: TextStyle(
-            fontFamily: pirataOne,
-            letterSpacing: 1.5,
-          ),
+        textTheme: SharedPrefs().useDefaultFonts
+            ? defaultTextTheme()
+            : customTextTheme(),
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: SharedPrefs().useDefaultFonts
+              ? defaultTextTheme().bodyMedium
+              : customTextTheme().bodyMedium,
         ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            textStyle: const TextStyle(
-              fontSize: secondaryFontSize,
-              fontFamily: nyala,
-            ),
-          ),
-        ),
-        checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.resolveWith(
-            getCheckboxColor,
-          ),
-          checkColor: MaterialStateProperty.resolveWith(
-            (Set<MaterialState> states) =>
-                states.contains(MaterialState.disabled)
-                    ? ThemeData.estimateBrightnessForColor(
-                                getPrimaryThemeColor()) ==
-                            Brightness.dark
-                        ? Colors.white
-                        : Colors.black87
-                    : null,
-          ),
-        ),
+        textButtonTheme: textButtonThemeData(),
+        checkboxTheme: checkboxThemeData(),
         colorScheme: ColorScheme.light(
           background: Colors.white,
           onBackground: Colors.black87,
@@ -77,15 +39,7 @@ class AppTheme {
         chipTheme: const ChipThemeData().copyWith(
           showCheckmark: false,
         ),
-        snackBarTheme: const SnackBarThemeData(
-          backgroundColor: Colors.white,
-          contentTextStyle: TextStyle(
-            fontFamily: highTower,
-            fontSize: 20,
-            color: Colors.black87,
-          ),
-          // actionTextColor: Colors.black,
-        ),
+        snackBarTheme: snackBarThemeData(),
         dividerTheme: DividerThemeData(
           color: Colors.grey.withOpacity(0.5),
         ),
@@ -96,54 +50,19 @@ class AppTheme {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        fontFamily: highTower,
+        fontFamily: SharedPrefs().useDefaultFonts ? openSans : nyala,
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
-        textTheme: const TextTheme(
-          // This is used for InputDecoration
-          titleMedium: TextStyle(
-            fontSize: 25.0,
-          ),
-          // This is used as the default text (Text, AutoSizeText)
-          bodyMedium: TextStyle(
-            fontSize: 25.0,
-            letterSpacing: 0.7,
-            fontFamily: nyala,
-          ),
-          // Name
-          displayLarge: TextStyle(
-            fontSize: 40,
-            fontFamily: pirataOne,
-          ),
-          // Notes, Perks, and Masteries titles
-          headlineMedium: TextStyle(
-            fontFamily: pirataOne,
-            letterSpacing: 1.5,
-          ),
+        textTheme: SharedPrefs().useDefaultFonts
+            ? defaultTextTheme()
+            : customTextTheme(),
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: SharedPrefs().useDefaultFonts
+              ? defaultTextTheme().bodyMedium
+              : customTextTheme().bodyMedium,
         ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            textStyle: const TextStyle(
-              fontSize: secondaryFontSize,
-              fontFamily: nyala,
-            ),
-          ),
-        ),
-        checkboxTheme: CheckboxThemeData(
-          fillColor: MaterialStateProperty.resolveWith(
-            getCheckboxColor,
-          ),
-          checkColor: MaterialStateProperty.resolveWith(
-            (Set<MaterialState> states) =>
-                states.contains(MaterialState.disabled)
-                    ? ThemeData.estimateBrightnessForColor(
-                                getPrimaryThemeColor()) ==
-                            Brightness.dark
-                        ? Colors.white
-                        : Colors.black87
-                    : null,
-          ),
-        ),
+        textButtonTheme: textButtonThemeData(),
+        checkboxTheme: checkboxThemeData(),
         colorScheme: ColorScheme.dark(
           primary: getPrimaryThemeColor(),
           secondary: getPrimaryThemeColor(),
@@ -164,17 +83,7 @@ class AppTheme {
         chipTheme: const ChipThemeData().copyWith(
           showCheckmark: false,
         ),
-        snackBarTheme: const SnackBarThemeData(
-          backgroundColor: Color(
-            0xff1c1b1f,
-          ),
-          contentTextStyle: TextStyle(
-            fontFamily: highTower,
-            fontSize: 20,
-            color: Colors.white,
-          ),
-          // actionTextColor: Colors.white,
-        ),
+        snackBarTheme: snackBarThemeData(),
         dividerTheme: DividerThemeData(
           color: Colors.grey.withOpacity(0.5),
         ),
@@ -183,6 +92,77 @@ class AppTheme {
 
 Color getPrimaryThemeColor() => Color(SharedPrefs().primaryClassColor);
 
+TextTheme customTextTheme() => const TextTheme(
+      // This is used for TextFormField
+      // titleMedium: const TextStyle(
+      //   fontSize: 40.0,
+      // ),
+      // This is used as the default text (Text, AutoSizeText)
+      bodyMedium: TextStyle(
+        fontSize: 25.0,
+        // letterSpacing: SharedPrefs().useDefaultFonts ? null : 0.7,
+        fontFamily: nyala,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 25,
+      ),
+      // // Name and Enhancement Cost
+      // displayLarge: TextStyle(
+      //   fontFamily: SharedPrefs().useDefaultFonts ? roboto : pirataOne,
+      // ),
+      // // Notes, Perks, and Masteries titles
+      headlineMedium: TextStyle(
+        // fontFamily: nyala,
+        letterSpacing: 1.5,
+        fontSize: 35,
+      ),
+    );
+
+TextTheme defaultTextTheme() => const TextTheme(
+      // This is used as the default text (Text, AutoSizeText)
+      bodyMedium: TextStyle(
+        fontSize: 20.0,
+        fontFamily: roboto,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 25,
+      ),
+    );
+
+CheckboxThemeData checkboxThemeData() => CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith(
+        getCheckboxColor,
+      ),
+      checkColor: MaterialStateProperty.resolveWith(
+        (Set<MaterialState> states) => states.contains(MaterialState.disabled)
+            ? ThemeData.estimateBrightnessForColor(getPrimaryThemeColor()) ==
+                    Brightness.dark
+                ? Colors.white
+                : Colors.black87
+            : null,
+      ),
+    );
+
+TextButtonThemeData textButtonThemeData() => TextButtonThemeData(
+        style: TextButton.styleFrom(
+      textStyle: SharedPrefs().useDefaultFonts
+          ? defaultTextTheme().bodyMedium
+          : customTextTheme().bodyMedium,
+    ));
+
+SnackBarThemeData snackBarThemeData() => SnackBarThemeData(
+      backgroundColor: SharedPrefs().darkTheme
+          ? const Color(
+              0xff1c1b1f,
+            )
+          : Colors.white,
+      contentTextStyle: TextStyle(
+        fontFamily: highTower,
+        fontSize: 20,
+        color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
+      ),
+      // actionTextColor: Colors.black,
+    );
 // Color getSecondaryThemeColor() => Color(
 //       CharacterData.playerClassByClassCode(
 //         SharedPrefs().currentPlayerClassCode,

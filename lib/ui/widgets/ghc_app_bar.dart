@@ -254,19 +254,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                style: Theme.of(context)
-                                    .textButtonTheme
-                                    .style
-                                    ?.copyWith(
-                                      foregroundColor: MaterialStateProperty
-                                          .resolveWith<Color?>(
-                                        (Set<MaterialState> states) =>
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? Colors.grey[300]
-                                                : Colors.black87,
-                                      ),
-                                    ),
                                 child: const Text(
                                   'Cancel',
                                 ),
@@ -283,16 +270,22 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                             Colors.red.withOpacity(0.75),
                                       ),
                                     ),
-                                onPressed: () => Navigator.pop(context, true),
+                                onPressed: () => Navigator.pop(
+                                  context,
+                                  true,
+                                ),
                                 icon: const Icon(
                                   Icons.delete_outline,
                                   color: Colors.white,
                                 ),
-                                label: const Text(
+                                label: Text(
                                   'Delete',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                      ),
                                 ),
                               )
                             ],

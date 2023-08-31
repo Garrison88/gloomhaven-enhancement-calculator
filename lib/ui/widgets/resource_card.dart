@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../models/resource.dart';
@@ -21,72 +22,35 @@ class ResourceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: canEdit ? 90 : 70,
+      height: canEdit ? 100 : 75,
       width: 100,
-      child: Stack(
-        alignment:
-            canEdit ? AlignmentDirectional.topStart : Alignment.centerRight,
-        children: <Widget>[
-          ResourceDetails(
-            name: resource.name,
-            count: count,
-            decreaseCount: decreaseCount,
-            increaseCount: increaseCount,
-            canEdit: canEdit,
-          ),
-          Align(
-            alignment: canEdit ? Alignment.topLeft : Alignment.centerLeft,
-            child: canEdit
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SvgPicture.asset(
-                        resource.icon,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black87,
-                          BlendMode.srcIn,
-                        ),
-                        height: iconSize,
-                        width: iconSize,
-                      ),
-                      Text(
-                        resource.name,
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(),
-                    ],
-                  )
-                : SvgPicture.asset(
-                    resource.icon,
-                    colorFilter: ColorFilter.mode(
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : Colors.black87,
-                      BlendMode.srcIn,
-                    ),
-                    height: iconSize,
-                    width: iconSize,
-                  ),
-          ),
-        ],
+      child: Card(
+        elevation: 4,
+        child: Stack(
+          children: <Widget>[
+            ResourceDetails(
+              resource: resource,
+              count: count,
+              decreaseCount: decreaseCount,
+              increaseCount: increaseCount,
+              canEdit: canEdit,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class ResourceDetails extends StatelessWidget {
-  final String name;
+  final Resource resource;
   final int count;
   final Function() decreaseCount;
   final Function() increaseCount;
   final bool canEdit;
   const ResourceDetails({
     Key? key,
-    required this.name,
+    required this.resource,
     required this.count,
     required this.decreaseCount,
     required this.increaseCount,
@@ -95,50 +59,62 @@ class ResourceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: canEdit ? 100 : 80,
-      child: Card(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (!canEdit)
-                    Text(
-                      name,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  Text('$count'),
-                ],
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: AutoSizeText(
+            resource.name,
+            maxLines: 1,
+            maxFontSize: 18,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Center(
+            child: SvgPicture.asset(
+              resource.icon,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.black87.withOpacity(0.05),
+                BlendMode.srcIn,
               ),
             ),
-            if (canEdit) ...[
-              Positioned(
-                bottom: -smallPadding,
-                left: -2,
-                child: IconButton(
-                  onPressed: () => decreaseCount(),
-                  icon: const Icon(
-                    Icons.remove_circle,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: -smallPadding,
-                right: -2,
-                child: IconButton(
-                  onPressed: () => increaseCount(),
-                  icon: const Icon(
-                    Icons.add_circle,
-                  ),
-                ),
-              ),
-            ]
-          ],
+          ),
         ),
-      ),
+        Positioned(
+          bottom: canEdit ? null : 8,
+          child: Center(
+            child: Text(
+              '$count',
+            ),
+          ),
+        ),
+        if (canEdit) ...[
+          Positioned(
+            bottom: -smallPadding,
+            left: -2,
+            child: IconButton(
+              onPressed: () => decreaseCount(),
+              icon: const Icon(
+                Icons.remove_circle,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -smallPadding,
+            right: -2,
+            child: IconButton(
+              onPressed: () => increaseCount(),
+              icon: const Icon(
+                Icons.add_circle,
+              ),
+            ),
+          ),
+        ]
+      ],
     );
   }
 }

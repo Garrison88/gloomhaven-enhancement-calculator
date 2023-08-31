@@ -7,11 +7,19 @@ class AppModel extends ChangeNotifier {
   final PageController pageController = PageController();
   ThemeMode _themeMode =
       SharedPrefs().darkTheme ? ThemeMode.dark : ThemeMode.light;
+  bool _useDefaultFonts = SharedPrefs().useDefaultFonts;
 
   ThemeMode get themeMode => _themeMode;
 
   set themeMode(ThemeMode mode) {
     _themeMode = mode;
+    notifyListeners();
+  }
+
+  bool get useDefaultFonts => _useDefaultFonts;
+
+  set useDefaultFonts(bool mode) {
+    _useDefaultFonts = mode;
     notifyListeners();
   }
 

@@ -143,67 +143,35 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
       children: <Widget>[
         Row(
           children: [
-            // TODO: problematic to use null assertions here?
-            (!context.watch<CharactersModel>().isEditMode &&
-                        charactersModel.currentCharacter!.previousRetirements ==
-                            0) ||
-                    (charactersModel.currentCharacter!.isRetired &&
-                        charactersModel.currentCharacter!.previousRetirements ==
-                            0)
-                ? Container()
-                : Container(
-                    constraints: const BoxConstraints(maxWidth: 175),
-                    child: TextFormField(
-                      textAlign: context.watch<CharactersModel>().isEditMode &&
-                              !character.isRetired
-                          ? TextAlign.center
-                          : TextAlign.start,
-                      style: Theme.of(context).textTheme.titleMedium,
-                      enableInteractiveSelection: false,
-                      onChanged: (String value) =>
-                          charactersModel.updateCharacter(
-                        character
-                          ..previousRetirements =
-                              value.isEmpty ? 0 : int.parse(value),
-                      ),
-                      enabled: context.watch<CharactersModel>().isEditMode &&
-                          !character.isRetired,
-                      decoration: InputDecoration(
-                        labelText: 'Previous Retirements',
-                        border: context.watch<CharactersModel>().isEditMode &&
-                                !character.isRetired
-                            ? null
-                            : InputBorder.none,
-                      ),
-                      // textAlign: TextAlign.center,
-                      controller: charactersModel.previousRetirementsController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(
-                            RegExp('[\\.|\\,|\\ |\\-]'))
-                      ],
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-            // : Text(
-            //     'Retirements: ${character.previousRetirements}',
-            //     // style: Theme.of(context).textTheme.titleMedium,
-            //     textAlign: TextAlign.center,
-            //     // style: Theme.of(context).textTheme.titleSmall,
-            //   ),
-            // IconButton(
-            //   icon: const Icon(
-            //     Icons.info_outline,
-            //   ),
-            //   onPressed: () => showDialog<void>(
-            //     context: context,
-            //     builder: (_) {
-            //       return InfoDialog(
-            //         title: Strings.previousRetirementsInfoTitle,
-            //         message: Strings.previousRetirementsInfoBody(context),
-            //       );
-            //     },
-            //   ),
-            // ),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 190),
+              child: TextField(
+                textAlign: context.watch<CharactersModel>().isEditMode &&
+                        !character.isRetired
+                    ? TextAlign.center
+                    : TextAlign.start,
+                enableInteractiveSelection: false,
+                onChanged: (String value) => charactersModel.updateCharacter(
+                  character
+                    ..previousRetirements =
+                        value.isEmpty ? 0 : int.parse(value),
+                ),
+                enabled: context.watch<CharactersModel>().isEditMode &&
+                    !character.isRetired,
+                decoration: InputDecoration(
+                  labelText: 'Previous Retirements',
+                  border: context.watch<CharactersModel>().isEditMode &&
+                          !character.isRetired
+                      ? null
+                      : InputBorder.none,
+                ),
+                controller: charactersModel.previousRetirementsController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]'))
+                ],
+                keyboardType: TextInputType.number,
+              ),
+            ),
           ],
         ),
         Tooltip(
@@ -277,14 +245,14 @@ class _NameAndClassSection extends StatelessWidget {
                 minLines: 1,
                 maxLines: 2,
                 controller: charactersModel.nameController,
-                style: Theme.of(context).textTheme.displayLarge,
+                style: Theme.of(context).textTheme.displayMedium,
                 textAlign: TextAlign.center,
                 textCapitalization: TextCapitalization.words,
               )
             : AutoSizeText(
                 character.name,
                 maxLines: 2,
-                style: Theme.of(context).textTheme.displayLarge,
+                style: Theme.of(context).textTheme.displayMedium,
                 textAlign: TextAlign.center,
               ),
         Row(
@@ -309,11 +277,10 @@ class _NameAndClassSection extends StatelessWidget {
                   ) =>
                       Text(
                     '${Character.level(character.xp)}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
-                      fontSize: titleFontSize - 7,
-                      fontFamily: pirataOne,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontSize: titleFontSize - 7,
+                          color: Theme.of(context).colorScheme.background,
+                        ),
                   ),
                 ),
               ],
@@ -435,7 +402,6 @@ class _StatsSection extends StatelessWidget {
                               );
                             },
                             textAlignVertical: TextAlignVertical.center,
-                            style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                             controller: charactersModel.xpController,
                             inputFormatters: [
@@ -533,7 +499,6 @@ class _StatsSection extends StatelessWidget {
                                 ..gold = value == '' ? 0 : int.parse(value),
                             ),
                             textAlignVertical: TextAlignVertical.center,
-                            style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                             controller: charactersModel.goldController,
                             inputFormatters: [
@@ -849,7 +814,6 @@ class _NotesSection extends StatelessWidget {
         ),
         context.watch<CharactersModel>().isEditMode && !character.isRetired
             ? TextField(
-                style: Theme.of(context).textTheme.titleMedium,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 onChanged: (String value) {

@@ -85,12 +85,13 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         return Stack(
           children: <Widget>[
             Positioned.fill(
-                child: GestureDetector(
-              onTap: () => closeMenu(),
-              child: Container(
-                color: Colors.transparent,
+              child: GestureDetector(
+                onTap: closeMenu,
+                child: Container(
+                  color: Colors.transparent,
+                ),
               ),
-            )),
+            ),
             Positioned(
               top: buttonPosition.dy - 100,
               left: buttonPosition.dx,
@@ -98,26 +99,28 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               child: Material(
                 color: Colors.transparent,
                 child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(
-                      _levels.length,
-                      (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            _levelTextFieldController.text =
-                                _levels[index].toString();
-                            closeMenu();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(smallPadding),
-                            child: Text(
-                              'Level ${_levels[index].toString()}',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: _levels.length,
+                    itemBuilder: (
+                      context,
+                      index,
+                    ) {
+                      return ListTile(
+                        visualDensity: VisualDensity.compact,
+                        onTap: () {
+                          _levelTextFieldController.text =
+                              _levels[index].toString();
+                          closeMenu();
+                        },
+                        title: Text(
+                          'Level ${_levels[index].toString()}',
+                          textAlign: TextAlign.center,
+                          // style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -182,7 +185,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        style: Theme.of(context).textTheme.titleMedium,
                         autofocus: true,
                         textCapitalization: TextCapitalization.words,
                         autocorrect: false,
@@ -210,7 +212,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        style: Theme.of(context).textTheme.titleMedium,
                         readOnly: true,
                         controller: _classTextFieldController,
                         decoration: const InputDecoration(
@@ -249,24 +250,44 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-                TextFormField(
-                  style: Theme.of(context).textTheme.titleMedium,
-                  enableInteractiveSelection: false,
-                  key: _levelKey,
-                  controller: _levelTextFieldController,
-                  readOnly: true,
-                  onTap: () => isLevelMenuOpen ? closeMenu() : openMenu(),
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.arrow_drop_down),
-                    suffixIconConstraints: BoxConstraints(
-                      maxHeight: 0,
-                      minWidth: 48,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        enableInteractiveSelection: false,
+                        key: _levelKey,
+                        controller: _levelTextFieldController,
+                        readOnly: true,
+                        onTap: isLevelMenuOpen ? closeMenu : openMenu,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Icons.arrow_drop_down),
+                          suffixIconConstraints: BoxConstraints(
+                            maxHeight: 0,
+                            minWidth: 48,
+                          ),
+                          labelText: 'Starting Level',
+                        ),
+                      ),
                     ),
-                    labelText: 'Starting Level',
-                  ),
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: SvgPicture.asset(
+                          'images/level.svg',
+                          // width: iconSize,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onBackground,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 // DropdownButton<PersonalGoal>(
                 //   value: _personalGoal,
@@ -305,7 +326,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 //   ),
                 // ),
                 TextFormField(
-                  style: Theme.of(context).textTheme.titleMedium,
                   enableInteractiveSelection: false,
                   controller: _previousRetirementsTextFieldController,
                   decoration: const InputDecoration(
@@ -322,7 +342,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   HighlightedWidget(
                     color: const Color(0xff6ab7ff),
                     child: TextFormField(
-                      style: Theme.of(context).textTheme.titleMedium,
                       enableInteractiveSelection: false,
                       controller: _prosperityLevelTextFieldController,
                       decoration: const InputDecoration(
@@ -350,7 +369,10 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         builder: (_) {
                           return InfoDialog(
                             title: Strings.newCharacterInfoTitle,
-                            message: Strings.newCharacterInfoBody(context),
+                            message: Strings.newCharacterInfoBody(
+                              context,
+                              gloomhavenMode: _gloomhavenMode,
+                            ),
                           );
                         },
                       ),
@@ -424,12 +446,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          style: Theme.of(context).textButtonTheme.style?.copyWith(
-                foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) =>
-                      Theme.of(context).colorScheme.onBackground,
-                ),
-              ),
           onPressed: () => Navigator.pop(context, false),
           child: const Text(
             'Cancel',
@@ -463,11 +479,11 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             );
             Navigator.pop(context, true);
           },
-          label: const Text(
+          label: Text(
             'Create',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.white,
+                ),
           ),
           icon: const Icon(
             Icons.check,

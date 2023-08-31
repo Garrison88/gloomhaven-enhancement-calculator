@@ -60,11 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Platform.isIOS ? Icons.arrow_back_ios_new : Icons.arrow_back,
           ),
         ),
-        title: const Text(
+        title: Text(
           'Settings',
-          style: TextStyle(
-            fontSize: 25.0,
-          ),
+          style: Theme.of(context).textTheme.displaySmall,
         ),
       ),
       body: Center(
@@ -79,9 +77,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         .copyWith(outline: Colors.transparent)),
                 child: SwitchListTile(
                   title: const Text('Theme'),
-                  subtitle: Theme.of(context).brightness == Brightness.dark
-                      ? const Text('Dark')
-                      : const Text('Light'),
+                  subtitle: Text(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'Dark'
+                        : 'Light',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   activeThumbImage: const AssetImage('images/elem_dark.png'),
                   activeColor: const Color(0xff1f272e),
                   inactiveThumbColor: const Color(0xffeda50b),
@@ -98,17 +99,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
               ),
+              // const SettingsDivider(),
+              SwitchListTile(
+                title: const Text('Use Roboto font'),
+                subtitle: Text(
+                  'This setting replaces all fonts with the default Roboto font to help with readability',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                value: widget.appModel.useDefaultFonts,
+                onChanged: (val) {
+                  SharedPrefs().useDefaultFonts = val;
+                  widget.appModel.useDefaultFonts = val;
+                  widget.appModel.updateTheme();
+                },
+              ),
               const SettingsDivider(),
               SwitchListTile(
                 title: const Text("Solve 'Envelope X'"),
-                subtitle: const Row(
+                subtitle: Row(
                   children: [
-                    Icon(Icons.warning),
-                    SizedBox(
+                    Icon(
+                      Icons.warning,
+                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
+                    ),
+                    const SizedBox(
                       width: smallPadding,
                     ),
                     Expanded(
-                      child: Text('Gloomhaven spoilers'),
+                      child: Text(
+                        'Gloomhaven spoilers',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                   ],
                 ),
@@ -139,9 +160,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       const Text(
                                           'Enter the solution to the puzzle'),
                                       TextField(
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
                                         autofocus: true,
                                         onChanged: (String val) {
                                           setState(() {
@@ -156,14 +174,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text(
+                                    child: const Text(
                                       'Cancel',
-                                      style: TextStyle(
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.grey[300]
-                                            : Colors.black87,
-                                      ),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
@@ -230,19 +242,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               SwitchListTile(
                 title: const Text('Scenario 114 Reward'),
-                subtitle: const Row(
+                subtitle: Row(
                   children: [
-                    Icon(Icons.warning),
-                    SizedBox(
+                    Icon(
+                      Icons.warning,
+                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
+                    ),
+                    const SizedBox(
                       width: smallPadding,
                     ),
                     Expanded(
                       child: Text(
                         'Forgotten Circles spoilers',
                         overflow: TextOverflow.fade,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
                   ],
@@ -257,22 +273,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               Stack(
                 alignment: Alignment.center,
                 children: [
                   ListTile(
                     title: const Text('Building 44'),
-                    subtitle: const Row(
+                    subtitle: Row(
                       children: [
-                        Icon(Icons.warning),
-                        SizedBox(
+                        Icon(
+                          Icons.warning,
+                          size:
+                              Theme.of(context).textTheme.titleLarge?.fontSize,
+                        ),
+                        const SizedBox(
                           width: smallPadding,
                         ),
                         Expanded(
                           child: Text(
                             'Frosthaven spoilers',
                             overflow: TextOverflow.fade,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                       ],
@@ -302,14 +323,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         CheckboxListTile(
-                                          enabled: false,
-                                          title: Text('Lvl 1',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(color: null)),
+                                          title: Text(
+                                            'Lvl 1',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: null,
+                                                ),
+                                          ),
                                           value: true,
-                                          onChanged: (_) => {},
+                                          onChanged: null,
                                         ),
                                         Text(
                                           'Buy enhancements',
@@ -422,14 +446,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: Text(
+                                child: const Text(
                                   'Close',
-                                  style: TextStyle(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.grey[300]
-                                        : Colors.black87,
-                                  ),
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
@@ -460,11 +478,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               SwitchListTile(
-                subtitle: const Text(
-                    "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community"),
-                title: const Text('Custom Content'),
+                subtitle: Text(
+                  "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                title: const Text(
+                  'Custom Content',
+                ),
                 value: SharedPrefs().customClasses,
                 onChanged: (val) {
                   setState(() {
@@ -472,17 +494,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   });
                 },
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               SwitchListTile(
-                title: const Text("Unlock 'Envelope V'"),
-                subtitle: const Row(
+                title: const Text(
+                  "Unlock 'Envelope V'",
+                ),
+                subtitle: Row(
                   children: [
-                    Icon(Icons.warning),
-                    SizedBox(
+                    Icon(
+                      Icons.warning,
+                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
+                    ),
+                    const SizedBox(
                       width: smallPadding,
                     ),
                     Expanded(
-                      child: Text('Crimson Scales spoilers'),
+                      child: Text(
+                        'Crimson Scales spoilers',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
                   ],
                 ),
@@ -513,9 +543,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       const Text(
                                           'What is the password for unlocking this envelope?'),
                                       TextField(
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
                                         autofocus: true,
                                         onChanged: (String val) {
                                           setState(() {
@@ -530,14 +557,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text(
+                                    child: const Text(
                                       'Cancel',
-                                      style: TextStyle(
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? Colors.grey[300]
-                                            : Colors.black87,
-                                      ),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
@@ -604,7 +625,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               SwitchListTile(
                 title: const Text('Show Retired Characters'),
                 value: widget.charactersModel.showRetired,
@@ -618,7 +639,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SettingsDivider(),
               ListTile(
                 title: const Text('Backup'),
-                subtitle: const Text('Backup your current characters'),
+                subtitle: Text(
+                  'Backup your current characters',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
                 onTap: () async {
                   await showDialog<String>(
                     context: context,
@@ -643,9 +667,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const Text(
                                     'If another backup file already exists in the Downloads folder with the same name, it will be overwritten'),
                               TextField(
-                                style: Theme.of(context).textTheme.titleMedium,
                                 decoration: const InputDecoration(
-                                    labelText: 'filename'),
+                                    labelText: 'Filename'),
                                 controller: titleController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
@@ -664,14 +687,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Icons.save,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              label: Text(
+                              label: const Text(
                                 'Save',
-                                style: TextStyle(
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.grey[300]
-                                      : Colors.black87,
-                                ),
                               ),
                               onPressed: () async {
                                 if (!await _getStoragePermission()) {
@@ -699,14 +716,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 : Container(),
                             label: Text(
                               Platform.isAndroid ? 'Share' : 'Continue',
-                              style: TextStyle(
-                                color: Platform.isAndroid
-                                    ? Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.grey[300]
-                                        : Colors.black87
-                                    : Theme.of(context).colorScheme.primary,
-                              ),
                             ),
                           ),
                         ],
@@ -752,11 +761,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              const SettingsDivider(),
+              // const SettingsDivider(),
               ListTile(
                 title: const Text('Restore'),
-                subtitle:
-                    const Text('Restore your characters from a backup file'),
+                subtitle: Text(
+                  'Restore your characters from a backup file',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
                 onTap: () async {
                   final bool? choice = await showDialog<bool?>(
                     barrierDismissible: false,
@@ -772,14 +783,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text(
+                            child: const Text(
                               'Cancel',
-                              style: TextStyle(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.grey[300]
-                                    : Colors.black87,
-                              ),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop(false);

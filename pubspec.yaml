@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 4.0.5+226
+version: 4.0.5+230
 
 environment:
   sdk: ">=2.19.4 <3.0.0"
@@ -70,3 +70,9 @@ flutter:
     - family: Nyala
       fonts:
         - asset: fonts/nyala.ttf
+    - family: Roboto
+      fonts:
+        - asset: fonts/roboto/Roboto-Regular.ttf
+    - family: OpenSans
+      fonts:
+        - asset: fonts/open_sans/OpenSans-Regular.ttf

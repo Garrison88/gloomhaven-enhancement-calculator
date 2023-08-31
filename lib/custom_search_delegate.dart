@@ -170,7 +170,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
               children: [
                 const Text(
                   'Hide Locked Classes',
-                  // style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Checkbox(
                   onChanged: (bool? value) => {
@@ -437,21 +436,29 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: Text(
+                            child: const Text(
                               'Cancel',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                              ),
+                              // style: Theme.of(context)
+                              //     .textTheme
+                              //     .bodyMedium
+                              //     ?.copyWith(
+                              //       color: Theme.of(context)
+                              //           .colorScheme
+                              //           .onBackground,
+                              //     ),
                             ),
                             onPressed: () => Navigator.pop(context, false),
                           ),
                           TextButton(
                             child: Text(
                               'Got it!',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
                             ),
                             onPressed: () => Navigator.pop(context, true),
                           ),

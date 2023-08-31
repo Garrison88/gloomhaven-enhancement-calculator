@@ -5,7 +5,7 @@ const String columnPerkDetails = 'Details';
 const String columnPerkIsGrouped = 'IsGrouped';
 
 class Perk {
-  late int perkId;
+  int? perkId;
   late String perkClassCode;
   late int numOfPerks;
   late String perkDetails;

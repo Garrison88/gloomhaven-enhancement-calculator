@@ -4,7 +4,7 @@ const String columnMasteryClass = 'Class';
 const String columnMasteryDetails = 'Details';
 
 class Mastery {
-  late int masteryId;
+  int? masteryId;
   late String masteryClassCode;
   late String masteryDetails;
 

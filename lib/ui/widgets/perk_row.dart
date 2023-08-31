@@ -22,7 +22,7 @@ class PerkRow extends StatefulWidget {
 }
 
 class _PerkRowState extends State<PerkRow> {
-  final List<int> perkIds = [];
+  final List<int?> perkIds = [];
 
   double height = 0;
 

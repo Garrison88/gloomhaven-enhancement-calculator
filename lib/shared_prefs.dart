@@ -248,4 +248,11 @@ class SharedPrefs {
       value,
     );
   }
+
+  bool get useDefaultFonts => _sharedPrefs.getBool('useDefaultFonts') ?? true;
+
+  set useDefaultFonts(bool value) => _sharedPrefs.setBool(
+        'useDefaultFonts',
+        value,
+      );
 }
