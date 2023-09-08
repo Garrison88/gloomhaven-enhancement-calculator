@@ -24,7 +24,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
     return [
       IconButton(
         icon: const Icon(
-          Icons.clear,
+          Icons.clear_rounded,
         ),
         onPressed: () {
           query = '';
@@ -37,7 +37,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: const Icon(
-        Icons.arrow_back,
+        Icons.arrow_back_rounded,
       ),
       onPressed: () => Navigator.of(context).pop(),
     );
@@ -64,127 +64,151 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
                 spacing: smallPadding,
                 children: [
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: gh
-                              ? ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary) ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge?.color,
-                        ),
+                    visualDensity: VisualDensity.compact,
+                    elevation: gh ? 4 : 0,
+                    labelStyle:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: gh
+                                  ? ThemeData.estimateBrightnessForColor(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary) ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black
+                                  : null,
+                            ),
                     selected: gh,
                     onSelected: (value) => stateSetter(() {
                       gh = value;
                     }),
-                    label: const Text('Gloomhaven'),
+                    label: const Text(
+                      'Gloomhaven',
+                    ),
                   ),
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: jotl
-                              ? ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary) ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge?.color,
-                        ),
+                    visualDensity: VisualDensity.compact,
+                    elevation: jotl ? 4 : 0,
+                    labelStyle:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: jotl
+                                  ? ThemeData.estimateBrightnessForColor(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary) ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black
+                                  : null,
+                            ),
                     selected: jotl,
                     onSelected: (value) => stateSetter(() {
                       jotl = value;
                     }),
-                    label: const Text('Jaws of the Lion'),
+                    label: const Text(
+                      'Jaws of the Lion',
+                    ),
                   ),
                   FilterChip(
-                    labelStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: fh
-                              ? ThemeData.estimateBrightnessForColor(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary) ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black
-                              : Theme.of(context).textTheme.bodyLarge?.color,
-                        ),
+                    visualDensity: VisualDensity.compact,
+                    elevation: fh ? 4 : 0,
+                    labelStyle:
+                        Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: fh
+                                  ? ThemeData.estimateBrightnessForColor(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary) ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black
+                                  : null,
+                            ),
                     selected: fh,
                     onSelected: (value) => stateSetter(() {
                       fh = value;
                     }),
-                    label: const Text('Frosthaven'),
+                    label: const Text(
+                      'Frosthaven',
+                    ),
                   ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
-                      labelStyle: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(
-                            color: cs
-                                ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .primary) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black
-                                : Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
+                      visualDensity: VisualDensity.compact,
+                      elevation: cs ? 4 : 0,
+                      labelStyle:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: cs
+                                    ? ThemeData.estimateBrightnessForColor(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary) ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black
+                                    : null,
+                              ),
                       selected: cs,
                       onSelected: (value) => stateSetter(() {
                         cs = value;
                       }),
-                      label: const Text('Crimson Scales'),
+                      label: const Text(
+                        'Crimson Scales',
+                      ),
                     ),
                   if (SharedPrefs().customClasses)
                     FilterChip(
-                      labelStyle: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(
-                            color: cc
-                                ? ThemeData.estimateBrightnessForColor(
-                                            Theme.of(context)
-                                                .colorScheme
-                                                .primary) ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black
-                                : Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
+                      visualDensity: VisualDensity.compact,
+                      elevation: cc ? 4 : 0,
+                      labelStyle:
+                          Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: cc
+                                    ? ThemeData.estimateBrightnessForColor(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary) ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black
+                                    : null,
+                              ),
                       selected: cc,
                       onSelected: (value) => stateSetter(() {
                         cc = value;
                       }),
-                      label: const Text('Custom Classes'),
+                      label: const Text(
+                        'Custom Classes',
+                      ),
                     ),
                 ],
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Text(
-                  'Hide Locked Classes',
-                ),
-                Checkbox(
-                  onChanged: (bool? value) => {
-                    stateSetter(() {
-                      hideLockedClasses = value ?? false;
-                    }),
-                  },
-                  value: hideLockedClasses,
-                ),
-              ],
+            CheckboxListTile(
+              title: Text(
+                'Hide locked classes',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.right,
+              ),
+              onChanged: (bool? value) => {
+                stateSetter(() {
+                  hideLockedClasses = value ?? false;
+                }),
+              },
+              value: hideLockedClasses,
             ),
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   children: [
+
+            //     Checkbox(),
+            //   ],
+            // ),
             Expanded(
               child: _WordSuggestionList(
                 query: query,
-                suggestions: filteredList(_playerClasses),
+                suggestions: _filteredList(_playerClasses),
                 onSelected: (String suggestion) {
                   query = suggestion;
                   showResults(context);
@@ -197,14 +221,12 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
     );
   }
 
-  List<PlayerClass> filteredList(List<PlayerClass> playerClasses) {
+  List<PlayerClass> _filteredList(List<PlayerClass> playerClasses) {
     return playerClasses.where((playerClass) {
-      if (doNotRenderPlayerClass(playerClass, hideLockedClass: hideLockedClasses
-          //  &&
-          //     !SharedPrefs().getPlayerClassIsUnlocked(
-          //       playerClass.classCode,
-          //     ),
-          )) {
+      if (_doNotRenderPlayerClass(
+        playerClass,
+        hideLockedClass: hideLockedClasses,
+      )) {
         return false;
       }
       if (!gh && !jotl && !fh && !cs && !cc) {
@@ -231,7 +253,7 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
       ..removeWhere((element) => element.classCode == 'rw');
   }
 
-  bool doNotRenderPlayerClass(
+  bool _doNotRenderPlayerClass(
     PlayerClass playerClass, {
     required bool hideLockedClass,
   }) =>
@@ -271,16 +293,7 @@ class _WordSuggestionList extends StatefulWidget {
 class __WordSuggestionListState extends State<_WordSuggestionList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      separatorBuilder: (
-        BuildContext _,
-        int index,
-      ) =>
-          const Divider(
-        indent: 8,
-        endIndent: 8,
-        height: 3,
-      ),
+    return ListView.builder(
       itemCount: widget.suggestions.length,
       itemBuilder: (
         BuildContext context,
@@ -295,31 +308,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
             thisLowerContext,
             innerSetState,
           ) {
-            bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
             return ListTile(
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  selectedPlayerClass.locked
-                      ? IconButton(
-                          onPressed: () {
-                            SharedPrefs().setPlayerClassIsUnlocked(
-                              selectedPlayerClass.classCode,
-                              !showHidden,
-                            );
-                            innerSetState(() {
-                              showHidden = !showHidden;
-                            });
-                          },
-                          icon: Icon(
-                            showHidden
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
               leading: SvgPicture.asset(
                 'images/class_icons/${selectedPlayerClass.icon}',
                 width: iconSize + 5,
@@ -341,139 +330,30 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                           : Theme.of(context).disabledColor,
                     ),
               ),
-              onTap: () {
-                if ((selectedPlayerClass.category == ClassCategory.custom) &&
-                    !hideMessage) {
-                  showDialog<bool>(
-                    context: context,
-                    builder: (_) {
-                      return AlertDialog(
-                        title: const Center(
-                          child: Text('Custom Content'),
-                        ),
-                        content: StatefulBuilder(
-                          builder: (
-                            thisLowerContext,
-                            innerSetState,
-                          ) {
-                            return Container(
-                              constraints: const BoxConstraints(
-                                maxWidth: maxDialogWidth,
-                                minWidth: maxDialogWidth,
-                              ),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text:
-                                                "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
-                                          ),
-                                          TextSpan(
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  color: Colors.blue,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                            text: 'Discord server',
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () async {
-                                                Uri uri = Uri(
-                                                  scheme: 'https',
-                                                  host: 'discord.gg',
-                                                  path: 'gSRz6sB',
-                                                );
-                                                var urllaunchable =
-                                                    await canLaunchUrl(
-                                                  uri,
-                                                );
-                                                if (urllaunchable) {
-                                                  await launchUrl(
-                                                    uri,
-                                                  );
-                                                } else {
-                                                  // print(
-                                                  //     "URL can't be launched.");
-                                                }
-                                              },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 35),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Text(
-                                          "Don't show again",
-                                          overflow: TextOverflow.visible,
-                                        ),
-                                        Checkbox(
-                                            value: hideMessage,
-                                            onChanged: (bool? value) {
-                                              if (value != null) {
-                                                innerSetState(() {
-                                                  SharedPrefs()
-                                                          .hideCustomClassesWarningMessage =
-                                                      value;
-                                                  hideMessage = !hideMessage;
-                                                });
-                                              }
-                                            }),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text(
-                              'Cancel',
-                              // style: Theme.of(context)
-                              //     .textTheme
-                              //     .bodyMedium
-                              //     ?.copyWith(
-                              //       color: Theme.of(context)
-                              //           .colorScheme
-                              //           .onBackground,
-                              //     ),
-                            ),
-                            onPressed: () => Navigator.pop(context, false),
-                          ),
-                          TextButton(
-                            child: Text(
-                              'Got it!',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                            ),
-                            onPressed: () => Navigator.pop(context, true),
-                          ),
-                        ],
-                      );
-                    },
-                  ).then((bool? value) {
-                    if (value != null && value) {
-                      Navigator.pop<PlayerClass>(
-                        context,
-                        selectedPlayerClass,
-                      );
-                    }
-                  });
-                } else {
+              trailing: selectedPlayerClass.locked
+                  ? IconButton(
+                      onPressed: () {
+                        SharedPrefs().setPlayerClassIsUnlocked(
+                          selectedPlayerClass.classCode,
+                          !showHidden,
+                        );
+                        innerSetState(() {
+                          showHidden = !showHidden;
+                        });
+                      },
+                      icon: Icon(
+                        showHidden
+                            ? Icons.visibility_rounded
+                            : Icons.visibility_off_rounded,
+                      ),
+                    )
+                  : null,
+              onTap: () async {
+                if (await _onClassSelected(
+                      context,
+                      selectedPlayerClass,
+                    ) !=
+                    null) {
                   Navigator.pop<PlayerClass>(
                     context,
                     selectedPlayerClass,
@@ -485,5 +365,193 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         );
       },
     );
+  }
+
+  Future<PlayerClass?> _onClassSelected(
+    BuildContext context,
+    PlayerClass selectedPlayerClass,
+  ) async {
+    bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
+    bool? proceed;
+    if ((selectedPlayerClass.category == ClassCategory.custom) &&
+        !hideMessage) {
+      proceed = await showDialog<bool?>(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                'Custom Classes',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ),
+            content: StatefulBuilder(
+              builder: (
+                thisLowerContext,
+                innerSetState,
+              ) {
+                return Container(
+                  constraints: const BoxConstraints(
+                    maxWidth: maxDialogWidth,
+                    minWidth: maxDialogWidth,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(
+                                text:
+                                    "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
+                              ),
+                              TextSpan(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                text: 'Discord server',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    Uri uri = Uri(
+                                      scheme: 'https',
+                                      host: 'discord.gg',
+                                      path: 'gSRz6sB',
+                                    );
+                                    var urllaunchable = await canLaunchUrl(
+                                      uri,
+                                    );
+                                    if (urllaunchable) {
+                                      await launchUrl(
+                                        uri,
+                                      );
+                                    } else {
+                                      // print(
+                                      //     "URL can't be launched.");
+                                    }
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 35),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text(
+                              "Don't show again",
+                              overflow: TextOverflow.visible,
+                            ),
+                            Checkbox(
+                              value: hideMessage,
+                              onChanged: (bool? value) {
+                                if (value != null) {
+                                  innerSetState(
+                                    () {
+                                      SharedPrefs()
+                                              .hideCustomClassesWarningMessage =
+                                          value;
+                                      hideMessage = !hideMessage;
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  'Cancel',
+                ),
+                onPressed: () => Navigator.pop(
+                  context,
+                  false,
+                ),
+              ),
+              TextButton(
+                child: const Text(
+                  'Continue',
+                ),
+                onPressed: () => Navigator.pop(
+                  context,
+                  true,
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    // else if (selectedPlayerClass.category == ClassCategory.gloomhaven) {
+    //   proceed = await showDialog<bool?>(
+    //     context: context,
+    //     builder: (_) {
+    //       return AlertDialog(
+    //         title: Row(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             SvgPicture.asset(
+    //               'images/class_icons/${selectedPlayerClass.icon}',
+    //               width: iconSize + 5,
+    //               height: iconSize + 5,
+    //               colorFilter: ColorFilter.mode(
+    //                 Color(
+    //                   selectedPlayerClass.primaryColor,
+    //                 ),
+    //                 BlendMode.srcIn,
+    //               ),
+    //             ),
+    //             const SizedBox(width: smallPadding * 2),
+    //             Text(
+    //               'Version',
+    //               style: Theme.of(context).textTheme.headlineLarge,
+    //             ),
+    //           ],
+    //         ),
+    //         actions: <Widget>[
+    //           TextButton(
+    //             child: const Text(
+    //               'Gloomhaven\n(Original)',
+    //             ),
+    //             onPressed: () {
+    //               Navigator.pop(
+    //                 context,
+    //                 true,
+    //               );
+    //             },
+    //           ),
+    //           TextButton(
+    //             child: const Text(
+    //               'Frosthaven\n(Crossover)',
+    //             ),
+    //             onPressed: () {
+    //               selectedPlayerClass.classVersion =
+    //                   ClassVersion.frosthavenCrossover;
+    //               Navigator.pop(
+    //                 context,
+    //                 true,
+    //               );
+    //             },
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
+    else {
+      return selectedPlayerClass;
+    }
+    return proceed ?? false ? selectedPlayerClass : null;
   }
 }

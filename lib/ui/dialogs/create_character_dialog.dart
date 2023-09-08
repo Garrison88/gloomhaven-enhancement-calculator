@@ -39,7 +39,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       TextEditingController();
   final TextEditingController _prosperityLevelTextFieldController =
       TextEditingController();
-  final List<int> _levels = List.generate(9, (index) => index + 1);
+  // final List<int> _levels = List.generate(9, (index) => index + 1);
   bool _gloomhavenMode = true;
   PlayerClass _selectedClass = CharacterData.playerClasses[0];
   Faker faker = Faker();
@@ -48,7 +48,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
-  late OverlayEntry _overlayEntry;
+  // late OverlayEntry _overlayEntry;
   late Size buttonSize;
   late Offset buttonPosition;
   bool isLevelMenuOpen = false;
@@ -58,7 +58,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   void initState() {
     super.initState();
     _classTextFieldController.text = _selectedClass.name;
-    _levelTextFieldController.text = '${_levels[0]}';
+    _levelTextFieldController.text = '1';
     placeholderName = _generateRandomName();
   }
 
@@ -79,76 +79,75 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
 
   // PersonalGoal _personalGoal;
 
-  OverlayEntry _overlayEntryBuilder() {
-    return OverlayEntry(
-      builder: (context) {
-        return Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: closeMenu,
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
-            Positioned(
-              top: buttonPosition.dy - 100,
-              left: buttonPosition.dx,
-              width: buttonSize.width / 2,
-              child: Material(
-                color: Colors.transparent,
-                child: Card(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: _levels.length,
-                    itemBuilder: (
-                      context,
-                      index,
-                    ) {
-                      return ListTile(
-                        visualDensity: VisualDensity.compact,
-                        onTap: () {
-                          _levelTextFieldController.text =
-                              _levels[index].toString();
-                          closeMenu();
-                        },
-                        title: Text(
-                          'Level ${_levels[index].toString()}',
-                          textAlign: TextAlign.center,
-                          // style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // OverlayEntry _overlayEntryBuilder() {
+  //   return OverlayEntry(
+  //     builder: (context) {
+  //       return Stack(
+  //         children: <Widget>[
+  //           Positioned.fill(
+  //             child: GestureDetector(
+  //               onTap: closeMenu,
+  //               child: Container(
+  //                 color: Colors.transparent,
+  //               ),
+  //             ),
+  //           ),
+  //           Positioned(
+  //             top: buttonPosition.dy / 2,
+  //             left: buttonPosition.dx,
+  //             width: buttonSize.width,
+  //             child: Material(
+  //               color: Colors.transparent,
+  //               child: Card(
+  //                 child: ListView.builder(
+  //                   padding: EdgeInsets.zero,
+  //                   shrinkWrap: true,
+  //                   itemCount: _levels.length,
+  //                   itemBuilder: (
+  //                     context,
+  //                     index,
+  //                   ) {
+  //                     return ListTile(
+  //                       visualDensity: VisualDensity.compact,
+  //                       onTap: () {
+  //                         _levelTextFieldController.text =
+  //                             _levels[index].toString();
+  //                         closeMenu();
+  //                       },
+  //                       title: Text(
+  //                         'Level ${_levels[index].toString()}',
+  //                         textAlign: TextAlign.center,
+  //                       ),
+  //                     );
+  //                   },
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  void openMenu() {
-    findButton();
-    _overlayEntry = _overlayEntryBuilder();
-    Overlay.of(context).insert(_overlayEntry);
-    isLevelMenuOpen = !isLevelMenuOpen;
-  }
+  // void openMenu() {
+  //   findButton();
+  //   _overlayEntry = _overlayEntryBuilder();
+  //   Overlay.of(context).insert(_overlayEntry);
+  //   isLevelMenuOpen = !isLevelMenuOpen;
+  // }
 
-  void closeMenu() {
-    _overlayEntry.remove();
-    isLevelMenuOpen = !isLevelMenuOpen;
-  }
+  // void closeMenu() {
+  //   _overlayEntry.remove();
+  //   isLevelMenuOpen = !isLevelMenuOpen;
+  // }
 
-  findButton() {
-    RenderBox renderBox =
-        _levelKey.currentContext?.findRenderObject() as RenderBox;
-    buttonSize = renderBox.size;
-    buttonPosition = renderBox.localToGlobal(Offset.zero);
-  }
+  // findButton() {
+  //   RenderBox renderBox =
+  //       _levelKey.currentContext?.findRenderObject() as RenderBox;
+  //   buttonSize = renderBox.size;
+  //   buttonPosition = renderBox.localToGlobal(Offset.zero);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -261,14 +260,14 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         key: _levelKey,
                         controller: _levelTextFieldController,
                         readOnly: true,
-                        onTap: isLevelMenuOpen ? closeMenu : openMenu,
+                        onTap: () async => await _showNumberGridDialog(context),
                         decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.arrow_drop_down),
                           suffixIconConstraints: BoxConstraints(
                             maxHeight: 0,
                             minWidth: 48,
                           ),
-                          labelText: 'Starting Level',
+                          labelText: 'Starting level',
                         ),
                       ),
                     ),
@@ -279,7 +278,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         padding: const EdgeInsets.all(8),
                         child: SvgPicture.asset(
                           'images/level.svg',
-                          // width: iconSize,
                           colorFilter: ColorFilter.mode(
                             Theme.of(context).colorScheme.onBackground,
                             BlendMode.srcIn,
@@ -329,7 +327,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   enableInteractiveSelection: false,
                   controller: _previousRetirementsTextFieldController,
                   decoration: const InputDecoration(
-                    labelText: 'Previous Retirements',
+                    labelText: 'Previous retirements',
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(
@@ -345,7 +343,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       enableInteractiveSelection: false,
                       controller: _prosperityLevelTextFieldController,
                       decoration: const InputDecoration(
-                        labelText: 'Prosperity Level',
+                        labelText: 'Prosperity level',
                       ),
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
@@ -380,9 +378,9 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     Flexible(
                       child: AutoSizeText(
                         'Gloomhaven',
+                        minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 20,
                               color: _gloomhavenMode ? null : Colors.grey,
                             ),
                       ),
@@ -412,33 +410,15 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     Flexible(
                       child: AutoSizeText(
                         'Frosthaven',
+                        minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 20,
                               color: _gloomhavenMode ? Colors.grey : null,
                             ),
                       ),
                     ),
-                    // const Visibility(
-                    //   maintainAnimation: true,
-                    //   maintainState: true,
-                    //   maintainSize: true,
-                    //   visible: false,
-                    //   child: IconButton(
-                    //     onPressed: null,
-                    //     icon: Icon(
-                    //       Icons.info_outline,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
-                // Text(
-                //   "Initial gold equals ${_gloomhavenMode ? "15x(L+1), where L is your character's level." : "(10xP+20), where 'P' is the current Prosperity level. This gold must be spent on items immediately, and any unspent gold is forfeited."}",
-                //   style: Theme.of(context).textTheme.titleMedium.copyWith(
-                //         fontSize: 16,
-                //       ),
-                // ),
               ],
             ),
           ),
@@ -492,5 +472,54 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         ),
       ],
     );
+  }
+
+  // Function to show the dialog with a grid of numbers.
+  Future<void> _showNumberGridDialog(BuildContext context) async {
+    final result = await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // title: Text('Level'),
+          icon: SvgPicture.asset(
+            'images/level.svg',
+            width: iconSize + 5,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.onBackground,
+              BlendMode.srcIn,
+            ),
+          ),
+          content: SizedBox(
+            width: 100,
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemCount: 9,
+              itemBuilder: (BuildContext context, int index) {
+                final number = index + 1;
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(number);
+                  },
+                  child: Center(
+                    child: Text(
+                      number.toString(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        _levelTextFieldController.text = result.toString();
+      });
+    }
   }
 }

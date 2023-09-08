@@ -249,7 +249,7 @@ class SharedPrefs {
     );
   }
 
-  bool get useDefaultFonts => _sharedPrefs.getBool('useDefaultFonts') ?? true;
+  bool get useDefaultFonts => _sharedPrefs.getBool('useDefaultFonts') ?? false;
 
   set useDefaultFonts(bool value) => _sharedPrefs.setBool(
         'useDefaultFonts',

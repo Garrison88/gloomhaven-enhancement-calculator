@@ -48,21 +48,18 @@ class _InfoDialogState extends State<InfoDialog> {
       for (final Enhancement enhancement in list) {
         icons.add(
           Padding(
-            child: SharedPrefs().darkTheme && enhancement.invertIconColor
-                ? SvgPicture.asset(
-                    'images/${enhancement.iconPath}',
-                    height: iconSize,
-                    width: iconSize,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  )
-                : SvgPicture.asset(
-                    'images/${enhancement.iconPath}',
-                    height: iconSize,
-                    width: iconSize,
-                  ),
+            child: SvgPicture.asset(
+              'images/${enhancement.iconPath}',
+              height: iconSize,
+              width: iconSize,
+              colorFilter:
+                  SharedPrefs().darkTheme && enhancement.invertIconColor
+                      ? const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        )
+                      : null,
+            ),
             padding: const EdgeInsets.only(
               right: (smallPadding / 2),
             ),
@@ -326,7 +323,7 @@ class _InfoDialogState extends State<InfoDialog> {
           : Center(
               child: Text(
                 widget.title!,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: Theme.of(context).textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -340,30 +337,34 @@ class _InfoDialogState extends State<InfoDialog> {
             children: <Widget>[
               // if title isn't provided, display eligible enhancements
               widget.title == null
-                  ? Column(children: <Widget>[
-                      const Text(
-                        'Eligible For:',
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: smallPadding,
-                          bottom: smallPadding,
+                  ? Column(
+                      children: <Widget>[
+                        const Text(
+                          'Eligible For',
+                          style:
+                              TextStyle(decoration: TextDecoration.underline),
                         ),
-                      ),
-                      Wrap(
-                        runSpacing: smallPadding,
-                        spacing: smallPadding,
-                        alignment: WrapAlignment.center,
-                        children: _createIconsListForDialog(_eligibleForIcons),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: smallPadding,
-                          bottom: smallPadding,
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            top: smallPadding,
+                            bottom: smallPadding,
+                          ),
                         ),
-                      ),
-                    ])
+                        Wrap(
+                          runSpacing: smallPadding,
+                          spacing: smallPadding,
+                          alignment: WrapAlignment.center,
+                          children:
+                              _createIconsListForDialog(_eligibleForIcons),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            top: smallPadding,
+                            bottom: smallPadding,
+                          ),
+                        ),
+                      ],
+                    )
                   // if title isn't provided, display an empty container
                   : Container(),
               widget.message ?? _bodyText,

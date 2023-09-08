@@ -25,7 +25,7 @@ class EnhancementData {
     // plus one
     Enhancement(
       EnhancementCategory.title,
-      'For Character',
+      'Character',
       iconPath: 'plus_one.svg',
     ),
     Enhancement(
@@ -108,7 +108,7 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.title,
-      'For Summon',
+      'Summon',
       iconPath: 'plus_one.svg',
     ),
     Enhancement(
@@ -242,76 +242,76 @@ class EnhancementData {
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '2 Hexes',
+      '2 hexes',
       ghCost: 100,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '3 Hexes',
+      '3 hexes',
       ghCost: 66,
       fhCost: 67,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '4 Hexes',
+      '4 hexes',
       ghCost: 50,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '5 Hexes',
+      '5 hexes',
       ghCost: 40,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '6 Hexes',
+      '6 hexes',
       ghCost: 33,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '7 Hexes',
+      '7 hexes',
       ghCost: 28,
       fhCost: 29,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '8 Hexes',
+      '8 hexes',
       ghCost: 25,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '9 Hexes',
+      '9 hexes',
       ghCost: 22,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '10 Hexes',
+      '10 hexes',
       ghCost: 20,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '11 Hexes',
+      '11 hexes',
       ghCost: 18,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '12 Hexes',
+      '12 hexes',
       ghCost: 16,
       fhCost: 17,
       iconPath: 'hex.svg',
     ),
     Enhancement(
       EnhancementCategory.hex,
-      '13 Hexes',
+      '13 hexes',
       ghCost: 15,
       iconPath: 'hex.svg',
     ),
@@ -373,7 +373,8 @@ class EnhancementData {
 
   static List<DropdownMenuItem<int>> previousEnhancements(
     BuildContext context, {
-    enhancerLvl4,
+    bool enhancerLvl4 = false,
+    bool tempEnhancements = false,
   }) {
     EnhancementCalculatorModel enhancementCalculatorModel =
         Provider.of(context, listen: false);
@@ -389,7 +390,7 @@ class EnhancementData {
                   const TextSpan(text: 'None')
                 else ...[
                   TextSpan(text: '$x ('),
-                  if (enhancerLvl4) ...[
+                  if (enhancerLvl4 || tempEnhancements) ...[
                     TextSpan(
                       text: '${75 * x}g',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -402,7 +403,7 @@ class EnhancementData {
                     ),
                     TextSpan(
                       text:
-                          '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g',
+                          '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g${tempEnhancements ? '*' : ''}',
                     ),
                     const TextSpan(text: ')'),
                   ] else ...[
@@ -458,7 +459,7 @@ class EnhancementData {
                                   .textTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                    decoration: TextDecoration.underline,
+                                    // decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -475,7 +476,7 @@ class EnhancementData {
                                   .textTheme
                                   .bodyMedium
                                   ?.copyWith(
-                                    decoration: TextDecoration.underline,
+                                    // decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),

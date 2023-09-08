@@ -8,38 +8,38 @@ class AppTheme {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        fontFamily: SharedPrefs().useDefaultFonts ? openSans : nyala,
+        fontFamily: SharedPrefs().useDefaultFonts ? inter : nyala,
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
         textTheme: SharedPrefs().useDefaultFonts
-            ? defaultTextTheme()
-            : customTextTheme(),
+            ? _defaultTextTheme()
+            : _customTextTheme(),
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: SharedPrefs().useDefaultFonts
-              ? defaultTextTheme().bodyMedium
-              : customTextTheme().bodyMedium,
+              ? _defaultTextTheme().bodyMedium
+              : _customTextTheme().bodyMedium,
         ),
-        textButtonTheme: textButtonThemeData(),
-        checkboxTheme: checkboxThemeData(),
+        textButtonTheme: _textButtonThemeData(),
+        checkboxTheme: _checkboxThemeData(),
         colorScheme: ColorScheme.light(
           background: Colors.white,
           onBackground: Colors.black87,
-          primary: getPrimaryThemeColor(),
+          primary: _getPrimaryThemeColor(),
           onPrimary:
-              ThemeData.estimateBrightnessForColor(getPrimaryThemeColor()) ==
+              ThemeData.estimateBrightnessForColor(_getPrimaryThemeColor()) ==
                       Brightness.dark
                   ? Colors.white
                   : Colors.black87,
-          secondary: getPrimaryThemeColor(),
-          primaryContainer: getPrimaryThemeColor(),
-          secondaryContainer: getPrimaryThemeColor(),
-          surfaceTint: getPrimaryThemeColor(),
+          secondary: _getPrimaryThemeColor(),
+          primaryContainer: _getPrimaryThemeColor(),
+          secondaryContainer: _getPrimaryThemeColor(),
+          surfaceTint: _getPrimaryThemeColor(),
           outline: Colors.grey[600],
         ),
         chipTheme: const ChipThemeData().copyWith(
           showCheckmark: false,
         ),
-        snackBarTheme: snackBarThemeData(),
+        snackBarTheme: _snackBarThemeData(),
         dividerTheme: DividerThemeData(
           color: Colors.grey.withOpacity(0.5),
         ),
@@ -50,92 +50,91 @@ class AppTheme {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
-        fontFamily: SharedPrefs().useDefaultFonts ? openSans : nyala,
+        fontFamily: SharedPrefs().useDefaultFonts ? inter : nyala,
         useMaterial3: true,
         splashFactory: NoSplash.splashFactory,
         textTheme: SharedPrefs().useDefaultFonts
-            ? defaultTextTheme()
-            : customTextTheme(),
+            ? _defaultTextTheme()
+            : _customTextTheme(),
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: SharedPrefs().useDefaultFonts
-              ? defaultTextTheme().bodyMedium
-              : customTextTheme().bodyMedium,
+              ? _defaultTextTheme().bodyMedium
+              : _customTextTheme().bodyMedium,
         ),
-        textButtonTheme: textButtonThemeData(),
-        checkboxTheme: checkboxThemeData(),
+        textButtonTheme: _textButtonThemeData(),
+        checkboxTheme: _checkboxThemeData(),
         colorScheme: ColorScheme.dark(
-          primary: getPrimaryThemeColor(),
-          secondary: getPrimaryThemeColor(),
-          primaryContainer: getPrimaryThemeColor(),
-          secondaryContainer: getPrimaryThemeColor(),
+          primary: _getPrimaryThemeColor(),
+          secondary: _getPrimaryThemeColor(),
+          primaryContainer: _getPrimaryThemeColor(),
+          secondaryContainer: _getPrimaryThemeColor(),
           onPrimary:
-              ThemeData.estimateBrightnessForColor(getPrimaryThemeColor()) ==
+              ThemeData.estimateBrightnessForColor(_getPrimaryThemeColor()) ==
                       Brightness.dark
                   ? Colors.white
                   : Colors.black87,
-          surfaceTint: getPrimaryThemeColor(),
+          surfaceTint: _getPrimaryThemeColor(),
           outline: Colors.grey[600],
         ),
-        // dividerColor: Colors.grey,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Color(0xff1c1b1f),
         ),
         chipTheme: const ChipThemeData().copyWith(
           showCheckmark: false,
         ),
-        snackBarTheme: snackBarThemeData(),
+        snackBarTheme: _snackBarThemeData(),
         dividerTheme: DividerThemeData(
           color: Colors.grey.withOpacity(0.5),
         ),
       );
 }
 
-Color getPrimaryThemeColor() => Color(SharedPrefs().primaryClassColor);
+Color _getPrimaryThemeColor() => Color(SharedPrefs().primaryClassColor);
 
-TextTheme customTextTheme() => const TextTheme(
-      // This is used for TextFormField
-      // titleMedium: const TextStyle(
-      //   fontSize: 40.0,
-      // ),
+TextTheme _customTextTheme() => const TextTheme().copyWith(
       // This is used as the default text (Text, AutoSizeText)
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
         fontSize: 25.0,
-        // letterSpacing: SharedPrefs().useDefaultFonts ? null : 0.7,
         fontFamily: nyala,
       ),
-      bodyLarge: TextStyle(
+      // Previous retirements, Resources
+      bodyLarge: const TextStyle(
         fontSize: 25,
       ),
-      // // Name and Enhancement Cost
-      // displayLarge: TextStyle(
-      //   fontFamily: SharedPrefs().useDefaultFonts ? roboto : pirataOne,
-      // ),
-      // // Notes, Perks, and Masteries titles
-      headlineMedium: TextStyle(
-        // fontFamily: nyala,
+      // Character name
+      displayMedium: const TextStyle(
+        fontFamily: pirataOne,
         letterSpacing: 1.5,
+      ),
+      // Notes, Perks, and Masteries titles
+      headlineMedium: const TextStyle(
         fontSize: 35,
       ),
     );
 
-TextTheme defaultTextTheme() => const TextTheme(
+TextTheme _defaultTextTheme() => const TextTheme().copyWith(
       // This is used as the default text (Text, AutoSizeText)
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
         fontSize: 20.0,
-        fontFamily: roboto,
+        fontFamily: inter,
       ),
-      bodyLarge: TextStyle(
+      // Previous retirements, Resources
+      bodyLarge: const TextStyle(
         fontSize: 25,
+      ),
+      // Character name
+      displayMedium: const TextStyle(
+        fontFamily: inter,
       ),
     );
 
-CheckboxThemeData checkboxThemeData() => CheckboxThemeData(
+CheckboxThemeData _checkboxThemeData() => CheckboxThemeData(
       fillColor: MaterialStateProperty.resolveWith(
-        getCheckboxColor,
+        _getCheckboxColor,
       ),
       checkColor: MaterialStateProperty.resolveWith(
         (Set<MaterialState> states) => states.contains(MaterialState.disabled)
-            ? ThemeData.estimateBrightnessForColor(getPrimaryThemeColor()) ==
+            ? ThemeData.estimateBrightnessForColor(_getPrimaryThemeColor()) ==
                     Brightness.dark
                 ? Colors.white
                 : Colors.black87
@@ -143,25 +142,39 @@ CheckboxThemeData checkboxThemeData() => CheckboxThemeData(
       ),
     );
 
-TextButtonThemeData textButtonThemeData() => TextButtonThemeData(
+TextButtonThemeData _textButtonThemeData() => TextButtonThemeData(
         style: TextButton.styleFrom(
       textStyle: SharedPrefs().useDefaultFonts
-          ? defaultTextTheme().bodyMedium
-          : customTextTheme().bodyMedium,
+          ? _defaultTextTheme().bodyMedium
+          : _customTextTheme().bodyMedium,
     ));
 
-SnackBarThemeData snackBarThemeData() => SnackBarThemeData(
+SnackBarThemeData _snackBarThemeData() => SnackBarThemeData(
       backgroundColor: SharedPrefs().darkTheme
           ? const Color(
               0xff1c1b1f,
             )
           : Colors.white,
-      contentTextStyle: TextStyle(
-        fontFamily: highTower,
-        fontSize: 20,
-        color: SharedPrefs().darkTheme ? Colors.white : Colors.black87,
-      ),
-      // actionTextColor: Colors.black,
+      actionTextColor: SharedPrefs().darkTheme
+          ? Colors.white
+          : const Color(
+              0xff1c1b1f,
+            ),
+      contentTextStyle: SharedPrefs().useDefaultFonts
+          ? _defaultTextTheme().bodyMedium?.copyWith(
+                color: SharedPrefs().darkTheme
+                    ? Colors.white
+                    : const Color(
+                        0xff1c1b1f,
+                      ),
+              )
+          : _customTextTheme().bodyMedium?.copyWith(
+                color: SharedPrefs().darkTheme
+                    ? Colors.white
+                    : const Color(
+                        0xff1c1b1f,
+                      ),
+              ),
     );
 // Color getSecondaryThemeColor() => Color(
 //       CharacterData.playerClassByClassCode(
@@ -169,16 +182,13 @@ SnackBarThemeData snackBarThemeData() => SnackBarThemeData(
 //       ).secondaryColor,
 //     );
 
-Color? getCheckboxColor(Set<MaterialState> states) =>
+Color? _getCheckboxColor(Set<MaterialState> states) =>
     states.contains(MaterialState.selected) &&
             states.contains(MaterialState.disabled)
-        ? lighten(getPrimaryThemeColor(), 30)
+        ? lighten(_getPrimaryThemeColor(), 30)
         : states.contains(MaterialState.selected)
-            ? getPrimaryThemeColor()
+            ? _getPrimaryThemeColor()
             : null;
-
-Color? getCheckColor(Set<MaterialState> states) =>
-    states.contains(MaterialState.selected) ? Colors.black87 : null;
 
 /// Darken a color by [percent] amount (100 = black)
 // ........................................................

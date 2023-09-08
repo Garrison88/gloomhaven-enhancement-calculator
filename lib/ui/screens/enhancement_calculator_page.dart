@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
@@ -24,7 +23,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
     enhancementCalculatorModel.calculateCost(notify: false);
 
     return Column(
-      // mainAxisSize: MainAxisSize.min,
       children: [
         OutlinedButton(
           onPressed: () => showDialog<void>(
@@ -41,9 +39,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
             },
           ),
           style: OutlinedButton.styleFrom(
-            // shape: RoundedRectangleBorder(
-            //   borderRadius: BorderRadius.circular(30.0),
-            // ),
             side: BorderSide(
               width: 2.0,
               color:
@@ -87,7 +82,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SettingsDivider(),
+                const EnhancementDivider(),
                 // CARD LEVEL
                 ListTile(
                   leading: IconButton(
@@ -104,27 +99,35 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  title: const Text('Card Level'),
-                  trailing: DropdownButtonHideUnderline(
-                    child: DropdownButton<int>(
-                      alignment: Alignment.center,
-                      value: enhancementCalculatorModel.cardLevel,
-                      items: EnhancementData.cardLevels(
-                        context,
-                        partyBoon: SharedPrefs().gloomhavenMode &&
-                            SharedPrefs().partyBoon,
-                        enhancerLvl3: !SharedPrefs().gloomhavenMode &&
-                            SharedPrefs().enhancerLvl3,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Card Level'),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<int>(
+                            alignment: Alignment.center,
+                            value: enhancementCalculatorModel.cardLevel,
+                            items: EnhancementData.cardLevels(
+                              context,
+                              partyBoon: SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().partyBoon,
+                              enhancerLvl3: !SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().enhancerLvl3,
+                            ),
+                            onChanged: (int? value) {
+                              if (value != null) {
+                                enhancementCalculatorModel.cardLevel = value;
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                      onChanged: (int? value) {
-                        if (value != null) {
-                          enhancementCalculatorModel.cardLevel = value;
-                        }
-                      },
-                    ),
+                    ],
                   ),
                 ),
-                const SettingsDivider(),
+                const EnhancementDivider(),
                 // PREVIOUS ENHANCEMENTS
                 ListTile(
                   leading: IconButton(
@@ -143,32 +146,39 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  title: const AutoSizeText(
-                    // softWrap: false,
-                    'Previous\nEnhancements',
-                    maxLines: 2,
-                    // minFontSize: 8,
-                    // maxFontSize: 20,
-                  ),
-                  trailing: DropdownButtonHideUnderline(
-                    child: DropdownButton<int>(
-                      alignment: Alignment.center,
-                      value: enhancementCalculatorModel.previousEnhancements,
-                      items: EnhancementData.previousEnhancements(
-                        context,
-                        enhancerLvl4: !SharedPrefs().gloomhavenMode &&
-                            SharedPrefs().enhancerLvl4,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Previous Enhancements',
                       ),
-                      onChanged: (int? value) {
-                        if (value != null) {
-                          enhancementCalculatorModel.previousEnhancements =
-                              value;
-                        }
-                      },
-                    ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<int>(
+                            alignment: Alignment.center,
+                            value:
+                                enhancementCalculatorModel.previousEnhancements,
+                            items: EnhancementData.previousEnhancements(
+                              context,
+                              enhancerLvl4: !SharedPrefs().gloomhavenMode &&
+                                  SharedPrefs().enhancerLvl4,
+                              tempEnhancements: enhancementCalculatorModel
+                                  .temporaryEnhancementMode,
+                            ),
+                            onChanged: (int? value) {
+                              if (value != null) {
+                                enhancementCalculatorModel
+                                    .previousEnhancements = value;
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SettingsDivider(),
+                const EnhancementDivider(),
                 // ENHANCEMENT
                 ListTile(
                   leading: IconButton(
@@ -187,41 +197,45 @@ class EnhancementCalculatorPage extends StatelessWidget {
                             )
                         : null,
                   ),
-                  title: const Text(
-                    'Enhancement Type',
-                  ),
-                  subtitle: DropdownButtonHideUnderline(
-                    child: DropdownButton<Enhancement>(
-                      alignment: Alignment.center,
-                      hint: Text(
-                        'Type',
-                        style: DropdownMenuThemeData(
-                                textStyle:
-                                    Theme.of(context).textTheme.bodyMedium)
-                            .textStyle
-                            ?.copyWith(color: Colors.grey),
-                        // ?.copyWith(
-                        //     fontSize: Theme.of(context)
-                        //         .textTheme
-                        //         .bodyMedium
-                        //         ?.fontSize),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Enhancement Type',
                       ),
-                      value: enhancementCalculatorModel.enhancement,
-                      items: EnhancementData.enhancementTypes(
-                        context,
-                        gloomhavenMode: SharedPrefs().gloomhavenMode,
-                        enhancerLvl2: SharedPrefs().enhancerLvl2,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<Enhancement>(
+                            alignment: Alignment.center,
+                            hint: Text(
+                              'Type',
+                              style: DropdownMenuThemeData(
+                                      textStyle: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium)
+                                  .textStyle
+                                  ?.copyWith(color: Colors.grey),
+                            ),
+                            value: enhancementCalculatorModel.enhancement,
+                            items: EnhancementData.enhancementTypes(
+                              context,
+                              gloomhavenMode: SharedPrefs().gloomhavenMode,
+                              enhancerLvl2: SharedPrefs().enhancerLvl2,
+                            ),
+                            onChanged: (Enhancement? selectedEnhancement) {
+                              if (selectedEnhancement != null) {
+                                enhancementCalculatorModel
+                                    .enhancementSelected(selectedEnhancement);
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                      onChanged: (Enhancement? selectedEnhancement) {
-                        if (selectedEnhancement != null) {
-                          enhancementCalculatorModel
-                              .enhancementSelected(selectedEnhancement);
-                        }
-                      },
-                    ),
+                    ],
                   ),
                 ),
-                const SettingsDivider(),
+                EnhancementDivider(),
                 // MULTIPLE TARGETS
                 SwitchListTile(
                   value: enhancementCalculatorModel.multipleTargets,
@@ -253,11 +267,10 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  title: const AutoSizeText('Multiple Targets?'), // \u2020
+                  title: const AutoSizeText('Multiple Targets'), // \u2020
                 ),
 
                 if (!SharedPrefs().gloomhavenMode) ...[
-                  const SettingsDivider(),
                   // LOSS NON-PERSISTENT
                   SwitchListTile(
                     value: enhancementCalculatorModel.lostNonPersistent,
@@ -324,7 +337,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SettingsDivider(),
                   // PERSISTENT
                   SwitchListTile(
                     value: enhancementCalculatorModel.persistent,
@@ -362,6 +374,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       width: iconSize,
                     ),
                   ),
+                  const SizedBox(height: 4),
                 ],
               ],
             ),
@@ -369,9 +382,6 @@ class EnhancementCalculatorPage extends StatelessWidget {
         ),
         Visibility(
           visible: enhancementCalculatorModel.showCost,
-          // maintainSize: true,
-          // maintainAnimation: true,
-          // maintainState: true,
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Column(
@@ -381,12 +391,16 @@ class EnhancementCalculatorPage extends StatelessWidget {
                   height: 0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 8,
+                  ),
                   child: AutoSizeText(
-                    'Enhancement Cost',
+                    'Total Cost',
                     maxLines: 1,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
                 Row(
@@ -411,10 +425,25 @@ class EnhancementCalculatorPage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          height: 24,
+        SizedBox(
+          height: enhancementCalculatorModel.showCost ? 24 : 82,
         )
       ],
+    );
+  }
+}
+
+class EnhancementDivider extends StatelessWidget {
+  const EnhancementDivider({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      endIndent: 24,
+      indent: 24,
+      height: 1,
     );
   }
 }

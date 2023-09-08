@@ -8,4 +8,5 @@ const String highTower = 'HighTower',
     nyala = 'Nyala',
     pirataOne = 'PirataOne',
     roboto = 'Roboto',
-    openSans = 'OpenSans';
+    openSans = 'OpenSans',
+    inter = 'Inter';

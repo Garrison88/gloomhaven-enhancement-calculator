@@ -120,7 +120,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl2) {
       enhancementCost -= 10;
     }
-    return enhancementCost;
+    return enhancementCost.isNegative ? 0 : enhancementCost;
   }
 
   bool get multipleTargets => _multipleTargets;

@@ -101,6 +101,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
     return AppBar(
+      automaticallyImplyLeading: false,
+      // leading: Icon(Icons.settings),
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
       centerTitle: true,
       title: context.watch<AppModel>().page == 0 &&
@@ -118,7 +120,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
             )
           : context.watch<AppModel>().page == 1
               ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // hack to center Switch
                     const Visibility(
@@ -133,39 +136,52 @@ class _GHCAppBarState extends State<GHCAppBar> {
                         ),
                       ),
                     ),
-                    Image.asset(
-                      'images/titles/gloomhaven.png',
-                      scale: 6.25,
-                    ),
-                    Theme(
-                      data: Theme.of(context).copyWith(
-                        colorScheme: Theme.of(context).colorScheme.copyWith(
-                              outline: Colors.transparent,
-                            ),
-                      ),
-                      child: Switch(
-                        inactiveThumbImage: const AssetImage(
-                          'images/switch_gh.png',
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Image.asset(
+                          'images/titles/gloomhaven.png',
+                          scale: 6.25,
                         ),
-                        activeColor: const Color(0xff005cb2),
-                        trackColor: MaterialStateProperty.resolveWith(
-                          (states) => states.contains(MaterialState.selected)
-                              ? const Color(0xff6ab7ff)
-                              : const Color(0xffa98274),
-                        ),
-                        value: !SharedPrefs().gloomhavenMode,
-                        onChanged: (value) {
-                          SharedPrefs().gloomhavenMode = !value;
-                          Provider.of<EnhancementCalculatorModel>(context,
-                                  listen: false)
-                              .gameVersionToggled();
-                          setState(() {});
-                        },
                       ),
                     ),
-                    Image.asset(
-                      'images/titles/frosthaven.png',
-                      scale: 7,
+                    Center(
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: Theme.of(context).colorScheme.copyWith(
+                                outline: Colors.transparent,
+                              ),
+                        ),
+                        child: Switch(
+                          inactiveThumbImage: const AssetImage(
+                            'images/switch_gh.png',
+                          ),
+                          activeColor: const Color(0xff005cb2),
+                          trackColor: MaterialStateProperty.resolveWith(
+                            (states) => states.contains(MaterialState.selected)
+                                ? const Color(0xff6ab7ff)
+                                : const Color(0xffa98274),
+                          ),
+                          value: !SharedPrefs().gloomhavenMode,
+                          onChanged: (value) {
+                            SharedPrefs().gloomhavenMode = !value;
+                            Provider.of<EnhancementCalculatorModel>(
+                              context,
+                              listen: false,
+                            ).gameVersionToggled();
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          'images/titles/frosthaven.png',
+                          scale: 7,
+                        ),
+                      ),
                     ),
                   ],
                 )
@@ -179,8 +195,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
             child: IconButton(
               icon: Icon(
                 charactersModel.currentCharacter!.isRetired
-                    ? Icons.unarchive_outlined
-                    : Icons.archive_outlined,
+                    ? Icons.directions_walk
+                    : Icons.assist_walker,
               ),
               onPressed: () async {
                 final String message =
@@ -197,6 +213,10 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           ? null
                           : SnackBarAction(
                               label: 'Show',
+                              textColor: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                               onPressed: () {
                                 charactersModel.toggleShowRetired(
                                   character: character,
@@ -229,8 +249,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
             child: IconButton(
               icon: Icon(
                 charactersModel.isEditMode
-                    ? Icons.delete_outlined
-                    : Icons.person_add_outlined,
+                    ? Icons.delete_rounded
+                    : Icons.person_add_rounded,
                 color: charactersModel.isEditMode
                     ? Colors.red[400]
                     : Theme.of(context).brightness == Brightness.dark
@@ -330,7 +350,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
           message: 'Settings',
           child: IconButton(
             icon: Icon(
-              Icons.settings_outlined,
+              Icons.settings_rounded,
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
                   : Colors.black,

@@ -36,6 +36,7 @@ abstract class CharacterData {
   static const _effects = 'effects';
 
   static const _brute = 'br';
+  // static const _bruteFHCO = 'brute_fhco';
   static const _tinkerer = 'ti';
   static const _spellweaver = 'sw';
   static const _scoundrel = 'sc';
@@ -90,6 +91,7 @@ abstract class CharacterData {
   static const _strong = 'Strong';
 
   static final List<PlayerClass> playerClasses = [
+    // GLOOMHAVEN
     PlayerClass(
       race: _inox,
       name: 'Brute',
@@ -99,6 +101,16 @@ abstract class CharacterData {
       locked: false,
       primaryColor: 0xff4e7ec1,
     ),
+    // PlayerClass(
+    //   race: _inox,
+    //   name: 'Brute',
+    //   classCode: _bruteFHCO,
+    //   icon: 'brute.svg',
+    //   category: ClassCategory.gloomhaven,
+    //   locked: false,
+    //   primaryColor: 0xff4e7ec1,
+    //   classVersion: ClassVersion.v2,
+    // ),
     PlayerClass(
       race: _quatryl,
       name: 'Tinkerer',

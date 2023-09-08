@@ -26,16 +26,12 @@ class ResourceCard extends StatelessWidget {
       width: 100,
       child: Card(
         elevation: 4,
-        child: Stack(
-          children: <Widget>[
-            ResourceDetails(
-              resource: resource,
-              count: count,
-              decreaseCount: decreaseCount,
-              increaseCount: increaseCount,
-              canEdit: canEdit,
-            ),
-          ],
+        child: ResourceDetails(
+          resource: resource,
+          count: count,
+          decreaseCount: decreaseCount,
+          increaseCount: increaseCount,
+          canEdit: canEdit,
         ),
       ),
     );

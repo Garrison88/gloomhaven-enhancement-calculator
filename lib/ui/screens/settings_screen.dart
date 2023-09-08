@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         title: Text(
           'Settings',
-          style: Theme.of(context).textTheme.displaySmall,
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),
       body: Center(
@@ -70,13 +70,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           constraints: const BoxConstraints(maxWidth: maxWidth),
           child: ListView(
             children: <Widget>[
+              const SettingsSection(title: 'DISPLAY'),
               Theme(
                 data: Theme.of(context).copyWith(
                     colorScheme: Theme.of(context)
                         .colorScheme
                         .copyWith(outline: Colors.transparent)),
                 child: SwitchListTile(
-                  title: const Text('Theme'),
+                  secondary: Icon(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Icons.dark_mode_rounded
+                        : Icons.light_mode_rounded,
+                  ),
+                  title: const Text('Brightness'),
                   subtitle: Text(
                     Theme.of(context).brightness == Brightness.dark
                         ? 'Dark'
@@ -99,11 +105,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
               ),
-              // const SettingsDivider(),
               SwitchListTile(
-                title: const Text('Use Roboto font'),
+                secondary: const FaIcon(
+                  FontAwesomeIcons.a,
+                ),
+                title: const Text('Use Inter Font'),
                 subtitle: Text(
-                  'This setting replaces all fonts with the default Roboto font to help with readability',
+                  'Replace stylized fonts with Inter to improve readability',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 value: widget.appModel.useDefaultFonts,
@@ -113,25 +121,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   widget.appModel.updateTheme();
                 },
               ),
-              const SettingsDivider(),
               SwitchListTile(
+                secondary: Icon(
+                  widget.charactersModel.showRetired
+                      ? Icons.visibility_rounded
+                      : Icons.visibility_off_rounded,
+                ),
+                title: const Text('Show Retired Characters'),
+                subtitle: Text(
+                    'Toggle visibility of retired characters in the Characters tab to reduce clutter',
+                    style: Theme.of(context).textTheme.titleLarge),
+                value: widget.charactersModel.showRetired,
+                onChanged: (val) {
+                  context.read<AppModel>().updateTheme();
+                  setState(() {
+                    widget.charactersModel.toggleShowRetired();
+                  });
+                },
+              ),
+              const SettingsSection(title: 'GAMEPLAY'),
+              SwitchListTile(
+                secondary: const Icon(Icons.interests_rounded),
+                subtitle: Text(
+                  "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                title: const Text(
+                  'Custom Content',
+                ),
+                value: SharedPrefs().customClasses,
+                onChanged: (val) {
+                  setState(() {
+                    SharedPrefs().customClasses = val;
+                  });
+                },
+              ),
+              SwitchListTile(
+                secondary: const Icon(Icons.warning_rounded),
                 title: const Text("Solve 'Envelope X'"),
-                subtitle: Row(
-                  children: [
-                    Icon(
-                      Icons.warning,
-                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
-                    ),
-                    const SizedBox(
-                      width: smallPadding,
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Gloomhaven spoilers',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                  ],
+                subtitle: Text(
+                  'Gloomhaven spoilers',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 value: SharedPrefs().envelopeX,
                 onChanged: (val) {
@@ -242,279 +272,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
               ),
-              // const SettingsDivider(),
               SwitchListTile(
-                title: const Text('Scenario 114 Reward'),
-                subtitle: Row(
-                  children: [
-                    Icon(
-                      Icons.warning,
-                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
-                    ),
-                    const SizedBox(
-                      width: smallPadding,
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Forgotten Circles spoilers',
-                        overflow: TextOverflow.fade,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                  ],
-                ),
-                value: SharedPrefs().partyBoon,
-                onChanged: (val) {
-                  setState(
-                    () {
-                      SharedPrefs().partyBoon = val;
-                      widget.enhancementCalculatorModel.calculateCost();
-                    },
-                  );
-                },
-              ),
-              // const SettingsDivider(),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  ListTile(
-                    title: const Text('Building 44'),
-                    subtitle: Row(
-                      children: [
-                        Icon(
-                          Icons.warning,
-                          size:
-                              Theme.of(context).textTheme.titleLarge?.fontSize,
-                        ),
-                        const SizedBox(
-                          width: smallPadding,
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Frosthaven spoilers',
-                            overflow: TextOverflow.fade,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () async {
-                      await showDialog<bool>(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Center(
-                              child: Text('Enhancer'),
-                            ),
-                            content: StatefulBuilder(
-                              builder: (
-                                thisLowerContext,
-                                innerSetState,
-                              ) {
-                                return Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CheckboxListTile(
-                                          title: Text(
-                                            'Lvl 1',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  color: null,
-                                                ),
-                                          ),
-                                          value: true,
-                                          onChanged: null,
-                                        ),
-                                        Text(
-                                          'Buy enhancements',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color:
-                                                    SharedPrefs().enhancerLvl1
-                                                        ? null
-                                                        : Colors.grey,
-                                                fontSize: 20,
-                                              ),
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 2'),
-                                          value: SharedPrefs().enhancerLvl2,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl2 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        Text(
-                                          'and reduce all enhancement costs by 10 gold',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color:
-                                                    SharedPrefs().enhancerLvl2
-                                                        ? null
-                                                        : Colors.grey,
-                                                fontSize: 20,
-                                              ),
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 3'),
-                                          value: SharedPrefs().enhancerLvl3,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl3 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        Text(
-                                          'and reduce level penalties by 10 gold per level',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color:
-                                                    SharedPrefs().enhancerLvl3
-                                                        ? null
-                                                        : Colors.grey,
-                                                fontSize: 20,
-                                              ),
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 4'),
-                                          value: SharedPrefs().enhancerLvl4,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl4 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        Text(
-                                          'and reduce repeat penalties by 25 gold per enhancement',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color:
-                                                    SharedPrefs().enhancerLvl4
-                                                        ? null
-                                                        : Colors.grey,
-                                                fontSize: 20,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text(
-                                  'Close',
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  Positioned(
-                    right: 32.5,
-                    child: IgnorePointer(
-                      ignoring: true,
-                      child: Icon(
-                        Icons.open_in_new,
-                        size: 30,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(.75),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 32.5,
-                  ),
-                ],
-              ),
-              // const SettingsDivider(),
-              SwitchListTile(
-                subtitle: Text(
-                  "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                title: const Text(
-                  'Custom Content',
-                ),
-                value: SharedPrefs().customClasses,
-                onChanged: (val) {
-                  setState(() {
-                    SharedPrefs().customClasses = val;
-                  });
-                },
-              ),
-              // const SettingsDivider(),
-              SwitchListTile(
+                secondary: const Icon(Icons.warning_rounded),
                 title: const Text(
                   "Unlock 'Envelope V'",
                 ),
-                subtitle: Row(
-                  children: [
-                    Icon(
-                      Icons.warning,
-                      size: Theme.of(context).textTheme.titleLarge?.fontSize,
-                    ),
-                    const SizedBox(
-                      width: smallPadding,
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Crimson Scales spoilers',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                  ],
+                subtitle: Text(
+                  'Crimson Scales spoilers',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 value: SharedPrefs().envelopeV,
                 onChanged: (val) {
@@ -625,36 +390,243 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
               ),
-              // const SettingsDivider(),
               SwitchListTile(
-                title: const Text('Show Retired Characters'),
-                value: widget.charactersModel.showRetired,
+                secondary: const Icon(Icons.warning_rounded),
+                title: const Text('Scenario 114 Reward'),
+                subtitle: Text(
+                  'Forgotten Circles spoilers',
+                  overflow: TextOverflow.fade,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                value: SharedPrefs().partyBoon,
                 onChanged: (val) {
-                  context.read<AppModel>().updateTheme();
-                  setState(() {
-                    widget.charactersModel.toggleShowRetired();
-                  });
+                  setState(
+                    () {
+                      SharedPrefs().partyBoon = val;
+                      widget.enhancementCalculatorModel.calculateCost();
+                    },
+                  );
                 },
               ),
-              const SettingsDivider(),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.warning_rounded),
+                    title: const Text('Building 44'),
+                    subtitle: Text(
+                      'Frosthaven spoilers',
+                      overflow: TextOverflow.fade,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    onTap: () {
+                      showDialog<bool>(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Center(
+                              child: Text(
+                                'Enhancer',
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge,
+                              ),
+                            ),
+                            content: StatefulBuilder(
+                              builder: (
+                                _,
+                                innerSetState,
+                              ) {
+                                return Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: maxDialogWidth,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CheckboxListTile(
+                                          title: Text(
+                                            'Lvl 1',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color: null,
+                                                  fontSize: SharedPrefs()
+                                                          .useDefaultFonts
+                                                      ? 25
+                                                      : null,
+                                                ),
+                                          ),
+                                          subtitle: Text(
+                                            'Buy enhancements',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      SharedPrefs().enhancerLvl1
+                                                          ? null
+                                                          : Colors.grey,
+                                                  fontSize: 20,
+                                                ),
+                                          ),
+                                          value: true,
+                                          onChanged: null,
+                                        ),
+                                        CheckboxListTile(
+                                          title: const Text('Lvl 2'),
+                                          subtitle: Text(
+                                            'and reduce all enhancement costs by 10 gold',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      SharedPrefs().enhancerLvl2
+                                                          ? null
+                                                          : Colors.grey,
+                                                  fontSize: 20,
+                                                ),
+                                          ),
+                                          value: SharedPrefs().enhancerLvl2,
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl2 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        CheckboxListTile(
+                                          title: const Text('Lvl 3'),
+                                          subtitle: Text(
+                                            'and reduce level penalties by 10 gold per level',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      SharedPrefs().enhancerLvl3
+                                                          ? null
+                                                          : Colors.grey,
+                                                  fontSize: 20,
+                                                ),
+                                          ),
+                                          value: SharedPrefs().enhancerLvl3,
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl3 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        CheckboxListTile(
+                                          title: const Text('Lvl 4'),
+                                          subtitle: Text(
+                                            'and reduce repeat penalties by 25 gold per enhancement',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      SharedPrefs().enhancerLvl4
+                                                          ? null
+                                                          : Colors.grey,
+                                                  fontSize: 20,
+                                                ),
+                                          ),
+                                          value: SharedPrefs().enhancerLvl4,
+                                          onChanged: (bool? val) {
+                                            if (val != null) {
+                                              innerSetState(
+                                                () {
+                                                  SharedPrefs().enhancerLvl4 =
+                                                      val;
+                                                  widget
+                                                      .enhancementCalculatorModel
+                                                      .calculateCost();
+                                                },
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  'Close',
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  Positioned(
+                    right: 32.5,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: Icon(
+                        Icons.open_in_new,
+                        size: 30,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(.75),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 32.5,
+                  ),
+                ],
+              ),
+              const SettingsSection(title: 'BACKUP & RESTORE'),
               ListTile(
+                leading: const Icon(Icons.upload_rounded),
                 title: const Text('Backup'),
                 subtitle: Text(
                   'Backup your current characters',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 onTap: () async {
-                  await showDialog<String>(
+                  await showDialog<String?>(
                     context: context,
                     builder: (context) {
-                      final TextEditingController titleController =
+                      final TextEditingController fileNameController =
                           TextEditingController()
                             ..text =
                                 'ghc_backup_${DateFormat('yyyy-MM-dd_HH:mm').format(DateTime.now())}'
                                     .replaceAll(RegExp(':'), '-');
                       return AlertDialog(
                         title: Platform.isAndroid
-                            ? const Icon(Icons.warning)
+                            ? const Icon(Icons.warning_rounded)
                             : null,
                         content: Container(
                           constraints: const BoxConstraints(
@@ -669,7 +641,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               TextField(
                                 decoration: const InputDecoration(
                                     labelText: 'Filename'),
-                                controller: titleController,
+                                controller: fileNameController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                     RegExp(
@@ -681,6 +653,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                         actions: <Widget>[
+                          TextButton(
+                            child: const Text(
+                              'Cancel',
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
                           if (Platform.isAndroid)
                             TextButton.icon(
                               icon: Icon(
@@ -698,14 +676,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     .generateBackup();
                                 downloadPath = '/storage/emulated/0/Download';
                                 File backupFile = File(
-                                    '$downloadPath/${titleController.text}.txt');
+                                    '$downloadPath/${fileNameController.text}.txt');
                                 await backupFile.writeAsString(value);
                                 Navigator.of(context).pop('save');
                               },
                             ),
                           TextButton.icon(
                             onPressed: () {
-                              Navigator.of(context).pop(titleController.text);
+                              Navigator.of(context)
+                                  .pop(fileNameController.text);
                             },
                             icon: Platform.isAndroid
                                 ? Icon(
@@ -722,7 +701,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   ).then(
-                    (backupName) async {
+                    (String? backupName) async {
                       if (backupName != null) {
                         if (backupName == 'save') {
                           ScaffoldMessenger.of(context)
@@ -761,8 +740,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              // const SettingsDivider(),
               ListTile(
+                leading: const Icon(Icons.download_rounded),
                 title: const Text('Restore'),
                 subtitle: Text(
                   'Restore your characters from a backup file',
@@ -770,7 +749,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 onTap: () async {
                   final bool? choice = await showDialog<bool?>(
-                    barrierDismissible: false,
                     context: context,
                     builder: (context) {
                       return AlertDialog(
@@ -779,7 +757,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             maxWidth: maxDialogWidth,
                           ),
                           child: const Text(
-                              'Restoring a backup file will overwrite any current characters. Do you wish to proceed?'),
+                              'Restoring a backup file will overwrite any current characters. Do you wish to continue?'),
                         ),
                         actions: <Widget>[
                           TextButton(
@@ -791,11 +769,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             },
                           ),
                           TextButton(
-                            child: Text(
-                              'Proceed',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                            child: const Text(
+                              'Continue',
                             ),
                             onPressed: () async {
                               if (!await _getStoragePermission()) {
@@ -808,7 +783,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   );
-                  if (choice != null && !choice) {
+                  if (choice == null || !choice) {
                     return;
                   }
                   await FilePicker.platform.pickFiles(
@@ -840,13 +815,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text(
-                                    'Error During Restore Operation'),
+                                title: Text(
+                                  'Error During Restore Operation',
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                ),
                                 actions: [
+                                  TextButton.icon(
+                                    onPressed: () => Clipboard.setData(
+                                      ClipboardData(
+                                        text: e.toString(),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.copy),
+                                    label: const Text('Copy'),
+                                  ),
                                   TextButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    child: const Text('Ok'),
+                                    child: const Text('Close'),
                                   ),
                                 ],
                                 content: Container(
@@ -855,7 +842,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                   child: SingleChildScrollView(
                                     child: Text(
-                                      'There was an error during the restoration. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer with your backup file and this information:\n${e.toString()}',
+                                      'There was an error during the restoration process. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer (through the Settings menu) with your existing backup file and this information:\n\n${e.toString()}',
                                     ),
                                   ),
                                 ),
@@ -1022,19 +1009,21 @@ Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
         uri,
       );
 
-class SettingsDivider extends StatelessWidget {
-  const SettingsDivider({
-    Key? key,
-  }) : super(key: key);
+class SettingsSection extends StatelessWidget {
+  final String title;
+  const SettingsSection({
+    super.key,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Divider(
-        endIndent: 16,
-        indent: 16,
-        height: 1,
+    return ListTile(
+      leading: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
       ),
     );
   }

@@ -41,38 +41,44 @@ class _HomeState extends State<Home> {
           builder: (_) {
             return AlertDialog(
               title: const Text(
-                'New in version 4.0.0',
+                'New in version 4',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
                 ),
               ),
-              content: const SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("1. Added all 'Frosthaven' classes"),
-                    Text(
-                        "2. Added all remaining 'Crimson Scales', add-on, and 'Trail of Ashes' classes (show Custom Classes in the Settings menu)"),
-                    Text('3. Added Resources section'),
-                    Text(
-                        "4. Added a toggle for the Enhancement Calculator to use 'Gloomhaven' or 'Frosthaven' rules"),
-                    Text(
-                        '5. Optional random name generator in Create Character dialog'),
-                    Text(
-                        "6. Added support for 'Temporary Enhancement' Variant mode in Enhancement Calculator"),
-                    Text(
-                        '7. Replaced many icons, UI/UX improvements, and many behind-the-scenes performance improvements'),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Text('Upcoming:'),
-                    Text(
-                        "Frosthaven crossover variants of 'Gloomhaven' and 'Crimson Scales' classes"),
-                    SizedBox(height: 16),
-                    Text(
-                        'Please reach out to the developer through the Support section in the Settings menu with any questions, comments, or critiques'),
-                  ],
+              content: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: maxDialogWidth,
+                  minWidth: maxDialogWidth,
+                ),
+                child: const SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("1. Added all 'Frosthaven' classes"),
+                      Text(
+                          "2. Added all remaining 'Crimson Scales', add-on, and 'Trail of Ashes' classes (show Custom Classes in the Settings menu)"),
+                      Text('3. Added Resources section'),
+                      Text(
+                          "4. Added a toggle for the Enhancement Calculator to use 'Gloomhaven' or 'Frosthaven' rules"),
+                      Text(
+                          '5. Optional random name generator in Create Character dialog'),
+                      Text(
+                          "6. Added support for 'Temporary Enhancement' Variant mode in Enhancement Calculator"),
+                      Text(
+                          '7. Replaced many icons, UI/UX improvements, and many behind-the-scenes performance improvements'),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text('Upcoming:'),
+                      Text(
+                          "Frosthaven crossover variants of 'Gloomhaven' and 'Crimson Scales' classes"),
+                      SizedBox(height: 16),
+                      Text(
+                          'Please reach out to the developer through the Support section in the Settings menu with any questions, comments, or critiques'),
+                    ],
+                  ),
                 ),
               ),
               actions: [
@@ -158,8 +164,8 @@ class _HomeState extends State<Home> {
                 : charactersModel.characters.isEmpty
                     ? Icons.add
                     : charactersModel.isEditMode
-                        ? Icons.edit_off_outlined
-                        : Icons.edit_outlined,
+                        ? Icons.edit_off_rounded
+                        : Icons.edit_rounded,
           ),
           onPressed: context.read<AppModel>().page == 1
               ? () => context.read<EnhancementCalculatorModel>().resetCost()

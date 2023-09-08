@@ -21,7 +21,7 @@ class GHCBottomNavigationBar extends StatelessWidget {
           icon: SizedBox(
             height: 35,
             child: Icon(
-              Icons.history_edu_outlined,
+              Icons.history_edu_rounded,
               size: iconSize,
             ),
           ),
@@ -31,7 +31,7 @@ class GHCBottomNavigationBar extends StatelessWidget {
           icon: SizedBox(
             height: 35,
             child: Icon(
-              Icons.auto_awesome_outlined,
+              Icons.auto_awesome_rounded,
               size: iconSize,
             ),
           ),

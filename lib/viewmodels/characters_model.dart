@@ -166,7 +166,8 @@ class CharactersModel with ChangeNotifier {
     /* TODO: change this to use V2 or something when done adding GH and JotL to FH
     crossover character sheets */
     // TODO: Also here, consider displaying or not displaying Traits if using old system
-    if (selectedClass.category != ClassCategory.frosthaven) {
+    if (selectedClass.category != ClassCategory.frosthaven &&
+        selectedClass.classVersion != ClassVersion.frosthavenCrossover) {
       character.includeMasteries = false;
     }
     character.id = await databaseHelper.insertCharacter(
