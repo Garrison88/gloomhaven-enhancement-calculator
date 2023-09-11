@@ -167,7 +167,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 //   alignment: Alignment.centerLeft,
                 //   child: IconButton(
                 //     icon: const Icon(
-                //       Icons.info_outline,
+                //       Icons.info_outline_rounded,
                 //     ),
                 //     onPressed: () => showDialog<void>(
                 //       context: context,
@@ -360,7 +360,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   children: [
                     IconButton(
                       icon: const Icon(
-                        Icons.info_outline,
+                        Icons.info_outline_rounded,
                       ),
                       onPressed: () => showDialog<void>(
                         context: context,
@@ -466,7 +466,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 ),
           ),
           icon: const Icon(
-            Icons.check,
+            Icons.check_rounded,
             color: Colors.white,
           ),
         ),

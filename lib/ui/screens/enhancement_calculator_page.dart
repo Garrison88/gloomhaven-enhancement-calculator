@@ -11,10 +11,36 @@ import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
-class EnhancementCalculatorPage extends StatelessWidget {
+class EnhancementCalculatorPage extends StatefulWidget {
   const EnhancementCalculatorPage({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<EnhancementCalculatorPage> createState() =>
+      _EnhancementCalculatorPageState();
+}
+
+class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
+  // final ScrollController scrollController = ScrollController();
+  // bool isBottom = false;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   scrollController.addListener(() {
+  //     if ((scrollController.offset >=
+  //         scrollController.position.maxScrollExtent)) {
+  //       setState(() {
+  //         isBottom = true;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         isBottom = false;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +81,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: maxWidth),
             padding: const EdgeInsets.symmetric(horizontal: smallPadding),
             child: ListView(
+              // controller: scrollController,
               children: <Widget>[
                 // TEMPORARY ENHANCEMENT
                 SwitchListTile(
@@ -68,7 +95,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                   ),
                   secondary: IconButton(
                     icon: const Icon(
-                      Icons.info_outline,
+                      Icons.info_outline_rounded,
                     ),
                     onPressed: () => showDialog<void>(
                       context: context,
@@ -87,7 +114,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                 ListTile(
                   leading: IconButton(
                     icon: const Icon(
-                      Icons.info_outline,
+                      Icons.info_outline_rounded,
                     ),
                     onPressed: () => showDialog<void>(
                       context: context,
@@ -132,7 +159,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                 ListTile(
                   leading: IconButton(
                     icon: const Icon(
-                      Icons.info_outline,
+                      Icons.info_outline_rounded,
                     ),
                     onPressed: () => showDialog<void>(
                       context: context,
@@ -183,7 +210,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                 ListTile(
                   leading: IconButton(
                     icon: const Icon(
-                      Icons.info_outline,
+                      Icons.info_outline_rounded,
                     ),
                     onPressed: enhancementCalculatorModel.enhancement != null
                         ? () => showDialog<void>(
@@ -235,7 +262,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                EnhancementDivider(),
+                const EnhancementDivider(),
                 // MULTIPLE TARGETS
                 SwitchListTile(
                   value: enhancementCalculatorModel.multipleTargets,
@@ -247,7 +274,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                       : null,
                   secondary: IconButton(
                     icon: Icon(
-                      Icons.info_outline,
+                      Icons.info_outline_rounded,
                       color:
                           SharedPrefs().darkTheme ? Colors.white : Colors.black,
                     ),
@@ -282,7 +309,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                           },
                     secondary: IconButton(
                       icon: Icon(
-                        Icons.info_outline,
+                        Icons.info_outline_rounded,
                         color: SharedPrefs().darkTheme
                             ? Colors.white
                             : Colors.black,
@@ -350,7 +377,7 @@ class EnhancementCalculatorPage extends StatelessWidget {
                               },
                     secondary: IconButton(
                       icon: Icon(
-                        Icons.info_outline,
+                        Icons.info_outline_rounded,
                         color: SharedPrefs().darkTheme
                             ? Colors.white
                             : Colors.black,
@@ -387,6 +414,9 @@ class EnhancementCalculatorPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                // isBottom
+                //     ? SizedBox()
+                //     :
                 const Divider(
                   height: 0,
                 ),
@@ -440,7 +470,7 @@ class EnhancementDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
+    return const Divider(
       endIndent: 24,
       indent: 24,
       height: 1,

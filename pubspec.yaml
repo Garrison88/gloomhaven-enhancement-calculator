@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 4.0.5+241
+version: 4.1.0+243
 
 environment:
   sdk: ">=2.19.4 <3.0.0"
@@ -26,7 +26,7 @@ dependencies:
   faker: ^2.1.0
   # maybe URL launcher is problematic
   font_awesome_flutter: ^10.5.0
-  settings_ui: ^2.0.2
+  material_design_icons_flutter: ^7.0.7296
 
   cupertino_icons: ^1.0.5
 

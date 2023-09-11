@@ -160,7 +160,7 @@ class _HomeState extends State<Home> {
           heroTag: null,
           child: Icon(
             appModel.page == 1
-                ? Icons.clear
+                ? Icons.clear_rounded
                 : charactersModel.characters.isEmpty
                     ? Icons.add
                     : charactersModel.isEditMode

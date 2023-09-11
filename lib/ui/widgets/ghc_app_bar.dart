@@ -231,7 +231,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
         // if (appModel.page == 0 && !charactersModel.isEditMode)
         //   IconButton(
         //     icon: const Icon(
-        //       Icons.info_outline,
+        //       Icons.info_outline_rounded,
         //     ),
         //     onPressed: () => showDialog<void>(
         //       context: context,
@@ -295,7 +295,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                   true,
                                 ),
                                 icon: const Icon(
-                                  Icons.delete_outline,
+                                  Icons.delete_rounded,
                                   color: Colors.white,
                                 ),
                                 label: Text(

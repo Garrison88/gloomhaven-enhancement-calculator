@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,6 +39,25 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final ScrollController scrollController = ScrollController();
+  bool isBottom = false;
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if ((scrollController.offset >=
+          scrollController.position.maxScrollExtent)) {
+        setState(() {
+          isBottom = true;
+        });
+      } else {
+        setState(() {
+          isBottom = false;
+        });
+      }
+    });
+  }
+
   late String downloadPath;
 
   final Future<PackageInfo> _packageInfoFuture = PackageInfo.fromPlatform();
@@ -106,8 +126,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               SwitchListTile(
-                secondary: const FaIcon(
-                  FontAwesomeIcons.a,
+                secondary: Icon(
+                  MdiIcons.formatFont,
                 ),
                 title: const Text('Use Inter Font'),
                 subtitle: Text(
@@ -141,13 +161,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SettingsSection(title: 'GAMEPLAY'),
               SwitchListTile(
-                secondary: const Icon(Icons.interests_rounded),
+                secondary: Icon(
+                  SharedPrefs().customClasses
+                      ? MdiIcons.testTube
+                      : MdiIcons.testTubeOff,
+                ),
                 subtitle: Text(
                   "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 title: const Text(
-                  'Custom Content',
+                  'Custom Classes',
                 ),
                 value: SharedPrefs().customClasses,
                 onChanged: (val) {
@@ -867,90 +891,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
       persistentFooterButtons: [
         FutureBuilder(
           future: _packageInfoFuture,
-          builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<PackageInfo> snapshot,
+          ) {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData) {
-              return Theme(
-                data: Theme.of(context)
-                    .copyWith(dividerColor: Colors.transparent),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Support & Feedback',
-                      textAlign: TextAlign.center,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: const FaIcon(
-                            FontAwesomeIcons.discord,
-                          ),
-                          onPressed: () {
-                            _launchURL(
-                              Uri(
-                                scheme: 'https',
-                                host: 'discord.gg',
-                                path: 'FxuKNzDAmj',
-                              ),
-                            );
-                          },
+              return Column(
+                children: [
+                  const Text(
+                    'Support & Feedback',
+                    textAlign: TextAlign.center,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const FaIcon(
+                          FontAwesomeIcons.discord,
                         ),
-                        IconButton(
-                          icon: const FaIcon(
-                            FontAwesomeIcons.instagram,
-                          ),
-                          onPressed: () async {
-                            await _launchURL(
-                              Uri(
-                                scheme: 'https',
-                                host: 'instagram.com',
-                                path: 'tomkatcreative',
-                              ),
-                            );
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.email,
-                          ),
-                          onPressed: () async {
-                            await _launchURL(
-                              Uri(
-                                scheme: 'mailto',
-                                path: 'tomkatcreative@gmail.com',
-                                queryParameters: snapshot.data != null
-                                    ? {
-                                        'subject':
-                                            'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
-                                      }
-                                    : null,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: smallPadding,
-                          right: smallPadding,
-                        ),
-                        child: snapshot.data != null
-                            ? Text(
-                                'v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              )
-                            : const SizedBox(),
+                        onPressed: () {
+                          _launchURL(
+                            Uri(
+                              scheme: 'https',
+                              host: 'discord.gg',
+                              path: 'FxuKNzDAmj',
+                            ),
+                          );
+                        },
                       ),
-                    )
-                  ],
-                ),
+                      IconButton(
+                        icon: const FaIcon(
+                          FontAwesomeIcons.instagram,
+                        ),
+                        onPressed: () async {
+                          await _launchURL(
+                            Uri(
+                              scheme: 'https',
+                              host: 'instagram.com',
+                              path: 'tomkatcreative',
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.email,
+                        ),
+                        onPressed: () async {
+                          await _launchURL(
+                            Uri(
+                              scheme: 'mailto',
+                              path: 'tomkatcreative@gmail.com',
+                              queryParameters: snapshot.data != null
+                                  ? {
+                                      'subject':
+                                          'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
+                                    }
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: smallPadding,
+                        right: smallPadding,
+                      ),
+                      child: snapshot.data != null
+                          ? Text(
+                              'v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
+                  )
+                ],
               );
             } else {
               return Container();
