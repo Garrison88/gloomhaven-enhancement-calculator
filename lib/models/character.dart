@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
@@ -29,6 +30,7 @@ const String columnResourceFlamefruit = 'ResourceFlameFruit';
 const String columnResourceCorpsecap = 'ResourceCorpseCap';
 const String columnResourceSnowthistle = 'ResourceSnowThistle';
 const String columnIsRetired = 'IsRetired';
+const String columnVariant = 'Variant';
 
 class Character {
   int? id;
@@ -50,6 +52,14 @@ class Character {
   late int resourceCorpsecap;
   late int resourceSnowthistle;
   bool isRetired = false;
+  Variant variant = Variant.base;
+  List<Perk> perks = [];
+  List<CharacterPerk> characterPerks = [];
+  List<Mastery> masteries = [];
+  List<CharacterMastery> characterMasteries = [];
+  List<PerkRow> perkRows = [];
+  List<Perk> perkRowPerks = [];
+  bool includeMasteries = true;
   Character({
     this.id,
     required this.uuid,
@@ -70,15 +80,8 @@ class Character {
     this.resourceCorpsecap = 0,
     this.resourceSnowthistle = 0,
     this.isRetired = false,
+    this.variant = Variant.base,
   });
-
-  List<Perk> perks = [];
-  List<CharacterPerk> characterPerks = [];
-  List<Mastery> masteries = [];
-  List<CharacterMastery> characterMasteries = [];
-  List<PerkRow> perkRows = [];
-  List<Perk> perkRowPerks = [];
-  bool includeMasteries = true;
 
   Character.fromMap(Map<String, dynamic> map) {
     id = map[columnCharacterId] ?? '';
@@ -103,6 +106,9 @@ class Character {
     resourceCorpsecap = map[columnResourceCorpsecap] ?? 0;
     resourceSnowthistle = map[columnResourceSnowthistle] ?? 0;
     isRetired = map[columnIsRetired] == 1 ? true : false;
+    variant = Variant.values.firstWhere(
+      (variant) => variant.name == map[columnVariant],
+    );
   }
 
   Map<String, dynamic> toMap() => {
@@ -125,6 +131,7 @@ class Character {
         columnResourceCorpsecap: resourceCorpsecap,
         columnResourceSnowthistle: resourceSnowthistle,
         columnIsRetired: isRetired ? 1 : 0,
+        columnVariant: variant.name,
       };
 
   Color primaryClassColor(
@@ -173,4 +180,8 @@ class Character {
         (previousValue, perk) =>
             previousValue + (perk.characterPerkIsSelected ? 1 : 0),
       );
+
+  bool showTraits() => !(playerClass.traits.isEmpty ||
+      (playerClass.category != ClassCategory.frosthaven &&
+          variant == Variant.base));
 }

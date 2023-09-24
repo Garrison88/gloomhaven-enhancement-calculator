@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'data/constants.dart';
 import 'models/player_class.dart';
 import 'shared_prefs.dart';
 
-class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
+class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   CustomSearchDelegate(
     List<PlayerClass> playerClass,
   ) : _playerClasses = playerClass;
@@ -196,15 +197,6 @@ class CustomSearchDelegate extends SearchDelegate<PlayerClass> {
               },
               value: hideLockedClasses,
             ),
-            // Row(
-            //   mainAxisSize: MainAxisSize.max,
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: [
-
-            //     Checkbox(),
-            //   ],
-            // ),
             Expanded(
               child: _WordSuggestionList(
                 query: query,
@@ -349,14 +341,14 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                     )
                   : null,
               onTap: () async {
-                if (await _onClassSelected(
-                      context,
-                      selectedPlayerClass,
-                    ) !=
-                    null) {
-                  Navigator.pop<PlayerClass>(
+                SelectedPlayerClass? choice = await _onClassSelected(
+                  context,
+                  selectedPlayerClass,
+                );
+                if (choice != null) {
+                  Navigator.pop<SelectedPlayerClass>(
                     context,
-                    selectedPlayerClass,
+                    choice,
                   );
                 }
               },
@@ -367,12 +359,16 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
     );
   }
 
-  Future<PlayerClass?> _onClassSelected(
+  Future<SelectedPlayerClass?> _onClassSelected(
     BuildContext context,
     PlayerClass selectedPlayerClass,
   ) async {
     bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
-    bool? proceed;
+    bool? proceed = true;
+    SelectedPlayerClass userChoice = SelectedPlayerClass(
+      playerClass: selectedPlayerClass,
+      variant: Variant.base,
+    );
     if ((selectedPlayerClass.category == ClassCategory.custom) &&
         !hideMessage) {
       proceed = await showDialog<bool?>(
@@ -493,65 +489,69 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         },
       );
     }
-    // else if (selectedPlayerClass.category == ClassCategory.gloomhaven) {
-    //   proceed = await showDialog<bool?>(
-    //     context: context,
-    //     builder: (_) {
-    //       return AlertDialog(
-    //         title: Row(
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           children: [
-    //             SvgPicture.asset(
-    //               'images/class_icons/${selectedPlayerClass.icon}',
-    //               width: iconSize + 5,
-    //               height: iconSize + 5,
-    //               colorFilter: ColorFilter.mode(
-    //                 Color(
-    //                   selectedPlayerClass.primaryColor,
-    //                 ),
-    //                 BlendMode.srcIn,
-    //               ),
-    //             ),
-    //             const SizedBox(width: smallPadding * 2),
-    //             Text(
-    //               'Version',
-    //               style: Theme.of(context).textTheme.headlineLarge,
-    //             ),
-    //           ],
-    //         ),
-    //         actions: <Widget>[
-    //           TextButton(
-    //             child: const Text(
-    //               'Gloomhaven\n(Original)',
-    //             ),
-    //             onPressed: () {
-    //               Navigator.pop(
-    //                 context,
-    //                 true,
-    //               );
-    //             },
-    //           ),
-    //           TextButton(
-    //             child: const Text(
-    //               'Frosthaven\n(Crossover)',
-    //             ),
-    //             onPressed: () {
-    //               selectedPlayerClass.classVersion =
-    //                   ClassVersion.frosthavenCrossover;
-    //               Navigator.pop(
-    //                 context,
-    //                 true,
-    //               );
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
-    else {
-      return selectedPlayerClass;
+    // TODO: This can be removed once all classes are converted over to use the Map
+    if (PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!.length >
+        1) {
+      Variant? variant = await showDialog<Variant?>(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'images/class_icons/${selectedPlayerClass.icon}',
+                  width: iconSize + 5,
+                  height: iconSize + 5,
+                  colorFilter: ColorFilter.mode(
+                    Color(
+                      selectedPlayerClass.primaryColor,
+                    ),
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: smallPadding * 2),
+                Text(
+                  selectedPlayerClass.name,
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+              ],
+            ),
+            content: const Text(
+              'Version',
+              textAlign: TextAlign.center,
+            ),
+            actions:
+                PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!
+                    .map((perkList) {
+              return TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(perkList.variant);
+                },
+                child: Text(
+                  CharacterData.classVariants[perkList.variant]!,
+                  textAlign: TextAlign.end,
+                ),
+              );
+            }).toList(),
+          );
+        },
+      );
+      userChoice = SelectedPlayerClass(
+        playerClass: selectedPlayerClass,
+        variant: variant ?? Variant.base,
+      );
+      return userChoice;
     }
-    return proceed ?? false ? selectedPlayerClass : null;
+    return proceed ?? false ? userChoice : null;
   }
+}
+
+class SelectedPlayerClass {
+  SelectedPlayerClass({
+    required this.playerClass,
+    required this.variant,
+  });
+  final PlayerClass playerClass;
+  final Variant variant;
 }

@@ -5,7 +5,7 @@ const String columnCharacterPerkIsSelected = 'IsSelected';
 
 class CharacterPerk {
   late String associatedCharacterUuid;
-  late int associatedPerkId;
+  late String associatedPerkId;
   bool characterPerkIsSelected = false;
 
   CharacterPerk(

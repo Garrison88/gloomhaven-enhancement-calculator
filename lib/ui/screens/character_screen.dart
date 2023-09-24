@@ -277,7 +277,7 @@ class _NameAndClassSection extends StatelessWidget {
             ),
           ],
         ),
-        if (character.playerClass.traits.isNotEmpty) ...[
+        if (character.showTraits()) ...[
           const SizedBox(
             height: smallPadding,
           ),

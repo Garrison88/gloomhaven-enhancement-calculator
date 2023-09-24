@@ -1,37 +1,53 @@
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+
 const String tablePerks = 'PerksTable';
 const String columnPerkId = '_id';
 const String columnPerkClass = 'Class';
 const String columnPerkDetails = 'Details';
 const String columnPerkIsGrouped = 'IsGrouped';
+const String columnPerkVariant = 'Variant';
 
 class Perk {
-  int? perkId;
-  late String perkClassCode;
-  late int numOfPerks;
+  late String perkId;
+  late String classCode;
+  late int quantity;
   late String perkDetails;
-  late bool perkIsGrouped = false;
+  bool grouped = false;
+  Variant variant = Variant.base;
 
   Perk(
-    this.perkClassCode,
-    this.numOfPerks,
     this.perkDetails, {
-    this.perkIsGrouped = false,
+    this.quantity = 1,
+    this.grouped = false,
   });
 
   Perk.fromMap(Map<String, dynamic> map) {
     perkId = map[columnPerkId];
-    perkClassCode = map[columnPerkClass];
+    classCode = map[columnPerkClass];
     perkDetails = map[columnPerkDetails];
-    perkIsGrouped = map[columnPerkIsGrouped] == 1 ? true : false;
+    grouped = map[columnPerkIsGrouped] == 1 ? true : false;
+    variant = Variant.values
+        .firstWhere((element) => element.name == map[columnPerkVariant]);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap(String index) {
     var map = <String, dynamic>{
-      columnPerkId: perkId,
-      columnPerkClass: perkClassCode,
+      columnPerkId: '${classCode}_${variant.name}_$index',
+      columnPerkClass: classCode,
       columnPerkDetails: perkDetails,
-      columnPerkIsGrouped: perkIsGrouped ? 1 : 0,
+      columnPerkIsGrouped: grouped ? 1 : 0,
+      columnPerkVariant: variant.name,
     };
     return map;
   }
+}
+
+class Perks {
+  Perks(
+    this.perks, {
+    this.variant = Variant.base,
+  });
+
+  List<Perk> perks;
+  Variant variant;
 }

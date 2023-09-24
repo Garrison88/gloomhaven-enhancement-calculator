@@ -153,6 +153,7 @@ class CharactersModel with ChangeNotifier {
     int previousRetirements = 0,
     bool gloomhavenMode = true,
     int prosperityLevel = 0,
+    Variant variant = Variant.base,
   }) async {
     Character character = Character(
       uuid: const Uuid().v1(),
@@ -162,24 +163,29 @@ class CharactersModel with ChangeNotifier {
       xp: CharacterData.xpByLevel(initialLevel),
       gold:
           gloomhavenMode ? 15 * (initialLevel + 1) : 10 * prosperityLevel + 20,
+      variant: variant,
+    );
+    try {
+      character.id = await databaseHelper.insertCharacter(
+        character,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    character.characterPerks = await _loadPerks(
+      character,
     );
     /* TODO: change this to use V2 or something when done adding GH and JotL to FH
     crossover character sheets */
     // TODO: Also here, consider displaying or not displaying Traits if using old system
-    if (selectedClass.category != ClassCategory.frosthaven &&
-        selectedClass.classVersion != ClassVersion.frosthavenCrossover) {
-      character.includeMasteries = false;
+    if (CharacterData.masteriesMap.keys
+        .any((key) => key == selectedClass.classCode)) {
+      character.includeMasteries = true;
+      character.characterMasteries = await _loadMasteries(
+        character,
+      );
     }
-    character.id = await databaseHelper.insertCharacter(
-      character,
-    );
-    character.characterPerks = await _loadPerks(
-      character,
-    );
 
-    character.characterMasteries = await _loadMasteries(
-      character,
-    );
     _characters.add(character);
     if (characters.length > 1) {
       _animateToPage(
@@ -291,7 +297,7 @@ class CharactersModel with ChangeNotifier {
   void increaseCheckmark(Character character) {
     if (character.checkMarks < 18) {
       updateCharacter(
-        character..checkMarks = character.checkMarks + 1,
+        character..checkMarks += 1,
       );
     }
   }
@@ -299,7 +305,7 @@ class CharactersModel with ChangeNotifier {
   void decreaseCheckmark(Character character) {
     if (character.checkMarks > 0) {
       updateCharacter(
-        character..checkMarks = character.checkMarks - 1,
+        character..checkMarks -= 1,
       );
     }
   }
@@ -308,7 +314,7 @@ class CharactersModel with ChangeNotifier {
     Character character,
   ) async {
     List<Map<String, Object?>> perks = await databaseHelper.queryPerks(
-      character.playerClass.classCode,
+      character,
     );
     for (var perkMap in perks) {
       character.perks.add(

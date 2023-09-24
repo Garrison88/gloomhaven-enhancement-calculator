@@ -45,6 +45,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   Faker faker = Faker();
   late String placeholderName;
   FocusNode nameFocusNode = FocusNode();
+  late Variant _variant;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
@@ -217,17 +218,19 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                           labelText: 'Class',
                         ),
                         onTap: () {
-                          showSearch<PlayerClass>(
+                          showSearch<SelectedPlayerClass>(
                             context: context,
                             delegate: CustomSearchDelegate(
                               CharacterData.playerClasses,
                             ),
-                          ).then((value) {
+                          ).then((classAndVariant) {
                             FocusScope.of(context).requestFocus(nameFocusNode);
-                            if (value != null) {
+                            if (classAndVariant != null) {
                               setState(() {
-                                _selectedClass = value;
-                                _classTextFieldController.text = value.name;
+                                _classTextFieldController.text =
+                                    classAndVariant.playerClass.name;
+                                _variant = classAndVariant.variant;
+                                _selectedClass = classAndVariant.playerClass;
                               });
                             }
                           });
@@ -260,7 +263,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         key: _levelKey,
                         controller: _levelTextFieldController,
                         readOnly: true,
-                        onTap: () async => await _showNumberGridDialog(context),
+                        onTap: () async => await _showLevelGridDialog(context),
                         decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.arrow_drop_down),
                           suffixIconConstraints: BoxConstraints(
@@ -456,6 +459,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
               prosperityLevel: _prosperityLevelTextFieldController.text != ''
                   ? int.parse(_prosperityLevelTextFieldController.text)
                   : 0,
+              variant: _variant,
             );
             Navigator.pop(context, true);
           },
@@ -475,7 +479,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   }
 
   // Function to show the dialog with a grid of numbers.
-  Future<void> _showNumberGridDialog(BuildContext context) async {
+  Future<void> _showLevelGridDialog(BuildContext context) async {
     final result = await showDialog<int>(
       context: context,
       builder: (BuildContext context) {

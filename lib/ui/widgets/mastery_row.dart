@@ -33,7 +33,7 @@ class _MasteryRowState extends State<MasteryRow> {
         border: Border.all(
           color: widget.character.characterMasteries
                   .firstWhere((mastery) =>
-                      mastery.associatedMasteryId == widget.mastery.masteryId)
+                      mastery.associatedMasteryId == widget.mastery.id)
                   .characterMasteryAchieved
               ? Theme.of(context).colorScheme.secondary
               : Theme.of(context).dividerColor.withOpacity(0),
@@ -47,7 +47,7 @@ class _MasteryRowState extends State<MasteryRow> {
             visualDensity: VisualDensity.comfortable,
             value: widget.character.characterMasteries
                 .firstWhere((mastery) =>
-                    mastery.associatedMasteryId == widget.mastery.masteryId)
+                    mastery.associatedMasteryId == widget.mastery.id)
                 .characterMasteryAchieved,
             onChanged: charactersModel.isEditMode && !widget.character.isRetired
                 ? (bool? value) => value != null
@@ -55,8 +55,7 @@ class _MasteryRowState extends State<MasteryRow> {
                         characterMasteries: widget.character.characterMasteries,
                         mastery: widget.character.characterMasteries.firstWhere(
                           (mastery) =>
-                              mastery.associatedMasteryId ==
-                              widget.mastery.masteryId,
+                              mastery.associatedMasteryId == widget.mastery.id,
                         ),
                         value: value,
                       )
@@ -68,7 +67,7 @@ class _MasteryRowState extends State<MasteryRow> {
             width: 1,
             color: widget.character.characterMasteries
                     .firstWhere((mastery) =>
-                        mastery.associatedMasteryId == widget.mastery.masteryId)
+                        mastery.associatedMasteryId == widget.mastery.id)
                     .characterMasteryAchieved
                 ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).dividerColor,

@@ -22,7 +22,7 @@ class PerkRow extends StatefulWidget {
 }
 
 class _PerkRowState extends State<PerkRow> {
-  final List<int?> perkIds = [];
+  final List<String?> perkIds = [];
 
   double height = 0;
 
@@ -36,7 +36,7 @@ class _PerkRowState extends State<PerkRow> {
       padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
       child: Row(
         children: <Widget>[
-          widget.perks[0].perkIsGrouped
+          widget.perks[0].grouped
               ? Container(
                   margin: const EdgeInsets.only(right: 6, left: 1),
                   decoration: BoxDecoration(
@@ -89,9 +89,11 @@ class _PerkRowState extends State<PerkRow> {
                     (index) => Checkbox(
                       visualDensity: VisualDensity.comfortable,
                       value: widget.character.characterPerks
-                          .firstWhere((element) =>
-                              element.associatedPerkId ==
-                              widget.perks[index].perkId)
+                          .firstWhere(
+                            (element) =>
+                                element.associatedPerkId ==
+                                widget.perks[index].perkId,
+                          )
                           .characterPerkIsSelected,
                       onChanged: charactersModel.isEditMode &&
                               !widget.character.isRetired
@@ -112,7 +114,7 @@ class _PerkRowState extends State<PerkRow> {
                     ),
                   ),
                 ),
-          widget.perks[0].perkIsGrouped
+          widget.perks[0].grouped
               ? const SizedBox(
                   width: smallPadding,
                 )

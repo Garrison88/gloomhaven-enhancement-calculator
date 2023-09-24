@@ -49,7 +49,7 @@ class Strings {
             const TextSpan(text: '\n'),
             ...Utils.generateCheckRowDetails(
               context,
-              "A pip_square symbol can hold a pip_plus_one sticker. If the action is MOVE and is not a summon ability, it can hold either a pip_plus_one sticker or a JUMP sticker.\nA pip_circle symbol can hold anything a pip_square can hold, or an Element sticker.\nA pip_diamond symbol can hold anything a pip_circle can hold, or a negative condition sticker.\nA pip_diamond_plus symbol can hold anything a pip_circle can hold, or a positive condition sticker.\nA pip_hex symbol can only hold a Hex sticker.\n",
+              " · A pip_square symbol can hold a pip_plus_one sticker. If the action is MOVE and is not a summon ability, it can hold either a pip_plus_one sticker or a JUMP sticker.\n · A pip_circle symbol can hold anything a pip_square can hold, or an Element sticker.\n · A pip_diamond symbol can hold anything a pip_circle can hold, or a negative condition sticker.\n · A pip_diamond_plus symbol can hold anything a pip_circle can hold, or a positive condition sticker.\n · A pip_hex symbol can only hold a Hex sticker.\n",
               darkMode,
             ),
           ],

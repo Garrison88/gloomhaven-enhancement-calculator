@@ -1,3 +1,6 @@
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+
 enum ClassCategory {
   gloomhaven,
   jawsOfTheLion,
@@ -6,8 +9,8 @@ enum ClassCategory {
   custom,
 }
 
-enum ClassVersion {
-  original,
+enum Variant {
+  base,
   frosthavenCrossover,
   v2,
   v3,
@@ -15,16 +18,15 @@ enum ClassVersion {
 }
 
 class PlayerClass {
-  String race;
-  String name;
+  final String race;
+  final String name;
   String classCode;
-  String icon;
-  ClassCategory category;
-  int primaryColor;
-  int? secondaryColor;
-  bool locked;
-  List<String> traits;
-  ClassVersion classVersion;
+  final String icon;
+  final ClassCategory category;
+  final int primaryColor;
+  final int? secondaryColor;
+  final bool locked;
+  final List<String> traits;
 
   PlayerClass({
     required this.race,
@@ -36,6 +38,8 @@ class PlayerClass {
     this.secondaryColor = 0xff4e7ec1,
     this.locked = true,
     this.traits = const [],
-    this.classVersion = ClassVersion.original,
   });
+
+  static List<Perks>? perkListByClassCode(String classCode) =>
+      CharacterData.perksMap[classCode];
 }

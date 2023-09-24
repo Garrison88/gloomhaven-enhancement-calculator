@@ -1,30 +1,46 @@
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+
 const String tableMasteries = 'MasteriesTable';
 const String columnMasteryId = '_id';
 const String columnMasteryClass = 'Class';
 const String columnMasteryDetails = 'Details';
+const String columnMasteryVariant = 'Variant';
 
 class Mastery {
-  int? masteryId;
-  late String masteryClassCode;
+  late String id;
+  late String classCode;
   late String masteryDetails;
+  Variant variant = Variant.base;
 
   Mastery({
-    required this.masteryClassCode,
     required this.masteryDetails,
   });
 
   Mastery.fromMap(Map<String, dynamic> map) {
-    masteryId = map[columnMasteryId];
-    masteryClassCode = map[columnMasteryClass];
+    id = map[columnMasteryId];
+    classCode = map[columnMasteryClass];
     masteryDetails = map[columnMasteryDetails];
+    variant = Variant.values
+        .firstWhere((element) => element.name == map[columnMasteryVariant]);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap(String index) {
     var map = <String, dynamic>{
-      columnMasteryId: masteryId,
-      columnMasteryClass: masteryClassCode,
+      columnMasteryId: '${classCode}_${variant.name}_$index',
+      columnMasteryClass: classCode,
       columnMasteryDetails: masteryDetails,
+      columnMasteryVariant: variant.name,
     };
     return map;
   }
+}
+
+class Masteries {
+  Masteries(
+    this.masteries, {
+    this.variant = Variant.base,
+  });
+
+  List<Mastery> masteries;
+  Variant variant;
 }

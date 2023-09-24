@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 
@@ -19,7 +20,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 7;
+  static const _databaseVersion = 8;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -45,6 +46,7 @@ class DatabaseHelper {
       documentsDirectory.path,
       _databaseName,
     );
+    debugPrint('Database Path:: $databasePath');
     // Open the database. Can also add an onUpgrade callback parameter.
     return await openDatabase(
       databasePath,
@@ -55,19 +57,22 @@ class DatabaseHelper {
   }
 
   static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const String idTextPrimaryType = 'TEXT PRIMARY KEY';
   static const String textType = 'TEXT NOT NULL';
   static const String boolType = 'BOOL NOT NULL';
   static const String integerType = 'INTEGER NOT NULL';
   // static const String integerType = 'INTEGER';
   static const String createTable = 'CREATE TABLE';
+  static const String dropTable = 'DROP TABLE';
 
   // SQL string to create the database
   Future _onCreate(
     Database db,
     int version,
   ) async {
-    await db.transaction((txn) async {
-      await txn.execute('''
+    await db.transaction(
+      (txn) async {
+        await txn.execute('''
         $createTable $tableCharacters (
           $columnCharacterId $idType,
           $columnCharacterUuid $textType,
@@ -87,50 +92,72 @@ class DatabaseHelper {
           $columnResourceRockroot $integerType,
           $columnResourceFlamefruit $integerType,
           $columnResourceCorpsecap $integerType,
-          $columnResourceSnowthistle $integerType
+          $columnResourceSnowthistle $integerType,
+          $columnVariant $textType
         )''');
-
-      await txn.execute('''
+        await txn.execute('''
         $createTable $tablePerks (
-          $columnPerkId $idType,
+          $columnPerkId $idTextPrimaryType,
           $columnPerkClass $textType,
           $columnPerkDetails $textType,
-          $columnPerkIsGrouped $boolType
-        )''').then(
-        (_) async {
-          for (Perk perk in CharacterData.perks) {
-            for (int i = 0; i < perk.numOfPerks; i++) {
-              await txn.insert(tablePerks, perk.toMap());
+          $columnPerkIsGrouped $boolType,
+          $columnPerkVariant $textType
+        )''');
+        await Future.forEach(CharacterData.perksMap.entries, (entry) async {
+          final classCode = entry.key;
+          final perkLists = entry.value;
+          for (Perks list in perkLists) {
+            for (Perk perk in list.perks) {
+              perk.variant = list.variant;
+              perk.classCode = classCode;
+              for (int i = 0; i < perk.quantity; i++) {
+                await txn.insert(
+                  tablePerks,
+                  perk.toMap(
+                    '${list.perks.indexOf(perk)}${indexToLetter(i)}',
+                  ),
+                );
+              }
             }
           }
-        },
-      );
-      await txn.execute('''
+        });
+        await txn.execute('''
         $createTable $tableCharacterPerks (
           $columnAssociatedCharacterUuid $textType,
-          $columnAssociatedPerkId $integerType,
+          $columnAssociatedPerkId $textType,
           $columnCharacterPerkIsSelected $boolType
         )''');
-      // TODO: don't use await / then structure
-      await txn.execute('''
+        await txn.execute('''
         $createTable $tableMasteries (
           $columnMasteryId $idType,
           $columnMasteryClass $textType,
-          $columnMasteryDetails $textType
-        )''').then(
-        (_) async {
-          for (Mastery mastery in CharacterData.masteries) {
-            await txn.insert(tableMasteries, mastery.toMap());
+          $columnMasteryDetails $textType,
+          $columnMasteryVariant $textType
+        )''');
+        await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
+          final classCode = entry.key;
+          final masteriesList = entry.value;
+          for (Masteries list in masteriesList) {
+            for (Mastery mastery in list.masteries) {
+              mastery.variant = list.variant;
+              mastery.classCode = classCode;
+              await txn.insert(
+                tablePerks,
+                mastery.toMap(
+                  '${list.masteries.indexOf(mastery)}',
+                ),
+              );
+            }
           }
-        },
-      );
-      await txn.execute('''
+        });
+        await txn.execute('''
         $createTable $tableCharacterMasteries (
           $columnAssociatedCharacterUuid $textType,
-          $columnAssociatedMasteryId $integerType,
+          $columnAssociatedMasteryId $textType,
           $columnCharacterMasteryAchieved $boolType
         )''');
-    });
+      },
+    );
   }
 
   Future _onUpgrade(
@@ -159,6 +186,15 @@ class DatabaseHelper {
           await DatabaseMigrations.includeClassMasteries(txn);
           // Include Resources
           await DatabaseMigrations.includeResources(txn);
+        }
+        if (oldVersion <= 7) {
+          await DatabaseMigrations.addVariantColumnToCharacterTable(txn);
+          await DatabaseMigrations.convertCharacterPerkIdColumnFromIntToText(
+              txn);
+          await DatabaseMigrations.convertCharacterMasteryIdColumnFromIntToText(
+              txn);
+          await DatabaseMigrations.includeClassVariantsAndPerksAsMap(txn);
+          await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
         }
       },
     );
@@ -251,7 +287,7 @@ class DatabaseHelper {
       character.toMap(),
     );
     final perks = await queryPerks(
-      character.playerClass.classCode,
+      character,
     );
     perks.asMap().forEach(
       (key, perk) async {
@@ -378,13 +414,16 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, Object?>>> queryPerks(
-    String classCode,
+    Character character,
   ) async {
     Database db = await database;
     var result = await db.query(
       tablePerks,
-      where: '$columnPerkClass = ?',
-      whereArgs: [classCode],
+      where: '$columnPerkClass = ? AND $columnPerkVariant = ?',
+      whereArgs: [
+        character.playerClass.classCode,
+        character.variant.name,
+      ],
     );
     return result.toList();
   }
@@ -436,4 +475,18 @@ class DatabaseHelper {
       );
     });
   }
+}
+
+String indexToLetter(int index) {
+  if (index < 0) {
+    throw ArgumentError('Index must be non-negative');
+  }
+
+  const int alphabetSize = 26; // Assuming you want to use the English alphabet
+
+  // Calculate the corresponding letter based on ASCII value
+  // 'a' is ASCII 97
+  final int letterCode = 97 + (index % alphabetSize);
+
+  return String.fromCharCode(letterCode);
 }

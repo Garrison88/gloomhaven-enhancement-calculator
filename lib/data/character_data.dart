@@ -1,116 +1,2067 @@
+import 'package:gloomhaven_enhancement_calc/models/goal.dart';
+import 'package:gloomhaven_enhancement_calc/models/legacy_perk.dart' as legacy;
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-
-import '../models/goal.dart';
-import '../models/perk.dart';
-import '../models/personal_goal.dart';
-import '../models/player_class.dart';
-import '../models/resource.dart';
+import 'package:gloomhaven_enhancement_calc/models/legacy_mastery.dart'
+    as legacy;
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/models/resource.dart';
 
 abstract class CharacterData {
-  static const _aesther = 'Aesther';
-  static const _harrower = 'Harrower';
-  static const _human = 'Human';
-  static const _inox = 'Inox';
-  static const _lurker = 'Lurker';
-  static const _orchid = 'Orchid';
-  static const _quatryl = 'Quatryl';
-  static const _savvas = 'Savvas';
-  static const _valrath = 'Valrath';
-  static const _vermling = 'Vermling';
-  static const _algox = 'Algox';
-  static const _unfettered = 'Unfettered';
+  static Map<Variant, String> classVariants = {
+    Variant.base: 'Base',
+    Variant.frosthavenCrossover: 'Frosthaven Crossover',
+    Variant.v2: 'Version II',
+    Variant.v3: 'Version III',
+  };
 
-  static const _one = 'one';
-  static const _two = 'two';
-  static const _three = 'three';
-  static const _card = 'card';
-  static const _cards = 'cards';
-  static const _add = 'Add';
-  static const _addL = 'add';
-  static const _removeL = 'remove';
-  static const _remove = 'Remove';
-  static const _replace = 'Replace';
-  static const _rolling = 'Rolling';
-  static const _negative = 'negative';
-  static const _scenario = 'scenario';
-  static const _effects = 'effects';
+  // Keep this to allow for a database migration
+  static final List<legacy.Perk> legacyPerks = [
+    // BRUTE
+    legacy.Perk(_brute, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _brute, 1, '$_remove $_one -1 $_card and $_addL $_one +1 $_card'),
+    legacy.Perk(_brute, 2, '$_add $_two +1 $_cards'),
+    legacy.Perk(_brute, 1, '$_add $_one +3 $_card'),
+    legacy.Perk(_brute, 2, '$_add $_three $_rolling PUSH 1 $_cards'),
+    legacy.Perk(_brute, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
+    legacy.Perk(_brute, 2, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_brute, 1,
+        '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
+    legacy.Perk(_brute, 2, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_brute, 1, '$_add $_one +1 "SHIELD 1, Self" $_card'),
+    legacy.Perk(_brute, 1,
+        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
+    // TINKERER
+    legacy.Perk(_tinkerer, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_tinkerer, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(_tinkerer, 1, '$_add $_two +1 $_cards'),
+    legacy.Perk(_tinkerer, 1, '$_add $_one +3 $_card'),
+    legacy.Perk(_tinkerer, 1, '$_add $_two $_rolling FIRE $_cards'),
+    legacy.Perk(_tinkerer, 1, '$_add $_three $_rolling MUDDLE $_cards'),
+    legacy.Perk(_tinkerer, 2, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_tinkerer, 2, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_tinkerer, 2, '$_add $_one +1 HEAL 2 $_card'),
+    legacy.Perk(_tinkerer, 1, '$_add $_one +0 ADD TARGET $_card'),
+    legacy.Perk(_tinkerer, 1, 'Ignore $_negative $_scenario $_effects'),
+    // SPELLWEAVER
+    legacy.Perk(_spellweaver, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _spellweaver, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_spellweaver, 2, '$_add $_two +1 $_cards'),
+    legacy.Perk(_spellweaver, 1, '$_add $_one +0 STUN $_card'),
+    legacy.Perk(_spellweaver, 1, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_spellweaver, 1, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_spellweaver, 1, '$_add $_one +1 CURSE $_card'),
+    legacy.Perk(_spellweaver, 2, '$_add $_one +2 FIRE $_card'),
+    legacy.Perk(_spellweaver, 2, '$_add $_one +2 ICE $_card'),
+    legacy.Perk(_spellweaver, 1,
+        '$_add $_one $_rolling EARTH and $_one $_rolling AIR $_card'),
+    legacy.Perk(_spellweaver, 1,
+        '$_add $_one $_rolling LIGHT and $_one $_rolling DARK $_card'),
+    // SCOUNDREL
+    legacy.Perk(_scoundrel, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_scoundrel, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _scoundrel, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(
+        _scoundrel, 1, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _scoundrel, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_scoundrel, 2, '$_add $_two $_rolling +1 $_cards'),
+    legacy.Perk(_scoundrel, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
+    legacy.Perk(_scoundrel, 2, '$_add $_two $_rolling POISON $_cards'),
+    legacy.Perk(_scoundrel, 1, '$_add $_two $_rolling MUDDLE $_cards'),
+    legacy.Perk(_scoundrel, 1, '$_add $_one $_rolling INVISIBLE $_card'),
+    legacy.Perk(_scoundrel, 1, 'Ignore $_negative $_scenario $_effects'),
+    // CRAGHEART
+    legacy.Perk(_cragheart, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _cragheart, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_cragheart, 1, '$_add $_one -2 $_card and $_two +2 $_cards'),
+    legacy.Perk(_cragheart, 2, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_cragheart, 2, '$_add $_one +2 MUDDLE $_card'),
+    legacy.Perk(_cragheart, 1, '$_add $_two $_rolling PUSH 2 $_cards'),
+    legacy.Perk(_cragheart, 2, '$_add $_two $_rolling EARTH $_cards'),
+    legacy.Perk(_cragheart, 1, '$_add $_two $_rolling AIR $_cards'),
+    legacy.Perk(_cragheart, 1, 'Ignore $_negative item $_effects'),
+    legacy.Perk(_cragheart, 1, 'Ignore $_negative $_scenario $_effects'),
+    // MINDTHIEF
+    legacy.Perk(_mindthief, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_mindthief, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _mindthief, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
+    legacy.Perk(
+        _mindthief, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(_mindthief, 2, '$_add $_one +2 ICE $_card'),
+    legacy.Perk(_mindthief, 2, '$_add $_two $_rolling +1 $_cards'),
+    legacy.Perk(_mindthief, 1, '$_add $_three $_rolling PULL 1 $_cards'),
+    legacy.Perk(_mindthief, 1, '$_add $_three $_rolling MUDDLE $_cards'),
+    legacy.Perk(_mindthief, 1, '$_add $_two $_rolling $_immobilize $_cards'),
+    legacy.Perk(_mindthief, 1, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_mindthief, 1,
+        '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
+    legacy.Perk(_mindthief, 1, 'Ignore $_negative $_scenario $_effects'),
+    // SUNKEEPER
+    legacy.Perk(_sunkeeper, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_sunkeeper, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _sunkeeper, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(
+        _sunkeeper, 1, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_sunkeeper, 2, '$_add $_two $_rolling +1 $_cards'),
+    legacy.Perk(_sunkeeper, 2, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_sunkeeper, 1, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_sunkeeper, 2, '$_add $_two $_rolling LIGHT $_cards'),
+    legacy.Perk(
+        _sunkeeper, 1, '$_add $_two $_rolling "SHIELD 1, Self" $_cards'),
+    legacy.Perk(_sunkeeper, 1,
+        'Ignore $_negative item $_effects and $_addL $_two +1 $_cards'),
+    legacy.Perk(_sunkeeper, 1, 'Ignore $_negative $_scenario $_effects'),
+    // QUARTERMASTER
+    legacy.Perk(_quartermaster, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_quartermaster, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _quartermaster, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_quartermaster, 2, '$_add $_two $_rolling +1 $_cards'),
+    legacy.Perk(_quartermaster, 1, '$_add $_three $_rolling MUDDLE $_cards'),
+    legacy.Perk(_quartermaster, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
+    legacy.Perk(_quartermaster, 1, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_quartermaster, 1, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_quartermaster, 3, '$_add $_one +0 "RECOVER an item" $_card'),
+    legacy.Perk(_quartermaster, 1,
+        'Ignore $_negative item $_effects and $_addL $_two +1 $_cards'),
+    // SUMMONER
+    legacy.Perk(_summoner, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_summoner, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(_summoner, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_summoner, 2, '$_add $_one +2 $_card'),
+    legacy.Perk(_summoner, 1, '$_add $_two $_rolling WOUND $_cards'),
+    legacy.Perk(_summoner, 1, '$_add $_two $_rolling POISON $_cards'),
+    legacy.Perk(_summoner, 3, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_summoner, 1,
+        '$_add $_one $_rolling FIRE and $_one $_rolling AIR $_card'),
+    legacy.Perk(_summoner, 1,
+        '$_add $_one $_rolling DARK and $_one $_rolling EARTH $_card'),
+    legacy.Perk(_summoner, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
+    // NIGHTSHROUD
+    legacy.Perk(_nightshroud, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_nightshroud, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_nightshroud, 2, '$_add $_one -1 DARK $_card'),
+    legacy.Perk(_nightshroud, 2,
+        '$_replace $_one -1 DARK $_card with $_one +1 DARK $_card'),
+    legacy.Perk(_nightshroud, 2, '$_add $_one +1 INVISIBLE $_card'),
+    legacy.Perk(_nightshroud, 2, '$_add $_three $_rolling MUDDLE $_cards'),
+    legacy.Perk(_nightshroud, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_nightshroud, 1, '$_add $_two $_rolling CURSE $_cards'),
+    legacy.Perk(_nightshroud, 1, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_nightshroud, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
+    // PLAGUEHERALD
+    legacy.Perk(
+        _plagueherald, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(
+        _plagueherald, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _plagueherald, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_plagueherald, 1, '$_add $_two +1 $_cards'),
+    legacy.Perk(_plagueherald, 3, '$_add $_one +1 AIR $_card'),
+    legacy.Perk(_plagueherald, 1, '$_add $_three $_rolling POISON $_cards'),
+    legacy.Perk(_plagueherald, 1, '$_add $_two $_rolling CURSE $_cards'),
+    legacy.Perk(_plagueherald, 1, '$_add $_two $_rolling $_immobilize $_cards'),
+    legacy.Perk(_plagueherald, 2, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_plagueherald, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
+    // BERSERKER
+    legacy.Perk(_berserker, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_berserker, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _berserker, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_berserker, 2,
+        '$_replace $_one +0 $_card with $_one $_rolling +2 $_card'),
+    legacy.Perk(_berserker, 2, '$_add $_two $_rolling WOUND $_cards'),
+    legacy.Perk(_berserker, 2, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_berserker, 1, '$_add $_one $_rolling +1 DISARM $_card'),
+    legacy.Perk(_berserker, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_berserker, 2, '$_add $_one +2 FIRE $_card'),
+    legacy.Perk(_berserker, 1, 'Ignore $_negative item $_effects'),
+    //SOOTHSINGER
+    legacy.Perk(_soothsinger, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_soothsinger, 1, '$_remove $_one -2 $_card'),
+    legacy.Perk(
+        _soothsinger, 2, '$_replace $_two +1 $_cards with $_one +4 $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +1 DISARM $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +2 WOUND $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +2 POISON $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
+    legacy.Perk(_soothsinger, 1,
+        '$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
+    legacy.Perk(
+        _soothsinger, 1, '$_replace $_one -1 $_card with $_one +0 STUN $_card'),
+    legacy.Perk(_soothsinger, 1, '$_add $_three $_rolling +1 $_cards'),
+    legacy.Perk(_soothsinger, 2, '$_add $_two $_rolling CURSE $_cards'),
+    // DOOMSTALKER
+    legacy.Perk(_doomstalker, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _doomstalker, 3, '$_replace $_two +0 $_cards with $_two +1 $_cards'),
+    legacy.Perk(_doomstalker, 2, '$_add $_two $_rolling +1 $_cards'),
+    legacy.Perk(_doomstalker, 1, '$_add $_one +2 MUDDLE $_card'),
+    legacy.Perk(_doomstalker, 1, '$_add $_one +1 POISON $_card'),
+    legacy.Perk(_doomstalker, 1, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_doomstalker, 1, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_doomstalker, 1, '$_add $_one +0 STUN $_card'),
+    legacy.Perk(_doomstalker, 2, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_doomstalker, 1, 'Ignore $_negative $_scenario $_effects'),
+    // SAWBONES
+    legacy.Perk(_sawbones, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_sawbones, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_sawbones, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_sawbones, 2, '$_add $_one $_rolling +2 $_card'),
+    legacy.Perk(_sawbones, 2, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_sawbones, 2, '$_add $_two $_rolling WOUND $_cards'),
+    legacy.Perk(_sawbones, 1, '$_add $_one $_rolling STUN $_card'),
+    legacy.Perk(_sawbones, 2, '$_add $_one $_rolling HEAL 3 $_card'),
+    legacy.Perk(_sawbones, 1, '$_add $_one +0 "RECOVER an item" $_card'),
+    // ELEMENTALIST
+    legacy.Perk(_elementalist, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _elementalist, 1, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _elementalist, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_elementalist, 1, '$_add $_three +0 FIRE $_cards'),
+    legacy.Perk(_elementalist, 1, '$_add $_three +0 ICE $_cards'),
+    legacy.Perk(_elementalist, 1, '$_add $_three +0 AIR $_cards'),
+    legacy.Perk(_elementalist, 1, '$_add $_three +0 EARTH $_cards'),
+    legacy.Perk(_elementalist, 1,
+        '$_replace $_two +0 $_cards with $_one +0 FIRE $_card and $_one +0 EARTH $_card'),
+    legacy.Perk(_elementalist, 1,
+        '$_replace $_two +0 $_cards with $_one +0 ICE $_card and $_one +0 AIR $_card'),
+    legacy.Perk(_elementalist, 1, '$_add $_two +1 PUSH 1 $_cards'),
+    legacy.Perk(_elementalist, 1, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_elementalist, 1, '$_add $_one +0 STUN $_card'),
+    legacy.Perk(_elementalist, 1, '$_add $_one +0 ADD TARGET $_card'),
+    // BEAST TYRANT
+    legacy.Perk(_beastTyrant, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _beastTyrant, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _beastTyrant, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_beastTyrant, 2, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_beastTyrant, 2, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_beastTyrant, 3, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_beastTyrant, 1, '$_add $_two $_rolling EARTH $_cards'),
+    legacy.Perk(_beastTyrant, 1, 'Ignore $_negative $_scenario $_effects'),
+    // BLADESWARM
+    legacy.Perk(_bladeswarm, 1, '$_remove $_one -2 $_card'),
+    legacy.Perk(_bladeswarm, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 AIR $_card'),
+    legacy.Perk(
+        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 EARTH $_card'),
+    legacy.Perk(
+        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 LIGHT $_card'),
+    legacy.Perk(
+        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 DARK $_card'),
+    legacy.Perk(_bladeswarm, 2, '$_add $_two $_rolling HEAL 1 $_cards'),
+    legacy.Perk(_bladeswarm, 2, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_bladeswarm, 2, '$_add $_one +1 POISON $_card'),
+    legacy.Perk(_bladeswarm, 1, '$_add $_one +2 MUDDLE $_card'),
+    legacy.Perk(_bladeswarm, 1,
+        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
+    legacy.Perk(_bladeswarm, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
+    // DIVINER
+    legacy.Perk(_diviner, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_diviner, 1, '$_remove $_one -2 $_card'),
+    legacy.Perk(_diviner, 2,
+        '$_replace $_two +1 $_cards with $_one +3 "SHIELD 1, Self" $_card'),
+    legacy.Perk(_diviner, 1,
+        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Affect any Ally" $_card'),
+    legacy.Perk(
+        _diviner, 1, '$_replace $_one +0 $_card with $_one +2 DARK $_card'),
+    legacy.Perk(
+        _diviner, 1, '$_replace $_one +0 $_card with $_one +2 LIGHT $_card'),
+    legacy.Perk(
+        _diviner, 1, '$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
+    legacy.Perk(
+        _diviner, 1, '$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
+    legacy.Perk(_diviner, 1,
+        '$_replace $_one +0 $_card with $_one +2 "REGENERATE, Self" $_card'),
+    legacy.Perk(_diviner, 1,
+        '$_replace $_one -1 $_card with $_one +1 "HEAL 2, Affect any Ally" $_card'),
+    legacy.Perk(_diviner, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
+    legacy.Perk(_diviner, 1, '$_add $_two $_rolling CURSE $_cards'),
+    legacy.Perk(_diviner, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
+    // DEMOLITIONIST
+    legacy.Perk(_demolitionist, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_demolitionist, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _demolitionist, 1, '$_remove $_one -2 $_card and $_one +1 $_card'),
+    legacy.Perk(_demolitionist, 2,
+        '$_replace $_one +0 $_card with $_one +2 MUDDLE $_card'),
+    legacy.Perk(_demolitionist, 1,
+        '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
+    legacy.Perk(_demolitionist, 2, '$_add $_one +2 $_card'),
+    legacy.Perk(_demolitionist, 2,
+        '$_replace $_one +1 $_card with $_one +2 EARTH $_card'),
+    legacy.Perk(_demolitionist, 2,
+        '$_replace $_one +1 $_card with $_one +2 FIRE $_card'),
+    legacy.Perk(_demolitionist, 2,
+        '$_add $_one +0 "All adjacent enemies suffer 1 DAMAGE" $_card'),
+    // HATCHET
+    legacy.Perk(_hatchet, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +0 $_card with $_one +2 MUDDLE $_card'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +0 $_card with $_one +1 POISON $_card'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+    legacy.Perk(_hatchet, 1,
+        '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +0 $_card with $_one +1 PUSH 2 $_card'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +0 $_card with $_one +0 STUN $_card'),
+    legacy.Perk(
+        _hatchet, 1, '$_replace $_one +1 $_card with $_one +1 STUN $_card'),
+    legacy.Perk(_hatchet, 3, '$_add $_one +2 AIR $_card'),
+    legacy.Perk(_hatchet, 3, '$_replace $_one +1 $_card with $_one +3 $_card'),
+    // RED GUARD
+    legacy.Perk(_redGuard, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_redGuard, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_redGuard, 1, '$_remove $_one -2 $_card and $_one +1 $_card'),
+    legacy.Perk(_redGuard, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _redGuard, 2, '$_replace $_one +1 $_card with $_one +2 FIRE $_card'),
+    legacy.Perk(
+        _redGuard, 2, '$_replace $_one +1 $_card with $_one +2 LIGHT $_card'),
+    legacy.Perk(_redGuard, 2, '$_add $_one +1 FIRE&LIGHT $_card'),
+    legacy.Perk(_redGuard, 2, '$_add $_one +1 SHIELD 1 $_card'),
+    legacy.Perk(_redGuard, 1,
+        '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+    legacy.Perk(
+        _redGuard, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+    // VOIDWARDEN
+    legacy.Perk(_voidwarden, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_voidwarden, 1, '$_remove $_one -2 $_card'),
+    legacy.Perk(
+        _voidwarden, 2, '$_replace $_one +0 $_card with $_one +1 DARK $_card'),
+    legacy.Perk(
+        _voidwarden, 2, '$_replace $_one +0 $_card with $_one +1 ICE $_card'),
+    legacy.Perk(_voidwarden, 2,
+        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Ally" $_card'),
+    legacy.Perk(_voidwarden, 3, '$_add $_one +1 "HEAL 1, Ally" $_card'),
+    legacy.Perk(_voidwarden, 1, '$_add $_one +1 POISON $_card'),
+    legacy.Perk(_voidwarden, 1, '$_add $_one +3 $_card'),
+    legacy.Perk(_voidwarden, 2, '$_add $_one +1 CURSE $_card'),
+    // AMBER AEGIS
+    legacy.Perk(_amberAegis, 1,
+        '$_replace $_one -2 $_card with $_one -1 "Place $_one Colony token of your choice on any empty hex within RANGE 2" $_card'),
+    legacy.Perk(_amberAegis, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_amberAegis, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_amberAegis, 1,
+        '$_replace $_one -1 $_card with $_one +2 MUDDLE $_card'),
+    legacy.Perk(_amberAegis, 1,
+        '$_replace $_one -1 $_card with $_one +1 POISON $_card'),
+    legacy.Perk(
+        _amberAegis, 1, '$_replace $_one -1 $_card with $_one +1 WOUND $_card'),
+    legacy.Perk(
+        _amberAegis, 2, '$_add $_two $_rolling +1 $_immobilize $_cards'),
+    legacy.Perk(_amberAegis, 2,
+        '$_add $_one $_rolling "HEAL 1, Self" $_card and $_one $_rolling "SHIELD 1, Self" $_card'),
+    legacy.Perk(
+        _amberAegis, 2, '$_add $_one $_rolling "RETALIATE 1, RANGE 3" $_card'),
+    legacy.Perk(_amberAegis, 1, '$_add $_one +2 FIRE/EARTH $_card'),
+    legacy.Perk(_amberAegis, 1,
+        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
+    legacy.Perk(_amberAegis, 1,
+        'Ignore $_scenario $_effects and $_addL $_one "+X, where X is the number of active Cultivate actions" card'),
+    // ARTIFICER
+    legacy.Perk(_artificer, 1,
+        '$_replace $_one -2 $_card with $_one -1 Any_Element $_card'),
+    legacy.Perk(
+        _artificer, 1, '$_replace $_one -1 $_card with $_one +1 DISARM $_card'),
+    legacy.Perk(
+        _artificer, 2, '$_replace $_one -1 $_card with $_one +1 PUSH 1 $_card'),
+    legacy.Perk(
+        _artificer, 2, '$_replace $_one -1 $_card with $_one +1 PULL 1 $_card'),
+    legacy.Perk(_artificer, 2,
+        '$_replace $_one +0 $_card with $_one +0 "RECOVER a spent item" $_card'),
+    legacy.Perk(_artificer, 2,
+        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Self" $_card'),
+    legacy.Perk(_artificer, 2,
+        '$_replace $_one +0 $_card with $_one +1 PIERCE 2 $_card'),
+    legacy.Perk(_artificer, 1,
+        '$_replace $_one +2 $_card with $_one +3 "HEAL 2, Self" $_card'),
+    legacy.Perk(_artificer, 1,
+        '$_replace $_two +1 $_cards with $_two $_rolling +1 POISON $_cards'),
+    legacy.Perk(_artificer, 1,
+        '$_replace $_two +1 $_cards with $_two $_rolling +1 WOUND $_cards'),
+    // BOMBARD
+    legacy.Perk(_bombard, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_bombard, 1,
+        '$_replace $_two +0 $_cards with $_two $_rolling PIERCE 3 $_cards'),
+    legacy.Perk(_bombard, 2,
+        '$_replace $_one -1 $_card with $_one +0 "+3 if Projectile" $_card'),
+    legacy.Perk(_bombard, 2, '$_add $_one +2 $_immobilize $_card'),
+    legacy.Perk(_bombard, 1,
+        '$_replace $_one +1 $_card with $_two +1 "RETALIATE 1, RANGE 3" $_cards'),
+    legacy.Perk(_bombard, 1,
+        '$_add $_two +1 "PULL 3, Self, toward the target" $_cards'),
+    legacy.Perk(_bombard, 1, '$_add $_one +0 "STRENGTHEN, Self" $_card'),
+    legacy.Perk(_bombard, 1, '$_add $_one +0 STUN $_card'),
+    legacy.Perk(_bombard, 1, '$_add $_one +1 WOUND $_card'),
+    legacy.Perk(_bombard, 1, '$_add $_two $_rolling "SHIELD 1, Self" $_cards'),
+    legacy.Perk(_bombard, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
+    legacy.Perk(_bombard, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+    legacy.Perk(_bombard, 1,
+        'Ignore $_negative item $_effects and $_removeL $_one +0 $_card'),
+    // BREWMASTER
+    legacy.Perk(
+        _brewmaster, 1, '$_replace $_one -2 $_card with $_one -1 STUN $_card'),
+    legacy.Perk(
+        _brewmaster, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_brewmaster, 2,
+        '$_replace $_one -1 $_card with $_two $_rolling MUDDLE $_cards'),
+    legacy.Perk(_brewmaster, 1,
+        '$_replace $_two +0 $_cards with $_two +0 "HEAL 1, Self" $_cards'),
+    legacy.Perk(_brewmaster, 2,
+        '$_replace $_one +0 $_card with $_one +0 "Give yourself or an adjacent Ally a \'Liquid Rage\' item $_card" $_card'),
+    legacy.Perk(_brewmaster, 2, '$_add $_one +2 PROVOKE $_card'),
+    legacy.Perk(_brewmaster, 2, '$_add four $_rolling Shrug_Off 1 $_cards'),
+    legacy.Perk(_brewmaster, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
+    legacy.Perk(_brewmaster, 2, 'Each time you long rest, perform Shrug_Off 1'),
+    // BRIGHTSPARK
+    legacy.Perk(_brightspark, 3,
+        '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element to $_addL +2 ATTACK" $_card'),
+    legacy.Perk(_brightspark, 1,
+        '$_replace $_one -2 $_card with $_one -2 "RECOVER $_one random $_card from your discard pile" $_card'),
+    legacy.Perk(_brightspark, 2,
+        '$_replace $_two +0 $_cards with $_one +1 "HEAL 1, Affect $_one Ally within RANGE 2" $_card'),
+    legacy.Perk(_brightspark, 1,
+        '$_replace $_two +0 $_cards with $_one +1 "SHIELD 1, Affect $_one Ally within RANGE 2" $_card'),
+    legacy.Perk(_brightspark, 2,
+        '$_replace $_one +1 $_card with $_one +2 Any_Element $_card'),
+    legacy.Perk(_brightspark, 2,
+        '$_add $_one +1 "STRENGTHEN, Affect $_one Ally within RANGE 2" $_card'),
+    legacy.Perk(_brightspark, 1,
+        '$_add $_one $_rolling "PUSH 1 or PULL 1, AIR" $_card and $_one $_rolling "$_immobilize, ICE" $_card'),
+    legacy.Perk(_brightspark, 1,
+        '$_add $_one $_rolling "HEAL 1, RANGE 3, LIGHT" $_card and $_one $_rolling "PIERCE 2, FIRE" $_card'),
+    legacy.Perk(_brightspark, 1,
+        '$_add $_three $_rolling "Consume_Any_Element : Any_Element" $_cards'),
+    legacy.Perk(_brightspark, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one -1 $_card'),
+    // CHIEFTAIN
+    legacy.Perk(
+        _chieftain, 1, '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
+    legacy.Perk(_chieftain, 2,
+        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Chieftain" $_card'),
+    legacy.Perk(_chieftain, 2,
+        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Affect all summoned allies owned" $_card'),
+    legacy.Perk(_chieftain, 1,
+        '$_replace $_one -2 $_card with $_one -2 "BLESS, Self" $_card'),
+    legacy.Perk(_chieftain, 1,
+        '$_replace $_two +0 $_cards with $_one +0 "$_immobilize and PUSH 1" $_card'),
+    legacy.Perk(_chieftain, 2,
+        '$_replace $_one +0 $_card with $_one "+X, where X is the number of summoned allies you own" $_card'),
+    legacy.Perk(_chieftain, 1,
+        '$_replace $_one +1 $_card with $_two +1 "$_rolling +1, if summon is attacking" $_cards'),
+    legacy.Perk(_chieftain, 1, '$_add $_one +0 WOUND, PIERCE 1 $_card'),
+    legacy.Perk(_chieftain, 2, '$_add $_one +1 EARTH $_card'),
+    legacy.Perk(_chieftain, 1,
+        '$_add $_two $_rolling "PIERCE 2, ignore RETALIATE on the target" $_cards'),
+    legacy.Perk(_chieftain, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
+    // FIRE KNIGHT
+    legacy.Perk(_fireKnight, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_fireKnight, 2,
+        '$_replace $_one -1 $_card with $_one +0 "STRENGTHEN, Ally" $_card'),
+    legacy.Perk(_fireKnight, 2,
+        '$_replace $_two +0 $_cards with $_two +0 "+2 if you are on Ladder" $_cards'),
+    legacy.Perk(
+        _fireKnight, 1, '$_replace $_one +0 $_card with $_one +1 FIRE $_card'),
+    legacy.Perk(
+        _fireKnight, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+    legacy.Perk(
+        _fireKnight, 1, '$_replace $_two +1 $_cards with $_one +2 FIRE $_card'),
+    legacy.Perk(_fireKnight, 1,
+        '$_replace $_two +1 $_cards with $_one +2 WOUND $_card'),
+    legacy.Perk(_fireKnight, 1, '$_add $_one +1 "STRENGTHEN, Ally" $_card'),
+    legacy.Perk(
+        _fireKnight, 2, '$_add $_two $_rolling "HEAL 1, RANGE 1" $_cards'),
+    legacy.Perk(_fireKnight, 1, '$_add $_two $_rolling WOUND $_cards'),
+    legacy.Perk(_fireKnight, 1,
+        'Ignore $_negative item $_effects and $_addL $_one $_rolling FIRE $_card'),
+    legacy.Perk(_fireKnight, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one $_rolling FIRE $_card'),
+    // FROSTBORN
+    legacy.Perk(_frostborn, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        _frostborn, 1, '$_replace $_one -2 $_card with $_one +0 CHILL $_card'),
+    legacy.Perk(_frostborn, 2,
+        '$_replace $_two +0 $_cards with $_two +1 PUSH 1 $_cards'),
+    legacy.Perk(_frostborn, 2,
+        '$_replace $_one +0 $_card with $_one +1 ICE CHILL $_card'),
+    legacy.Perk(
+        _frostborn, 1, '$_replace $_one +1 $_card with $_one +3 $_card'),
+    legacy.Perk(_frostborn, 1, '$_add $_one +0 STUN $_card'),
+    legacy.Perk(_frostborn, 2, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_frostborn, 1, '$_add $_three $_rolling CHILL $_cards'),
+    legacy.Perk(_frostborn, 1, '$_add $_three $_rolling PUSH 1 $_cards'),
+    legacy.Perk(_frostborn, 1,
+        'Ignore difficult and hazardous terrain during move actions'),
+    legacy.Perk(_frostborn, 1, 'Ignore $_scenario $_effects'),
+    // HOLLOWPACT
+    legacy.Perk(_hollowpact, 2,
+        '$_replace $_one -1 $_card with $_one +0 "HEAL 2, Self" $_card'),
+    legacy.Perk(_hollowpact, 2,
+        '$_replace $_two +0 $_cards with $_one +0 VOIDSIGHT $_card'),
+    legacy.Perk(_hollowpact, 2,
+        '$_add $_one -2 EARTH $_card and $_two +2 DARK $_cards'),
+    legacy.Perk(_hollowpact, 1,
+        '$_replace $_one -1 $_card with $_one -2 STUN $_card and $_one +0 VOIDSIGHT $_card'),
+    legacy.Perk(_hollowpact, 1,
+        '$_replace $_one -2 $_card with $_one +0 DISARM $_card and $_one -1 Any_Element $_card'),
+    legacy.Perk(_hollowpact, 2,
+        '$_replace $_one -1 $_card with $_one $_rolling +1 VOID $_card and $_one $_rolling -1 CURSE $_card'),
+    legacy.Perk(_hollowpact, 2,
+        '$_replace $_two +1 $_cards with $_one +3 "REGENERATE, Self" $_card'),
+    legacy.Perk(_hollowpact, 2,
+        '$_replace $_one +0 $_card with $_one +1 "Create a Void pit in an empty hex within RANGE 2" $_card'),
+    legacy.Perk(_hollowpact, 1,
+        'Ignore $_negative $_scenario $_effects and $_addL $_one +0 "WARD, Self" $_card'),
+    // MIREFOOT
+    legacy.Perk(_mirefoot, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(_mirefoot, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_mirefoot, 2,
+        '$_replace $_two +0 $_cards with $_two "+X, where X is the POISON value of the target" $_cards'),
+    legacy.Perk(
+        _mirefoot, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
+    legacy.Perk(_mirefoot, 2,
+        '$_replace $_one +0 $_card with $_two $_rolling "Create difficult terrain in the hex occupied by the target" $_cards'),
+    legacy.Perk(
+        _mirefoot, 2, '$_replace $_one +1 $_card with $_one +0 WOUND 2 $_card'),
+    legacy.Perk(_mirefoot, 1,
+        '$_add four $_rolling +0 "+1 if the target occupies difficult terrain" $_cards'),
+    legacy.Perk(_mirefoot, 1,
+        '$_add $_two $_rolling "INVISIBLE, Self, if you occupy difficult terrain" $_cards'),
+    legacy.Perk(_mirefoot, 1,
+        'Gain "Poison Dagger" (Item 011). You may carry $_one additional One_Hand item with "Dagger" in its name'),
+    legacy.Perk(_mirefoot, 1,
+        'Ignore damage, $_negative conditions, and modifiers from Events, and $_removeL $_one -1 $_card'),
+    legacy.Perk(_mirefoot, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one -1 $_card'),
+    // ROOTWHISPERER
+    // May be dead legacy.Perks if Rootwhisperer has a big overhaul - this is fine
+    legacy.Perk(_rootwhisperer, 2, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_rootwhisperer, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(
+        _rootwhisperer, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(_rootwhisperer, 2, '$_add $_one $_rolling +2 $_card'),
+    legacy.Perk(_rootwhisperer, 2, '$_add $_one +1 $_immobilize $_card'),
+    legacy.Perk(_rootwhisperer, 2, '$_add $_two $_rolling POISON $_cards'),
+    legacy.Perk(_rootwhisperer, 1, '$_add $_one $_rolling DISARM $_card'),
+    legacy.Perk(_rootwhisperer, 2, '$_add $_one $_rolling HEAL 2 EARTH $_card'),
+    legacy.Perk(_rootwhisperer, 1, 'Ignore $_negative $_scenario $_effects'),
+    // CHAINGUARD
+    legacy.Perk(_chainguard, 2,
+        '$_replace $_one -1 $_card with $_one +1 Shackle $_card'),
+    legacy.Perk(_chainguard, 2,
+        '$_replace $_one -1 $_card with $_one +0 "+2 if the target is Shackled" $_card'),
+    legacy.Perk(_chainguard, 2,
+        '$_replace $_two +0 $_cards with $_one $_rolling "SHIELD 1, Self" $_card'),
+    legacy.Perk(
+        _chainguard, 1, '$_add $_two $_rolling "RETALIATE 1, Self" $_cards'),
+    legacy.Perk(_chainguard, 1, '$_add $_three $_rolling SWING 3 $_cards'),
+    legacy.Perk(
+        _chainguard, 1, '$_replace $_one +1 $_card with $_one +2 WOUND $_card'),
+    legacy.Perk(_chainguard, 1,
+        '$_add $_one +1 "DISARM if the target is Shackled" $_card'),
+    legacy.Perk(_chainguard, 1,
+        '$_add $_one +1 "Create a 2 DAMAGE trap in an empty hex within RANGE 2" $_card'),
+    legacy.Perk(_chainguard, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
+    legacy.Perk(_chainguard, 2, '$_add $_one +2 Shackle $_card'),
+    legacy.Perk(_chainguard, 1,
+        'Ignore $_negative item $_effects and $_removeL $_one +0 $_card'),
+    // HIEROPHANT
+    legacy.Perk(_hierophant, 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(_hierophant, 1,
+        '$_replace $_two +0 $_cards with $_one $_rolling LIGHT $_card'),
+    legacy.Perk(_hierophant, 1,
+        '$_replace $_two +0 $_cards with $_one $_rolling EARTH $_card'),
+    legacy.Perk(
+        _hierophant, 2, '$_replace $_one -1 $_card with $_one +0 CURSE $_card'),
+    legacy.Perk(_hierophant, 1,
+        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Ally" $_card'),
+    legacy.Perk(_hierophant, 1,
+        '$_replace $_one -2 $_card with $_one -1 "Give $_one Ally a \'Prayer\' ability $_card" and $_one +0 $_card'),
+    legacy.Perk(
+        _hierophant, 2, '$_replace $_one +1 $_card with $_one +3 $_card'),
+    legacy.Perk(
+        _hierophant, 2, '$_add $_two $_rolling "HEAL 1, Self or Ally" $_cards'),
+    legacy.Perk(_hierophant, 2, '$_add $_one +1 WOUND, MUDDLE $_card'),
+    legacy.Perk(_hierophant, 1,
+        'At the start of your first turn each $_scenario, gain BLESS'),
+    legacy.Perk(_hierophant, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+    // LUMINARY
+    legacy.Perk(_luminary, 1, '$_remove four +0 $_cards'),
+    legacy.Perk(_luminary, 1, '$_replace $_one +0 $_card with $_one +2 $_card'),
+    legacy.Perk(
+        _luminary, 1, '$_replace $_one -1 $_card with $_one +0 ICE $_card'),
+    legacy.Perk(
+        _luminary, 1, '$_replace $_one -1 $_card with $_one +0 FIRE $_card'),
+    legacy.Perk(
+        _luminary, 1, '$_replace $_one -1 $_card with $_one +0 LIGHT $_card'),
+    legacy.Perk(
+        _luminary, 1, '$_replace $_one -1 $_card with $_one +0 DARK $_card'),
+    legacy.Perk(_luminary, 1,
+        '$_replace $_one -2 $_card with $_one -2 "Perform $_one Glow ability" $_card'),
+    legacy.Perk(_luminary, 2, '$_add $_one +0 Any_Element $_card'),
+    legacy.Perk(_luminary, 2, '$_add $_one $_rolling +1 "HEAL 1, Self" $_card'),
+    legacy.Perk(_luminary, 2,
+        '$_add $_one "POISON, target all enemies in the depicted LUMINARY_HEXES area" $_card'),
+    legacy.Perk(_luminary, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+    legacy.Perk(_luminary, 1,
+        'Ignore $_negative item $_effects and $_addL $_one $_rolling "Consume_Any_Element : Any_Element" $_card'),
+    // SPIRIT CALLER
+    legacy.Perk(_spiritCaller, 1,
+        '$_replace $_one -2 $_card with $_one -1 $_card and $_one +1 $_card'),
+    legacy.Perk(_spiritCaller, 2,
+        '$_replace $_one -1 $_card with $_one +0 "+2 if a Spirit performed the attack" $_card'),
+    legacy.Perk(_spiritCaller, 2,
+        '$_replace $_one -1 $_card with $_one +0 $_card and $_one $_rolling POISON $_card'),
+    legacy.Perk(
+        _spiritCaller, 2, '$_replace $_one +0 $_card with $_one +1 AIR $_card'),
+    legacy.Perk(_spiritCaller, 2,
+        '$_replace $_one +0 $_card with $_one +1 DARK $_card'),
+    legacy.Perk(_spiritCaller, 1,
+        '$_replace $_one +0 $_card with $_one +1 PIERCE 2 $_card'),
+    legacy.Perk(_spiritCaller, 1, '$_add $_three $_rolling PIERCE 3 $_cards'),
+    legacy.Perk(_spiritCaller, 1, '$_add $_one +1 CURSE $_card'),
+    legacy.Perk(_spiritCaller, 1, '$_add $_one $_rolling ADD TARGET $_card'),
+    legacy.Perk(_spiritCaller, 1,
+        '$_replace $_one +1 $_card with $_one +2 PUSH 2 $_card'),
+    legacy.Perk(_spiritCaller, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+    // STARSLINGER
+    legacy.Perk(_starslinger, 2,
+        '$_replace $_two +0 $_cards with $_one $_rolling "HEAL 1, Self" $_card'),
+    legacy.Perk(_starslinger, 1,
+        '$_replace $_one -2 $_card with $_one -1 "INVISIBLE, Self" $_card'),
+    legacy.Perk(_starslinger, 1,
+        '$_replace $_two -1 $_cards with $_one +0 DARK $_card'),
+    legacy.Perk(_starslinger, 2,
+        '$_replace $_one -1 $_card with $_one +1 LIGHT $_card'),
+    legacy.Perk(_starslinger, 1, '$_add $_one $_rolling Loot 1 $_card'),
+    legacy.Perk(_starslinger, 2,
+        '$_add $_one +1 "+3 if you are at full health" $_card'),
+    legacy.Perk(_starslinger, 1, '$_add $_two $_rolling $_immobilize $_cards'),
+    legacy.Perk(_starslinger, 2, '$_add $_one +1 "HEAL 1, RANGE 3" $_card'),
+    legacy.Perk(_starslinger, 1,
+        '$_add $_two $_rolling "Force the target to perform a \'MOVE 1\' ability" $_cards'),
+    legacy.Perk(
+        _starslinger, 1, '$_add $_two $_rolling "HEAL 1, RANGE 1" $_cards'),
+    legacy.Perk(_starslinger, 1,
+        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+    // RUINMAW
+    legacy.Perk(_ruinmaw, 1,
+        '$_replace $_one -2 $_card with $_one -1 RUPTURE and WOUND $_card'),
+    legacy.Perk(
+        _ruinmaw, 2, '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
+    legacy.Perk(
+        _ruinmaw, 2, '$_replace $_one -1 $_card with $_one +0 RUPTURE $_card'),
+    legacy.Perk(_ruinmaw, 3,
+        '$_replace $_one +0 $_card with $_one +1 "$_add +3 instead if the target has RUPTURE or WOUND" $_card'),
+    legacy.Perk(_ruinmaw, 3,
+        '$_replace $_one +0 $_card with $_one $_rolling "HEAL 1, Self, EMPOWER" $_card'),
+    legacy.Perk(_ruinmaw, 1,
+        'Once each $_scenario, become SATED after collecting your 5th loot token'),
+    legacy.Perk(_ruinmaw, 1,
+        'Become SATED each time you lose a $_card to negate suffering damage'),
+    legacy.Perk(_ruinmaw, 1,
+        'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "MOVE 1"'),
+    legacy.Perk(_ruinmaw, 1,
+        'Ignore $_negative $_scenario $_effects, and $_removeL $_one -1 $_card'),
+    // ************** ^^ THIS IS AS FAR AS RELEASE 3.7.0 GOES ^^ **************
+    // DRIFTER
+    legacy.Perk(_drifter, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(_drifter, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(_drifter, 2,
+        '$_replace $_one +1 $_card with $_two +0 "Move $_one of your character tokens backward $_one slot" $_cards'),
+    legacy.Perk(_drifter, 1,
+        '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
+    legacy.Perk(_drifter, 1,
+        '$_replace $_two +0 $_cards with $_two PUSH 2 $_rolling $_cards'),
+    legacy.Perk(_drifter, 1, '$_add $_one +3 $_card'),
+    legacy.Perk(_drifter, 2, '$_add $_one +2 $_immobilize $_card'),
+    legacy.Perk(_drifter, 1, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
+    legacy.Perk(
+        _drifter, 1, 'Ignore $_scenario $_effects and $_addL $_one +1 $_card'),
+    legacy.Perk(_drifter, 1,
+        'Ignore item item_minus_one $_effects and $_addL $_one +1 $_card'),
+    legacy.Perk(_drifter, 2,
+        'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
+        perkIsGrouped: true),
+    legacy.Perk(_drifter, 1,
+        'You may bring $_one additional One_Hand item into each $_scenario'),
+    legacy.Perk(_drifter, 1,
+        "At the end of each $_scenario, you may discard up to $_two loot $_cards, except 'Random Item', to draw that many new loot $_cards"),
+    // BLINK BLADE
+    legacy.Perk(_blinkblade, 1, '$_remove $_one -2 $_card'),
+    legacy.Perk(
+        _blinkblade, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk(
+        _blinkblade, 2, '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
+    legacy.Perk(_blinkblade, 2,
+        '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+    legacy.Perk(_blinkblade, 3,
+        '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addL plustwo ATTACK" $_rolling $_card'),
+    legacy.Perk(
+        _blinkblade, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
+    legacy.Perk(
+        _blinkblade, 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
+    legacy.Perk(
+        _blinkblade, 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
+    legacy.Perk(_blinkblade, 1,
+        'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
+    legacy.Perk(_blinkblade, 1,
+        'At the start of your first turn each $_scenario, you may perform MOVE 3'),
+    legacy.Perk(_blinkblade, 1,
+        'Whenever you would gain $_immobilize, prevent the condition'),
+    // BANNER SPEAR
+    legacy.Perk('bannerspear', 3,
+        '$_replace $_one -1 $_card with $_one "SHIELD 1" $_rolling $_card'),
+    legacy.Perk('bannerspear', 2,
+        '$_replace $_one +0 $_card with $_one +1 "$_add plusone ATTACK for each ally adjacent to the target" $_card'),
+    legacy.Perk('bannerspear', 2, '$_add $_one +1 DISARM $_card'),
+    legacy.Perk('bannerspear', 2, '$_add $_one +2 PUSH 1 $_card'),
+    legacy.Perk('bannerspear', 2, '$_add $_two +1 $_rolling $_cards'),
+    legacy.Perk(
+        'bannerspear', 2, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
+    legacy.Perk('bannerspear', 1,
+        'Ignore item item_minus_one $_effects and $_removeL $_one -1 $_card'),
+    legacy.Perk('bannerspear', 1,
+        'At the end of each of your long rests, grant $_one ally within RANGE 3: MOVE 2'),
+    legacy.Perk('bannerspear', 1,
+        'Whenever you open a door with a move ability, $_addL +3 MOVE'),
+    legacy.Perk('bannerspear', 2,
+        'Once each $_scenario, during your turn, gain SHIELD 2 for the round',
+        perkIsGrouped: true),
+    // DEATHWALKER
+    legacy.Perk('deathwalker', 1, '$_remove $_two -1 $_cards'),
+    legacy.Perk(
+        'deathwalker', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk(
+        'deathwalker', 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
+    legacy.Perk('deathwalker', 3,
+        '$_replace $_one +0 $_card with $_one +1 CURSE $_card'),
+    legacy.Perk('deathwalker', 2, '$_add $_one +2 DARK $_card'),
+    legacy.Perk('deathwalker', 2,
+        '$_add $_one DISARM $_rolling and $_one MUDDLE $_rolling $_card'),
+    legacy.Perk('deathwalker', 2,
+        '$_add $_two "HEAL 1, Target 1 ally" $_rolling $_cards'),
+    legacy.Perk('deathwalker', 1, 'Ignore $_scenario $_effects'),
+    legacy.Perk('deathwalker', 1,
+        'Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
+    legacy.Perk('deathwalker', 1,
+        'Whenever you short rest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
+    legacy.Perk('deathwalker', 1,
+        'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
+    // BONESHAPER
+    legacy.Perk('boneshaper', 2,
+        '$_replace $_one -1 $_card with $_one +0 CURSE $_card'),
+    legacy.Perk('boneshaper', 2,
+        '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
+    legacy.Perk(
+        'boneshaper', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk('boneshaper', 3,
+        '$_replace $_one +0 $_card with $_one +1 "Kill the attacking summon to instead $_addL +4" $_card'),
+    legacy.Perk('boneshaper', 2,
+        '$_add $_three "HEAL 1, Target Boneshaper" $_rolling $_cards'),
+    legacy.Perk('boneshaper', 3, '$_add $_one +2 EARTH/DARK $_card'),
+    legacy.Perk('boneshaper', 1,
+        'Ignore $_scenario $_effects and $_addL $_two +1 $_cards'),
+    legacy.Perk('boneshaper', 1,
+        'Immediately before each of your rests, you may kill $_one of your summons to perform BLESS, self'),
+    legacy.Perk('boneshaper', 1,
+        'Once each $_scenario, when any character ally would become exhausted by suffering DAMAGE, you may suffer DAMAGE 2 to reduce their hit point value to 1 instead'),
+    legacy.Perk('boneshaper', 2,
+        'At the start of each $_scenario, you may play a level 1 $_card from your hand to perform a summon action of the $_card',
+        perkIsGrouped: true),
+    // GEMINATE
+    legacy.Perk(
+        'geminate', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk('geminate', 3,
+        '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element : Any_Element" $_card'),
+    legacy.Perk(
+        'geminate', 2, '$_replace $_one +0 $_card with $_one +1 POISON $_card'),
+    legacy.Perk(
+        'geminate', 2, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+    legacy.Perk('geminate', 1,
+        '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
+    legacy.Perk('geminate', 1, '$_add $_two +1 PUSH 3 $_cards'),
+    legacy.Perk('geminate', 1, '$_add $_one 2x "BRITTLE, self" $_card'),
+    legacy.Perk(
+        'geminate', 2, '$_add $_one +1 "REGENERATE, self" $_rolling card'),
+    legacy.Perk('geminate', 1, 'Ignore $_scenario $_effects'),
+    legacy.Perk('geminate', 1,
+        'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
+    legacy.Perk('geminate', 1,
+        'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
+    legacy.Perk('geminate', 2,
+        'Whenever you perform an action with a lost icon, you may discard $_one $_card to RECOVER $_one card from your discard pile of equal or lower level',
+        perkIsGrouped: true),
+    // INFUSER
+    legacy.Perk('infuser', 1,
+        'Replace one -2 card with one -1 and one -1 AIR EARTH DARK card'),
+    legacy.Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/EARTH card'),
+    legacy.Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/DARK card'),
+    legacy.Perk(
+        'infuser', 2, 'Replace one -1 card with one +0 EARTH/DARK card'),
+    legacy.Perk('infuser', 2, 'Replace one +0 card with one +2 card'),
+    legacy.Perk('infuser', 2,
+        'Replace one +0 card with three "Move one waning element to strong" Rolling cards'),
+    legacy.Perk('infuser', 2,
+        'Add two "plusone ATTACK for each pair of active INFUSION" Rolling cards'),
+    legacy.Perk('infuser', 1, 'Ignore $_scenario $_effects'),
+    legacy.Perk('infuser', 1,
+        'Ignore item item_minus_one effects. Whenever you become exhausted, keep all your active bonuses in play, with your summons acting on initiative 99 each round'),
+    legacy.Perk('infuser', 1,
+        'Whenever you short rest, you may Consume_Any_Element to RECOVER one spent One_Hand or Two_Hand item'),
+    legacy.Perk('infuser', 1,
+        'Once each scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
+    // PYROCLAST
+    legacy.Perk('pyroclast', 1, 'Remove two -1 cards'),
+    legacy.Perk('pyroclast', 1, 'Remove one -2 card'),
+    legacy.Perk('pyroclast', 2, 'Replace one +0 card with one +1 WOUND card'),
+    legacy.Perk('pyroclast', 2,
+        'Replace one -1 card with one +0 "Create one 1-hex hazardous terrain tile in a featureless hex adjacent to the target" card'),
+    legacy.Perk(
+        'pyroclast', 2, 'Replace two +0 cards with two PUSH 2 Rolling cards'),
+    legacy.Perk('pyroclast', 1, 'Replace two +1 cards with two +2 cards'),
+    legacy.Perk('pyroclast', 2, 'Add two +1 FIRE/EARTH cards'),
+    legacy.Perk('pyroclast', 1, 'Add two +1 MUDDLE Rolling cards'),
+    legacy.Perk('pyroclast', 1, 'Ignore scenario effects'),
+    legacy.Perk('pyroclast', 1,
+        'Whenever you long rest, you may destroy one adjacent obstacle to gain WARD'),
+    legacy.Perk('pyroclast', 1,
+        'Whenever you short rest, you may consume_FIRE to perform WOUND, Target 1 enemy occupying or adjacent to hazardous terrain'),
+    legacy.Perk('pyroclast', 3,
+        'You and all allies are unaffected by hazardous terrain you create',
+        perkIsGrouped: true),
+    // SHATTERSONG
+    legacy.Perk('shattersong', 1, 'Remove four +0 cards'),
+    legacy.Perk('shattersong', 2,
+        'Replace two -1 cards with two +0 "Reveal the top card of the target\'s monster ability deck" cards'),
+    legacy.Perk('shattersong', 1, 'Replace one -2 card with one -1 STUN card'),
+    legacy.Perk(
+        'shattersong', 2, 'Replace one +0 card with one +0 BRITTLE card'),
+    legacy.Perk(
+        'shattersong', 2, 'Replace two +1 cards with two +2 AIR/LIGHT cards'),
+    legacy.Perk('shattersong', 2,
+        'Add one "HEAL 2, BLESS, Target 1 ally" Rolling card'),
+    legacy.Perk('shattersong', 3, 'Add one +1 "Gain 1 RESONANCE" card'),
+    legacy.Perk('shattersong', 1, 'Ignore scenario effects'),
+    legacy.Perk('shattersong', 2,
+        'Whenever you short rest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
+        perkIsGrouped: true),
+    legacy.Perk('shattersong', 1,
+        'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
+    legacy.Perk('shattersong', 1,
+        'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
+    // TRAPPER
+    legacy.Perk('trapper', 1, 'Remove one -2 card'),
+    legacy.Perk('trapper', 2,
+        'Replace one -1 card with one +0 "Create one HEAL 2 trap in an empty hex adjacent to the target" card'),
+    legacy.Perk('trapper', 3,
+        'Replace one -1 card with one +0 "Create one DAMAGE 1 trap in an empty hex adjacent to the target" card'),
+    legacy.Perk('trapper', 3,
+        'Replace two +0 cards with two +0 "Add DAMAGE 2 or HEAL 2 to a trap within RANGE 2 of you" cards'),
+    legacy.Perk(
+        'trapper', 2, 'Replace two +1 cards with two +2 $_immobilize cards'),
+    legacy.Perk('trapper', 3, 'Add two "Add PUSH 2 or PULL 2" Rolling cards'),
+    legacy.Perk('trapper', 1, 'Ignore scenario effects'),
+    legacy.Perk('trapper', 1,
+        'Whenever you long rest, you may create one DAMAGE 1 trap in an adjacent empty hex'),
+    legacy.Perk('trapper', 1,
+        'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
+    legacy.Perk('trapper', 1,
+        'At the start of each scenario, you may create one DAMAGE 2 trap in an adjacent empty hex'),
+    // PAIN CONDUIT
+    legacy.Perk('painconduit', 2, 'Remove two -1 cards'),
+    legacy.Perk(
+        'painconduit', 1, 'Replace one -2 card with one -2 CURSE CURSE card'),
+    legacy.Perk(
+        'painconduit', 1, 'Replace one -1 card with one +0 DISARM card'),
+    legacy.Perk(
+        'painconduit', 3, 'Replace one +0 card with one +1 FIRE/AIR card'),
+    legacy.Perk('painconduit', 1, 'Replace one +0 card with one +2 card'),
+    legacy.Perk(
+        'painconduit', 1, 'Replace three +1 cards with three +1 CURSE cards'),
+    legacy.Perk('painconduit', 2, 'Add three "HEAL 1, self" Rolling cards'),
+    legacy.Perk('painconduit', 2,
+        'Add one +0 "Add plusone ATTACK for each negative condition you have" card'),
+    legacy.Perk(
+        'painconduit', 1, 'Ignore scenario effects and add two +1 cards'),
+    legacy.Perk('painconduit', 1,
+        'Each round in which you long rest, you may ignore all negative conditions you have. If you do, they cannot be removed that round'),
+    legacy.Perk('painconduit', 1,
+        'Whenever you become exhausted, first perform CURSE, Target all, RANGE 3'),
+    legacy.Perk('painconduit', 2, 'Increase your maximum hit point value by 5',
+        perkIsGrouped: true),
+    // SNOWDANCER
+    legacy.Perk('snowdancer', 3,
+        'Replace one -1 card with one +0 "HEAL 1, Target 1 ally" card'),
+    legacy.Perk(
+        'snowdancer', 2, 'Replace one -1 card with one +0 $_immobilize card'),
+    legacy.Perk('snowdancer', 2, 'Add two +1 ICE/AIR cards'),
+    legacy.Perk('snowdancer', 2,
+        'Replace two +0 cards with two "If this action forces the target to move, it suffers DAMAGE 1" Rolling cards'),
+    legacy.Perk('snowdancer', 2,
+        'Replace one +0 card with one +1 "STRENGTHEN, Target 1 ally" card'),
+    legacy.Perk(
+        'snowdancer', 2, 'Add one "HEAL 1, WARD, Target 1 ally" Rolling card'),
+    legacy.Perk('snowdancer', 1, 'Whenever you long rest, you may ICE/AIR'),
+    legacy.Perk('snowdancer', 2,
+        'Whenever you short rest, you may consume_ICE to perform REGENERATE, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
+        perkIsGrouped: true),
+    legacy.Perk('snowdancer', 2,
+        'At the start of each scenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
+        perkIsGrouped: true),
+    // FROZEN FIST
+    legacy.Perk('frozenfist', 2, 'Replace one -1 card with one +0 DISARM card'),
+    legacy.Perk('frozenfist', 1, 'Replace one -1 card with one +1 card'),
+    legacy.Perk('frozenfist', 1, 'Replace one -2 card with one +0 card'),
+    legacy.Perk('frozenfist', 2,
+        'Replace one +0 card with one +1 "SHIELD 1" Rolling card'),
+    legacy.Perk(
+        'frozenfist', 2, 'Replace one +0 card with one +1 ICE/EARTH card'),
+    legacy.Perk('frozenfist', 2,
+        'Replace one +0 card with one +2 "Create one 1-hex icy terrain tile in a featureless hex adjacent to the target" card'),
+    legacy.Perk('frozenfist', 1, 'Add one +3 card'),
+    legacy.Perk('frozenfist', 3, 'Add two "HEAL 1, self" Rolling cards'),
+    legacy.Perk('frozenfist', 1,
+        'Ignore item item_minus_one effects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
+    legacy.Perk('frozenfist', 1,
+        'Whenever you heal from a long rest, you may consume_ICE/EARTH to add plustwo HEAL'),
+    legacy.Perk('frozenfist', 2,
+        'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
+        perkIsGrouped: true),
+    // HIVE
+    legacy.Perk('hive', 1, 'Remove one -2 card and one +1 card'),
+    legacy.Perk('hive', 3,
+        'Replace one -1 card with one +0 "After this attack ability, grant one of your summons: MOVE 2" card'),
+    legacy.Perk('hive', 3,
+        'Replace one +0 card with one +1 "After this attack ability, TRANSFER" card'),
+    legacy.Perk('hive', 3, 'Add one +1 "HEAL 1, self" card'),
+    legacy.Perk('hive', 2, 'Add one +2 MUDDLE card'),
+    legacy.Perk('hive', 1, 'Add two POISON Rolling cards'),
+    legacy.Perk('hive', 1, 'Add two WOUND Rolling cards'),
+    legacy.Perk('hive', 2,
+        'Whenever you long rest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
+        perkIsGrouped: true),
+    legacy.Perk(
+        'hive', 1, 'At the end of each of your short rests, you may TRANSFER'),
+    legacy.Perk(
+        'hive', 1, 'Whenever you would gain WOUND, prevent the condition'),
+    // METAL MOSAIC
+    legacy.Perk('metalmosaic', 3,
+        'Replace one -1 card with one +0 "PRESSURE_GAIN or PRESSURE_LOSE" card'),
+    legacy.Perk('metalmosaic', 2,
+        'Replace one -1 card with one "SHIELD 1" Rolling card'),
+    legacy.Perk('metalmosaic', 2,
+        'Replace one +0 card with one +0 "The target and all enemies adjacent to it suffer DAMAGE 1" card'),
+    legacy.Perk('metalmosaic', 2,
+        'Replace two +0 cards with one PIERCE 3 Rolling and one "RETALIATE 2" Rolling card'),
+    legacy.Perk('metalmosaic', 2, 'Add one +1 "HEAL 2, self" card'),
+    legacy.Perk('metalmosaic', 1, 'Add one +3 card'),
+    legacy.Perk('metalmosaic', 1,
+        'Ignore item item_minus_one effects and add two +1 cards'),
+    legacy.Perk('metalmosaic', 1,
+        'Whenever you long rest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
+    legacy.Perk('metalmosaic', 1,
+        'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
+    legacy.Perk('metalmosaic', 3,
+        'Once each scenario, when you would become exhausted, instead gain STUN and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
+        perkIsGrouped: true),
+    // DEEPWRAITH
+    legacy.Perk('deepwraith', 1, 'Remove two -1 cards'),
+    legacy.Perk('deepwraith', 2, 'Replace one -1 card with one +0 DISARM card'),
+    legacy.Perk('deepwraith', 1, 'Replace one -2 card with one -1 STUN card'),
+    legacy.Perk('deepwraith', 2,
+        'Replace one +0 card with one +0 "INVISIBLE, self" card'),
+    legacy.Perk('deepwraith', 1,
+        'Replace two +0 cards with two PIERCE 3 Rolling cards'),
+    legacy.Perk('deepwraith', 1, 'Replace two +1 cards with two +2 cards'),
+    legacy.Perk(
+        'deepwraith', 1, 'Replace three +1 cards with three +1 CURSE cards'),
+    legacy.Perk('deepwraith', 3, 'Add two +1 "Gain 1 TROPHY" cards'),
+    legacy.Perk(
+        'deepwraith', 1, 'Ignore scenario effects and remove two +0 cards'),
+    legacy.Perk('deepwraith', 1,
+        'Whenever you long rest, you may Loot one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+    legacy.Perk(
+        'deepwraith', 1, 'At the start of each scenario, gain 2 TROPHY'),
+    legacy.Perk('deepwraith', 3,
+        'While you have INVISIBLE, gain advantage on all your attacks',
+        perkIsGrouped: true),
+    // CRASHING TIDE
+    legacy.Perk('crashingtide', 2,
+        'Replace one -1 card with two PIERCE 3 Rolling cards'),
+    legacy.Perk('crashingtide', 2,
+        'Replace one -1 card with one +0 "plusone Target" card'),
+    legacy.Perk('crashingtide', 2,
+        'Replace one +0 card with one +1 "SHIELD 1" Rolling card'),
+    legacy.Perk('crashingtide', 2,
+        'Add two +1 "If you performed a TIDE action this round, +2 instead" cards'),
+    legacy.Perk('crashingtide', 2, 'Add one +2 MUDDLE card'),
+    legacy.Perk('crashingtide', 1, 'Add one +1 DISARM card'),
+    legacy.Perk('crashingtide', 2, 'Add two "HEAL 1, self" Rolling cards'),
+    legacy.Perk('crashingtide', 1,
+        'Ignore item item_minus_one effects, and, whenever you would gain IMPAIR, prevent the condition'),
+    legacy.Perk('crashingtide', 1,
+        'Whenever you declare a long rest during card selection, gain SHIELD 1 for the round'),
+    legacy.Perk('crashingtide', 3,
+        'Gain advantage on all your attacks performed while occupying or targeting enemies occupying water hexes',
+        perkIsGrouped: true),
+    // THORNREAPER
+    legacy.Perk('thornreaper', 2,
+        '$_replace $_one -1 $_card with $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card'),
+    legacy.Perk(
+        'thornreaper', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
+    legacy.Perk('thornreaper', 2,
+        'Add three Rolling "+1 if LIGHT is Strong or Waning" cards'),
+    legacy.Perk('thornreaper', 1, '$_add $_two $_rolling LIGHT $_cards'),
+    legacy.Perk('thornreaper', 1,
+        '$_add $_three $_rolling "EARTH if LIGHT is Strong or Waning" $_cards'),
+    legacy.Perk('thornreaper', 1,
+        '$_add $_one "Create hazardous terrain in $_one hex within RANGE 1" $_card'),
+    legacy.Perk('thornreaper', 2,
+        'Add one Rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain RETALIATE 3" card'),
+    legacy.Perk('thornreaper', 2,
+        'Add one Rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain SHIELD 3" card'),
+    legacy.Perk('thornreaper', 1,
+        'Ignore $_negative item $_effects and $_addL $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card'),
+    legacy.Perk(
+        'thornreaper', 2, 'Gain SHIELD 1 while you occupy hazardous terrain',
+        perkIsGrouped: true),
+    // INCARNATE
+    legacy.Perk('incarnate', 1,
+        '$_replace $_one -2 $_card with $_one $_rolling ALL_STANCES $_card'),
+    legacy.Perk('incarnate', 1,
+        '$_replace $_one -1 $_card with $_one $_rolling PIERCE 2, FIRE $_card'),
+    legacy.Perk('incarnate', 1,
+        '$_replace $_one -1 $_card with $_one $_rolling "SHIELD 1, Self, EARTH" $_card'),
+    legacy.Perk('incarnate', 1,
+        '$_replace $_one -1 $_card with $_one $_rolling PUSH 1, AIR $_card'),
+    legacy.Perk('incarnate', 2,
+        '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE / CONQUEROR : EMPOWER, Self" $_card'),
+    legacy.Perk('incarnate', 2,
+        '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / CONQUEROR : EMPOWER, Self" $_card'),
+    legacy.Perk('incarnate', 2,
+        '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / RITUALIST : ENFEEBLE" $_card'),
+    legacy.Perk('incarnate', 1,
+        '$_add $_one $_rolling "RECOVER $_one One_Hand or Two_Hand item" $_card'),
+    legacy.Perk(
+        'incarnate', 1, 'Each time you long rest, perform: ALL_STANCES'),
+    legacy.Perk('incarnate', 1,
+        'You may bring one additional One_Hand item into each scenario'),
+    legacy.Perk('incarnate', 1,
+        'Each time you short rest, RECOVER one spent One_Hand item'),
+    legacy.Perk('incarnate', 1,
+        'Ignore negative item effects and $_removeL one -1 $_card'),
+    // RIMEHEARTH
+    legacy.Perk('rimehearth', 2,
+        '$_replace $_one -1 $_card with $_one $_rolling WOUND $_card'),
+    legacy.Perk('rimehearth', 1,
+        '$_replace $_one +0 $_card with $_one $_rolling "HEAL 3, WOUND, Self" $_card'),
+    legacy.Perk('rimehearth', 1,
+        '$_replace $_two +0 $_cards with $_two $_rolling FIRE $_cards'),
+    legacy.Perk('rimehearth', 1,
+        '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 WOUND $_card, and $_one +1 "HEAL 1, Self" $_card'),
+    legacy.Perk(
+        'rimehearth', 2, '$_replace $_one +0 $_card with $_one +1 ICE $_card'),
+    legacy.Perk('rimehearth', 2,
+        '$_replace $_one -1 $_card with $_one +0 CHILL $_card'),
+    legacy.Perk('rimehearth', 1,
+        '$_replace $_one +2 $_card with $_one +3 CHILL $_card'),
+    legacy.Perk('rimehearth', 2, '$_add $_one +2 FIRE/ICE $_card'),
+    legacy.Perk('rimehearth', 1, '$_add $_one +0 BRITTLE $_card'),
+    legacy.Perk('rimehearth', 1,
+        'At the start of each $_scenario, you may either gain WOUND to generate FIRE or gain CHILL to generate ICE'),
+    legacy.Perk('rimehearth', 1,
+        'Ignore negative item effects and $_add $_one $_rolling FIRE/ICE $_card'),
+    // SHARDRENDER
+    legacy.Perk('shardrender', 1, 'Remove one -2 card'),
+    legacy.Perk(
+        'shardrender', 2, '$_replace $_one -1 $_card with $_one +1 card'),
+    legacy.Perk('shardrender', 2,
+        '$_replace -1 card with one Rolling "Shield 1, Self" card'),
+    legacy.Perk('shardrender', 2,
+        '$_replace two +0 cards with two +0 "Move one character token on a CRYSTALLIZE back one space" cards'),
+    legacy.Perk('shardrender', 2,
+        'Replace one +0 card with one Rolling +1 "+2 instead if the attack has PIERCE" card'),
+    legacy.Perk('shardrender', 1,
+        'Add two +1 "+2 instead if you CRYSTALLIZE PERSIST one space" cards'),
+    legacy.Perk('shardrender', 1, 'Add one +0 BRITTLE card'),
+    legacy.Perk('shardrender', 2,
+        'Ignore negative item effects and at the start of each scenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
+        perkIsGrouped: true),
+    legacy.Perk('shardrender', 1,
+        'Once each scenario, when you would suffer damage from an attack, gain "SHIELD 3" for that attack'),
+    legacy.Perk('shardrender', 1,
+        'Each time you long rest, perform "REGENERATE, Self"'),
+    // TEMPEST
+    legacy.Perk('tempest', 1, 'Replace one -2 card with one -1 AIR/LIGHT card'),
+    legacy.Perk('tempest', 1,
+        'Replace one -1 AIR/LIGHT card with one +1 AIR/LIGHT card'),
+    legacy.Perk('tempest', 2, 'Replace one -1 card with one +0 WOUND card'),
+    legacy.Perk('tempest', 2,
+        '$_replace one -1 card with one Rolling "REGENERATE, RANGE 1" card'),
+    legacy.Perk('tempest', 1, 'Replace one +0 card with one +2 MUDDLE card'),
+    legacy.Perk(
+        'tempest', 1, 'Replace two +0 cards with one +1 $_immobilize card'),
+    legacy.Perk('tempest', 2, 'Add one +1 "DODGE, Self" card'),
+    legacy.Perk('tempest', 1, 'Add one +2 AIR/LIGHT card'),
+    legacy.Perk('tempest', 1, 'Whenever you dodge an attack, gain one SPARK'),
+    legacy.Perk('tempest', 2, 'Whenever you long rest, you may gain DODGE',
+        perkIsGrouped: true),
+    legacy.Perk('tempest', 1,
+        'Whenever you short rest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
+    // VANQUISHER
+    legacy.Perk(
+        'vanquisher', 1, 'Replace two -1 cards with one +0 MUDDLE card'),
+    legacy.Perk('vanquisher', 1,
+        'Replace two -1 cards with one -1 "HEAL 2, Self" card'),
+    legacy.Perk(
+        'vanquisher', 1, 'Replace one -2 card with one -1 POISON WOUND card'),
+    legacy.Perk('vanquisher', 2,
+        '$_replace one +0 card with one +1 "HEAL 1, Self" card'),
+    legacy.Perk('vanquisher', 1,
+        'Replace two +0 cards with one +0 CURSE card and one +0 $_immobilize card'),
+    legacy.Perk(
+        'vanquisher', 2, 'Replace one +1 card with one +2 FIRE/AIR card'),
+    legacy.Perk('vanquisher', 1,
+        'Replace one +2 card with one Rolling "Gain one RAGE" card'),
+    legacy.Perk('vanquisher', 2,
+        'Add one +1 "RETALIATE 1, Self" card and one Rolling PIERCE 3 card'),
+    legacy.Perk('vanquisher', 1, 'Add one +0 "BLESS, Self" card'),
+    legacy.Perk('vanquisher', 1,
+        'Add two +1 "+2 instead if you suffer 1 damage" cards'),
+    legacy.Perk('vanquisher', 1,
+        'Add one +2 "+3 instead if you suffer 1 damage" cards'),
+    legacy.Perk(
+        'vanquisher', 1, 'Ignore negative item effects and remove one -1 card'),
+    // INCARNATE V2
+    // Perk('incarnate', 1,
+    //     '$_replace $_one -2 $_card with $_one +0 ALL_STANCES $_rolling $_card'),
+    // Perk('incarnate', 1,
+    //     '$_replace $_one -1 $_card with $_one +0 PIERCE 2 FIRE $_rolling $_card'),
+    // Perk('incarnate', 1,
+    //     '$_replace $_one -1 $_card with $_one +0 PUSH 1 AIR $_rolling $_card'),
+    // Perk('incarnate', 1,
+    //     '$_replace $_one -1 $_card with $_one +0 "SHIELD 1" EARTH $_rolling $_card'),
+    // Perk('incarnate', 2,
+    //     '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE or RITUALIST : ENFEEBLE" $_card'),
+    // Perk('incarnate', 2,
+    //     '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE or CONQUEROR : EMPOWER, self" $_card'),
+    // Perk('incarnate', 2,
+    //     '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE or CONQUEROR : EMPOWER, self" $_card'),
+    // Perk('incarnate', 1,
+    //     'Add one +0 "RECOVER one One_Hand or Two_Hand item" Rolling card'),
+    // Perk('incarnate', 1,
+    //     'Ignore item item_minus_one effects and remove one -1 card'),
+    // Perk('incarnate', 1,
+    //     '[Eyes of the Ritualist:] Whenever you long rest, perform ALL_STANCES'),
+    // Perk('incarnate', 1,
+    //     '[Shoulders of the Conqueror:] You may bring one additional One_Hand item into each scenario'),
+    // Perk('incarnate', 1,
+    //     '[Hands of the Reaver:] Whenever you short rest, RECOVER one spent One_Hand item'),
+  ];
 
-  static const _brute = 'br';
-  // static const _bruteFHCO = 'brute_fhco';
-  static const _tinkerer = 'ti';
-  static const _spellweaver = 'sw';
-  static const _scoundrel = 'sc';
-  static const _cragheart = 'ch';
-  static const _mindthief = 'mt';
-  static const _sunkeeper = 'sk';
-  static const _quartermaster = 'qm';
-  static const _summoner = 'su';
-  static const _nightshroud = 'ns';
-  static const _plagueherald = 'ph';
-  static const _berserker = 'be';
-  static const _soothsinger = 'ss';
-  static const _doomstalker = 'ds';
-  static const _sawbones = 'sb';
-  static const _elementalist = 'el';
-  static const _beastTyrant = 'bt';
-  static const _bladeswarm = 'bs';
-  static const _diviner = 'dv';
-  static const _demolitionist = 'dl';
-  static const _hatchet = 'hc';
-  static const _redGuard = 'rg';
-  static const _voidwarden = 'vw';
-  static const _drifter = 'drifter';
-  static const _blinkblade = 'blinkblade';
-  static const _bombard = 'bb';
-  static const _brightspark = 'bp';
-  static const _chainguard = 'cg';
-  static const _chieftain = 'ct';
-  static const _fireKnight = 'fk';
-  static const _hierophant = 'hf';
-  static const _hollowpact = 'hp';
-  static const _luminary = 'ln';
-  static const _mirefoot = 'mf';
-  static const _spiritCaller = 'scr';
-  static const _starslinger = 'ssl';
-  static const _amberAegis = 'aa';
-  static const _artificer = 'af';
-  static const _brewmaster = 'bm';
-  static const _frostborn = 'fb';
-  static const _rootwhisperer = 'rw';
-  static const _ruinmaw = 'rm';
+  static final List<legacy.Mastery> masteries = [
+    // GLOOMHAVEN
+    legacy.Mastery(
+      masteryClassCode: _brute,
+      masteryDetails:
+          'Cause enemies to suffer a total of 12 or more RETALIATE damage during attacks targeting you in a single round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _brute,
+      masteryDetails:
+          'Across three consecutive rounds, play six different ability cards and cause enemies to suffer at least DAMAGE 6 on each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _tinkerer,
+      masteryDetails:
+          'Heal an ally or apply a negative condition to an enemy each turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _tinkerer,
+      masteryDetails:
+          'Perform two actions with lost icons before your first rest and then only rest after having played at least two actions with lost icons since your previous rest',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _spellweaver,
+      masteryDetails: 'Infuse and consume all six elements',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _spellweaver,
+      masteryDetails: 'Perform four different loss actions twice each',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _scoundrel,
+      masteryDetails:
+          'Kill at least six enemies that are adjacent to at least one of your allies',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _scoundrel,
+      masteryDetails:
+          'Kill at least six enemies that are adjacent to none of your allies',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _cragheart,
+      masteryDetails: 'Only attack enemies adjacent to obstacles or walls',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _cragheart,
+      masteryDetails: 'Damage or heal at least one ally each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _mindthief,
+      masteryDetails:
+          'Trigger the on-attack effect of four different Augments thrice each',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _mindthief,
+      masteryDetails: 'Never be targeted by an attack',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _sunkeeper,
+      masteryDetails:
+          'Reduce attacks targeting you by a total of 20 or more through Shield effects in a single round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _sunkeeper,
+      masteryDetails: 'LIGHT or consume_LIGHT during each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _quartermaster,
+      masteryDetails:
+          "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of 'Reinforced Steel'",
+    ),
+    legacy.Mastery(
+      masteryClassCode: _quartermaster,
+      masteryDetails: 'Loot six or more loot tokens in a single turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _summoner,
+      masteryDetails:
+          'Summon the Lava Golem on your first turn and keep it alive for the entire scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _summoner,
+      masteryDetails:
+          'Perform the summon action of five different ability cards',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _nightshroud,
+      masteryDetails:
+          'Have INVISIBLE at the start or end of each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _nightshroud,
+      masteryDetails: 'DARK or consume_DARK during each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _plagueherald,
+      masteryDetails: 'Kill at least five enemies with non-attack abilities',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _plagueherald,
+      masteryDetails:
+          'Perform three different attack abilities that target at least four enemies each',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _berserker,
+      masteryDetails:
+          "Lose at least one hit point during each of your turns, without ever performing the bottom action of 'Blood Pact'",
+    ),
+    legacy.Mastery(
+      masteryClassCode: _berserker,
+      masteryDetails:
+          'Have exactly one hit point at the end of each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _soothsinger,
+      masteryDetails:
+          'On your first turn of the scenario and the turn after each of your rests, perform one Song action that you have not yet performed this scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _soothsinger,
+      masteryDetails:
+          'Have all 10 monster CURSE cards and all 10 BLESS cards in modifier decks at the same time',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _doomstalker,
+      masteryDetails:
+          'Never perform a Doom action that you have already performed in the scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _doomstalker,
+      masteryDetails: 'Kill three Doomed enemies during one of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _sawbones,
+      masteryDetails:
+          "On each of your turns, give an ally an ability card, target an ally with a HEAL ability, grant an ally SHIELD, or place an ability card in an ally's active area",
+    ),
+    legacy.Mastery(
+      masteryClassCode: _sawbones,
+      masteryDetails: 'Deal at least DAMAGE 20 with a single attack ability',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _elementalist,
+      masteryDetails:
+          "Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of 'Formless Power' or 'Shaping the Ether'",
+    ),
+    legacy.Mastery(
+      masteryClassCode: _elementalist,
+      masteryDetails:
+          'Infuse five or more elements during one of your turns, then consume five or more elements during your following turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _beastTyrant,
+      masteryDetails:
+          'Have your bear summon deal DAMAGE 10 or more in three consecutive rounds',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _beastTyrant,
+      masteryDetails:
+          'You or your summons must apply a negative condition to at least 10 different enemies',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _bladeswarm,
+      masteryDetails:
+          'Perform two different summon actions on your first turn and keep all summons from those actions alive for the entire scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _bladeswarm,
+      masteryDetails:
+          'Perform three different non-summon persistent loss actions before your first rest',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _diviner,
+      masteryDetails:
+          'During one round, have at least four monsters move into four different Rifts that affect those monsters',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _diviner,
+      masteryDetails:
+          'Reveal at least one card from at least one ability card deck or attack modifier deck each round',
+    ),
+    // JAWS OF THE LION
+    legacy.Mastery(
+      masteryClassCode: _demolitionist,
+      masteryDetails:
+          'Deal DAMAGE 10 or more with each of three different attack actions',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _demolitionist,
+      masteryDetails:
+          'Destroy at least six obstacles. End the scenario with no obstacles on the map other than ones placed by allies',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _hatchet,
+      masteryDetails: 'AIR or consume_AIR during each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _hatchet,
+      masteryDetails:
+          'During each round in which there is at least one enemy on the map at the start of your turn, either place one of your tokens on an ability card of yours or on an enemy',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _redGuard,
+      masteryDetails: 'Kill at least five enemies during their turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _redGuard,
+      masteryDetails:
+          'Force each enemy in the scenario to move at least one hex, forcing at least six enemies to move',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _voidwarden,
+      masteryDetails:
+          'Cause enemies to suffer DAMAGE 20 or more in a single turn with granted or commanded attacks',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _voidwarden,
+      masteryDetails:
+          'Give at least one ally or enemy POISON, STRENGTHEN, BLESS, or WARD each round',
+    ),
+    // FROSTHAVEN
+    legacy.Mastery(
+      masteryClassCode: _drifter,
+      masteryDetails:
+          'End a scenario with your character tokens on the last use slots of four persistent abilities',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _drifter,
+      masteryDetails:
+          'Never perform a move or attack ability with a value less than 4, and perform at least one move or attack ability every round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _blinkblade,
+      masteryDetails: 'Declare Fast seven rounds in a row',
+    ),
+    legacy.Mastery(
+      masteryClassCode: _blinkblade,
+      masteryDetails: 'Never be targeted by an attack',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'bannerspear',
+      masteryDetails:
+          'Attack at least three targets with three different area of effect attacks',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'bannerspear',
+      masteryDetails:
+          'Play a Banner summon ability on your first turn, always have it within RANGE 3 of you, and keep it alive for the entire scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'Consume seven SHADOW in one round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'deathwalker',
+      masteryDetails: 'Create or consume at least one SHADOW every round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'boneshaper',
+      masteryDetails: 'Kill at least 15 of your summons',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'boneshaper',
+      masteryDetails:
+          'Play a summon action on your first turn, have this summon kill at least 6 enemies, and keep it alive for the entire scenario',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'geminate',
+      masteryDetails: 'Switch forms every round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'geminate',
+      masteryDetails: 'Lose at least one card every round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'infuser',
+      masteryDetails: 'Have five active INFUSION bonuses',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'infuser',
+      masteryDetails: 'Kill at least four enemies, but never attack',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'pyroclast',
+      masteryDetails:
+          'Create or destroy at least one obstacle or hazardous terrain tile each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'pyroclast',
+      masteryDetails:
+          'Move enemies through six different hexes of hazardous terrain you created in one turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'shattersong',
+      masteryDetails:
+          'Always have 0 RESONANCE directly before you gain RESONANCE at the end of each of your turns',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'shattersong',
+      masteryDetails:
+          'Spend 5 RESONANCE on each of five different Wave abilities',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'trapper',
+      masteryDetails:
+          'Have one HEAL trap on the map with a value of at least 20',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'trapper',
+      masteryDetails:
+          'Move enemies through seven or more traps with one ability',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'painconduit',
+      masteryDetails:
+          'Cause other figures to suffer a total of at least DAMAGE 40 in one round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'painconduit',
+      masteryDetails:
+          'Start a turn with WOUND, BRITTLE, BANE, POISON, $_immobilize, DISARM, STUN, and MUDDLE',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'snowdancer',
+      masteryDetails: 'Cause at least one ally or enemy to move each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'snowdancer',
+      masteryDetails:
+          'Ensure the first ally to suffer DAMAGE each round, directly before suffering the DAMAGE, has at least one condition you applied',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'frozenfist',
+      masteryDetails:
+          'RECOVER at least one card from your discard pile each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'frozenfist',
+      masteryDetails:
+          'Enter at least ten different hexes with one move ability, then cause one enemy to suffer at least DAMAGE 10 with one attack ability in the same turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'hive',
+      masteryDetails: 'TRANSFER each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'hive',
+      masteryDetails: 'TRANSFER into four different summons in one round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'metalmosaic',
+      masteryDetails: 'Never attack',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'metalmosaic',
+      masteryDetails:
+          'For four consecutive rounds, move the pressure gauge up or down three levels from where it started the round (PRESSURE_LOW to PRESSURE_HIGH, or vice versa)',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'deepwraith',
+      masteryDetails: 'Perform all your attacks with advantage',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'deepwraith',
+      masteryDetails: 'Infuse DARK each round',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'crashingtide',
+      masteryDetails:
+          'Never suffer damage from attacks, and be targeted by at least five attacks',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'crashingtide',
+      masteryDetails:
+          'At the start of each of your rests, have more active TIDE than cards in your discard pile',
+    ),
+    // CUSTOM
+    legacy.Mastery(
+      masteryClassCode: 'incarnate',
+      masteryDetails:
+          'Never end your turn with the same spirit you started in that turn',
+    ),
+    legacy.Mastery(
+      masteryClassCode: 'incarnate',
+      masteryDetails:
+          'Perform fifteen attacks using One_Hand or Two_Hand items',
+    ),
+  ];
 
-  static const _arcane = 'Arcane';
-  static const _armored = 'Armored';
-  static const _chaotic = 'Chaotic';
-  static const _educated = 'Educated';
-  static const _intimidating = 'Intimidating';
-  static const _nimble = 'Nimble';
-  static const _outcast = 'Outcast';
-  static const _persuasive = 'Persuasive';
-  static const _resourceful = 'Resourceful';
-  static const _strong = 'Strong';
+  static final Map<String, List<Masteries>> masteriesMap = {
+    _brute: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Cause enemies to suffer a total of 12 or more RETALIATE damage during attacks targeting you in a single round',
+          ),
+          Mastery(
+            masteryDetails:
+                'Across three consecutive rounds, play six different ability cards and cause enemies to suffer at least DAMAGE 6 on each of your turns',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _tinkerer: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Heal an ally or apply a negative condition to an enemy each turn',
+          ),
+          Mastery(
+            masteryDetails:
+                'Perform two actions with lost icons before your first rest and then only rest after having played at least two actions with lost icons since your previous rest',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _spellweaver: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails: 'Infuse and consume all six elements',
+          ),
+          Mastery(
+            masteryDetails: 'Perform four different loss actions twice each',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _scoundrel: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Kill at least six enemies that are adjacent to at least one of your allies',
+          ),
+          Mastery(
+            masteryDetails:
+                'Kill at least six enemies that are adjacent to none of your allies',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _cragheart: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Only attack enemies adjacent to obstacles or walls',
+          ),
+          Mastery(
+            masteryDetails: 'Damage or heal at least one ally each round',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _mindthief: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Trigger the on-attack effect of four different Augments thrice each',
+          ),
+          Mastery(
+            masteryDetails: 'Never be targeted by an attack',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+  };
+
+  static final Map<String, List<Perks>> perksMap = {
+    // BRUTE
+    _brute: [
+      Perks(
+        [
+          Perk('$_remove $_two -1 $_cards'),
+          Perk('$_remove $_one -1 $_card and $_addL $_one +1 $_card'),
+          Perk(
+            '$_add $_two +1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_one +3 $_card'),
+          Perk(
+            '$_add $_three $_rolling PUSH 1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_two $_rolling PIERCE 3 $_cards'),
+          Perk(
+            '$_add $_one $_rolling STUN $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
+          Perk(
+            '$_add $_one $_rolling ADD TARGET $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_one +1 "SHIELD  Self" $_card'),
+          Perk('Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
+        ],
+      ),
+      Perks(
+        [
+          Perk(
+            'Replace one -1 card with one +1 card',
+            quantity: 2,
+          ),
+          Perk(
+            'Replace one -1 card with three +0 PUSH 1 $_rolling cards',
+            quantity: 2,
+          ),
+          Perk('$_replace two +0 cards with two +0 PIERCE 3 $_rolling cards'),
+          Perk(
+            '$_replace one +0 card with two +1 cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace one +0 card with one +0 "+1 TARGET" $_rolling card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add one +0 STUN $_rolling card',
+            quantity: 2,
+          ),
+          Perk(
+              'Add one +0 DISARM $_rolling card and one +0 MUDDLE $_rolling card'),
+          Perk('$_add $_one +3 card'),
+          Perk(
+              'Ignore item item_minus_one effects and $_addL $_one +1 "SHIELD 1" card'),
+          Perk(
+              '[Rested and Ready:] Whenever you long rest, add +1 MOVE to your first move ability the following round'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _tinkerer: [
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -2 $_card with $_one +0 $_card',
+          ),
+          Perk(
+            '$_add $_two +1 $_cards',
+          ),
+          Perk(
+            '$_add $_one +3 $_card',
+          ),
+          Perk(
+            '$_add $_two $_rolling FIRE $_cards',
+          ),
+          Perk(
+            '$_add $_three $_rolling MUDDLE $_cards',
+          ),
+          Perk(
+            '$_add $_one +1 WOUND $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +1 $_immobilize $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +1 HEAL 2 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +0 ADD TARGET $_card',
+          ),
+          Perk(
+            'Ignore $_negative $_scenario $_effects',
+          ),
+        ],
+      ),
+      Perks(
+        [
+          Perk('Remove two -1 cards'),
+          Perk(
+            'Replace one -1 card with one +1 card',
+            quantity: 2,
+          ),
+          Perk('Replace one -2 card with one +0 card'),
+          Perk('Replace one +0 card with one +0 "+1 TARGET" card'),
+          Perk(
+            'Replace one +0 card with one +1 WOUND card',
+            quantity: 2,
+          ),
+          Perk(
+            'Replace one +0 card with one +1 $_immobilize card',
+            quantity: 2,
+          ),
+          Perk('Replace two +0 cards with three +0 MUDDLE Rolling cards'),
+          Perk('Add one +3 card'),
+          Perk('Add two +1 "HEAL 2, self" cards'),
+          Perk('Ignore scenario effects and add two +0 FIRE Rolling cards'),
+          Perk(
+            '[Rejuvenating Vapor:] Whenever you long rest, you may perform "HEAL 2, RANGE 3"',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _spellweaver: [
+      Perks(
+        [
+          Perk('$_remove four +0 $_cards'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two +1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_one +0 STUN $_card'),
+          Perk('$_add $_one +1 WOUND $_card'),
+          Perk('$_add $_one +1 $_immobilize $_card'),
+          Perk('$_add $_one +1 CURSE $_card'),
+          Perk(
+            '$_add $_one +2 FIRE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +2 ICE $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_one $_rolling EARTH and $_one $_rolling AIR $_card'),
+          Perk('$_add $_one $_rolling LIGHT and $_one $_rolling DARK $_card'),
+        ],
+      ),
+      Perks(
+        [
+          Perk('Remove one -2 card'),
+          Perk(
+            'Replace one -1 card with one +1 card',
+            quantity: 2,
+          ),
+          Perk(
+              'Replace one -1 card with one +0 AIR Rolling card and one +0 EARTH Rolling card'),
+          Perk(
+              'Replace one -1 card with one +0 LIGHT Rolling card and one +0 DARK Rolling card'),
+          Perk('Replace one +0 card with one +1 WOUND card'),
+          Perk('Replace one +0 card with one +1 $_immobilize card'),
+          Perk('Replace one +0 card with one +1 STUN card'),
+          Perk('Replace one +0 card with one +1 CURSE card'),
+          Perk(
+            'Add one +2 FIRE card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add one +2 ICE card',
+            quantity: 2,
+          ),
+          Perk('Ignore scenario effects'),
+          Perk(
+              '[Etheric Bond:] Whenever you short rest, if Reviving Ether is in your discard pile, first return it to your hand'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _scoundrel: [
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove four +0 $_cards'),
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +1 $_card'),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two $_rolling +1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_two $_rolling PIERCE 3 $_cards'),
+          Perk(
+            '$_add $_two $_rolling POISON $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_two $_rolling MUDDLE $_cards'),
+          Perk('$_add $_one $_rolling INVISIBLE $_card'),
+          Perk('Ignore $_negative $_scenario $_effects'),
+        ],
+      ),
+      Perks(
+        [
+          Perk('Remove two -1 cards'),
+          Perk('Replace one -1 card with one +1 card'),
+          Perk(
+            'Replace one -1 card with two +0 POISON Rolling cards',
+            quantity: 2,
+          ),
+          Perk('Replace one -2 card with one +0 card'),
+          Perk(
+            'Replace one +0 card with one +2 card',
+            quantity: 2,
+          ),
+          Perk(
+            'Replace two +0 cards with one +0 MUDDLE Rolling card and one +0 PIERCE 3 Rolling card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add two +1 Rolling cards',
+            quantity: 2,
+          ),
+          Perk('Add one +0 "INVISIBLE, self", Rolling cards'),
+          Perk('Ignore scenario effects'),
+          Perk(
+              '[Cloak of Invisibility:] Once each scenario, during your turn, perform "INVISIBLE, self"'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _cragheart: [
+      Perks(
+        [
+          Perk('$_remove four +0 $_cards'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 3,
+          ),
+          Perk('$_add $_one -2 $_card and $_two +2 $_cards'),
+          Perk(
+            '$_add $_one +1 $_immobilize $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +2 MUDDLE $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_two $_rolling PUSH 2 $_cards'),
+          Perk(
+            '$_add $_two $_rolling EARTH $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_two $_rolling AIR $_cards'),
+          Perk('Ignore $_negative item $_effects'),
+          Perk('Ignore $_negative $_scenario $_effects'),
+        ],
+      ),
+      Perks(
+        [
+          Perk(
+            'Replace one -1 card with one +1 card',
+            quantity: 3,
+          ),
+          Perk('Replace one +0 card with two +0 PUSH 2 Rolling cards'),
+          Perk('Replace one +0 card with one +0 $_immobilize Rolling card'),
+          Perk(
+            'Replace one +0 card with one +2 card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add one +2 MUDDLE card and one +0 AIR Rolling card',
+            quantity: 2,
+          ),
+          Perk('Add four +0 EARTH Rolling cards'),
+          Perk('Ignore item item_minus_one effects'),
+          Perk('Ignore scenario effects'),
+          Perk(
+            '[Earthquakes:] Whenever a new room is revealed, control all enemies in the newly revealed room: MOVE 1, this movement must end in an empty hex',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _mindthief: [
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove four +0 $_cards'),
+          Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_add $_one +2 ICE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two $_rolling +1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_add $_three $_rolling PULL 1 $_cards'),
+          Perk('$_add $_three $_rolling MUDDLE $_cards'),
+          Perk('$_add $_two $_rolling $_immobilize $_cards'),
+          Perk('$_add $_one $_rolling STUN $_card'),
+          Perk(
+              '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
+          Perk('Ignore $_negative $_scenario $_effects'),
+        ],
+      ),
+      Perks(
+        [
+          Perk('Remove two -1 cards'),
+          Perk(
+            'Replace one -1 card with one +0 $_immobilize Rolling card',
+            quantity: 2,
+          ),
+          Perk('Replace one -2 card with one +0 card'),
+          Perk('Replace two +0 cards with three +0 PUSH 1 Rolling cards'),
+          Perk('Replace two +0 cards with three +0 MUDDLE Rolling cards'),
+          Perk('Replace two +1 cards with two +2 cards'),
+          Perk(
+            'Add one +2 ICE card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add two +1 Rolling cards',
+            quantity: 2,
+          ),
+          Perk('Add one +0 STUN Rolling card'),
+          Perk('Add one +0 DISARM Rolling card and one +0 MUDDLE Rolling card'),
+          Perk('Ignore scenario effects'),
+          Perk(
+              '[Lying Low:] You are considered to be last in initiative order when determining monster focus'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
+  };
+
+  static final List<PersonalGoal> personalGoals = [
+    PersonalGoal(
+      510,
+      [
+        SubGoal("Complete three 'Crypt' scenarios", 3),
+        SubGoal("Complete 'Noxious Cellar' ($_scenario 52", 1),
+      ],
+      'Seeker of Xorn',
+      _plagueherald,
+    ),
+  ];
 
   static final List<PlayerClass> playerClasses = [
     // GLOOMHAVEN
     PlayerClass(
-      race: _inox,
-      name: 'Brute',
-      classCode: _brute,
-      icon: 'brute.svg',
-      category: ClassCategory.gloomhaven,
-      locked: false,
-      primaryColor: 0xff4e7ec1,
-    ),
-    // PlayerClass(
-    //   race: _inox,
-    //   name: 'Brute',
-    //   classCode: _bruteFHCO,
-    //   icon: 'brute.svg',
-    //   category: ClassCategory.gloomhaven,
-    //   locked: false,
-    //   primaryColor: 0xff4e7ec1,
-    //   classVersion: ClassVersion.v2,
-    // ),
+        race: _inox,
+        name: 'Brute',
+        classCode: _brute,
+        icon: 'brute.svg',
+        category: ClassCategory.gloomhaven,
+        locked: false,
+        primaryColor: 0xff4e7ec1,
+        traits: [
+          _armored,
+          _intimidating,
+          _strong,
+        ]),
     PlayerClass(
       race: _quatryl,
       name: 'Tinkerer',
@@ -119,6 +2070,11 @@ abstract class CharacterData {
       category: ClassCategory.gloomhaven,
       locked: false,
       primaryColor: 0xffc5b58d,
+      traits: [
+        _educated,
+        _nimble,
+        _resourceful,
+      ],
     ),
     PlayerClass(
       race: _orchid,
@@ -128,6 +2084,11 @@ abstract class CharacterData {
       category: ClassCategory.gloomhaven,
       locked: false,
       primaryColor: 0xffb578b3,
+      traits: [
+        _arcane,
+        _educated,
+        _resourceful,
+      ],
     ),
     PlayerClass(
       race: _human,
@@ -137,6 +2098,11 @@ abstract class CharacterData {
       category: ClassCategory.gloomhaven,
       locked: false,
       primaryColor: 0xffa5d166,
+      traits: [
+        _chaotic,
+        _nimble,
+        _resourceful,
+      ],
     ),
     PlayerClass(
       race: _savvas,
@@ -146,6 +2112,11 @@ abstract class CharacterData {
       category: ClassCategory.gloomhaven,
       locked: false,
       primaryColor: 0xff899538,
+      traits: [
+        _armored,
+        _outcast,
+        _strong,
+      ],
     ),
     PlayerClass(
       race: _vermling,
@@ -155,6 +2126,11 @@ abstract class CharacterData {
       category: ClassCategory.gloomhaven,
       locked: false,
       primaryColor: 0xff647c9d,
+      traits: [
+        _arcane,
+        _outcast,
+        _persuasive,
+      ],
     ),
     PlayerClass(
       race: _valrath,
@@ -756,1507 +2732,6 @@ abstract class CharacterData {
     ),
   ];
 
-  static PlayerClass playerClassByClassCode(String classCode) =>
-      playerClasses.firstWhere(
-        (playerClass) => playerClass.classCode == classCode,
-      );
-
-  static final Map<int, int> _levelXp = {
-    1: 0,
-    2: 45,
-    3: 95,
-    4: 150,
-    5: 210,
-    6: 275,
-    7: 345,
-    8: 420,
-    9: 500
-  };
-
-  static int xpByLevel(int level) =>
-      _levelXp.entries.lastWhere((entry) => entry.key == level).value;
-
-  static int nextXpByLevel(int level) => _levelXp.entries
-      .firstWhere(
-        (entry) => entry.key > level,
-        orElse: () => _levelXp.entries.last,
-      )
-      .value;
-
-  static int levelByXp(int xp) => _levelXp.entries
-      .lastWhere(
-        (entry) => entry.value <= xp,
-      )
-      .key;
-
-  static final List<Perk> perks = [
-    // BRUTE
-    Perk(_brute, 1, '$_remove $_two -1 $_cards'),
-    Perk(_brute, 1, '$_remove $_one -1 $_card and $_addL $_one +1 $_card'),
-    Perk(_brute, 2, '$_add $_two +1 $_cards'),
-    Perk(_brute, 1, '$_add $_one +3 $_card'),
-    Perk(_brute, 2, '$_add $_three $_rolling PUSH 1 $_cards'),
-    Perk(_brute, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
-    Perk(_brute, 2, '$_add $_one $_rolling STUN $_card'),
-    Perk(_brute, 1,
-        '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
-    Perk(_brute, 2, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_brute, 1, '$_add $_one +1 "SHIELD 1, Self" $_card'),
-    Perk(_brute, 1,
-        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
-    // TINKERER
-    Perk(_tinkerer, 2, '$_remove $_two -1 $_cards'),
-    Perk(_tinkerer, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_tinkerer, 1, '$_add $_two +1 $_cards'),
-    Perk(_tinkerer, 1, '$_add $_one +3 $_card'),
-    Perk(_tinkerer, 1, '$_add $_two $_rolling FIRE $_cards'),
-    Perk(_tinkerer, 1, '$_add $_three $_rolling MUDDLE $_cards'),
-    Perk(_tinkerer, 2, '$_add $_one +1 WOUND $_card'),
-    Perk(_tinkerer, 2, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_tinkerer, 2, '$_add $_one +1 HEAL 2 $_card'),
-    Perk(_tinkerer, 1, '$_add $_one +0 ADD TARGET $_card'),
-    Perk(_tinkerer, 1, 'Ignore $_negative $_scenario $_effects'),
-    // SPELLWEAVER
-    Perk(_spellweaver, 1, '$_remove four +0 $_cards'),
-    Perk(_spellweaver, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_spellweaver, 2, '$_add $_two +1 $_cards'),
-    Perk(_spellweaver, 1, '$_add $_one +0 STUN $_card'),
-    Perk(_spellweaver, 1, '$_add $_one +1 WOUND $_card'),
-    Perk(_spellweaver, 1, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_spellweaver, 1, '$_add $_one +1 CURSE $_card'),
-    Perk(_spellweaver, 2, '$_add $_one +2 FIRE $_card'),
-    Perk(_spellweaver, 2, '$_add $_one +2 ICE $_card'),
-    Perk(_spellweaver, 1,
-        '$_add $_one $_rolling EARTH and $_one $_rolling AIR $_card'),
-    Perk(_spellweaver, 1,
-        '$_add $_one $_rolling LIGHT and $_one $_rolling DARK $_card'),
-    // SCOUNDREL
-    Perk(_scoundrel, 2, '$_remove $_two -1 $_cards'),
-    Perk(_scoundrel, 1, '$_remove four +0 $_cards'),
-    Perk(_scoundrel, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_scoundrel, 1, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_scoundrel, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_scoundrel, 2, '$_add $_two $_rolling +1 $_cards'),
-    Perk(_scoundrel, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
-    Perk(_scoundrel, 2, '$_add $_two $_rolling POISON $_cards'),
-    Perk(_scoundrel, 1, '$_add $_two $_rolling MUDDLE $_cards'),
-    Perk(_scoundrel, 1, '$_add $_one $_rolling INVISIBLE $_card'),
-    Perk(_scoundrel, 1, 'Ignore $_negative $_scenario $_effects'),
-    // CRAGHEART
-    Perk(_cragheart, 1, '$_remove four +0 $_cards'),
-    Perk(_cragheart, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_cragheart, 1, '$_add $_one -2 $_card and $_two +2 $_cards'),
-    Perk(_cragheart, 2, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_cragheart, 2, '$_add $_one +2 MUDDLE $_card'),
-    Perk(_cragheart, 1, '$_add $_two $_rolling PUSH 2 $_cards'),
-    Perk(_cragheart, 2, '$_add $_two $_rolling EARTH $_cards'),
-    Perk(_cragheart, 1, '$_add $_two $_rolling AIR $_cards'),
-    Perk(_cragheart, 1, 'Ignore $_negative item $_effects'),
-    Perk(_cragheart, 1, 'Ignore $_negative $_scenario $_effects'),
-    // MINDTHIEF
-    Perk(_mindthief, 2, '$_remove $_two -1 $_cards'),
-    Perk(_mindthief, 1, '$_remove four +0 $_cards'),
-    Perk(_mindthief, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
-    Perk(_mindthief, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_mindthief, 2, '$_add $_one +2 ICE $_card'),
-    Perk(_mindthief, 2, '$_add $_two $_rolling +1 $_cards'),
-    Perk(_mindthief, 1, '$_add $_three $_rolling PULL 1 $_cards'),
-    Perk(_mindthief, 1, '$_add $_three $_rolling MUDDLE $_cards'),
-    Perk(_mindthief, 1, '$_add $_two $_rolling IMMOBILIZE $_cards'),
-    Perk(_mindthief, 1, '$_add $_one $_rolling STUN $_card'),
-    Perk(_mindthief, 1,
-        '$_add $_one $_rolling DISARM $_card and $_one $_rolling MUDDLE $_card'),
-    Perk(_mindthief, 1, 'Ignore $_negative $_scenario $_effects'),
-    // SUNKEEPER
-    Perk(_sunkeeper, 2, '$_remove $_two -1 $_cards'),
-    Perk(_sunkeeper, 1, '$_remove four +0 $_cards'),
-    Perk(_sunkeeper, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_sunkeeper, 1, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_sunkeeper, 2, '$_add $_two $_rolling +1 $_cards'),
-    Perk(_sunkeeper, 2, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_sunkeeper, 1, '$_add $_one $_rolling STUN $_card'),
-    Perk(_sunkeeper, 2, '$_add $_two $_rolling LIGHT $_cards'),
-    Perk(_sunkeeper, 1, '$_add $_two $_rolling "SHIELD 1, Self" $_cards'),
-    Perk(_sunkeeper, 1,
-        'Ignore $_negative item $_effects and $_addL $_two +1 $_cards'),
-    Perk(_sunkeeper, 1, 'Ignore $_negative $_scenario $_effects'),
-    // QUARTERMASTER
-    Perk(_quartermaster, 2, '$_remove $_two -1 $_cards'),
-    Perk(_quartermaster, 1, '$_remove four +0 $_cards'),
-    Perk(_quartermaster, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_quartermaster, 2, '$_add $_two $_rolling +1 $_cards'),
-    Perk(_quartermaster, 1, '$_add $_three $_rolling MUDDLE $_cards'),
-    Perk(_quartermaster, 1, '$_add $_two $_rolling PIERCE 3 $_cards'),
-    Perk(_quartermaster, 1, '$_add $_one $_rolling STUN $_card'),
-    Perk(_quartermaster, 1, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_quartermaster, 3, '$_add $_one +0 "RECOVER an item" $_card'),
-    Perk(_quartermaster, 1,
-        'Ignore $_negative item $_effects and $_addL $_two +1 $_cards'),
-    // SUMMONER
-    Perk(_summoner, 1, '$_remove $_two -1 $_cards'),
-    Perk(_summoner, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_summoner, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_summoner, 2, '$_add $_one +2 $_card'),
-    Perk(_summoner, 1, '$_add $_two $_rolling WOUND $_cards'),
-    Perk(_summoner, 1, '$_add $_two $_rolling POISON $_cards'),
-    Perk(_summoner, 3, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_summoner, 1,
-        '$_add $_one $_rolling FIRE and $_one $_rolling AIR $_card'),
-    Perk(_summoner, 1,
-        '$_add $_one $_rolling DARK and $_one $_rolling EARTH $_card'),
-    Perk(_summoner, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
-    // NIGHTSHROUD
-    Perk(_nightshroud, 2, '$_remove $_two -1 $_cards'),
-    Perk(_nightshroud, 1, '$_remove four +0 $_cards'),
-    Perk(_nightshroud, 2, '$_add $_one -1 DARK $_card'),
-    Perk(_nightshroud, 2,
-        '$_replace $_one -1 DARK $_card with $_one +1 DARK $_card'),
-    Perk(_nightshroud, 2, '$_add $_one +1 INVISIBLE $_card'),
-    Perk(_nightshroud, 2, '$_add $_three $_rolling MUDDLE $_cards'),
-    Perk(_nightshroud, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_nightshroud, 1, '$_add $_two $_rolling CURSE $_cards'),
-    Perk(_nightshroud, 1, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_nightshroud, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
-    // PLAGUEHERALD
-    Perk(_plagueherald, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_plagueherald, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_plagueherald, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_plagueherald, 1, '$_add $_two +1 $_cards'),
-    Perk(_plagueherald, 3, '$_add $_one +1 AIR $_card'),
-    Perk(_plagueherald, 1, '$_add $_three $_rolling POISON $_cards'),
-    Perk(_plagueherald, 1, '$_add $_two $_rolling CURSE $_cards'),
-    Perk(_plagueherald, 1, '$_add $_two $_rolling IMMOBILIZE $_cards'),
-    Perk(_plagueherald, 2, '$_add $_one $_rolling STUN $_card'),
-    Perk(_plagueherald, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
-    // BERSERKER
-    Perk(_berserker, 1, '$_remove $_two -1 $_cards'),
-    Perk(_berserker, 1, '$_remove four +0 $_cards'),
-    Perk(_berserker, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_berserker, 2,
-        '$_replace $_one +0 $_card with $_one $_rolling +2 $_card'),
-    Perk(_berserker, 2, '$_add $_two $_rolling WOUND $_cards'),
-    Perk(_berserker, 2, '$_add $_one $_rolling STUN $_card'),
-    Perk(_berserker, 1, '$_add $_one $_rolling +1 DISARM $_card'),
-    Perk(_berserker, 1, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_berserker, 2, '$_add $_one +2 FIRE $_card'),
-    Perk(_berserker, 1, 'Ignore $_negative item $_effects'),
-    //SOOTHSINGER
-    Perk(_soothsinger, 2, '$_remove $_two -1 $_cards'),
-    Perk(_soothsinger, 1, '$_remove $_one -2 $_card'),
-    Perk(_soothsinger, 2, '$_replace $_two +1 $_cards with $_one +4 $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +1 DISARM $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +2 WOUND $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +2 POISON $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
-    Perk(_soothsinger, 1,
-        '$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
-    Perk(
-        _soothsinger, 1, '$_replace $_one -1 $_card with $_one +0 STUN $_card'),
-    Perk(_soothsinger, 1, '$_add $_three $_rolling +1 $_cards'),
-    Perk(_soothsinger, 2, '$_add $_two $_rolling CURSE $_cards'),
-    // DOOMSTALKER
-    Perk(_doomstalker, 2, '$_remove $_two -1 $_cards'),
-    Perk(_doomstalker, 3, '$_replace $_two +0 $_cards with $_two +1 $_cards'),
-    Perk(_doomstalker, 2, '$_add $_two $_rolling +1 $_cards'),
-    Perk(_doomstalker, 1, '$_add $_one +2 MUDDLE $_card'),
-    Perk(_doomstalker, 1, '$_add $_one +1 POISON $_card'),
-    Perk(_doomstalker, 1, '$_add $_one +1 WOUND $_card'),
-    Perk(_doomstalker, 1, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_doomstalker, 1, '$_add $_one +0 STUN $_card'),
-    Perk(_doomstalker, 2, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_doomstalker, 1, 'Ignore $_negative $_scenario $_effects'),
-    // SAWBONES
-    Perk(_sawbones, 2, '$_remove $_two -1 $_cards'),
-    Perk(_sawbones, 1, '$_remove four +0 $_cards'),
-    Perk(_sawbones, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_sawbones, 2, '$_add $_one $_rolling +2 $_card'),
-    Perk(_sawbones, 2, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_sawbones, 2, '$_add $_two $_rolling WOUND $_cards'),
-    Perk(_sawbones, 1, '$_add $_one $_rolling STUN $_card'),
-    Perk(_sawbones, 2, '$_add $_one $_rolling HEAL 3 $_card'),
-    Perk(_sawbones, 1, '$_add $_one +0 "RECOVER an item" $_card'),
-    // ELEMENTALIST
-    Perk(_elementalist, 2, '$_remove $_two -1 $_cards'),
-    Perk(_elementalist, 1, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_elementalist, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_elementalist, 1, '$_add $_three +0 FIRE $_cards'),
-    Perk(_elementalist, 1, '$_add $_three +0 ICE $_cards'),
-    Perk(_elementalist, 1, '$_add $_three +0 AIR $_cards'),
-    Perk(_elementalist, 1, '$_add $_three +0 EARTH $_cards'),
-    Perk(_elementalist, 1,
-        '$_replace $_two +0 $_cards with $_one +0 FIRE $_card and $_one +0 EARTH $_card'),
-    Perk(_elementalist, 1,
-        '$_replace $_two +0 $_cards with $_one +0 ICE $_card and $_one +0 AIR $_card'),
-    Perk(_elementalist, 1, '$_add $_two +1 PUSH 1 $_cards'),
-    Perk(_elementalist, 1, '$_add $_one +1 WOUND $_card'),
-    Perk(_elementalist, 1, '$_add $_one +0 STUN $_card'),
-    Perk(_elementalist, 1, '$_add $_one +0 ADD TARGET $_card'),
-    // BEAST TYRANT
-    Perk(_beastTyrant, 1, '$_remove $_two -1 $_cards'),
-    Perk(_beastTyrant, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_beastTyrant, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_beastTyrant, 2, '$_add $_one +1 WOUND $_card'),
-    Perk(_beastTyrant, 2, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_beastTyrant, 3, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_beastTyrant, 1, '$_add $_two $_rolling EARTH $_cards'),
-    Perk(_beastTyrant, 1, 'Ignore $_negative $_scenario $_effects'),
-    // BLADESWARM
-    Perk(_bladeswarm, 1, '$_remove $_one -2 $_card'),
-    Perk(_bladeswarm, 1, '$_remove four +0 $_cards'),
-    Perk(_bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 AIR $_card'),
-    Perk(
-        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 EARTH $_card'),
-    Perk(
-        _bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 LIGHT $_card'),
-    Perk(_bladeswarm, 1, '$_replace $_one -1 $_card with $_one +1 DARK $_card'),
-    Perk(_bladeswarm, 2, '$_add $_two $_rolling HEAL 1 $_cards'),
-    Perk(_bladeswarm, 2, '$_add $_one +1 WOUND $_card'),
-    Perk(_bladeswarm, 2, '$_add $_one +1 POISON $_card'),
-    Perk(_bladeswarm, 1, '$_add $_one +2 MUDDLE $_card'),
-    Perk(_bladeswarm, 1,
-        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
-    Perk(_bladeswarm, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
-    // DIVINER
-    Perk(_diviner, 2, '$_remove $_two -1 $_cards'),
-    Perk(_diviner, 1, '$_remove $_one -2 $_card'),
-    Perk(_diviner, 2,
-        '$_replace $_two +1 $_cards with $_one +3 "SHIELD 1, Self" $_card'),
-    Perk(_diviner, 1,
-        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Affect any Ally" $_card'),
-    Perk(_diviner, 1, '$_replace $_one +0 $_card with $_one +2 DARK $_card'),
-    Perk(_diviner, 1, '$_replace $_one +0 $_card with $_one +2 LIGHT $_card'),
-    Perk(_diviner, 1, '$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
-    Perk(_diviner, 1, '$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
-    Perk(_diviner, 1,
-        '$_replace $_one +0 $_card with $_one +2 "REGENERATE, Self" $_card'),
-    Perk(_diviner, 1,
-        '$_replace $_one -1 $_card with $_one +1 "HEAL 2, Affect any Ally" $_card'),
-    Perk(_diviner, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
-    Perk(_diviner, 1, '$_add $_two $_rolling CURSE $_cards'),
-    Perk(_diviner, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
-    // DEMOLITIONIST
-    Perk(_demolitionist, 1, '$_remove four +0 $_cards'),
-    Perk(_demolitionist, 2, '$_remove $_two -1 $_cards'),
-    Perk(_demolitionist, 1, '$_remove $_one -2 $_card and $_one +1 $_card'),
-    Perk(_demolitionist, 2,
-        '$_replace $_one +0 $_card with $_one +2 MUDDLE $_card'),
-    Perk(_demolitionist, 1,
-        '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
-    Perk(_demolitionist, 2, '$_add $_one +2 $_card'),
-    Perk(_demolitionist, 2,
-        '$_replace $_one +1 $_card with $_one +2 EARTH $_card'),
-    Perk(_demolitionist, 2,
-        '$_replace $_one +1 $_card with $_one +2 FIRE $_card'),
-    Perk(_demolitionist, 2,
-        '$_add $_one +0 "All adjacent enemies suffer 1 DAMAGE" $_card'),
-    // HATCHET
-    Perk(_hatchet, 2, '$_remove $_two -1 $_cards'),
-    Perk(_hatchet, 1, '$_replace $_one +0 $_card with $_one +2 MUDDLE $_card'),
-    Perk(_hatchet, 1, '$_replace $_one +0 $_card with $_one +1 POISON $_card'),
-    Perk(_hatchet, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
-    Perk(_hatchet, 1,
-        '$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-    Perk(_hatchet, 1, '$_replace $_one +0 $_card with $_one +1 PUSH 2 $_card'),
-    Perk(_hatchet, 1, '$_replace $_one +0 $_card with $_one +0 STUN $_card'),
-    Perk(_hatchet, 1, '$_replace $_one +1 $_card with $_one +1 STUN $_card'),
-    Perk(_hatchet, 3, '$_add $_one +2 AIR $_card'),
-    Perk(_hatchet, 3, '$_replace $_one +1 $_card with $_one +3 $_card'),
-    // RED GUARD
-    Perk(_redGuard, 1, '$_remove four +0 $_cards'),
-    Perk(_redGuard, 1, '$_remove $_two -1 $_cards'),
-    Perk(_redGuard, 1, '$_remove $_one -2 $_card and $_one +1 $_card'),
-    Perk(_redGuard, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_redGuard, 2, '$_replace $_one +1 $_card with $_one +2 FIRE $_card'),
-    Perk(_redGuard, 2, '$_replace $_one +1 $_card with $_one +2 LIGHT $_card'),
-    Perk(_redGuard, 2, '$_add $_one +1 FIRE&LIGHT $_card'),
-    Perk(_redGuard, 2, '$_add $_one +1 SHIELD 1 $_card'),
-    Perk(_redGuard, 1,
-        '$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-    Perk(_redGuard, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
-    // VOIDWARDEN
-    Perk(_voidwarden, 1, '$_remove $_two -1 $_cards'),
-    Perk(_voidwarden, 1, '$_remove $_one -2 $_card'),
-    Perk(_voidwarden, 2, '$_replace $_one +0 $_card with $_one +1 DARK $_card'),
-    Perk(_voidwarden, 2, '$_replace $_one +0 $_card with $_one +1 ICE $_card'),
-    Perk(_voidwarden, 2,
-        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Ally" $_card'),
-    Perk(_voidwarden, 3, '$_add $_one +1 "HEAL 1, Ally" $_card'),
-    Perk(_voidwarden, 1, '$_add $_one +1 POISON $_card'),
-    Perk(_voidwarden, 1, '$_add $_one +3 $_card'),
-    Perk(_voidwarden, 2, '$_add $_one +1 CURSE $_card'),
-    // AMBER AEGIS
-    Perk(_amberAegis, 1,
-        '$_replace $_one -2 $_card with $_one -1 "Place $_one Colony token of your choice on any empty hex within RANGE 2" $_card'),
-    Perk(_amberAegis, 1, '$_remove $_two -1 $_cards'),
-    Perk(_amberAegis, 1, '$_remove four +0 $_cards'),
-    Perk(_amberAegis, 1,
-        '$_replace $_one -1 $_card with $_one +2 MUDDLE $_card'),
-    Perk(_amberAegis, 1,
-        '$_replace $_one -1 $_card with $_one +1 POISON $_card'),
-    Perk(
-        _amberAegis, 1, '$_replace $_one -1 $_card with $_one +1 WOUND $_card'),
-    Perk(_amberAegis, 2, '$_add $_two $_rolling +1 IMMOBILIZE $_cards'),
-    Perk(_amberAegis, 2,
-        '$_add $_one $_rolling "HEAL 1, Self" $_card and $_one $_rolling "SHIELD 1, Self" $_card'),
-    Perk(_amberAegis, 2, '$_add $_one $_rolling "RETALIATE 1, RANGE 3" $_card'),
-    Perk(_amberAegis, 1, '$_add $_one +2 FIRE/EARTH $_card'),
-    Perk(_amberAegis, 1,
-        'Ignore $_negative item $_effects and $_addL $_one +1 $_card'),
-    Perk(_amberAegis, 1,
-        'Ignore $_scenario $_effects and $_addL $_one "+X, where X is the number of active Cultivate actions" card'),
-    // ARTIFICER
-    Perk(_artificer, 1,
-        '$_replace $_one -2 $_card with $_one -1 Any_Element $_card'),
-    Perk(
-        _artificer, 1, '$_replace $_one -1 $_card with $_one +1 DISARM $_card'),
-    Perk(
-        _artificer, 2, '$_replace $_one -1 $_card with $_one +1 PUSH 1 $_card'),
-    Perk(
-        _artificer, 2, '$_replace $_one -1 $_card with $_one +1 PULL 1 $_card'),
-    Perk(_artificer, 2,
-        '$_replace $_one +0 $_card with $_one +0 "RECOVER a spent item" $_card'),
-    Perk(_artificer, 2,
-        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Self" $_card'),
-    Perk(_artificer, 2,
-        '$_replace $_one +0 $_card with $_one +1 PIERCE 2 $_card'),
-    Perk(_artificer, 1,
-        '$_replace $_one +2 $_card with $_one +3 "HEAL 2, Self" $_card'),
-    Perk(_artificer, 1,
-        '$_replace $_two +1 $_cards with $_two $_rolling +1 POISON $_cards'),
-    Perk(_artificer, 1,
-        '$_replace $_two +1 $_cards with $_two $_rolling +1 WOUND $_cards'),
-    // BOMBARD
-    Perk(_bombard, 1, '$_remove $_two -1 $_cards'),
-    Perk(_bombard, 1,
-        '$_replace $_two +0 $_cards with $_two $_rolling PIERCE 3 $_cards'),
-    Perk(_bombard, 2,
-        '$_replace $_one -1 $_card with $_one +0 "+3 if Projectile" $_card'),
-    Perk(_bombard, 2, '$_add $_one +2 IMMOBILIZE $_card'),
-    Perk(_bombard, 1,
-        '$_replace $_one +1 $_card with $_two +1 "RETALIATE 1, RANGE 3" $_cards'),
-    Perk(_bombard, 1,
-        '$_add $_two +1 "PULL 3, Self, toward the target" $_cards'),
-    Perk(_bombard, 1, '$_add $_one +0 "STRENGTHEN, Self" $_card'),
-    Perk(_bombard, 1, '$_add $_one +0 STUN $_card'),
-    Perk(_bombard, 1, '$_add $_one +1 WOUND $_card'),
-    Perk(_bombard, 1, '$_add $_two $_rolling "SHIELD 1, Self" $_cards'),
-    Perk(_bombard, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
-    Perk(_bombard, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
-    Perk(_bombard, 1,
-        'Ignore $_negative item $_effects and $_removeL $_one +0 $_card'),
-    // BREWMASTER
-    Perk(_brewmaster, 1, '$_replace $_one -2 $_card with $_one -1 STUN $_card'),
-    Perk(_brewmaster, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_brewmaster, 2,
-        '$_replace $_one -1 $_card with $_two $_rolling MUDDLE $_cards'),
-    Perk(_brewmaster, 1,
-        '$_replace $_two +0 $_cards with $_two +0 "HEAL 1, Self" $_cards'),
-    Perk(_brewmaster, 2,
-        '$_replace $_one +0 $_card with $_one +0 "Give yourself or an adjacent Ally a \'Liquid Rage\' item $_card" $_card'),
-    Perk(_brewmaster, 2, '$_add $_one +2 PROVOKE $_card'),
-    Perk(_brewmaster, 2, '$_add four $_rolling Shrug_Off 1 $_cards'),
-    Perk(_brewmaster, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
-    Perk(_brewmaster, 2, 'Each time you long rest, perform Shrug_Off 1'),
-    // BRIGHTSPARK
-    Perk(_brightspark, 3,
-        '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element to $_addL +2 ATTACK" $_card'),
-    Perk(_brightspark, 1,
-        '$_replace $_one -2 $_card with $_one -2 "RECOVER $_one random $_card from your discard pile" $_card'),
-    Perk(_brightspark, 2,
-        '$_replace $_two +0 $_cards with $_one +1 "HEAL 1, Affect $_one Ally within RANGE 2" $_card'),
-    Perk(_brightspark, 1,
-        '$_replace $_two +0 $_cards with $_one +1 "SHIELD 1, Affect $_one Ally within RANGE 2" $_card'),
-    Perk(_brightspark, 2,
-        '$_replace $_one +1 $_card with $_one +2 Any_Element $_card'),
-    Perk(_brightspark, 2,
-        '$_add $_one +1 "STRENGTHEN, Affect $_one Ally within RANGE 2" $_card'),
-    Perk(_brightspark, 1,
-        '$_add $_one $_rolling "PUSH 1 or PULL 1, AIR" $_card and $_one $_rolling "IMMOBILIZE, ICE" $_card'),
-    Perk(_brightspark, 1,
-        '$_add $_one $_rolling "HEAL 1, RANGE 3, LIGHT" $_card and $_one $_rolling "PIERCE 2, FIRE" $_card'),
-    Perk(_brightspark, 1,
-        '$_add $_three $_rolling "Consume_Any_Element : Any_Element" $_cards'),
-    Perk(_brightspark, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one -1 $_card'),
-    // CHIEFTAIN
-    Perk(
-        _chieftain, 1, '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
-    Perk(_chieftain, 2,
-        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Chieftain" $_card'),
-    Perk(_chieftain, 2,
-        '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Affect all summoned allies owned" $_card'),
-    Perk(_chieftain, 1,
-        '$_replace $_one -2 $_card with $_one -2 "BLESS, Self" $_card'),
-    Perk(_chieftain, 1,
-        '$_replace $_two +0 $_cards with $_one +0 "IMMOBILIZE and PUSH 1" $_card'),
-    Perk(_chieftain, 2,
-        '$_replace $_one +0 $_card with $_one "+X, where X is the number of summoned allies you own" $_card'),
-    Perk(_chieftain, 1,
-        '$_replace $_one +1 $_card with $_two +1 "$_rolling +1, if summon is attacking" $_cards'),
-    Perk(_chieftain, 1, '$_add $_one +0 WOUND, PIERCE 1 $_card'),
-    Perk(_chieftain, 2, '$_add $_one +1 EARTH $_card'),
-    Perk(_chieftain, 1,
-        '$_add $_two $_rolling "PIERCE 2, ignore RETALIATE on the target" $_cards'),
-    Perk(_chieftain, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
-    // FIRE KNIGHT
-    Perk(_fireKnight, 1, '$_remove $_two -1 $_cards'),
-    Perk(_fireKnight, 2,
-        '$_replace $_one -1 $_card with $_one +0 "STRENGTHEN, Ally" $_card'),
-    Perk(_fireKnight, 2,
-        '$_replace $_two +0 $_cards with $_two +0 "+2 if you are on Ladder" $_cards'),
-    Perk(_fireKnight, 1, '$_replace $_one +0 $_card with $_one +1 FIRE $_card'),
-    Perk(
-        _fireKnight, 1, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
-    Perk(
-        _fireKnight, 1, '$_replace $_two +1 $_cards with $_one +2 FIRE $_card'),
-    Perk(_fireKnight, 1,
-        '$_replace $_two +1 $_cards with $_one +2 WOUND $_card'),
-    Perk(_fireKnight, 1, '$_add $_one +1 "STRENGTHEN, Ally" $_card'),
-    Perk(_fireKnight, 2, '$_add $_two $_rolling "HEAL 1, RANGE 1" $_cards'),
-    Perk(_fireKnight, 1, '$_add $_two $_rolling WOUND $_cards'),
-    Perk(_fireKnight, 1,
-        'Ignore $_negative item $_effects and $_addL $_one $_rolling FIRE $_card'),
-    Perk(_fireKnight, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one $_rolling FIRE $_card'),
-    // FROSTBORN
-    Perk(_frostborn, 2, '$_remove $_two -1 $_cards'),
-    Perk(_frostborn, 1, '$_replace $_one -2 $_card with $_one +0 CHILL $_card'),
-    Perk(_frostborn, 2,
-        '$_replace $_two +0 $_cards with $_two +1 PUSH 1 $_cards'),
-    Perk(_frostborn, 2,
-        '$_replace $_one +0 $_card with $_one +1 ICE CHILL $_card'),
-    Perk(_frostborn, 1, '$_replace $_one +1 $_card with $_one +3 $_card'),
-    Perk(_frostborn, 1, '$_add $_one +0 STUN $_card'),
-    Perk(_frostborn, 2, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_frostborn, 1, '$_add $_three $_rolling CHILL $_cards'),
-    Perk(_frostborn, 1, '$_add $_three $_rolling PUSH 1 $_cards'),
-    Perk(_frostborn, 1,
-        'Ignore difficult and hazardous terrain during move actions'),
-    Perk(_frostborn, 1, 'Ignore $_scenario $_effects'),
-    // HOLLOWPACT
-    Perk(_hollowpact, 2,
-        '$_replace $_one -1 $_card with $_one +0 "HEAL 2, Self" $_card'),
-    Perk(_hollowpact, 2,
-        '$_replace $_two +0 $_cards with $_one +0 VOIDSIGHT $_card'),
-    Perk(_hollowpact, 2,
-        '$_add $_one -2 EARTH $_card and $_two +2 DARK $_cards'),
-    Perk(_hollowpact, 1,
-        '$_replace $_one -1 $_card with $_one -2 STUN $_card and $_one +0 VOIDSIGHT $_card'),
-    Perk(_hollowpact, 1,
-        '$_replace $_one -2 $_card with $_one +0 DISARM $_card and $_one -1 Any_Element $_card'),
-    Perk(_hollowpact, 2,
-        '$_replace $_one -1 $_card with $_one $_rolling +1 VOID $_card and $_one $_rolling -1 CURSE $_card'),
-    Perk(_hollowpact, 2,
-        '$_replace $_two +1 $_cards with $_one +3 "REGENERATE, Self" $_card'),
-    Perk(_hollowpact, 2,
-        '$_replace $_one +0 $_card with $_one +1 "Create a Void pit in an empty hex within RANGE 2" $_card'),
-    Perk(_hollowpact, 1,
-        'Ignore $_negative $_scenario $_effects and $_addL $_one +0 "WARD, Self" $_card'),
-    // MIREFOOT
-    Perk(_mirefoot, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_mirefoot, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_mirefoot, 2,
-        '$_replace $_two +0 $_cards with $_two "+X, where X is the POISON value of the target" $_cards'),
-    Perk(_mirefoot, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
-    Perk(_mirefoot, 2,
-        '$_replace $_one +0 $_card with $_two $_rolling "Create difficult terrain in the hex occupied by the target" $_cards'),
-    Perk(
-        _mirefoot, 2, '$_replace $_one +1 $_card with $_one +0 WOUND 2 $_card'),
-    Perk(_mirefoot, 1,
-        '$_add four $_rolling +0 "+1 if the target occupies difficult terrain" $_cards'),
-    Perk(_mirefoot, 1,
-        '$_add $_two $_rolling "INVISIBLE, Self, if you occupy difficult terrain" $_cards'),
-    Perk(_mirefoot, 1,
-        'Gain "Poison Dagger" (Item 011). You may carry $_one additional One_Hand item with "Dagger" in its name'),
-    Perk(_mirefoot, 1,
-        'Ignore damage, $_negative conditions, and modifiers from Events, and $_removeL $_one -1 $_card'),
-    Perk(_mirefoot, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one -1 $_card'),
-    // ROOTWHISPERER
-    // May be dead Perks if Rootwhisperer has a big overhaul - this is fine
-    Perk(_rootwhisperer, 2, '$_remove $_two -1 $_cards'),
-    Perk(_rootwhisperer, 1, '$_remove four +0 $_cards'),
-    Perk(_rootwhisperer, 2, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_rootwhisperer, 2, '$_add $_one $_rolling +2 $_card'),
-    Perk(_rootwhisperer, 2, '$_add $_one +1 IMMOBILIZE $_card'),
-    Perk(_rootwhisperer, 2, '$_add $_two $_rolling POISON $_cards'),
-    Perk(_rootwhisperer, 1, '$_add $_one $_rolling DISARM $_card'),
-    Perk(_rootwhisperer, 2, '$_add $_one $_rolling HEAL 2 EARTH $_card'),
-    Perk(_rootwhisperer, 1, 'Ignore $_negative $_scenario $_effects'),
-    // CHAINGUARD
-    Perk(_chainguard, 2,
-        '$_replace $_one -1 $_card with $_one +1 Shackle $_card'),
-    Perk(_chainguard, 2,
-        '$_replace $_one -1 $_card with $_one +0 "+2 if the target is Shackled" $_card'),
-    Perk(_chainguard, 2,
-        '$_replace $_two +0 $_cards with $_one $_rolling "SHIELD 1, Self" $_card'),
-    Perk(_chainguard, 1, '$_add $_two $_rolling "RETALIATE 1, Self" $_cards'),
-    Perk(_chainguard, 1, '$_add $_three $_rolling SWING 3 $_cards'),
-    Perk(
-        _chainguard, 1, '$_replace $_one +1 $_card with $_one +2 WOUND $_card'),
-    Perk(_chainguard, 1,
-        '$_add $_one +1 "DISARM if the target is Shackled" $_card'),
-    Perk(_chainguard, 1,
-        '$_add $_one +1 "Create a 2 DAMAGE trap in an empty hex within RANGE 2" $_card'),
-    Perk(_chainguard, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
-    Perk(_chainguard, 2, '$_add $_one +2 Shackle $_card'),
-    Perk(_chainguard, 1,
-        'Ignore $_negative item $_effects and $_removeL $_one +0 $_card'),
-    // HIEROPHANT
-    Perk(_hierophant, 1, '$_remove $_two -1 $_cards'),
-    Perk(_hierophant, 1,
-        '$_replace $_two +0 $_cards with $_one $_rolling LIGHT $_card'),
-    Perk(_hierophant, 1,
-        '$_replace $_two +0 $_cards with $_one $_rolling EARTH $_card'),
-    Perk(
-        _hierophant, 2, '$_replace $_one -1 $_card with $_one +0 CURSE $_card'),
-    Perk(_hierophant, 1,
-        '$_replace $_one +0 $_card with $_one +1 "SHIELD 1, Ally" $_card'),
-    Perk(_hierophant, 1,
-        '$_replace $_one -2 $_card with $_one -1 "Give $_one Ally a \'Prayer\' ability $_card" and $_one +0 $_card'),
-    Perk(_hierophant, 2, '$_replace $_one +1 $_card with $_one +3 $_card'),
-    Perk(
-        _hierophant, 2, '$_add $_two $_rolling "HEAL 1, Self or Ally" $_cards'),
-    Perk(_hierophant, 2, '$_add $_one +1 WOUND, MUDDLE $_card'),
-    Perk(_hierophant, 1,
-        'At the start of your first turn each $_scenario, gain BLESS'),
-    Perk(_hierophant, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
-    // LUMINARY
-    Perk(_luminary, 1, '$_remove four +0 $_cards'),
-    Perk(_luminary, 1, '$_replace $_one +0 $_card with $_one +2 $_card'),
-    Perk(_luminary, 1, '$_replace $_one -1 $_card with $_one +0 ICE $_card'),
-    Perk(_luminary, 1, '$_replace $_one -1 $_card with $_one +0 FIRE $_card'),
-    Perk(_luminary, 1, '$_replace $_one -1 $_card with $_one +0 LIGHT $_card'),
-    Perk(_luminary, 1, '$_replace $_one -1 $_card with $_one +0 DARK $_card'),
-    Perk(_luminary, 1,
-        '$_replace $_one -2 $_card with $_one -2 "Perform $_one Glow ability" $_card'),
-    Perk(_luminary, 2, '$_add $_one +0 Any_Element $_card'),
-    Perk(_luminary, 2, '$_add $_one $_rolling +1 "HEAL 1, Self" $_card'),
-    Perk(_luminary, 2,
-        '$_add $_one "POISON, target all enemies in the depicted LUMINARY_HEXES area" $_card'),
-    Perk(_luminary, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
-    Perk(_luminary, 1,
-        'Ignore $_negative item $_effects and $_addL $_one $_rolling "Consume_Any_Element : Any_Element" $_card'),
-    // SPIRIT CALLER
-    Perk(_spiritCaller, 1,
-        '$_replace $_one -2 $_card with $_one -1 $_card and $_one +1 $_card'),
-    Perk(_spiritCaller, 2,
-        '$_replace $_one -1 $_card with $_one +0 "+2 if a Spirit performed the attack" $_card'),
-    Perk(_spiritCaller, 2,
-        '$_replace $_one -1 $_card with $_one +0 $_card and $_one $_rolling POISON $_card'),
-    Perk(
-        _spiritCaller, 2, '$_replace $_one +0 $_card with $_one +1 AIR $_card'),
-    Perk(_spiritCaller, 2,
-        '$_replace $_one +0 $_card with $_one +1 DARK $_card'),
-    Perk(_spiritCaller, 1,
-        '$_replace $_one +0 $_card with $_one +1 PIERCE 2 $_card'),
-    Perk(_spiritCaller, 1, '$_add $_three $_rolling PIERCE 3 $_cards'),
-    Perk(_spiritCaller, 1, '$_add $_one +1 CURSE $_card'),
-    Perk(_spiritCaller, 1, '$_add $_one $_rolling ADD TARGET $_card'),
-    Perk(_spiritCaller, 1,
-        '$_replace $_one +1 $_card with $_one +2 PUSH 2 $_card'),
-    Perk(_spiritCaller, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
-    // STARSLINGER
-    Perk(_starslinger, 2,
-        '$_replace $_two +0 $_cards with $_one $_rolling "HEAL 1, Self" $_card'),
-    Perk(_starslinger, 1,
-        '$_replace $_one -2 $_card with $_one -1 "INVISIBLE, Self" $_card'),
-    Perk(_starslinger, 1,
-        '$_replace $_two -1 $_cards with $_one +0 DARK $_card'),
-    Perk(_starslinger, 2,
-        '$_replace $_one -1 $_card with $_one +1 LIGHT $_card'),
-    Perk(_starslinger, 1, '$_add $_one $_rolling Loot 1 $_card'),
-    Perk(_starslinger, 2,
-        '$_add $_one +1 "+3 if you are at full health" $_card'),
-    Perk(_starslinger, 1, '$_add $_two $_rolling IMMOBILIZE $_cards'),
-    Perk(_starslinger, 2, '$_add $_one +1 "HEAL 1, RANGE 3" $_card'),
-    Perk(_starslinger, 1,
-        '$_add $_two $_rolling "Force the target to perform a \'MOVE 1\' ability" $_cards'),
-    Perk(_starslinger, 1, '$_add $_two $_rolling "HEAL 1, RANGE 1" $_cards'),
-    Perk(_starslinger, 1,
-        'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
-    // RUINMAW
-    Perk(_ruinmaw, 1,
-        '$_replace $_one -2 $_card with $_one -1 RUPTURE and WOUND $_card'),
-    Perk(_ruinmaw, 2, '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
-    Perk(_ruinmaw, 2, '$_replace $_one -1 $_card with $_one +0 RUPTURE $_card'),
-    Perk(_ruinmaw, 3,
-        '$_replace $_one +0 $_card with $_one +1 "$_add +3 instead if the target has RUPTURE or WOUND" $_card'),
-    Perk(_ruinmaw, 3,
-        '$_replace $_one +0 $_card with $_one $_rolling "HEAL 1, Self, EMPOWER" $_card'),
-    Perk(_ruinmaw, 1,
-        'Once each $_scenario, become SATED after collecting your 5th loot token'),
-    Perk(_ruinmaw, 1,
-        'Become SATED each time you lose a $_card to negate suffering damage'),
-    Perk(_ruinmaw, 1,
-        'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "MOVE 1"'),
-    Perk(_ruinmaw, 1,
-        'Ignore $_negative $_scenario $_effects, and $_removeL $_one -1 $_card'),
-    // ************** ^^ THIS IS AS FAR AS RELEASE 3.7.0 GOES ^^ **************
-    // DRIFTER
-    Perk(_drifter, 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(_drifter, 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk(_drifter, 2,
-        '$_replace $_one +1 $_card with $_two +0 "Move $_one of your character tokens backward $_one slot" $_cards'),
-    Perk(_drifter, 1,
-        '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
-    Perk(_drifter, 1,
-        '$_replace $_two +0 $_cards with $_two PUSH 2 $_rolling $_cards'),
-    Perk(_drifter, 1, '$_add $_one +3 $_card'),
-    Perk(_drifter, 2, '$_add $_one +2 IMMOBILIZE $_card'),
-    Perk(_drifter, 1, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
-    Perk(_drifter, 1, 'Ignore $_scenario $_effects and $_addL $_one +1 $_card'),
-    Perk(_drifter, 1,
-        'Ignore item item_minus_one $_effects and $_addL $_one +1 $_card'),
-    Perk(_drifter, 2,
-        'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
-        perkIsGrouped: true),
-    Perk(_drifter, 1,
-        'You may bring $_one additional One_Hand item into each $_scenario'),
-    Perk(_drifter, 1,
-        "At the end of each $_scenario, you may discard up to $_two loot $_cards, except 'Random Item', to draw that many new loot $_cards"),
-    // BLINK BLADE
-    Perk(_blinkblade, 1, '$_remove $_one -2 $_card'),
-    Perk(_blinkblade, 2, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk(
-        _blinkblade, 2, '$_replace $_one -1 $_card with $_one +0 WOUND $_card'),
-    Perk(_blinkblade, 2,
-        '$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-    Perk(_blinkblade, 3,
-        '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addL plustwo ATTACK" $_rolling $_card'),
-    Perk(_blinkblade, 1, '$_replace $_two +1 $_cards with $_two +2 $_cards'),
-    Perk(_blinkblade, 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
-    Perk(_blinkblade, 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
-    Perk(_blinkblade, 1,
-        'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
-    Perk(_blinkblade, 1,
-        'At the start of your first turn each $_scenario, you may perform MOVE 3'),
-    Perk(_blinkblade, 1,
-        'Whenever you would gain IMMOBILIZE, prevent the condition'),
-    // BANNER SPEAR
-    Perk('bannerspear', 3,
-        '$_replace $_one -1 $_card with $_one "SHIELD 1" $_rolling $_card'),
-    Perk('bannerspear', 2,
-        '$_replace $_one +0 $_card with $_one +1 "$_add plusone ATTACK for each ally adjacent to the target" $_card'),
-    Perk('bannerspear', 2, '$_add $_one +1 DISARM $_card'),
-    Perk('bannerspear', 2, '$_add $_one +2 PUSH 1 $_card'),
-    Perk('bannerspear', 2, '$_add $_two +1 $_rolling $_cards'),
-    Perk('bannerspear', 2, '$_add $_two "HEAL 1, self" $_rolling $_cards'),
-    Perk('bannerspear', 1,
-        'Ignore item item_minus_one $_effects and $_removeL $_one -1 $_card'),
-    Perk('bannerspear', 1,
-        'At the end of each of your long rests, grant $_one ally within RANGE 3: MOVE 2'),
-    Perk('bannerspear', 1,
-        'Whenever you open a door with a move ability, $_addL +3 MOVE'),
-    Perk('bannerspear', 2,
-        'Once each $_scenario, during your turn, gain SHIELD 2 for the round',
-        perkIsGrouped: true),
-    // DEATHWALKER
-    Perk('deathwalker', 1, '$_remove $_two -1 $_cards'),
-    Perk('deathwalker', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk('deathwalker', 3, '$_replace $_one -1 $_card with $_one +1 $_card'),
-    Perk('deathwalker', 3,
-        '$_replace $_one +0 $_card with $_one +1 CURSE $_card'),
-    Perk('deathwalker', 2, '$_add $_one +2 DARK $_card'),
-    Perk('deathwalker', 2,
-        '$_add $_one DISARM $_rolling and $_one MUDDLE $_rolling $_card'),
-    Perk('deathwalker', 2,
-        '$_add $_two "HEAL 1, Target 1 ally" $_rolling $_cards'),
-    Perk('deathwalker', 1, 'Ignore $_scenario $_effects'),
-    Perk('deathwalker', 1,
-        'Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
-    Perk('deathwalker', 1,
-        'Whenever you short rest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
-    Perk('deathwalker', 1,
-        'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
-    // BONESHAPER
-    Perk('boneshaper', 2,
-        '$_replace $_one -1 $_card with $_one +0 CURSE $_card'),
-    Perk('boneshaper', 2,
-        '$_replace $_one -1 $_card with $_one +0 POISON $_card'),
-    Perk('boneshaper', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk('boneshaper', 3,
-        '$_replace $_one +0 $_card with $_one +1 "Kill the attacking summon to instead $_addL +4" $_card'),
-    Perk('boneshaper', 2,
-        '$_add $_three "HEAL 1, Target Boneshaper" $_rolling $_cards'),
-    Perk('boneshaper', 3, '$_add $_one +2 EARTH/DARK $_card'),
-    Perk('boneshaper', 1,
-        'Ignore $_scenario $_effects and $_addL $_two +1 $_cards'),
-    Perk('boneshaper', 1,
-        'Immediately before each of your rests, you may kill $_one of your summons to perform BLESS, self'),
-    Perk('boneshaper', 1,
-        'Once each $_scenario, when any character ally would become exhausted by suffering DAMAGE, you may suffer DAMAGE 2 to reduce their hit point value to 1 instead'),
-    Perk('boneshaper', 2,
-        'At the start of each $_scenario, you may play a level 1 $_card from your hand to perform a summon action of the $_card',
-        perkIsGrouped: true),
-    // GEMINATE
-    Perk('geminate', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk('geminate', 3,
-        '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element : Any_Element" $_card'),
-    Perk(
-        'geminate', 2, '$_replace $_one +0 $_card with $_one +1 POISON $_card'),
-    Perk('geminate', 2, '$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
-    Perk('geminate', 1,
-        '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
-    Perk('geminate', 1, '$_add $_two +1 PUSH 3 $_cards'),
-    Perk('geminate', 1, '$_add $_one 2x "BRITTLE, self" $_card'),
-    Perk('geminate', 2, '$_add $_one +1 "REGENERATE, self" $_rolling card'),
-    Perk('geminate', 1, 'Ignore $_scenario $_effects'),
-    Perk('geminate', 1,
-        'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
-    Perk('geminate', 1,
-        'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
-    Perk('geminate', 2,
-        'Whenever you perform an action with a lost icon, you may discard $_one $_card to RECOVER $_one card from your discard pile of equal or lower level',
-        perkIsGrouped: true),
-    // INFUSER
-    Perk('infuser', 1,
-        'Replace one -2 card with one -1 and one -1 AIR EARTH DARK card'),
-    Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/EARTH card'),
-    Perk('infuser', 2, 'Replace one -1 card with one +0 AIR/DARK card'),
-    Perk('infuser', 2, 'Replace one -1 card with one +0 EARTH/DARK card'),
-    Perk('infuser', 2, 'Replace one +0 card with one +2 card'),
-    Perk('infuser', 2,
-        'Replace one +0 card with three "Move one waning element to strong" Rolling cards'),
-    Perk('infuser', 2,
-        'Add two "plusone ATTACK for each pair of active INFUSION" Rolling cards'),
-    Perk('infuser', 1, 'Ignore $_scenario $_effects'),
-    Perk('infuser', 1,
-        'Ignore item item_minus_one effects. Whenever you become exhausted, keep all your active bonuses in play, with your summons acting on initiative 99 each round'),
-    Perk('infuser', 1,
-        'Whenever you short rest, you may Consume_Any_Element to RECOVER one spent One_Hand or Two_Hand item'),
-    Perk('infuser', 1,
-        'Once each scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
-    // PYROCLAST
-    Perk('pyroclast', 1, 'Remove two -1 cards'),
-    Perk('pyroclast', 1, 'Remove one -2 card'),
-    Perk('pyroclast', 2, 'Replace one +0 card with one +1 WOUND card'),
-    Perk('pyroclast', 2,
-        'Replace one -1 card with one +0 "Create one 1-hex hazardous terrain tile in a featureless hex adjacent to the target" card'),
-    Perk('pyroclast', 2, 'Replace two +0 cards with two PUSH 2 Rolling cards'),
-    Perk('pyroclast', 1, 'Replace two +1 cards with two +2 cards'),
-    Perk('pyroclast', 2, 'Add two +1 FIRE/EARTH cards'),
-    Perk('pyroclast', 1, 'Add two +1 MUDDLE Rolling cards'),
-    Perk('pyroclast', 1, 'Ignore scenario effects'),
-    Perk('pyroclast', 1,
-        'Whenever you long rest, you may destroy one adjacent obstacle to gain WARD'),
-    Perk('pyroclast', 1,
-        'Whenever you short rest, you may consume_FIRE to perform WOUND, Target 1 enemy occupying or adjacent to hazardous terrain'),
-    Perk('pyroclast', 3,
-        'You and all allies are unaffected by hazardous terrain you create',
-        perkIsGrouped: true),
-    // SHATTERSONG
-    Perk('shattersong', 1, 'Remove four +0 cards'),
-    Perk('shattersong', 2,
-        'Replace two -1 cards with two +0 "Reveal the top card of the target\'s monster ability deck" cards'),
-    Perk('shattersong', 1, 'Replace one -2 card with one -1 STUN card'),
-    Perk('shattersong', 2, 'Replace one +0 card with one +0 BRITTLE card'),
-    Perk('shattersong', 2, 'Replace two +1 cards with two +2 AIR/LIGHT cards'),
-    Perk('shattersong', 2,
-        'Add one "HEAL 2, BLESS, Target 1 ally" Rolling card'),
-    Perk('shattersong', 3, 'Add one +1 "Gain 1 RESONANCE" card'),
-    Perk('shattersong', 1, 'Ignore scenario effects'),
-    Perk('shattersong', 2,
-        'Whenever you short rest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
-        perkIsGrouped: true),
-    Perk('shattersong', 1,
-        'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
-    Perk('shattersong', 1,
-        'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
-    // TRAPPER
-    Perk('trapper', 1, 'Remove one -2 card'),
-    Perk('trapper', 2,
-        'Replace one -1 card with one +0 "Create one HEAL 2 trap in an empty hex adjacent to the target" card'),
-    Perk('trapper', 3,
-        'Replace one -1 card with one +0 "Create one DAMAGE 1 trap in an empty hex adjacent to the target" card'),
-    Perk('trapper', 3,
-        'Replace two +0 cards with two +0 "Add DAMAGE 2 or HEAL 2 to a trap within RANGE 2 of you" cards'),
-    Perk('trapper', 2, 'Replace two +1 cards with two +2 IMMOBILIZE cards'),
-    Perk('trapper', 3, 'Add two "Add PUSH 2 or PULL 2" Rolling cards'),
-    Perk('trapper', 1, 'Ignore scenario effects'),
-    Perk('trapper', 1,
-        'Whenever you long rest, you may create one DAMAGE 1 trap in an adjacent empty hex'),
-    Perk('trapper', 1,
-        'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
-    Perk('trapper', 1,
-        'At the start of each scenario, you may create one DAMAGE 2 trap in an adjacent empty hex'),
-    // PAIN CONDUIT
-    Perk('painconduit', 2, 'Remove two -1 cards'),
-    Perk('painconduit', 1, 'Replace one -2 card with one -2 CURSE CURSE card'),
-    Perk('painconduit', 1, 'Replace one -1 card with one +0 DISARM card'),
-    Perk('painconduit', 3, 'Replace one +0 card with one +1 FIRE/AIR card'),
-    Perk('painconduit', 1, 'Replace one +0 card with one +2 card'),
-    Perk('painconduit', 1, 'Replace three +1 cards with three +1 CURSE cards'),
-    Perk('painconduit', 2, 'Add three "HEAL 1, self" Rolling cards'),
-    Perk('painconduit', 2,
-        'Add one +0 "Add plusone ATTACK for each negative condition you have" card'),
-    Perk('painconduit', 1, 'Ignore scenario effects and add two +1 cards'),
-    Perk('painconduit', 1,
-        'Each round in which you long rest, you may ignore all negative conditions you have. If you do, they cannot be removed that round'),
-    Perk('painconduit', 1,
-        'Whenever you become exhausted, first perform CURSE, Target all, RANGE 3'),
-    Perk('painconduit', 2, 'Increase your maximum hit point value by 5',
-        perkIsGrouped: true),
-    // SNOWDANCER
-    Perk('snowdancer', 3,
-        'Replace one -1 card with one +0 "HEAL 1, Target 1 ally" card'),
-    Perk('snowdancer', 2, 'Replace one -1 card with one +0 IMMOBILIZE card'),
-    Perk('snowdancer', 2, 'Add two +1 ICE/AIR cards'),
-    Perk('snowdancer', 2,
-        'Replace two +0 cards with two "If this action forces the target to move, it suffers DAMAGE 1" Rolling cards'),
-    Perk('snowdancer', 2,
-        'Replace one +0 card with one +1 "STRENGTHEN, Target 1 ally" card'),
-    Perk('snowdancer', 2, 'Add one "HEAL 1, WARD, Target 1 ally" Rolling card'),
-    Perk('snowdancer', 1, 'Whenever you long rest, you may ICE/AIR'),
-    Perk('snowdancer', 2,
-        'Whenever you short rest, you may consume_ICE to perform REGENERATE, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
-        perkIsGrouped: true),
-    Perk('snowdancer', 2,
-        'At the start of each scenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
-        perkIsGrouped: true),
-    // FROZEN FIST
-    Perk('frozenfist', 2, 'Replace one -1 card with one +0 DISARM card'),
-    Perk('frozenfist', 1, 'Replace one -1 card with one +1 card'),
-    Perk('frozenfist', 1, 'Replace one -2 card with one +0 card'),
-    Perk('frozenfist', 2,
-        'Replace one +0 card with one +1 "SHIELD 1" Rolling card'),
-    Perk('frozenfist', 2, 'Replace one +0 card with one +1 ICE/EARTH card'),
-    Perk('frozenfist', 2,
-        'Replace one +0 card with one +2 "Create one 1-hex icy terrain tile in a featureless hex adjacent to the target" card'),
-    Perk('frozenfist', 1, 'Add one +3 card'),
-    Perk('frozenfist', 3, 'Add two "HEAL 1, self" Rolling cards'),
-    Perk('frozenfist', 1,
-        'Ignore item item_minus_one effects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
-    Perk('frozenfist', 1,
-        'Whenever you heal from a long rest, you may consume_ICE/EARTH to add plustwo HEAL'),
-    Perk('frozenfist', 2,
-        'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
-        perkIsGrouped: true),
-    // HIVE
-    Perk('hive', 1, 'Remove one -2 card and one +1 card'),
-    Perk('hive', 3,
-        'Replace one -1 card with one +0 "After this attack ability, grant one of your summons: MOVE 2" card'),
-    Perk('hive', 3,
-        'Replace one +0 card with one +1 "After this attack ability, TRANSFER" card'),
-    Perk('hive', 3, 'Add one +1 "HEAL 1, self" card'),
-    Perk('hive', 2, 'Add one +2 MUDDLE card'),
-    Perk('hive', 1, 'Add two POISON Rolling cards'),
-    Perk('hive', 1, 'Add two WOUND Rolling cards'),
-    Perk('hive', 2,
-        'Whenever you long rest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
-        perkIsGrouped: true),
-    Perk('hive', 1, 'At the end of each of your short rests, you may TRANSFER'),
-    Perk('hive', 1, 'Whenever you would gain WOUND, prevent the condition'),
-    // METAL MOSAIC
-    Perk('metalmosaic', 3,
-        'Replace one -1 card with one +0 "PRESSURE_GAIN or PRESSURE_LOSE" card'),
-    Perk('metalmosaic', 2,
-        'Replace one -1 card with one "SHIELD 1" Rolling card'),
-    Perk('metalmosaic', 2,
-        'Replace one +0 card with one +0 "The target and all enemies adjacent to it suffer DAMAGE 1" card'),
-    Perk('metalmosaic', 2,
-        'Replace two +0 cards with one PIERCE 3 Rolling and one "RETALIATE 2" Rolling card'),
-    Perk('metalmosaic', 2, 'Add one +1 "HEAL 2, self" card'),
-    Perk('metalmosaic', 1, 'Add one +3 card'),
-    Perk('metalmosaic', 1,
-        'Ignore item item_minus_one effects and add two +1 cards'),
-    Perk('metalmosaic', 1,
-        'Whenever you long rest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
-    Perk('metalmosaic', 1,
-        'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
-    Perk('metalmosaic', 3,
-        'Once each scenario, when you would become exhausted, instead gain STUN and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
-        perkIsGrouped: true),
-    // DEEPWRAITH
-    Perk('deepwraith', 1, 'Remove two -1 cards'),
-    Perk('deepwraith', 2, 'Replace one -1 card with one +0 DISARM card'),
-    Perk('deepwraith', 1, 'Replace one -2 card with one -1 STUN card'),
-    Perk('deepwraith', 2,
-        'Replace one +0 card with one +0 "INVISIBLE, self" card'),
-    Perk('deepwraith', 1,
-        'Replace two +0 cards with two PIERCE 3 Rolling cards'),
-    Perk('deepwraith', 1, 'Replace two +1 cards with two +2 cards'),
-    Perk('deepwraith', 1, 'Replace three +1 cards with three +1 CURSE cards'),
-    Perk('deepwraith', 3, 'Add two +1 "Gain 1 TROPHY" cards'),
-    Perk('deepwraith', 1, 'Ignore scenario effects and remove two +0 cards'),
-    Perk('deepwraith', 1,
-        'Whenever you long rest, you may Loot one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
-    Perk('deepwraith', 1, 'At the start of each scenario, gain 2 TROPHY'),
-    Perk('deepwraith', 3,
-        'While you have INVISIBLE, gain advantage on all your attacks',
-        perkIsGrouped: true),
-    // CRASHING TIDE
-    Perk('crashingtide', 2,
-        'Replace one -1 card with two PIERCE 3 Rolling cards'),
-    Perk('crashingtide', 2,
-        'Replace one -1 card with one +0 "plusone Target" card'),
-    Perk('crashingtide', 2,
-        'Replace one +0 card with one +1 "SHIELD 1" Rolling card'),
-    Perk('crashingtide', 2,
-        'Add two +1 "If you performed a TIDE action this round, +2 instead" cards'),
-    Perk('crashingtide', 2, 'Add one +2 MUDDLE card'),
-    Perk('crashingtide', 1, 'Add one +1 DISARM card'),
-    Perk('crashingtide', 2, 'Add two "HEAL 1, self" Rolling cards'),
-    Perk('crashingtide', 1,
-        'Ignore item item_minus_one effects, and, whenever you would gain IMPAIR, prevent the condition'),
-    Perk('crashingtide', 1,
-        'Whenever you declare a long rest during card selection, gain SHIELD 1 for the round'),
-    Perk('crashingtide', 3,
-        'Gain advantage on all your attacks performed while occupying or targeting enemies occupying water hexes',
-        perkIsGrouped: true),
-    // THORNREAPER
-    Perk('thornreaper', 2,
-        '$_replace $_one -1 $_card with $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card'),
-    Perk('thornreaper', 1, '$_replace $_one -2 $_card with $_one +0 $_card'),
-    Perk('thornreaper', 2,
-        'Add three Rolling "+1 if LIGHT is Strong or Waning" cards'),
-    Perk('thornreaper', 1, '$_add $_two $_rolling LIGHT $_cards'),
-    Perk('thornreaper', 1,
-        '$_add $_three $_rolling "EARTH if LIGHT is Strong or Waning" $_cards'),
-    Perk('thornreaper', 1,
-        '$_add $_one "Create hazardous terrain in $_one hex within RANGE 1" $_card'),
-    Perk('thornreaper', 2,
-        'Add one Rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain RETALIATE 3" card'),
-    Perk('thornreaper', 2,
-        'Add one Rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain SHIELD 3" card'),
-    Perk('thornreaper', 1,
-        'Ignore $_negative item $_effects and $_addL $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card'),
-    Perk('thornreaper', 2, 'Gain SHIELD 1 while you occupy hazardous terrain',
-        perkIsGrouped: true),
-    // INCARNATE
-    Perk('incarnate', 1,
-        '$_replace $_one -2 $_card with $_one $_rolling ALL_STANCES $_card'),
-    Perk('incarnate', 1,
-        '$_replace $_one -1 $_card with $_one $_rolling PIERCE 2, FIRE $_card'),
-    Perk('incarnate', 1,
-        '$_replace $_one -1 $_card with $_one $_rolling "SHIELD 1, Self, EARTH" $_card'),
-    Perk('incarnate', 1,
-        '$_replace $_one -1 $_card with $_one $_rolling PUSH 1, AIR $_card'),
-    Perk('incarnate', 2,
-        '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE / CONQUEROR : EMPOWER, Self" $_card'),
-    Perk('incarnate', 2,
-        '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / CONQUEROR : EMPOWER, Self" $_card'),
-    Perk('incarnate', 2,
-        '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / RITUALIST : ENFEEBLE" $_card'),
-    Perk('incarnate', 1,
-        '$_add $_one $_rolling "RECOVER $_one One_Hand or Two_Hand item" $_card'),
-    Perk('incarnate', 1, 'Each time you long rest, perform: ALL_STANCES'),
-    Perk('incarnate', 1,
-        'You may bring one additional One_Hand item into each scenario'),
-    Perk('incarnate', 1,
-        'Each time you short rest, RECOVER one spent One_Hand item'),
-    Perk('incarnate', 1,
-        'Ignore negative item effects and $_removeL one -1 $_card'),
-    // RIMEHEARTH
-    Perk('rimehearth', 2,
-        '$_replace $_one -1 $_card with $_one $_rolling WOUND $_card'),
-    Perk('rimehearth', 1,
-        '$_replace $_one +0 $_card with $_one $_rolling "HEAL 3, WOUND, Self" $_card'),
-    Perk('rimehearth', 1,
-        '$_replace $_two +0 $_cards with $_two $_rolling FIRE $_cards'),
-    Perk('rimehearth', 1,
-        '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 WOUND $_card, and $_one +1 "HEAL 1, Self" $_card'),
-    Perk('rimehearth', 2, '$_replace $_one +0 $_card with $_one +1 ICE $_card'),
-    Perk('rimehearth', 2,
-        '$_replace $_one -1 $_card with $_one +0 CHILL $_card'),
-    Perk('rimehearth', 1,
-        '$_replace $_one +2 $_card with $_one +3 CHILL $_card'),
-    Perk('rimehearth', 2, '$_add $_one +2 FIRE/ICE $_card'),
-    Perk('rimehearth', 1, '$_add $_one +0 BRITTLE $_card'),
-    Perk('rimehearth', 1,
-        'At the start of each $_scenario, you may either gain WOUND to generate FIRE or gain CHILL to generate ICE'),
-    Perk('rimehearth', 1,
-        'Ignore negative item effects and $_add $_one $_rolling FIRE/ICE $_card'),
-    // SHARDRENDER
-    Perk('shardrender', 1, 'Remove one -2 card'),
-    Perk('shardrender', 2, '$_replace $_one -1 $_card with $_one +1 card'),
-    Perk('shardrender', 2,
-        '$_replace -1 card with one Rolling "Shield 1, Self" card'),
-    Perk('shardrender', 2,
-        '$_replace two +0 cards with two +0 "Move one character token on a CRYSTALLIZE back one space" cards'),
-    Perk('shardrender', 2,
-        'Replace one +0 card with one Rolling +1 "+2 instead if the attack has PIERCE" card'),
-    Perk('shardrender', 1,
-        'Add two +1 "+2 instead if you CRYSTALLIZE PERSIST one space" cards'),
-    Perk('shardrender', 1, 'Add one +0 BRITTLE card'),
-    Perk('shardrender', 2,
-        'Ignore negative item effects and at the start of each scenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
-        perkIsGrouped: true),
-    Perk('shardrender', 1,
-        'Once each scenario, when you would suffer damage from an attack, gain "SHIELD 3" for that attack'),
-    Perk('shardrender', 1,
-        'Each time you long rest, perform "REGENERATE, Self"'),
-    // TEMPEST
-    Perk('tempest', 1, 'Replace one -2 card with one -1 AIR/LIGHT card'),
-    Perk('tempest', 1,
-        'Replace one -1 AIR/LIGHT card with one +1 AIR/LIGHT card'),
-    Perk('tempest', 2, 'Replace one -1 card with one +0 WOUND card'),
-    Perk('tempest', 2,
-        '$_replace one -1 card with one Rolling "REGENERATE, RANGE 1" card'),
-    Perk('tempest', 1, 'Replace one +0 card with one +2 MUDDLE card'),
-    Perk('tempest', 1, 'Replace two +0 cards with one +1 IMMOBILIZE card'),
-    Perk('tempest', 2, 'Add one +1 "DODGE, Self" card'),
-    Perk('tempest', 1, 'Add one +2 AIR/LIGHT card'),
-    Perk('tempest', 1, 'Whenever you dodge an attack, gain one SPARK'),
-    Perk('tempest', 2, 'Whenever you long rest, you may gain DODGE',
-        perkIsGrouped: true),
-    Perk('tempest', 1,
-        'Whenever you short rest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
-    // VANQUISHER
-    Perk('vanquisher', 1, 'Replace two -1 cards with one +0 MUDDLE card'),
-    Perk('vanquisher', 1,
-        'Replace two -1 cards with one -1 "HEAL 2, Self" card'),
-    Perk('vanquisher', 1, 'Replace one -2 card with one -1 POISON WOUND card'),
-    Perk('vanquisher', 2,
-        '$_replace one +0 card with one +1 "HEAL 1, Self" card'),
-    Perk('vanquisher', 1,
-        'Replace two +0 cards with one +0 CURSE card and one +0 IMMOBILIZE card'),
-    Perk('vanquisher', 2, 'Replace one +1 card with one +2 FIRE/AIR card'),
-    Perk('vanquisher', 1,
-        'Replace one +2 card with one Rolling "Gain one RAGE" card'),
-    Perk('vanquisher', 2,
-        'Add one +1 "RETALIATE 1, Self" card and one Rolling PIERCE 3 card'),
-    Perk('vanquisher', 1, 'Add one +0 "BLESS, Self" card'),
-    Perk('vanquisher', 1,
-        'Add two +1 "+2 instead if you suffer 1 damage" cards'),
-    Perk('vanquisher', 1,
-        'Add one +2 "+3 instead if you suffer 1 damage" cards'),
-    Perk(
-        'vanquisher', 1, 'Ignore negative item effects and remove one -1 card'),
-    // ***************** Frosthaven Crossover Perks Lists *****************
-    // INCARNATE V2
-    // Perk('incarnate_fhco', 1,
-    //     '$_replace $_one -2 $_card with $_one +0 ALL_STANCES $_rolling $_card'),
-    // Perk('incarnate_fhco', 1,
-    //     '$_replace $_one -1 $_card with $_one +0 PIERCE 2 FIRE $_rolling $_card'),
-    // Perk('incarnate_fhco', 1,
-    //     '$_replace $_one -1 $_card with $_one +0 PUSH 1 AIR $_rolling $_card'),
-    // Perk('incarnate_fhco', 1,
-    //     '$_replace $_one -1 $_card with $_one +0 "SHIELD 1" EARTH $_rolling $_card'),
-    // Perk('incarnate_fhco', 2,
-    //     '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE or RITUALIST : ENFEEBLE" $_card'),
-    // Perk('incarnate_fhco', 2,
-    //     '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE or CONQUEROR : EMPOWER, self" $_card'),
-    // Perk('incarnate_fhco', 2,
-    //     '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE or CONQUEROR : EMPOWER, self" $_card'),
-    // Perk('incarnate_fhco', 1,
-    //     'Add one +0 "RECOVER one One_Hand or Two_Hand item" Rolling card'),
-    // Perk('incarnate_fhco', 1,
-    //     'Ignore item item_minus_one effects and remove one -1 card'),
-    // Perk('incarnate_fhco', 1,
-    //     '[Eyes of the Ritualist:] Whenever you long rest, perform ALL_STANCES'),
-    // Perk('incarnate_fhco', 1,
-    //     '[Shoulders of the Conqueror:] You may bring one additional One_Hand item into each scenario'),
-    // Perk('incarnate_fhco', 1,
-    //     '[Hands of the Reaver:] Whenever you short rest, RECOVER one spent One_Hand item'),
-  ];
-
-  static final List<Mastery> masteries = [
-    // GLOOMHAVEN
-    Mastery(
-      masteryClassCode: _brute,
-      masteryDetails:
-          'Cause enemies to suffer a total of 12 or more RETALIATE damage during attacks targeting you in a single round',
-    ),
-    Mastery(
-      masteryClassCode: _brute,
-      masteryDetails:
-          'Across three consecutive rounds, play six different ability cards and cause enemies to suffer at least DAMAGE 6 on each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _tinkerer,
-      masteryDetails:
-          'Heal an ally or apply a negative condition to an enemy each turn',
-    ),
-    Mastery(
-      masteryClassCode: _tinkerer,
-      masteryDetails:
-          'Perform two actions with lost icons before your first rest and then only rest after having played at least two actions with lost icons since your previous rest',
-    ),
-    Mastery(
-      masteryClassCode: _spellweaver,
-      masteryDetails: 'Infuse and consume all six elements',
-    ),
-    Mastery(
-      masteryClassCode: _spellweaver,
-      masteryDetails: 'Perform four different loss actions twice each',
-    ),
-    Mastery(
-      masteryClassCode: _scoundrel,
-      masteryDetails:
-          'Kill at least six enemies that are adjacent to at least one of your allies',
-    ),
-    Mastery(
-      masteryClassCode: _scoundrel,
-      masteryDetails:
-          'Kill at least six enemies that are adjacent to none of your allies',
-    ),
-    Mastery(
-      masteryClassCode: _cragheart,
-      masteryDetails: 'Only attack enemies adjacent to obstacles or walls',
-    ),
-    Mastery(
-      masteryClassCode: _cragheart,
-      masteryDetails: 'Damage or heal at least one ally each round',
-    ),
-    Mastery(
-      masteryClassCode: _mindthief,
-      masteryDetails:
-          'Trigger the on-attack effect of four different Augments thrice each',
-    ),
-    Mastery(
-      masteryClassCode: _mindthief,
-      masteryDetails: 'Never be targeted by an attack',
-    ),
-    Mastery(
-      masteryClassCode: _sunkeeper,
-      masteryDetails:
-          'Reduce attacks targeting you by a total of 20 or more through Shield effects in a single round',
-    ),
-    Mastery(
-      masteryClassCode: _sunkeeper,
-      masteryDetails: 'LIGHT or consume_LIGHT during each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _quartermaster,
-      masteryDetails:
-          "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of 'Reinforced Steel'",
-    ),
-    Mastery(
-      masteryClassCode: _quartermaster,
-      masteryDetails: 'Loot six or more loot tokens in a single turn',
-    ),
-    Mastery(
-      masteryClassCode: _summoner,
-      masteryDetails:
-          'Summon the Lava Golem on your first turn and keep it alive for the entire scenario',
-    ),
-    Mastery(
-      masteryClassCode: _summoner,
-      masteryDetails:
-          'Perform the summon action of five different ability cards',
-    ),
-    Mastery(
-      masteryClassCode: _nightshroud,
-      masteryDetails:
-          'Have INVISIBLE at the start or end of each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _nightshroud,
-      masteryDetails: 'DARK or consume_DARK during each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _plagueherald,
-      masteryDetails: 'Kill at least five enemies with non-attack abilities',
-    ),
-    Mastery(
-      masteryClassCode: _plagueherald,
-      masteryDetails:
-          'Perform three different attack abilities that target at least four enemies each',
-    ),
-    Mastery(
-      masteryClassCode: _berserker,
-      masteryDetails:
-          "Lose at least one hit point during each of your turns, without ever performing the bottom action of 'Blood Pact'",
-    ),
-    Mastery(
-      masteryClassCode: _berserker,
-      masteryDetails:
-          'Have exactly one hit point at the end of each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _soothsinger,
-      masteryDetails:
-          'On your first turn of the scenario and the turn after each of your rests, perform one Song action that you have not yet performed this scenario',
-    ),
-    Mastery(
-      masteryClassCode: _soothsinger,
-      masteryDetails:
-          'Have all 10 monster CURSE cards and all 10 BLESS cards in modifier decks at the same time',
-    ),
-    Mastery(
-      masteryClassCode: _doomstalker,
-      masteryDetails:
-          'Never perform a Doom action that you have already performed in the scenario',
-    ),
-    Mastery(
-      masteryClassCode: _doomstalker,
-      masteryDetails: 'Kill three Doomed enemies during one of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _sawbones,
-      masteryDetails:
-          "On each of your turns, give an ally an ability card, target an ally with a HEAL ability, grant an ally SHIELD, or place an ability card in an ally's active area",
-    ),
-    Mastery(
-      masteryClassCode: _sawbones,
-      masteryDetails: 'Deal at least DAMAGE 20 with a single attack ability',
-    ),
-    Mastery(
-      masteryClassCode: _elementalist,
-      masteryDetails:
-          "Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of 'Formless Power' or 'Shaping the Ether'",
-    ),
-    Mastery(
-      masteryClassCode: _elementalist,
-      masteryDetails:
-          'Infuse five or more elements during one of your turns, then consume five or more elements during your following turn',
-    ),
-    Mastery(
-      masteryClassCode: _beastTyrant,
-      masteryDetails:
-          'Have your bear summon deal DAMAGE 10 or more in three consecutive rounds',
-    ),
-    Mastery(
-      masteryClassCode: _beastTyrant,
-      masteryDetails:
-          'You or your summons must apply a negative condition to at least 10 different enemies',
-    ),
-    Mastery(
-      masteryClassCode: _bladeswarm,
-      masteryDetails:
-          'Perform two different summon actions on your first turn and keep all summons from those actions alive for the entire scenario',
-    ),
-    Mastery(
-      masteryClassCode: _bladeswarm,
-      masteryDetails:
-          'Perform three different non-summon persistent loss actions before your first rest',
-    ),
-    Mastery(
-      masteryClassCode: _diviner,
-      masteryDetails:
-          'During one round, have at least four monsters move into four different Rifts that affect those monsters',
-    ),
-    Mastery(
-      masteryClassCode: _diviner,
-      masteryDetails:
-          'Reveal at least one card from at least one ability card deck or attack modifier deck each round',
-    ),
-    // JAWS OF THE LION
-    Mastery(
-      masteryClassCode: _demolitionist,
-      masteryDetails:
-          'Deal DAMAGE 10 or more with each of three different attack actions',
-    ),
-    Mastery(
-      masteryClassCode: _demolitionist,
-      masteryDetails:
-          'Destroy at least six obstacles. End the scenario with no obstacles on the map other than ones placed by allies',
-    ),
-    Mastery(
-      masteryClassCode: _hatchet,
-      masteryDetails: 'AIR or consume_AIR during each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: _hatchet,
-      masteryDetails:
-          'During each round in which there is at least one enemy on the map at the start of your turn, either place one of your tokens on an ability card of yours or on an enemy',
-    ),
-    Mastery(
-      masteryClassCode: _redGuard,
-      masteryDetails: 'Kill at least five enemies during their turns',
-    ),
-    Mastery(
-      masteryClassCode: _redGuard,
-      masteryDetails:
-          'Force each enemy in the scenario to move at least one hex, forcing at least six enemies to move',
-    ),
-    Mastery(
-      masteryClassCode: _voidwarden,
-      masteryDetails:
-          'Cause enemies to suffer DAMAGE 20 or more in a single turn with granted or commanded attacks',
-    ),
-    Mastery(
-      masteryClassCode: _voidwarden,
-      masteryDetails:
-          'Give at least one ally or enemy POISON, STRENGTHEN, BLESS, or WARD each round',
-    ),
-    // FROSTHAVEN
-    Mastery(
-      masteryClassCode: _drifter,
-      masteryDetails:
-          'End a scenario with your character tokens on the last use slots of four persistent abilities',
-    ),
-    Mastery(
-      masteryClassCode: _drifter,
-      masteryDetails:
-          'Never perform a move or attack ability with a value less than 4, and perform at least one move or attack ability every round',
-    ),
-    Mastery(
-      masteryClassCode: _blinkblade,
-      masteryDetails: 'Declare Fast seven rounds in a row',
-    ),
-    Mastery(
-      masteryClassCode: _blinkblade,
-      masteryDetails: 'Never be targeted by an attack',
-    ),
-    Mastery(
-      masteryClassCode: 'bannerspear',
-      masteryDetails:
-          'Attack at least three targets with three different area of effect attacks',
-    ),
-    Mastery(
-      masteryClassCode: 'bannerspear',
-      masteryDetails:
-          'Play a Banner summon ability on your first turn, always have it within RANGE 3 of you, and keep it alive for the entire scenario',
-    ),
-    Mastery(
-      masteryClassCode: 'deathwalker',
-      masteryDetails: 'Consume seven SHADOW in one round',
-    ),
-    Mastery(
-      masteryClassCode: 'deathwalker',
-      masteryDetails: 'Create or consume at least one SHADOW every round',
-    ),
-    Mastery(
-      masteryClassCode: 'boneshaper',
-      masteryDetails: 'Kill at least 15 of your summons',
-    ),
-    Mastery(
-      masteryClassCode: 'boneshaper',
-      masteryDetails:
-          'Play a summon action on your first turn, have this summon kill at least 6 enemies, and keep it alive for the entire scenario',
-    ),
-    Mastery(
-      masteryClassCode: 'geminate',
-      masteryDetails: 'Switch forms every round',
-    ),
-    Mastery(
-      masteryClassCode: 'geminate',
-      masteryDetails: 'Lose at least one card every round',
-    ),
-    Mastery(
-      masteryClassCode: 'infuser',
-      masteryDetails: 'Have five active INFUSION bonuses',
-    ),
-    Mastery(
-      masteryClassCode: 'infuser',
-      masteryDetails: 'Kill at least four enemies, but never attack',
-    ),
-    Mastery(
-      masteryClassCode: 'pyroclast',
-      masteryDetails:
-          'Create or destroy at least one obstacle or hazardous terrain tile each round',
-    ),
-    Mastery(
-      masteryClassCode: 'pyroclast',
-      masteryDetails:
-          'Move enemies through six different hexes of hazardous terrain you created in one turn',
-    ),
-    Mastery(
-      masteryClassCode: 'shattersong',
-      masteryDetails:
-          'Always have 0 RESONANCE directly before you gain RESONANCE at the end of each of your turns',
-    ),
-    Mastery(
-      masteryClassCode: 'shattersong',
-      masteryDetails:
-          'Spend 5 RESONANCE on each of five different Wave abilities',
-    ),
-    Mastery(
-      masteryClassCode: 'trapper',
-      masteryDetails:
-          'Have one HEAL trap on the map with a value of at least 20',
-    ),
-    Mastery(
-      masteryClassCode: 'trapper',
-      masteryDetails:
-          'Move enemies through seven or more traps with one ability',
-    ),
-    Mastery(
-      masteryClassCode: 'painconduit',
-      masteryDetails:
-          'Cause other figures to suffer a total of at least DAMAGE 40 in one round',
-    ),
-    Mastery(
-      masteryClassCode: 'painconduit',
-      masteryDetails:
-          'Start a turn with WOUND, BRITTLE, BANE, POISON, IMMOBILIZE, DISARM, STUN, and MUDDLE',
-    ),
-    Mastery(
-      masteryClassCode: 'snowdancer',
-      masteryDetails: 'Cause at least one ally or enemy to move each round',
-    ),
-    Mastery(
-      masteryClassCode: 'snowdancer',
-      masteryDetails:
-          'Ensure the first ally to suffer DAMAGE each round, directly before suffering the DAMAGE, has at least one condition you applied',
-    ),
-    Mastery(
-      masteryClassCode: 'frozenfist',
-      masteryDetails:
-          'RECOVER at least one card from your discard pile each round',
-    ),
-    Mastery(
-      masteryClassCode: 'frozenfist',
-      masteryDetails:
-          'Enter at least ten different hexes with one move ability, then cause one enemy to suffer at least DAMAGE 10 with one attack ability in the same turn',
-    ),
-    Mastery(
-      masteryClassCode: 'hive',
-      masteryDetails: 'TRANSFER each round',
-    ),
-    Mastery(
-      masteryClassCode: 'hive',
-      masteryDetails: 'TRANSFER into four different summons in one round',
-    ),
-    Mastery(
-      masteryClassCode: 'metalmosaic',
-      masteryDetails: 'Never attack',
-    ),
-    Mastery(
-      masteryClassCode: 'metalmosaic',
-      masteryDetails:
-          'For four consecutive rounds, move the pressure gauge up or down three levels from where it started the round (PRESSURE_LOW to PRESSURE_HIGH, or vice versa)',
-    ),
-    Mastery(
-      masteryClassCode: 'deepwraith',
-      masteryDetails: 'Perform all your attacks with advantage',
-    ),
-    Mastery(
-      masteryClassCode: 'deepwraith',
-      masteryDetails: 'Infuse DARK each round',
-    ),
-    Mastery(
-      masteryClassCode: 'crashingtide',
-      masteryDetails:
-          'Never suffer damage from attacks, and be targeted by at least five attacks',
-    ),
-    Mastery(
-      masteryClassCode: 'crashingtide',
-      masteryDetails:
-          'At the start of each of your rests, have more active TIDE than cards in your discard pile',
-    ),
-    // CUSTOM
-    Mastery(
-      masteryClassCode: 'incarnate',
-      masteryDetails:
-          'Never end your turn with the same spirit you started in that turn',
-    ),
-    Mastery(
-      masteryClassCode: 'incarnate',
-      masteryDetails:
-          'Perform fifteen attacks using One_Hand or Two_Hand items',
-    ),
-  ];
-
   static final List<Resource> resources = [
     Resource(
       'Lumber',
@@ -2296,15 +2771,118 @@ abstract class CharacterData {
     ),
   ];
 
-  static final List<PersonalGoal> personalGoals = [
-    PersonalGoal(
-      510,
-      [
-        SubGoal("Complete three 'Crypt' scenarios", 3),
-        SubGoal("Complete 'Noxious Cellar' ($_scenario 52", 1),
-      ],
-      'Seeker of Xorn',
-      _plagueherald,
-    ),
-  ];
+  static const _add = 'Add';
+  static const _addL = 'add';
+  static const _aesther = 'Aesther';
+  static const _algox = 'Algox';
+  static const _amberAegis = 'aa';
+  static const _arcane = 'Arcane';
+  static const _armored = 'Armored';
+  static const _artificer = 'af';
+  static const _beastTyrant = 'bt';
+  static const _berserker = 'be';
+  static const _bladeswarm = 'bs';
+  static const _blinkblade = 'blinkblade';
+  static const _bombard = 'bb';
+  static const _brewmaster = 'bm';
+  static const _brightspark = 'bp';
+  static const _brute = 'br';
+  static const _card = 'card';
+  static const _cards = 'cards';
+  static const _chainguard = 'cg';
+  static const _chaotic = 'Chaotic';
+  static const _chieftain = 'ct';
+  static const _cragheart = 'ch';
+  static const _demolitionist = 'dl';
+  static const _diviner = 'dv';
+  static const _doomstalker = 'ds';
+  static const _drifter = 'drifter';
+  static const _educated = 'Educated';
+  static const _effects = 'effects';
+  static const _elementalist = 'el';
+  static const _fireKnight = 'fk';
+  static const _frostborn = 'fb';
+  static const _harrower = 'Harrower';
+  static const _hatchet = 'hc';
+  static const _hierophant = 'hf';
+  static const _hollowpact = 'hp';
+  static const _human = 'Human';
+  static const _inox = 'Inox';
+  static const _intimidating = 'Intimidating';
+  static final Map<int, int> _levelXp = {
+    1: 0,
+    2: 45,
+    3: 95,
+    4: 150,
+    5: 210,
+    6: 275,
+    7: 345,
+    8: 420,
+    9: 500,
+  };
+
+  static const _luminary = 'ln';
+  static const _lurker = 'Lurker';
+  static const _mindthief = 'mt';
+  static const _mirefoot = 'mf';
+  static const _negative = 'negative';
+  static const _nightshroud = 'ns';
+  static const _nimble = 'Nimble';
+  static const _one = 'one';
+  static const _orchid = 'Orchid';
+  static const _outcast = 'Outcast';
+  static const _persuasive = 'Persuasive';
+  static const _plagueherald = 'ph';
+  static const _quartermaster = 'qm';
+  static const _quatryl = 'Quatryl';
+  static const _redGuard = 'rg';
+  static const _remove = 'Remove';
+  static const _removeL = 'remove';
+  static const _replace = 'Replace';
+  static const _resourceful = 'Resourceful';
+  static const _rolling = 'Rolling';
+  static const _rootwhisperer = 'rw';
+  static const _ruinmaw = 'rm';
+  static const _savvas = 'Savvas';
+  static const _sawbones = 'sb';
+  static const _scenario = 'scenario';
+  static const _scoundrel = 'sc';
+  static const _soothsinger = 'ss';
+  static const _spellweaver = 'sw';
+  static const _spiritCaller = 'scr';
+  static const _starslinger = 'ssl';
+  static const _strong = 'Strong';
+  static const _summoner = 'su';
+  static const _sunkeeper = 'sk';
+  static const _three = 'three';
+  static const _tinkerer = 'ti';
+  static const _two = 'two';
+  static const _unfettered = 'Unfettered';
+  static const _valrath = 'Valrath';
+  static const _vermling = 'Vermling';
+  static const _voidwarden = 'vw';
+
+  static const _immobilize = 'IMMOBILIZE';
+
+  static PlayerClass playerClassByClassCode(String classCode) {
+    return playerClasses.firstWhere(
+      (playerClass) => playerClass.classCode == classCode,
+    );
+  }
+
+  static int xpByLevel(int level) =>
+      _levelXp.entries.lastWhere((entry) => entry.key == level).value;
+
+  static int nextXpByLevel(int level) => _levelXp.entries
+      .firstWhere(
+        (entry) => entry.key > level,
+        orElse: () => _levelXp.entries.last,
+      )
+      .value;
+
+  static int levelByXp(int xp) => _levelXp.entries
+      .lastWhere(
+        (entry) => entry.value <= xp,
+      )
+      .key;
 }

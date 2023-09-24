@@ -329,8 +329,8 @@ class _InfoDialogState extends State<InfoDialog> {
             ),
       content: Container(
         constraints: const BoxConstraints(
-          maxWidth: 400,
-          minWidth: maxDialogWidth,
+          maxWidth: maxDialogWidth,
+          // minWidth: maxDialogWidth,
         ),
         child: SingleChildScrollView(
           child: Column(
