@@ -294,7 +294,7 @@ abstract class CharacterData {
     legacy.Perk(
         _diviner, 1, '$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
     legacy.Perk(_diviner, 1,
-        '$_replace $_one +0 $_card with $_one +2 "REGENERATE, Self" $_card'),
+        '$_replace $_one +0 $_card with $_one +2 "$_regenerate, Self" $_card'),
     legacy.Perk(_diviner, 1,
         '$_replace $_one -1 $_card with $_one +1 "HEAL 2, Affect any Ally" $_card'),
     legacy.Perk(_diviner, 1, '$_add $_two $_rolling "HEAL 1, Self" $_cards'),
@@ -538,7 +538,7 @@ abstract class CharacterData {
     legacy.Perk(_hollowpact, 2,
         '$_replace $_one -1 $_card with $_one $_rolling +1 VOID $_card and $_one $_rolling -1 CURSE $_card'),
     legacy.Perk(_hollowpact, 2,
-        '$_replace $_two +1 $_cards with $_one +3 "REGENERATE, Self" $_card'),
+        '$_replace $_two +1 $_cards with $_one +3 "$_regenerate, Self" $_card'),
     legacy.Perk(_hollowpact, 2,
         '$_replace $_one +0 $_card with $_one +1 "Create a Void pit in an empty hex within RANGE 2" $_card'),
     legacy.Perk(_hollowpact, 1,
@@ -667,7 +667,7 @@ abstract class CharacterData {
         '$_replace $_two -1 $_cards with $_one +0 DARK $_card'),
     legacy.Perk(_starslinger, 2,
         '$_replace $_one -1 $_card with $_one +1 LIGHT $_card'),
-    legacy.Perk(_starslinger, 1, '$_add $_one $_rolling Loot 1 $_card'),
+    legacy.Perk(_starslinger, 1, '$_add $_one $_rolling LOOT 1 $_card'),
     legacy.Perk(_starslinger, 2,
         '$_add $_one +1 "+3 if you are at full health" $_card'),
     legacy.Perk(_starslinger, 1, '$_add $_two $_rolling $_immobilize $_cards'),
@@ -736,7 +736,7 @@ abstract class CharacterData {
     legacy.Perk(
         _blinkBlade, 2, '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card'),
     legacy.Perk(
-        _blinkBlade, 2, '$_add $_one +2 "REGENERATE, self" $_rolling $_card'),
+        _blinkBlade, 2, '$_add $_one +2 "$_regenerate, self" $_rolling $_card'),
     legacy.Perk(_blinkBlade, 1,
         'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
     legacy.Perk(_blinkBlade, 1,
@@ -816,7 +816,7 @@ abstract class CharacterData {
     legacy.Perk(_geminate, 1, '$_add $_two +1 PUSH 3 $_cards'),
     legacy.Perk(_geminate, 1, '$_add $_one 2x "BRITTLE, self" $_card'),
     legacy.Perk(
-        _geminate, 2, '$_add $_one +1 "REGENERATE, self" $_rolling card'),
+        _geminate, 2, '$_add $_one +1 "$_regenerate, self" $_rolling card'),
     legacy.Perk(_geminate, 1, 'Ignore $_scenario $_effects'),
     legacy.Perk(_geminate, 1,
         'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
@@ -935,7 +935,7 @@ abstract class CharacterData {
         _snowdancer, 2, 'Add one "HEAL 1, WARD, Target 1 ally" $_rolling card'),
     legacy.Perk(_snowdancer, 1, 'Whenever you long rest, you may ICE/AIR'),
     legacy.Perk(_snowdancer, 2,
-        'Whenever you short rest, you may consume_ICE to perform REGENERATE, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
+        'Whenever you short rest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
         perkIsGrouped: true),
     legacy.Perk(_snowdancer, 2,
         'At the start of each scenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
@@ -1011,7 +1011,7 @@ abstract class CharacterData {
     legacy.Perk(
         _deepwraith, 1, '$_ignoreScenarioEffects and remove two +0 cards'),
     legacy.Perk(_deepwraith, 1,
-        'Whenever you long rest, you may Loot one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+        'Whenever you long rest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
     legacy.Perk(_deepwraith, 1, 'At the start of each scenario, gain 2 TROPHY'),
     legacy.Perk(_deepwraith, 3,
         'While you have INVISIBLE, gain advantage on all your attacks',
@@ -1119,15 +1119,15 @@ abstract class CharacterData {
         perkIsGrouped: true),
     legacy.Perk(_shardrender, 1,
         'Once each scenario, when you would suffer damage from an attack, gain "$_shield 3" for that attack'),
-    legacy.Perk(
-        _shardrender, 1, 'Each time you long rest, perform "REGENERATE, Self"'),
+    legacy.Perk(_shardrender, 1,
+        'Each time you long rest, perform "$_regenerate, Self"'),
     // TEMPEST
     legacy.Perk(_tempest, 1, 'Replace one -2 card with one -1 AIR/LIGHT card'),
     legacy.Perk(_tempest, 1,
         'Replace one -1 AIR/LIGHT card with one +1 AIR/LIGHT card'),
     legacy.Perk(_tempest, 2, 'Replace one -1 card with one +0 WOUND card'),
     legacy.Perk(_tempest, 2,
-        '$_replace one -1 card with one $_rolling "REGENERATE, RANGE 1" card'),
+        '$_replace one -1 card with one $_rolling "$_regenerate, RANGE 1" card'),
     legacy.Perk(_tempest, 1, 'Replace one +0 card with one +2 MUDDLE card'),
     legacy.Perk(
         _tempest, 1, 'Replace two +0 cards with one +1 $_immobilize card'),
@@ -1261,7 +1261,7 @@ abstract class CharacterData {
     ),
     legacy.Mastery(
       masteryClassCode: _quartermaster,
-      masteryDetails: 'Loot six or more loot tokens in a single turn',
+      masteryDetails: 'LOOT six or more loot tokens in a single turn',
     ),
     legacy.Mastery(
       masteryClassCode: _summoner,
@@ -1686,7 +1686,7 @@ abstract class CharacterData {
                 "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of ~Reinforced ~Steel",
           ),
           Mastery(
-            masteryDetails: 'Loot six or more loot tokens in a single turn',
+            masteryDetails: 'LOOT six or more loot tokens in a single turn',
           ),
         ],
         variant: Variant.frosthavenCrossover,
@@ -3197,6 +3197,37 @@ abstract class CharacterData {
               'Ignore $_negative $_scenario $_effects and $_addL $_one +1 $_card'),
         ],
       ),
+      // Crosschecked and confirmed
+      Perks(
+        [
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 WOUND $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 POISON $_card',
+            quantity: 2,
+          ),
+          Perk('$_replace $_one +0 $_card with $_one +1 AIR $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 EARTH $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 LIGHT $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 DARK $_card'),
+          Perk(
+            '$_add $_one +2 MUDDLE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two HEAL 1 $_rolling $_cards',
+            quantity: 2,
+          ),
+          Perk('$_ignoreNegativeItemEffects and $_addL $_one +1 $_card'),
+          Perk('$_ignoreScenarioEffects and $_addL $_one +1 $_card'),
+          Perk(
+              '[Spinning Up:] At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _diviner: [
       Perks([
@@ -3216,14 +3247,43 @@ abstract class CharacterData {
         Perk('$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
         Perk('$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
         Perk(
-            '$_replace $_one +0 $_card with $_one +2 "REGENERATE, Self" $_card'),
+            '$_replace $_one +0 $_card with $_one +2 "$_regenerate, Self" $_card'),
         Perk(
             '$_replace $_one -1 $_card with $_one +1 "HEAL 2, Affect any Ally" $_card'),
         Perk('$_add $_two $_rolling "HEAL 1, Self" $_cards'),
         Perk('$_add $_two $_rolling CURSE $_cards'),
         Perk(
             'Ignore $_negative $_scenario $_effects and $_addL $_two +1 $_cards'),
-      ])
+      ]),
+      // Crosschecked and confirmed
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_replace $_two +1 $_cards with $_one +3 "SHIELD 1" $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_replace $_one +0 $_card with $_one +1 "Any ally gains SHIELD 1" $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 DARK $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 LIGHT $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
+          Perk(
+              '$_replace $_one +0 $_card with $_one +2 "$_regenerate, self" $_card'),
+          Perk(
+              '$_replace $_one -1 $_card with $_one +1 "HEAL 2, TARGET 1 ally" $_card'),
+          Perk('$_add $_two +0 CURSE $_rolling $_cards'),
+          Perk('$_ignoreScenarioEffects and add $_two +1 $_cards'),
+          Perk(
+              '[Tip the Scales:] Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_LIGHT/DARK to place one card on the bottom of the deck'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _demolitionist: [
       Perks([
@@ -3255,6 +3315,32 @@ abstract class CharacterData {
           quantity: 2,
         ),
       ]),
+      // Crosschecked and confirmed
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove $_four +0 $_cards'),
+          Perk('$_replace $_one -2 $_card with $_one +0 POISON $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 MUDDLE $_card',
+              quantity: 2),
+          Perk('$_replace $_one +1 $_card with $_two +2 $_cards'),
+          Perk('$_replace $_one +1 $_card with $_one +2 FIRE $_card',
+              quantity: 2),
+          Perk('$_replace $_one +1 $_card with $_one +2 EARTH $_card',
+              quantity: 2),
+          Perk('$_add $_two +0 "All adjacent enemies suffer DAMAGE 1" $_cards'),
+          Perk('$_ignoreScenarioEffects and $_remove $_one -1 $_card'),
+          Perk(
+            '[Remodeling:] Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within RANGE 2 (of you)',
+            quantity: 2,
+            grouped: true,
+          )
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _hatchet: [
       Perks([
@@ -3278,6 +3364,32 @@ abstract class CharacterData {
           quantity: 3,
         ),
       ]),
+      // Crosschecked and confirmed
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_replace $_one +0 $_card with $_one +0 STUN $_card'),
+          Perk('$_replace $_one +1 $_card with $_one +1 STUN $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 POISON $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 MUDDLE $_card'),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +3 $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_add $_one +2 AIR $_card',
+            quantity: 3,
+          ),
+          Perk(
+              '[Hasty Pick-up:] Once each scenario, during your turn, if the Favourite is in a hex on the map, you may consume_AIR to return it to its ability card')
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _redGuard: [
       Perks([
@@ -3307,6 +3419,38 @@ abstract class CharacterData {
         Perk('$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
         Perk('$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
       ]),
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove $_one -2 $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 $_immobilize $_card'),
+          Perk(
+              '$_replace $_one +0 $_card and $_one +1 $_card with $_two +1 "$_shield 1" $_cards'),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +2 FIRE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +2 LIGHT $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +1 FIRE/LIGHT $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreItemMinusOneEffects and $_addL $_two +1 $_cards'),
+          Perk(
+            '[Brilliant Aegis:] Whenever you are attacked, you may consume_LIGHT to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
+            quantity: 2,
+            grouped: true,
+          )
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _voidwarden: [
       Perks([
@@ -3335,6 +3479,32 @@ abstract class CharacterData {
           quantity: 2,
         ),
       ]),
+      Perks(
+        [
+          Perk('$_remove $_two -1 $_cards'),
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "HEAL 1, TARGET 1 ally" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "HEAL 1, TARGET 1 ally" $_card',
+            quantity: 3,
+          ),
+          Perk('$_replace $_one +0 $_card with $_one +1 POISON $_card'),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 CURSE $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_two +1 ICE $_cards'),
+          Perk('$_add $_two +1 DARK $_cards'),
+          Perk('$_add $_one +3 $_card'),
+          Perk(_ignoreScenarioEffects),
+          Perk(
+              '[Grave Defense:] Whenever you rest, you may consume_ICE/DARK to give WARD to one ally who has POISON')
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
     _amberAegis: [
       Perks([
@@ -3587,7 +3757,7 @@ abstract class CharacterData {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_two +1 $_cards with $_one +3 "REGENERATE, Self" $_card',
+          '$_replace $_two +1 $_cards with $_one +3 "$_regenerate, Self" $_card',
           quantity: 2,
         ),
         Perk(
@@ -4558,6 +4728,7 @@ abstract class CharacterData {
   static const _persuasive = 'Persuasive';
   static const _plagueherald = 'ph';
   static const _pyroclast = 'pyroclast';
+  static const _regenerate = 'REGENERATE';
   static const _quartermaster = 'qm';
   static const _quatryl = 'Quatryl';
   static const _redGuard = 'rg';

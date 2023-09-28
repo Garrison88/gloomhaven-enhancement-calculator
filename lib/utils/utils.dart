@@ -9,8 +9,6 @@ class Utils {
     bool darkTheme,
   ) {
     List<InlineSpan> inlineList = [];
-    int? start;
-    int? end;
     // This makes Perk description text bold if it's [surrounded by square brackets]
     if (details.startsWith('[')) {
       String perkDescription =
@@ -194,7 +192,7 @@ class Utils {
             assetPath = 'range.svg';
             invertColor = true;
             break;
-          case 'Loot':
+          case 'LOOT':
             assetPath = 'loot.svg';
             invertColor = true;
             break;
