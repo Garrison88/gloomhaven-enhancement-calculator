@@ -365,9 +365,10 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
   ) async {
     bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
     bool? proceed = true;
+    Variant? variant = Variant.base;
     SelectedPlayerClass userChoice = SelectedPlayerClass(
       playerClass: selectedPlayerClass,
-      variant: Variant.base,
+      variant: variant,
     );
     if ((selectedPlayerClass.category == ClassCategory.custom) &&
         !hideMessage) {
@@ -490,6 +491,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       );
     }
     // TODO: This can be removed once all classes are converted over to use the Map
+    // Until then, it will throw an error if the classes Perks are not in PerksMap
     if (PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!.length >
         1) {
       Variant? variant = await showDialog<Variant?>(
@@ -533,17 +535,21 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                   textAlign: TextAlign.end,
                 ),
               );
-            }).toList(),
+            }).toList()
+                  ..add(TextButton(
+                      onPressed: (() => Navigator.of(context).pop()),
+                      child: const Text('Cancel'))),
           );
         },
       );
+      proceed = variant != null;
       userChoice = SelectedPlayerClass(
         playerClass: selectedPlayerClass,
         variant: variant ?? Variant.base,
       );
-      return userChoice;
+      // return userChoice;
     }
-    return proceed ?? false ? userChoice : null;
+    return proceed == true ? userChoice : null;
   }
 }
 

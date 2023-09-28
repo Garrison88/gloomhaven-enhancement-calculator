@@ -59,7 +59,7 @@ class Character {
   List<CharacterMastery> characterMasteries = [];
   List<PerkRow> perkRows = [];
   List<Perk> perkRowPerks = [];
-  bool includeMasteries = true;
+  // bool includeMasteries = true;
   Character({
     this.id,
     required this.uuid,
@@ -184,4 +184,9 @@ class Character {
   bool showTraits() => !(playerClass.traits.isEmpty ||
       (playerClass.category != ClassCategory.frosthaven &&
           variant == Variant.base));
+
+  // TODO: modify this to include Custom and Crimson Scales once they have masteries
+  bool includeMasteries() =>
+      playerClass.category == ClassCategory.frosthaven ||
+      variant == Variant.frosthavenCrossover;
 }

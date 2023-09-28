@@ -9,8 +9,10 @@ class Utils {
     bool darkTheme,
   ) {
     List<InlineSpan> inlineList = [];
-    // This makes Perk description text bold if it's [surrounded in square brackets]
-    if (details.contains('[') && details.contains('[')) {
+    int? start;
+    int? end;
+    // This makes Perk description text bold if it's [surrounded by square brackets]
+    if (details.startsWith('[')) {
       String perkDescription =
           details.substring(details.indexOf('[') + 1, details.lastIndexOf(']'));
       details = details.substring(details.lastIndexOf(']') + 1);
@@ -24,6 +26,31 @@ class Utils {
         ),
       );
     }
+
+    // if (details.contains('*')) {
+    //   String perkDescription = details.substring(
+    //     details.indexOf('*') + 1,
+    //     details.lastIndexOf('*'),
+    //   );
+    //   start = details.indexOf('*');
+    //   end = details.lastIndexOf('*');
+    //   // details =
+    //   //     details.substring(details.indexOf('*'), details.lastIndexOf('*') + 1);
+    //   details = details.replaceRange(
+    //     details.indexOf('*'),
+    //     details.lastIndexOf('*') + 1,
+    //     '',
+    //   );
+    // details = details.substring(start, end) + textToInsert + original.substring(index);
+    // inlineList.add(
+    //   TextSpan(
+    //     text: perkDescription,
+    //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+    //           fontStyle: FontStyle.italic,
+    //         ),
+    //   ),
+    // );
+    // }
     List<String> list = details.split(' ');
     for (String element in list) {
       String? assetPath;
@@ -587,7 +614,6 @@ class Utils {
             ),
           );
         }
-        // this is specific to the Infuser character sheet
       } else if (element == '"plusone') {
         inlineList.add(
           const TextSpan(text: '"+1'),
@@ -599,6 +625,16 @@ class Utils {
       } else if (element == 'plustwo') {
         inlineList.add(
           const TextSpan(text: '+2'),
+        );
+      } else if (element.startsWith('~')) {
+        inlineList.add(
+          TextSpan(
+            text: element.substring(1),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontStyle: FontStyle.italic),
+          ),
         );
       } else {
         inlineList.add(
@@ -639,11 +675,11 @@ class _SizeProviderWidgetState extends State<SizeProviderWidget> {
   @override
   void initState() {
     super.initState();
-    if (context.mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
         widget.onChildSize(context.size);
-      });
-    }
+      }
+    });
   }
 
   @override
@@ -725,4 +761,45 @@ class _HighlightedWidgetState extends State<HighlightedWidget>
       },
     );
   }
+}
+
+RichText buildStyledText(String details, BuildContext context) {
+  List<TextSpan> inlineList = [];
+  int lastMatchEnd = 0;
+
+  RegExp exp = RegExp(r'\*(.*?)\*');
+  Iterable<RegExpMatch> matches = exp.allMatches(details);
+
+  for (RegExpMatch match in matches) {
+    // Add text between last matched pair of asterisks and the current pair
+    String beforeText = details.substring(lastMatchEnd, match.start);
+    if (beforeText.isNotEmpty) {
+      inlineList.add(TextSpan(text: beforeText));
+    }
+
+    // Add the text between the asterisks in italic
+    String italicText = match.group(1)!;
+    inlineList.add(
+      TextSpan(
+        text: italicText,
+        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+      ),
+    );
+
+    lastMatchEnd = match.end;
+  }
+
+  // Add any remaining text after the last pair of asterisks
+  if (lastMatchEnd < details.length) {
+    inlineList.add(TextSpan(text: details.substring(lastMatchEnd)));
+  }
+
+  return RichText(
+    text: TextSpan(
+      children: inlineList,
+      style: Theme.of(context).textTheme.bodyText1,
+    ),
+  );
 }

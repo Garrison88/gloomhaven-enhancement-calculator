@@ -61,7 +61,6 @@ class DatabaseHelper {
   static const String textType = 'TEXT NOT NULL';
   static const String boolType = 'BOOL NOT NULL';
   static const String integerType = 'INTEGER NOT NULL';
-  // static const String integerType = 'INTEGER';
   static const String createTable = 'CREATE TABLE';
   static const String dropTable = 'DROP TABLE';
 
@@ -100,7 +99,7 @@ class DatabaseHelper {
           $columnPerkId $idTextPrimaryType,
           $columnPerkClass $textType,
           $columnPerkDetails $textType,
-          $columnPerkIsGrouped $boolType,
+          $columnPerkIsGrouped $boolType DEFAULT 0,
           $columnPerkVariant $textType
         )''');
         await Future.forEach(CharacterData.perksMap.entries, (entry) async {
@@ -129,7 +128,7 @@ class DatabaseHelper {
         )''');
         await txn.execute('''
         $createTable $tableMasteries (
-          $columnMasteryId $idType,
+          $columnMasteryId $idTextPrimaryType,
           $columnMasteryClass $textType,
           $columnMasteryDetails $textType,
           $columnMasteryVariant $textType
@@ -142,7 +141,7 @@ class DatabaseHelper {
               mastery.variant = list.variant;
               mastery.classCode = classCode;
               await txn.insert(
-                tablePerks,
+                tableMasteries,
                 mastery.toMap(
                   '${list.masteries.indexOf(mastery)}',
                 ),
@@ -301,7 +300,7 @@ class DatabaseHelper {
         );
       },
     );
-    if (character.includeMasteries) {
+    if (character.includeMasteries()) {
       final masteries = await queryMasteries(
         character.playerClass.classCode,
       );

@@ -175,16 +175,10 @@ class CharactersModel with ChangeNotifier {
     character.characterPerks = await _loadPerks(
       character,
     );
-    /* TODO: change this to use V2 or something when done adding GH and JotL to FH
-    crossover character sheets */
-    // TODO: Also here, consider displaying or not displaying Traits if using old system
-    if (CharacterData.masteriesMap.keys
-        .any((key) => key == selectedClass.classCode)) {
-      character.includeMasteries = true;
-      character.characterMasteries = await _loadMasteries(
-        character,
-      );
-    }
+
+    character.characterMasteries = await _loadMasteries(
+      character,
+    );
 
     _characters.add(character);
     if (characters.length > 1) {
@@ -357,6 +351,9 @@ class CharactersModel with ChangeNotifier {
   Future<List<CharacterMastery>> _loadMasteries(
     Character character,
   ) async {
+    if (!character.includeMasteries()) {
+      return [];
+    }
     List<Map<String, Object?>> masteries = await databaseHelper.queryMasteries(
       character.playerClass.classCode,
     );

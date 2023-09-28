@@ -25,7 +25,6 @@ class DatabaseMigrations {
           ${legacy.columnPerkIsGrouped} ${DatabaseHelper.boolType}
         )''').then(
       (_) async {
-        // TODO: put this back when you put back perks
         for (legacy.Perk perk in CharacterData.legacyPerks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
             await txn.insert(
@@ -274,6 +273,7 @@ class DatabaseMigrations {
               perk.toMap(suffix),
             );
             CharacterPerk? matchingCharacterPerk;
+            // Existing perks id should
 
             matchingCharacterPerk = characterPerks.firstWhereOrNull(
               (element) => element?.associatedPerkId == id.toString(),
@@ -356,17 +356,17 @@ class DatabaseMigrations {
           $columnMasteryDetails ${DatabaseHelper.textType},
           $columnMasteryVariant ${DatabaseHelper.textType}
         )''');
-    // Handle existing Perks for Variant.base
-    await _handleBaseVariantMasteries(
+    // Handle existing Masteries for Variant.base
+    await _handleVariantMasteries(
       txn,
       tempTableMasteries,
     );
 
     // Handle all other Perks
-    await _handleRemainingVariantMasteries(
-      txn,
-      tempTableMasteries,
-    );
+    // await _handleRemainingVariantMasteries(
+    //   txn,
+    //   tempTableMasteries,
+    // );
 
     // Replace the old table with the temp table
     await _dropCharacterMasteriesTableAndRenameTemp(
@@ -375,7 +375,9 @@ class DatabaseMigrations {
     );
   }
 
-  static Future<void> _handleBaseVariantMasteries(
+  // TODO: Masteries can be handled the same regardless of Variant because no new ones have been added
+  // (or have they? considering JotL FHCO character sheets...)
+  static Future<void> _handleVariantMasteries(
     Transaction txn,
     String tempTableMasteries,
   ) async {
@@ -385,12 +387,12 @@ class DatabaseMigrations {
         characterMasteriesMaps.map((e) => CharacterMastery.fromMap(e)).toList();
     await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
       final classKey = entry.key;
-      final masteryLists =
-          entry.value.where((element) => element.variant == Variant.base);
+      final masteryLists = entry.value;
 
       for (Masteries list in masteryLists) {
         for (Mastery mastery in list.masteries) {
           mastery.classCode = classKey;
+          mastery.variant = list.variant;
 
           int id = await txn.insert(
             tempTableMasteries,
@@ -428,31 +430,31 @@ class DatabaseMigrations {
     });
   }
 
-  static Future<void> _handleRemainingVariantMasteries(
-    Transaction txn,
-    String tempTableMasteries,
-  ) async {
-    await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
-      final classCode = entry.key;
-      final masteryLists =
-          entry.value.where((element) => element.variant != Variant.base);
+  // static Future<void> _handleRemainingVariantMasteries(
+  //   Transaction txn,
+  //   String tempTableMasteries,
+  // ) async {
+  //   await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
+  //     final classCode = entry.key;
+  //     final masteryLists =
+  //         entry.value.where((element) => element.variant != Variant.base);
 
-      for (Masteries list in masteryLists) {
-        for (Mastery mastery in list.masteries) {
-          mastery.variant = list.variant;
-          mastery.classCode = classCode;
-          try {
-            await txn.insert(
-              tempTableMasteries,
-              mastery.toMap('${list.masteries.indexOf(mastery)}'),
-            );
-          } catch (e) {
-            debugPrint('ERROR WITH MASTERIES TABLE: $e');
-          }
-        }
-      }
-    });
-  }
+  //     for (Masteries list in masteryLists) {
+  //       for (Mastery mastery in list.masteries) {
+  //         mastery.variant = list.variant;
+  //         mastery.classCode = classCode;
+  //         try {
+  //           await txn.insert(
+  //             tempTableMasteries,
+  //             mastery.toMap('${list.masteries.indexOf(mastery)}'),
+  //           );
+  //         } catch (e) {
+  //           debugPrint('ERROR WITH MASTERIES TABLE: $e');
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
 
   static Future<void> _dropCharacterMasteriesTableAndRenameTemp(
     Transaction txn,

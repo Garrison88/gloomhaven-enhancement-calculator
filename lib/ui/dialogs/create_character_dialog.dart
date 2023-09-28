@@ -39,7 +39,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       TextEditingController();
   final TextEditingController _prosperityLevelTextFieldController =
       TextEditingController();
-  // final List<int> _levels = List.generate(9, (index) => index + 1);
   bool _gloomhavenMode = true;
   PlayerClass _selectedClass = CharacterData.playerClasses[0];
   Faker faker = Faker();
@@ -49,7 +48,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
-  // late OverlayEntry _overlayEntry;
   late Size buttonSize;
   late Offset buttonPosition;
   bool isLevelMenuOpen = false;
@@ -129,25 +127,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   //       );
   //     },
   //   );
-  // }
-
-  // void openMenu() {
-  //   findButton();
-  //   _overlayEntry = _overlayEntryBuilder();
-  //   Overlay.of(context).insert(_overlayEntry);
-  //   isLevelMenuOpen = !isLevelMenuOpen;
-  // }
-
-  // void closeMenu() {
-  //   _overlayEntry.remove();
-  //   isLevelMenuOpen = !isLevelMenuOpen;
-  // }
-
-  // findButton() {
-  //   RenderBox renderBox =
-  //       _levelKey.currentContext?.findRenderObject() as RenderBox;
-  //   buttonSize = renderBox.size;
-  //   buttonPosition = renderBox.localToGlobal(Offset.zero);
   // }
 
   @override
@@ -484,7 +463,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          // title: Text('Level'),
           icon: SvgPicture.asset(
             'images/level.svg',
             width: iconSize + 5,
