@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -880,6 +881,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   );
                 },
+              ),
+              const SettingsSection(title: 'TESTING'),
+              ListTile(
+                title: Text('Create All'),
+                onTap: () => widget.charactersModel.createCharactersTest(),
+              ),
+              ListTile(
+                title: Text('Create Gloomhaven'),
+                onTap: () => widget.charactersModel.createCharactersTest(
+                  classCategory: ClassCategory.gloomhaven,
+                ),
+              ),
+              ListTile(
+                title: Text('Create Jaws of the Lion'),
+                onTap: () => widget.charactersModel.createCharactersTest(
+                  classCategory: ClassCategory.jawsOfTheLion,
+                ),
+              ),
+              ListTile(
+                title: Text('Create Frosthaven'),
+                onTap: () => widget.charactersModel.createCharactersTest(
+                  classCategory: ClassCategory.frosthaven,
+                ),
+              ),
+              ListTile(
+                title: Text('Create Crimson Scales'),
+                onTap: () => widget.charactersModel.createCharactersTest(
+                  classCategory: ClassCategory.crimsonScales,
+                ),
+              ),
+              ListTile(
+                title: Text('Create Custom'),
+                onTap: () => widget.charactersModel.createCharactersTest(
+                  classCategory: ClassCategory.custom,
+                ),
               ),
               const SizedBox(
                 height: smallPadding,

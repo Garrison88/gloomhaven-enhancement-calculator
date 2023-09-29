@@ -2205,7 +2205,7 @@ abstract class CharacterData {
             quantity: 2,
           ),
           Perk(
-            '$_replace one +0 card with one +0 "plusone TARGET" $_rolling card',
+            '$_replace one +0 card with one +0 "plusone Target" $_rolling card',
             quantity: 2,
           ),
           Perk(
@@ -2274,7 +2274,7 @@ abstract class CharacterData {
             quantity: 2,
           ),
           Perk('Replace one -2 card with one +0 card'),
-          Perk('Replace one +0 card with one +0 "plusone TARGET" card'),
+          Perk('Replace one +0 card with one +0 "plusone Target" card'),
           Perk(
             'Replace one +0 card with one +1 WOUND card',
             quantity: 2,
@@ -2625,7 +2625,7 @@ abstract class CharacterData {
             quantity: 2,
           ),
           Perk('Replace two +0 cards with two +0 PIERCE 3 $_rolling cards'),
-          Perk('Replace one +0 card with one +0 "plusone TARGET" card'),
+          Perk('Replace one +0 card with one +0 "plusone Target" card'),
           Perk(
             'Replace one +0 card with one +2 card',
             quantity: 2,
@@ -2744,7 +2744,7 @@ abstract class CharacterData {
           ),
           Perk('Replace one -2 card with one -1 DARK card'),
           Perk(
-              'Replace one +0 card with one +0 "plusone TARGET" $_rolling card'),
+              'Replace one +0 card with one +0 "plusone Target" $_rolling card'),
           Perk(
             'Replace two +0 cards with three +0 MUDDLE $_rolling cards',
             quantity: 2,
@@ -2977,7 +2977,7 @@ abstract class CharacterData {
             quantity: 4,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +0 "plusone TARGET" $_rolling $_card',
+            '$_replace $_one +0 $_card with $_one +0 "plusone Target" $_rolling $_card',
             quantity: 2,
           ),
           Perk('$_replace $_one +0 $_card with $_one +0 STUN $_card'),
@@ -3092,7 +3092,7 @@ abstract class CharacterData {
           Perk('$_remove $_one -2 $_card'),
           Perk('$_remove $_four +0 $_cards'),
           Perk(
-              '$_replace $_one -1 $_card with $_one +0 "plusone TARGET" $_card'),
+              '$_replace $_one -1 $_card with $_one +0 "plusone Target" $_card'),
           Perk('$_replace $_one +0 $_card with $_one +0 STUN $_card'),
           Perk('$_replace $_one +0 $_card with $_one +1 WOUND $_card'),
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
@@ -3276,7 +3276,7 @@ abstract class CharacterData {
           Perk(
               '$_replace $_one +0 $_card with $_one +2 "$_regenerate, self" $_card'),
           Perk(
-              '$_replace $_one -1 $_card with $_one +1 "HEAL 2, TARGET 1 ally" $_card'),
+              '$_replace $_one -1 $_card with $_one +1 "HEAL 2, Target 1 ally" $_card'),
           Perk('$_add $_two +0 CURSE $_rolling $_cards'),
           Perk('$_ignoreScenarioEffects and add $_two +1 $_cards'),
           Perk(
@@ -3484,11 +3484,11 @@ abstract class CharacterData {
           Perk('$_remove $_two -1 $_cards'),
           Perk('$_remove $_one -2 $_card'),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "HEAL 1, TARGET 1 ally" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Target 1 ally" $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "HEAL 1, TARGET 1 ally" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "HEAL 1, Target 1 ally" $_card',
             quantity: 3,
           ),
           Perk('$_replace $_one +0 $_card with $_one +1 POISON $_card'),
@@ -3830,6 +3830,395 @@ abstract class CharacterData {
           quantity: 2,
         ),
         Perk('Ignore $_negative $_scenario $_effects'),
+      ]),
+    ],
+    // TODO: NEED TO CHECK ALL BELOW HERE vvvvvvvv *************
+    _chainguard: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 Shackle $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "+2 if the target is Shackled" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_two +0 $_cards with $_one $_rolling "$_shield 1, Self" $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_two $_rolling "$_retaliate 1, Self" $_cards'),
+        Perk('$_add $_three $_rolling SWING 3 $_cards'),
+        Perk('$_replace $_one +1 $_card with $_one +2 WOUND $_card'),
+        Perk('$_add $_one +1 "DISARM if the target is Shackled" $_card'),
+        Perk(
+            '$_add $_one +1 "Create a 2 DAMAGE trap in an empty hex within RANGE 2" $_card'),
+        Perk('$_add $_two $_rolling "HEAL 1, Self" $_cards'),
+        Perk(
+          '$_add $_one +2 Shackle $_card',
+          quantity: 2,
+        ),
+        Perk('Ignore $_negative item $_effects and $_removeL $_one +0 $_card'),
+      ]),
+    ],
+    _hierophant: [
+      Perks([
+        Perk('$_remove $_two -1 $_cards'),
+        Perk('$_replace $_two +0 $_cards with $_one $_rolling LIGHT $_card'),
+        Perk('$_replace $_two +0 $_cards with $_one $_rolling EARTH $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 CURSE $_card',
+          quantity: 2,
+        ),
+        Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_shield 1, Ally" $_card'),
+        Perk(
+            '$_replace $_one -2 $_card with $_one -1 "Give $_one Ally a \'Prayer\' ability $_card" and $_one +0 $_card'),
+        Perk(
+          '$_replace $_one +1 $_card with $_one +3 $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two $_rolling "HEAL 1, Self or Ally" $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +1 WOUND, MUDDLE $_card',
+          quantity: 2,
+        ),
+        Perk('At the start of your first turn each $_scenario, gain BLESS'),
+        Perk(
+            'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+      ]),
+    ],
+    _luminary: [
+      Perks([
+        Perk('$_remove four +0 $_cards'),
+        Perk('$_replace $_one +0 $_card with $_one +2 $_card'),
+        Perk('$_replace $_one -1 $_card with $_one +0 ICE $_card'),
+        Perk('$_replace $_one -1 $_card with $_one +0 FIRE $_card'),
+        Perk('$_replace $_one -1 $_card with $_one +0 LIGHT $_card'),
+        Perk('$_replace $_one -1 $_card with $_one +0 DARK $_card'),
+        Perk(
+            '$_replace $_one -2 $_card with $_one -2 "Perform $_one Glow ability" $_card'),
+        Perk(
+          '$_add $_one +0 Any_Element $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one $_rolling +1 "HEAL 1, Self" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one "POISON, target all enemies in the depicted LUMINARY_HEXES area" $_card',
+          quantity: 2,
+        ),
+        Perk(
+            'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+        Perk(
+            'Ignore $_negative item $_effects and $_addL $_one $_rolling "Consume_Any_Element : Any_Element" $_card'),
+      ]),
+    ],
+    _spiritCaller: [
+      Perks([
+        Perk(
+            '$_replace $_one -2 $_card with $_one -1 $_card and $_one +1 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "+2 if a Spirit performed the attack" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 $_card and $_one $_rolling POISON $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 AIR $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 DARK $_card',
+          quantity: 2,
+        ),
+        Perk('$_replace $_one +0 $_card with $_one +1 PIERCE 2 $_card'),
+        Perk('$_add $_three $_rolling PIERCE 3 $_cards'),
+        Perk('$_add $_one +1 CURSE $_card'),
+        Perk('$_add $_one $_rolling ADD TARGET $_card'),
+        Perk('$_replace $_one +1 $_card with $_one +2 PUSH 2 $_card'),
+        Perk(
+            'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+      ]),
+    ],
+    _starslinger: [
+      Perks([
+        Perk(
+          '$_replace $_two +0 $_cards with $_one $_rolling "HEAL 1, Self" $_card',
+          quantity: 2,
+        ),
+        Perk(
+            '$_replace $_one -2 $_card with $_one -1 "INVISIBLE, Self" $_card'),
+        Perk('$_replace $_two -1 $_cards with $_one +0 DARK $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 LIGHT $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_one $_rolling LOOT 1 $_card'),
+        Perk(
+          '$_add $_one +1 "+3 if you are at full health" $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_two $_rolling $_immobilize $_cards'),
+        Perk(
+          '$_add $_one +1 "HEAL 1, RANGE 3" $_card',
+          quantity: 2,
+        ),
+        Perk(
+            '$_add $_two $_rolling "Force the target to perform a \'MOVE 1\' ability" $_cards'),
+        Perk('$_add $_two $_rolling "HEAL 1, RANGE 1" $_cards'),
+        Perk(
+            'Ignore $_negative $_scenario $_effects and $_removeL $_one +0 $_card'),
+      ]),
+    ],
+    _ruinmaw: [
+      Perks([
+        Perk(
+            '$_replace $_one -2 $_card with $_one -1 RUPTURE and WOUND $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 WOUND $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 RUPTURE $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "$_add +3 instead if the target has RUPTURE or WOUND" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one $_rolling "HEAL 1, Self, EMPOWER" $_card',
+          quantity: 3,
+        ),
+        Perk(
+            'Once each $_scenario, become SATED after collecting your 5th loot token'),
+        Perk(
+            'Become SATED each time you lose a $_card to negate suffering damage'),
+        Perk(
+            'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "MOVE 1"'),
+        Perk(
+            'Ignore $_negative $_scenario $_effects, and $_removeL $_one -1 $_card'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _drifter: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 $_card',
+          quantity: 3,
+        ),
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          '$_replace $_one +1 $_card with $_two +0 "Move $_one of your character tokens backward $_one slot" $_cards',
+          quantity: 2,
+        ),
+        Perk(
+            '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
+        Perk('$_replace $_two +0 $_cards with $_two PUSH 2 $_rolling $_cards'),
+        Perk('$_add $_one +3 $_card'),
+        Perk(
+          '$_add $_one +2 $_immobilize $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_two "HEAL 1, self" $_rolling $_cards'),
+        Perk('$_ignoreScenarioEffects and $_addL $_one +1 $_card'),
+        Perk('$_ignoreItemMinusOneEffects and $_addL $_one +1 $_card'),
+        Perk(
+          'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+            'You may bring $_one additional One_Hand item into each $_scenario'),
+        Perk(
+            'At the end of each $_scenario, you may discard up to $_two loot $_cards, except ~Random ~Item, to draw that many new loot $_cards'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _blinkBlade: [
+      Perks([
+        Perk('$_remove $_one -2 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 WOUND $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addL plustwo ATTACK" $_rolling $_card',
+          quantity: 3,
+        ),
+        Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
+        Perk(
+          '$_add $_one -1 "Gain $_one TIME_TOKEN" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +2 "$_regenerate, self" $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk(
+            'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
+        Perk(
+            'At the start of your first turn each $_scenario, you may perform MOVE 3'),
+        Perk('Whenever you would gain $_immobilize, prevent the condition'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _bannerSpear: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one "$_shield 1" $_rolling $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "$_add plusone ATTACK for each ally adjacent to the target" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +1 DISARM $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +2 PUSH 1 $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two +1 $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two "HEAL 1, self" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk('$_ignoreItemMinusOneEffects and $_removeL $_one -1 $_card'),
+        Perk(
+            'At the end of each of your long rests, grant $_one ally within RANGE 3: MOVE 2'),
+        Perk('Whenever you open a door with a move ability, $_addL +3 MOVE'),
+        Perk(
+          'Once each $_scenario, during your turn, gain $_shield 2 for the round',
+          grouped: true,
+          quantity: 2,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _deathwalker: [
+      Perks([
+        Perk('$_remove $_two -1 $_cards'),
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 CURSE $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_add $_one +2 DARK $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one DISARM $_rolling and $_one MUDDLE $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two "HEAL 1, Target 1 ally" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(_ignoreScenarioEffects),
+        Perk('Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
+        Perk(
+            'Whenever you short rest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
+        Perk(
+            'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _boneshaper: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 CURSE $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 POISON $_card',
+          quantity: 2,
+        ),
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "Kill the attacking summon to instead $_addL +4" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_add $_three "HEAL 1, Target Boneshaper" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +2 EARTH/DARK $_card',
+          quantity: 3,
+        ),
+        Perk('$_ignoreScenarioEffects and $_addL $_two +1 $_cards'),
+        Perk(
+            'Immediately before each of your rests, you may kill $_one of your summons to perform BLESS, self'),
+        Perk(
+            'Once each $_scenario, when any character ally would become exhausted by suffering DAMAGE, you may suffer DAMAGE 2 to reduce their hit point value to 1 instead'),
+        Perk(
+          'At the start of each $_scenario, you may play a level 1 $_card from your hand to perform a summon action of the $_card',
+          quantity: 2,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _geminate: [
+      Perks([
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element : Any_Element" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 POISON $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 WOUND $_card',
+          quantity: 2,
+        ),
+        Perk(
+            '$_replace $_two +0 $_cards with $_two PIERCE 3 $_rolling $_cards'),
+        Perk('$_add $_two +1 PUSH 3 $_cards'),
+        Perk('$_add $_one 2x "BRITTLE, self" $_card'),
+        Perk(
+          '$_add $_one +1 "$_regenerate, self" $_rolling card',
+          quantity: 2,
+        ),
+        Perk(_ignoreScenarioEffects),
+        Perk(
+            'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
+        Perk(
+            'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
+        Perk(
+          'Whenever you perform an action with a lost icon, you may discard $_one $_card to RECOVER $_one card from your discard pile of equal or lower level',
+          quantity: 2,
+          grouped: true,
+        ),
       ]),
     ],
   };
@@ -4683,6 +5072,7 @@ abstract class CharacterData {
   static const _effects = 'effects';
   static const _elementalist = 'el';
   static const _fireKnight = 'fk';
+  static const _four = 'four';
   static const _frostborn = 'fb';
   static const _frozenFist = 'frozenfist';
   static const _geminate = 'geminate';
@@ -4690,11 +5080,12 @@ abstract class CharacterData {
   static const _hatchet = 'hc';
   static const _hierophant = 'hf';
   static const _hive = 'hive';
-  static const _retaliate = 'RETALIATE';
   static const _hollowpact = 'hp';
   static const _human = 'Human';
   static const _ignoreItemMinusOneEffects =
       'Ignore item item_minus_one effects';
+
+  static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
   static const _ignoreScenarioEffects = 'Ignore scenario effects';
   static const _immobilize = 'IMMOBILIZE';
   static const _incarnate = 'incarnate';
@@ -4728,14 +5119,15 @@ abstract class CharacterData {
   static const _persuasive = 'Persuasive';
   static const _plagueherald = 'ph';
   static const _pyroclast = 'pyroclast';
-  static const _regenerate = 'REGENERATE';
   static const _quartermaster = 'qm';
   static const _quatryl = 'Quatryl';
   static const _redGuard = 'rg';
+  static const _regenerate = 'REGENERATE';
   static const _remove = 'Remove';
   static const _removeL = 'remove';
   static const _replace = 'Replace';
   static const _resourceful = 'Resourceful';
+  static const _retaliate = 'RETALIATE';
   static const _rimehearth = 'rimehearth';
   static const _rolling = 'Rolling';
   static const _rootwhisperer = 'rw';
@@ -4746,8 +5138,8 @@ abstract class CharacterData {
   static const _scoundrel = 'sc';
   static const _shardrender = 'shardrender';
   static const _shattersong = 'shattersong';
-  static const _snowdancer = 'snowdancer';
   static const _shield = 'SHIELD';
+  static const _snowdancer = 'snowdancer';
   static const _soothsinger = 'ss';
   static const _spellweaver = 'sw';
   static const _spiritCaller = 'scr';
@@ -4755,11 +5147,9 @@ abstract class CharacterData {
   static const _strong = 'Strong';
   static const _summoner = 'su';
   static const _sunkeeper = 'sk';
-  static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
   static const _tempest = 'tempest';
   static const _thornreaper = 'thornreaper';
   static const _three = 'three';
-  static const _four = 'four';
   static const _tinkerer = 'ti';
   static const _trapper = 'trapper';
   static const _two = 'two';

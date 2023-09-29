@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -108,6 +111,9 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<List<Character>> loadCharacters() async {
+    // if (kDebugMode) {
+    //   await createAllCharactersTest();
+    // }
     List<Character> loadedCharacters =
         await databaseHelper.queryAllCharacters();
     for (Character character in loadedCharacters) {
@@ -125,6 +131,41 @@ class CharactersModel with ChangeNotifier {
     );
     notifyListeners();
     return characters;
+  }
+
+  Future<void> createCharactersTest({
+    ClassCategory? classCategory,
+  }) async {
+    var random = Random();
+    if (classCategory == null) {
+      for (PlayerClass playerClass in CharacterData.playerClasses) {
+        await createCharacter(
+          playerClass.name,
+          playerClass,
+          initialLevel: random.nextInt(9) + 1,
+          previousRetirements: random.nextInt(4),
+          gloomhavenMode: random.nextBool(),
+          prosperityLevel: random.nextInt(5),
+        );
+        debugPrint('Created ${playerClass.name}');
+      }
+    } else {
+      for (PlayerClass playerClass in CharacterData.playerClasses.where(
+        (element) => element.category == classCategory,
+      )) {
+        await createCharacter(
+          playerClass.name,
+          playerClass,
+          initialLevel: random.nextInt(9) + 1,
+          previousRetirements: random.nextInt(4),
+          gloomhavenMode: random.nextBool(),
+          prosperityLevel: random.nextInt(5),
+        );
+        debugPrint('Created ${playerClass.name}');
+      }
+    }
+
+    await loadCharacters();
   }
 
   void toggleEditMode() {
