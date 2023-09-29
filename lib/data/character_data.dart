@@ -715,7 +715,7 @@ abstract class CharacterData {
     legacy.Perk(_drifter, 1,
         'Ignore item item_minus_one $_effects and $_addL $_one +1 $_card'),
     legacy.Perk(_drifter, 2,
-        'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
+        '$_wheneverYouLongRest, you may move $_one of your character tokens backward $_one slot',
         perkIsGrouped: true),
     legacy.Perk(_drifter, 1,
         'You may bring $_one additional One_Hand item into each $_scenario'),
@@ -738,7 +738,7 @@ abstract class CharacterData {
     legacy.Perk(
         _blinkBlade, 2, '$_add $_one +2 "$_regenerate, self" $_rolling $_card'),
     legacy.Perk(_blinkBlade, 1,
-        'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
+        '$_wheneverYouShortRest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
     legacy.Perk(_blinkBlade, 1,
         'At the start of your first turn each $_scenario, you may perform MOVE 3'),
     legacy.Perk(_blinkBlade, 1,
@@ -777,9 +777,9 @@ abstract class CharacterData {
         '$_add $_two "HEAL 1, Target 1 ally" $_rolling $_cards'),
     legacy.Perk(_deathwalker, 1, 'Ignore $_scenario $_effects'),
     legacy.Perk(_deathwalker, 1,
-        'Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
+        '$_wheneverYouLongRest, you may move $_one SHADOW up to 3 hexes'),
     legacy.Perk(_deathwalker, 1,
-        'Whenever you short rest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
+        '$_wheneverYouShortRest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
     legacy.Perk(_deathwalker, 1,
         'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
     // BONESHAPER
@@ -819,7 +819,7 @@ abstract class CharacterData {
         _geminate, 2, '$_add $_one +1 "$_regenerate, self" $_rolling card'),
     legacy.Perk(_geminate, 1, 'Ignore $_scenario $_effects'),
     legacy.Perk(_geminate, 1,
-        'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
+        '$_wheneverYouShortRest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
     legacy.Perk(_geminate, 1,
         'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
     legacy.Perk(_geminate, 2,
@@ -840,7 +840,7 @@ abstract class CharacterData {
     legacy.Perk(_infuser, 1,
         '$_ignoreItemMinusOneEffects. Whenever you become exhausted, keep all your active bonuses in play, with your summons acting on initiative 99 each round'),
     legacy.Perk(_infuser, 1,
-        'Whenever you short rest, you may Consume_Any_Element to RECOVER one spent One_Hand or Two_Hand item'),
+        '$_wheneverYouShortRest, you may Consume_Any_Element to RECOVER one spent One_Hand or Two_Hand item'),
     legacy.Perk(_infuser, 1,
         'Once each scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
     // PYROCLAST
@@ -856,9 +856,9 @@ abstract class CharacterData {
     legacy.Perk(_pyroclast, 1, 'Add two +1 MUDDLE $_rolling cards'),
     legacy.Perk(_pyroclast, 1, _ignoreScenarioEffects),
     legacy.Perk(_pyroclast, 1,
-        'Whenever you long rest, you may destroy one adjacent obstacle to gain WARD'),
+        '$_wheneverYouLongRest, you may destroy one adjacent obstacle to gain WARD'),
     legacy.Perk(_pyroclast, 1,
-        'Whenever you short rest, you may consume_FIRE to perform WOUND, Target 1 enemy occupying or adjacent to hazardous terrain'),
+        '$_wheneverYouShortRest, you may consume_FIRE to perform WOUND, Target 1 enemy occupying or adjacent to hazardous terrain'),
     legacy.Perk(_pyroclast, 3,
         'You and all allies are unaffected by hazardous terrain you create',
         perkIsGrouped: true),
@@ -876,7 +876,7 @@ abstract class CharacterData {
     legacy.Perk(_shattersong, 3, 'Add one +1 "Gain 1 RESONANCE" card'),
     legacy.Perk(_shattersong, 1, _ignoreScenarioEffects),
     legacy.Perk(_shattersong, 2,
-        'Whenever you short rest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
+        '$_wheneverYouShortRest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
         perkIsGrouped: true),
     legacy.Perk(_shattersong, 1,
         'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
@@ -895,7 +895,7 @@ abstract class CharacterData {
     legacy.Perk(_trapper, 3, 'Add two "Add PUSH 2 or PULL 2" $_rolling cards'),
     legacy.Perk(_trapper, 1, _ignoreScenarioEffects),
     legacy.Perk(_trapper, 1,
-        'Whenever you long rest, you may create one DAMAGE 1 trap in an adjacent empty hex'),
+        '$_wheneverYouLongRest, you may create one DAMAGE 1 trap in an adjacent empty hex'),
     legacy.Perk(_trapper, 1,
         'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
     legacy.Perk(_trapper, 1,
@@ -933,9 +933,9 @@ abstract class CharacterData {
         'Replace one +0 card with one +1 "STRENGTHEN, Target 1 ally" card'),
     legacy.Perk(
         _snowdancer, 2, 'Add one "HEAL 1, WARD, Target 1 ally" $_rolling card'),
-    legacy.Perk(_snowdancer, 1, 'Whenever you long rest, you may ICE/AIR'),
+    legacy.Perk(_snowdancer, 1, '$_wheneverYouLongRest, you may ICE/AIR'),
     legacy.Perk(_snowdancer, 2,
-        'Whenever you short rest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
+        '$_wheneverYouShortRest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
         perkIsGrouped: true),
     legacy.Perk(_snowdancer, 2,
         'At the start of each scenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
@@ -970,7 +970,7 @@ abstract class CharacterData {
     legacy.Perk(_hive, 1, 'Add two POISON $_rolling cards'),
     legacy.Perk(_hive, 1, 'Add two WOUND $_rolling cards'),
     legacy.Perk(_hive, 2,
-        'Whenever you long rest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
+        '$_wheneverYouLongRest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
         perkIsGrouped: true),
     legacy.Perk(
         _hive, 1, 'At the end of each of your short rests, you may TRANSFER'),
@@ -990,7 +990,7 @@ abstract class CharacterData {
     legacy.Perk(
         _metalMosaic, 1, '$_ignoreItemMinusOneEffects and add two +1 cards'),
     legacy.Perk(_metalMosaic, 1,
-        'Whenever you long rest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
+        '$_wheneverYouLongRest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
     legacy.Perk(_metalMosaic, 1,
         'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
     legacy.Perk(_metalMosaic, 3,
@@ -1011,7 +1011,7 @@ abstract class CharacterData {
     legacy.Perk(
         _deepwraith, 1, '$_ignoreScenarioEffects and remove two +0 cards'),
     legacy.Perk(_deepwraith, 1,
-        'Whenever you long rest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+        '$_wheneverYouLongRest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
     legacy.Perk(_deepwraith, 1, 'At the start of each scenario, gain 2 TROPHY'),
     legacy.Perk(_deepwraith, 3,
         'While you have INVISIBLE, gain advantage on all your attacks',
@@ -1134,10 +1134,10 @@ abstract class CharacterData {
     legacy.Perk(_tempest, 2, 'Add one +1 "DODGE, Self" card'),
     legacy.Perk(_tempest, 1, 'Add one +2 AIR/LIGHT card'),
     legacy.Perk(_tempest, 1, 'Whenever you dodge an attack, gain one SPARK'),
-    legacy.Perk(_tempest, 2, 'Whenever you long rest, you may gain DODGE',
+    legacy.Perk(_tempest, 2, '$_wheneverYouLongRest, you may gain DODGE',
         perkIsGrouped: true),
     legacy.Perk(_tempest, 1,
-        'Whenever you short rest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
+        '$_wheneverYouShortRest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
     // VANQUISHER
     legacy.Perk(_vanquisher, 1, 'Replace two -1 cards with one +0 MUDDLE card'),
     legacy.Perk(
@@ -1181,11 +1181,11 @@ abstract class CharacterData {
     // Perk(_incarnate, 1,
     //     '$_ignoreItemMinusOneEffects and remove one -1 card'),
     // Perk(_incarnate, 1,
-    //     '[Eyes of the Ritualist:] Whenever you long rest, perform ALL_STANCES'),
+    //     '[Eyes of the Ritualist:] $_wheneverYouLongRest, perform ALL_STANCES'),
     // Perk(_incarnate, 1,
     //     '[Shoulders of the Conqueror:] You may bring one additional One_Hand item into each scenario'),
     // Perk(_incarnate, 1,
-    //     '[Hands of the Reaver:] Whenever you short rest, RECOVER one spent One_Hand item'),
+    //     '[Hands of the Reaver:] $_wheneverYouShortRest, RECOVER one spent One_Hand item'),
   ];
 
   static final List<legacy.Mastery> masteries = [
@@ -2218,7 +2218,7 @@ abstract class CharacterData {
           Perk(
               '$_ignoreItemMinusOneEffects and $_addL $_one +1 "$_shield 1" card'),
           Perk(
-              '[Rested and Ready:] Whenever you long rest, add +1 MOVE to your first move ability the following round'),
+              '[Rested and Ready:] $_wheneverYouLongRest, add +1 MOVE to your first move ability the following round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -2288,7 +2288,7 @@ abstract class CharacterData {
           Perk('Add two +1 "HEAL 2, self" cards'),
           Perk('$_ignoreScenarioEffects and add two +0 FIRE $_rolling cards'),
           Perk(
-            '[Rejuvenating Vapor:] Whenever you long rest, you may perform "HEAL 2, RANGE 3"',
+            '[Rejuvenating Vapor:] $_wheneverYouLongRest, you may perform "HEAL 2, RANGE 3"',
             quantity: 2,
             grouped: true,
           ),
@@ -2350,7 +2350,7 @@ abstract class CharacterData {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Etheric Bond:] Whenever you short rest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
+              '[Etheric Bond:] $_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -4032,7 +4032,7 @@ abstract class CharacterData {
         Perk('$_ignoreScenarioEffects and $_addL $_one +1 $_card'),
         Perk('$_ignoreItemMinusOneEffects and $_addL $_one +1 $_card'),
         Perk(
-          'Whenever you long rest, you may move $_one of your character tokens backward $_one slot',
+          '$_wheneverYouLongRest, you may move $_one of your character tokens backward $_one slot',
           quantity: 2,
           grouped: true,
         ),
@@ -4072,7 +4072,7 @@ abstract class CharacterData {
           quantity: 2,
         ),
         Perk(
-            'Whenever you short rest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
+            '$_wheneverYouShortRest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
         Perk(
             'At the start of your first turn each $_scenario, you may perform MOVE 3'),
         Perk('Whenever you would gain $_immobilize, prevent the condition'),
@@ -4142,9 +4142,9 @@ abstract class CharacterData {
           quantity: 2,
         ),
         Perk(_ignoreScenarioEffects),
-        Perk('Whenever you long rest, you may move $_one SHADOW up to 3 hexes'),
+        Perk('$_wheneverYouLongRest, you may move $_one SHADOW up to 3 hexes'),
         Perk(
-            'Whenever you short rest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
+            '$_wheneverYouShortRest, you may consume_DARK to perform MUDDLE, CURSE, RANGE 2 as if you were occupying a hex with a SHADOW'),
         Perk(
             'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
       ]),
@@ -4211,7 +4211,7 @@ abstract class CharacterData {
         ),
         Perk(_ignoreScenarioEffects),
         Perk(
-            'Whenever you short rest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
+            '$_wheneverYouShortRest, you may $_removeL $_one $_negative condition from $_one ally within RANGE 3'),
         Perk(
             'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
         Perk(
@@ -4219,6 +4219,120 @@ abstract class CharacterData {
           quantity: 2,
           grouped: true,
         ),
+      ]),
+    ],
+    // TODO: Have to fix this in migration method - Infuser was given 1 too few perks originally
+    // Crosschecked and confirmed
+    _infuser: [
+      Perks([
+        Perk(
+            '$_replace $_one -2 $_card with $_one -1 $_card and $_one -1 AIR EARTH DARK $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 AIR/EARTH $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 AIR/DARK $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 EARTH/DARK $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +2 $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_three "Move one waning element to strong" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two "plusone ATTACK for each pair of active INFUSION" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(_ignoreScenarioEffects),
+        Perk(
+          '$_ignoreItemMinusOneEffects. Whenever you become exhausted, keep all your active bonuses in play, with your summons acting on initiative 99 each round',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+            '$_wheneverYouShortRest, you may Consume_Any_Element to RECOVER $_one spent One_Hand or Two_Hand item'),
+        Perk(
+            'Once each $_scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _pyroclast: [
+      Perks([
+        Perk('Remove two -1 cards'),
+        Perk('Remove one -2 card'),
+        Perk(
+          'Replace one +0 card with one +1 WOUND card',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace one -1 card with one +0 "Create one 1-hex hazardous terrain tile in a featureless hex adjacent to the target" card',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace two +0 cards with two PUSH 2 $_rolling cards',
+          quantity: 2,
+        ),
+        Perk('Replace two +1 cards with two +2 cards'),
+        Perk(
+          'Add two +1 FIRE/EARTH cards',
+          quantity: 2,
+        ),
+        Perk('Add two +1 MUDDLE $_rolling cards'),
+        Perk(_ignoreScenarioEffects),
+        Perk(
+            '$_wheneverYouLongRest, you may destroy one adjacent obstacle to gain WARD'),
+        Perk(
+            '$_wheneverYouShortRest, you may consume_FIRE to perform WOUND, Target 1 enemy occupying or adjacent to hazardous terrain'),
+        Perk(
+          'You and all allies are unaffected by hazardous terrain you create',
+          quantity: 3,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _shattersong: [
+      Perks([
+        Perk('Remove four +0 cards'),
+        Perk(
+          'Replace two -1 cards with two +0 "Reveal the top card of the target\'s monster ability deck" cards',
+          quantity: 2,
+        ),
+        Perk('Replace one -2 card with one -1 STUN card'),
+        Perk(
+          'Replace one +0 card with one +0 BRITTLE card',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace two +1 cards with two +2 AIR/LIGHT cards',
+          quantity: 2,
+        ),
+        Perk(
+          'Add one "HEAL 2, BLESS, Target 1 ally" $_rolling card',
+          quantity: 2,
+        ),
+        Perk(
+          'Add one +1 "Gain 1 RESONANCE" card',
+          quantity: 3,
+        ),
+        Perk(_ignoreScenarioEffects),
+        Perk(
+          '$_wheneverYouShortRest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+            'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
+        Perk(
+            'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
       ]),
     ],
   };
@@ -5084,7 +5198,6 @@ abstract class CharacterData {
   static const _human = 'Human';
   static const _ignoreItemMinusOneEffects =
       'Ignore item item_minus_one effects';
-
   static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
   static const _ignoreScenarioEffects = 'Ignore scenario effects';
   static const _immobilize = 'IMMOBILIZE';
@@ -5158,6 +5271,8 @@ abstract class CharacterData {
   static const _vanquisher = 'vanquisher';
   static const _vermling = 'Vermling';
   static const _voidwarden = 'vw';
+  static const _wheneverYouLongRest = 'Whenever you long rest';
+  static const _wheneverYouShortRest = 'Whenever you short rest';
 
   static PlayerClass playerClassByClassCode(String classCode) {
     return playerClasses.firstWhere(

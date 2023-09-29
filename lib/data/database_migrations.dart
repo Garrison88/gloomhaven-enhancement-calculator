@@ -264,16 +264,34 @@ class DatabaseMigrations {
       for (Perks list in perkLists) {
         for (Perk perk in list.perks) {
           perk.classCode = classKey;
-
+          String index =
+              (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
           for (int i = 0; i < perk.quantity; i++) {
-            String suffix = '${list.perks.indexOf(perk)}${indexToLetter(i)}';
+            String suffix = '$index${indexToLetter(i)}';
 
             int id = await txn.insert(
               tempTablePerks,
               perk.toMap(suffix),
             );
+
+            if (id >= 724) {
+              id--;
+            }
+            // This handles for a mistake when first defining the Infuser perks
+            // One perk that has two checks was only given one
+            // The perk in question is ID:723 - in production, this has one perk
+            // when it should have two
+            // infuser_base_8a and infuser_base_8b
+            // if (perk.classCode == 'infuser' &&
+            //     perk.perkDetails.startsWith('Add two "plusone ATTACK') &&
+            //     i == 1) {
+            //   id++;
+            // }
+            // if (id >= 723) {
+            //   debugPrint('GOT HERE: ${perk.perkDetails}\n${perk.quantity}');
+            //   id++;
+            // }
             CharacterPerk? matchingCharacterPerk;
-            // Existing perks id should
 
             matchingCharacterPerk = characterPerks.firstWhereOrNull(
               (element) => element?.associatedPerkId == id.toString(),
@@ -289,6 +307,16 @@ class DatabaseMigrations {
 
               Character character = Character.fromMap(characters.first);
 
+              if (matchingCharacterPerk.associatedPerkId == '723') {
+                await txn.insert(
+                  tableCharacterPerks,
+                  CharacterPerk(
+                    character.uuid,
+                    'infuser_base_9b',
+                    false,
+                  ).toMap(),
+                );
+              }
               await txn.update(
                 tableCharacterPerks,
                 {
