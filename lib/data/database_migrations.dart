@@ -252,86 +252,103 @@ class DatabaseMigrations {
     Transaction txn,
     String tempTablePerks,
   ) async {
-    final List<Map<String, dynamic>> characterPerksMaps =
-        await txn.query(tableCharacterPerks);
+    final List<Map<String, dynamic>> characterPerksMaps = await txn.query(
+      tableCharacterPerks,
+    );
     final List<CharacterPerk?> characterPerks =
         characterPerksMaps.map((e) => CharacterPerk.fromMap(e)).toList();
-    await Future.forEach(CharacterData.perksMap.entries, (entry) async {
-      final classKey = entry.key;
-      final perkLists =
-          entry.value.where((element) => element.variant == Variant.base);
+    final List<Map<String, dynamic>> charactersMaps = await txn.query(
+      tableCharacters,
+    );
+    final List<Character?> characters =
+        charactersMaps.map((e) => Character.fromMap(e)).toList();
+    await Future.forEach(
+      CharacterData.perksMap.entries,
+      (entry) async {
+        final classKey = entry.key;
+        final perkLists =
+            entry.value.where((element) => element.variant == Variant.base);
 
-      for (Perks list in perkLists) {
-        for (Perk perk in list.perks) {
-          perk.classCode = classKey;
-          String index =
-              (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
-          for (int i = 0; i < perk.quantity; i++) {
-            String suffix = '$index${indexToLetter(i)}';
+        for (Perks list in perkLists) {
+          for (Perk perk in list.perks) {
+            perk.classCode = classKey;
+            String index =
+                (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
+            for (int i = 0; i < perk.quantity; i++) {
+              String suffix = '$index${indexToLetter(i)}';
 
-            int id = await txn.insert(
-              tempTablePerks,
-              perk.toMap(suffix),
-            );
-
-            if (id >= 724) {
-              id--;
-            }
-            // This handles for a mistake when first defining the Infuser perks
-            // One perk that has two checks was only given one
-            // The perk in question is ID:723 - in production, this has one perk
-            // when it should have two
-            // infuser_base_8a and infuser_base_8b
-            // if (perk.classCode == 'infuser' &&
-            //     perk.perkDetails.startsWith('Add two "plusone ATTACK') &&
-            //     i == 1) {
-            //   id++;
-            // }
-            // if (id >= 723) {
-            //   debugPrint('GOT HERE: ${perk.perkDetails}\n${perk.quantity}');
-            //   id++;
-            // }
-            CharacterPerk? matchingCharacterPerk;
-
-            matchingCharacterPerk = characterPerks.firstWhereOrNull(
-              (element) => element?.associatedPerkId == id.toString(),
-            );
-
-            if (matchingCharacterPerk != null) {
-              debugPrint('MATCHING PERK FOUND');
-              final List<Map<String, dynamic>> characters = await txn.query(
-                tableCharacters,
-                where: '$columnCharacterUuid = ?',
-                whereArgs: [matchingCharacterPerk.associatedCharacterUuid],
+              int id = await txn.insert(
+                tempTablePerks,
+                perk.toMap(suffix),
               );
 
-              Character character = Character.fromMap(characters.first);
+              // if (id == 725) {
+              //   id++;
+              // }
+              // This handles for a mistake when first defining the Infuser perks
+              // One perk that has two checks was only given one
+              // The perk in question is ID:723 - in production, this has one perk
+              // when it should have two
+              // infuser_base_9a and infuser_base_9b
+              // if (perk.classCode == 'infuser' &&
+              //     perk.perkDetails.startsWith('Add two "plusone ATTACK') &&
+              //     i == 1) {
+              //   id++;
+              // }
+              // if (id >= 723) {
+              //   debugPrint('GOT HERE: ${perk.perkDetails}\n${perk.quantity}');
+              //   id++;
+              // }
+              // if (id >= 723 && perk.classCode == 'infuser') {
+              //   id++;
+              // }
+              CharacterPerk? matchingCharacterPerk;
 
-              if (matchingCharacterPerk.associatedPerkId == '723') {
-                await txn.insert(
-                  tableCharacterPerks,
-                  CharacterPerk(
-                    character.uuid,
-                    'infuser_base_9b',
-                    false,
-                  ).toMap(),
+              matchingCharacterPerk = characterPerks.firstWhereOrNull(
+                (element) => element?.associatedPerkId == id.toString(),
+              );
+
+              if (matchingCharacterPerk != null) {
+                Character? character = characters.firstWhereOrNull(
+                  (element) =>
+                      element?.uuid ==
+                      matchingCharacterPerk?.associatedCharacterUuid,
                 );
+                if (character != null) {
+                  if (matchingCharacterPerk.associatedPerkId == '723') {
+                    await txn.insert(
+                      tableCharacterPerks,
+                      CharacterPerk(
+                        character.uuid,
+                        'infuser_base_9b',
+                        false,
+                      ).toMap(),
+                    );
+                  }
+                  debugPrint('MATCHING PERK FOUND');
+                  // final List<Map<String, dynamic>> characters = await txn.query(
+                  //   tableCharacters,
+                  //   where: '$columnCharacterUuid = ?',
+                  //   whereArgs: [matchingCharacterPerk.associatedCharacterUuid],
+                  // );
+
+                  await txn.update(
+                    tableCharacterPerks,
+                    {
+                      columnAssociatedPerkId:
+                          '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
+                    },
+                    where: '$columnAssociatedPerkId = ?',
+                    whereArgs: [id],
+                  );
+                }
+                debugPrint('INSERTED PERK ID IS: $id');
               }
-              await txn.update(
-                tableCharacterPerks,
-                {
-                  columnAssociatedPerkId:
-                      '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
-                },
-                where: '$columnAssociatedPerkId = ?',
-                whereArgs: [id],
-              );
             }
-            debugPrint('INSERTED PERK ID IS: $id');
           }
         }
-      }
-    });
+      },
+    );
   }
 
   static Future<void> _handleRemainingVariantPerks(

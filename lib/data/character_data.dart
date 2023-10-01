@@ -3011,7 +3011,10 @@ abstract class CharacterData {
             '$_add $_one $_rolling +2 $_card',
             quantity: 2,
           ),
-          Perk('$_add $_one +1 IMMOBILIZE $_card'),
+          Perk(
+            '$_add $_one +1 $_immobilize $_card',
+            quantity: 2,
+          ),
           Perk(
             '$_add $_two $_rolling WOUND $_cards',
             quantity: 2,
