@@ -879,7 +879,7 @@ abstract class CharacterData {
         '$_wheneverYouShortRest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_LIGHT to perform BLESS, RANGE 3',
         perkIsGrouped: true),
     legacy.Perk(_shattersong, 1,
-        'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
+        '$_atTheStartOfEachScenario, you may gain BRITTLE to gain 2 RESONANCE'),
     legacy.Perk(_shattersong, 1,
         'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
     // TRAPPER
@@ -899,7 +899,7 @@ abstract class CharacterData {
     legacy.Perk(_trapper, 1,
         'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
     legacy.Perk(_trapper, 1,
-        'At the start of each scenario, you may create one DAMAGE 2 trap in an adjacent empty hex'),
+        '$_atTheStartOfEachScenario, you may create one DAMAGE 2 trap in an adjacent empty hex'),
     // PAIN CONDUIT
     legacy.Perk(_painConduit, 2, 'Remove two -1 cards'),
     legacy.Perk(
@@ -938,7 +938,7 @@ abstract class CharacterData {
         '$_wheneverYouShortRest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
         perkIsGrouped: true),
     legacy.Perk(_snowdancer, 2,
-        'At the start of each scenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
+        '$_atTheStartOfEachScenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
         perkIsGrouped: true),
     // FROZEN FIST
     legacy.Perk(_frozenFist, 2, 'Replace one -1 card with one +0 DISARM card'),
@@ -1012,7 +1012,7 @@ abstract class CharacterData {
         _deepwraith, 1, '$_ignoreScenarioEffects and remove two +0 cards'),
     legacy.Perk(_deepwraith, 1,
         '$_wheneverYouLongRest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
-    legacy.Perk(_deepwraith, 1, 'At the start of each scenario, gain 2 TROPHY'),
+    legacy.Perk(_deepwraith, 1, '$_atTheStartOfEachScenario, gain 2 TROPHY'),
     legacy.Perk(_deepwraith, 3,
         'While you have INVISIBLE, gain advantage on all your attacks',
         perkIsGrouped: true),
@@ -1115,7 +1115,7 @@ abstract class CharacterData {
         'Add two +1 "+2 instead if you CRYSTALLIZE PERSIST one space" cards'),
     legacy.Perk(_shardrender, 1, 'Add one +0 BRITTLE card'),
     legacy.Perk(_shardrender, 2,
-        '$_ignoreNegativeItemEffects and at the start of each scenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
+        '$_ignoreNegativeItemEffects and $_atTheStartOfEachScenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
         perkIsGrouped: true),
     legacy.Perk(_shardrender, 1,
         'Once each scenario, when you would suffer damage from an attack, gain "$_shield 3" for that attack'),
@@ -3105,7 +3105,7 @@ abstract class CharacterData {
           Perk('$_add $_four +0 EARTH $_cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Elemental Proficiency:] At the start of each scenario and whenever you long rest, Any_Element',
+            '[Elemental Proficiency:] $_atTheStartOfEachScenario and whenever you long rest, Any_Element',
             quantity: 2,
             grouped: true,
           ),
@@ -4333,9 +4333,290 @@ abstract class CharacterData {
           grouped: true,
         ),
         Perk(
-            'At the start of each scenario, you may gain BRITTLE to gain 2 RESONANCE'),
+            '$_atTheStartOfEachScenario, you may gain BRITTLE to gain 2 RESONANCE'),
         Perk(
             'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _trapper: [
+      Perks([
+        Perk('$_remove $_one -2 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "Create $_one HEAL 2 trap in an empty hex adjacent to the target" card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "Create $_one DAMAGE 1 trap in an empty hex adjacent to the target" card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_two +0 $_cards with $_two +0 "Add DAMAGE 2 or HEAL 2 to a trap within RANGE 2 of you" $_cards',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_two +1 $_cards with $_two +2 $_immobilize $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two "Add PUSH 2 or PULL 2" $_rolling $_cards',
+          quantity: 3,
+        ),
+        Perk(_ignoreScenarioEffects),
+        Perk(
+            '$_wheneverYouLongRest, you may create $_one DAMAGE 1 trap in an adjacent empty hex'),
+        Perk(
+            'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
+        Perk(
+            '$_atTheStartOfEachScenario, you may create $_one DAMAGE 2 trap in an adjacent empty hex'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _painConduit: [
+      Perks([
+        Perk(
+          '$_remove $_two -1 $_cards',
+          quantity: 2,
+        ),
+        Perk('$_replace $_one -2 $_card with $_one -2 CURSE CURSE $_card'),
+        Perk('$_replace $_one -1 $_card with $_one +0 DISARM $_card'),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 FIRE/AIR $_card',
+          quantity: 3,
+        ),
+        Perk('$_replace $_one +0 $_card with $_one +2 $_card'),
+        Perk('$_replace $_three +1 $_cards with $_three +1 CURSE $_cards'),
+        Perk(
+          '$_add $_three "HEAL 1, self" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +0 "Add plusone ATTACK for each negative condition you have" $_card',
+          quantity: 2,
+        ),
+        Perk('$_ignoreScenarioEffects and $_add $_two +1 $_cards'),
+        Perk(
+            'Each round in which you long rest, you may ignore all negative conditions you have. If you do, they cannot be removed that round'),
+        Perk(
+            'Whenever you become exhausted, first perform CURSE, Target all, RANGE 3'),
+        Perk(
+          'Increase your maximum hit point value by 5',
+          quantity: 2,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _snowdancer: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "HEAL 1, Target 1 ally" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 $_immobilize $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two +1 ICE/AIR $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_two +0 $_cards with $_two "If this action forces the target to move, it suffers DAMAGE 1" $_rolling $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "STRENGTHEN, Target 1 ally" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one "HEAL 1, WARD, Target 1 ally" $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk('$_wheneverYouLongRest, you may ICE/AIR'),
+        Perk(
+          '$_wheneverYouShortRest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform WARD, RANGE 3',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+          '$_atTheStartOfEachScenario, all enemies gain MUDDLE. Whenever a new room is revealed, all enemies in the newly revealed room gain MUDDLE',
+          quantity: 2,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _frozenFist: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 DISARM $_card',
+          quantity: 2,
+        ),
+        Perk('$_replace $_one -1 $_card with $_one +1 $_card'),
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "$_shield 1" $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 ICE/EARTH $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +2 "Create $_one 1-hex icy terrain tile in a featureless hex adjacent to the target" $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_one +3 $_card'),
+        Perk(
+          '$_add $_two "HEAL 1, self" $_rolling $_cards',
+          quantity: 3,
+        ),
+        Perk(
+            '$_ignoreItemMinusOneEffects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
+        Perk(
+            'Whenever you heal from a long rest, you may consume_ICE/EARTH to add plustwo HEAL'),
+        Perk(
+          'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
+          quantity: 2,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _hive: [
+      Perks([
+        Perk('$_remove $_one -2 $_card and $_one +1 $_card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "After this attack ability, grant one of your summons: MOVE 2" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "After this attack ability, TRANSFER" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_add $_one +1 "HEAL 1, self" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_add $_one +2 MUDDLE $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_two POISON $_rolling $_cards'),
+        Perk('$_add $_two WOUND $_rolling $_cards'),
+        Perk(
+          '$_wheneverYouLongRest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk('At the end of each of your short rests, you may TRANSFER'),
+        Perk('Whenever you would gain WOUND, prevent the condition'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _metalMosaic: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 "PRESSURE_GAIN or PRESSURE_LOSE" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one "$_shield 1" $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +0 "The target and all enemies adjacent to it suffer DAMAGE 1" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_two +0 $_cards with $_one PIERCE 3 $_rolling and $_one "$_retaliate 2" $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one +1 "HEAL 2, self" $_card',
+          quantity: 2,
+        ),
+        Perk('$_add $_one +3 $_card'),
+        Perk('$_ignoreItemMinusOneEffects and add two +1 $_cards'),
+        Perk('$_wheneverYouLongRest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
+        Perk(
+            'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
+        Perk(
+          'Once each scenario, when you would become exhausted, instead gain STUN and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
+          quantity: 3,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _deepwraith: [
+      Perks([
+        Perk('$_remove $_two -1 $_cards'),
+        Perk(
+          '$_replace $_one -1 card with one +0 DISARM card',
+          quantity: 2,
+        ),
+        Perk('Replace one -2 card with one -1 STUN card'),
+        Perk(
+          'Replace one +0 card with one +0 "INVISIBLE, self" card',
+          quantity: 2,
+        ),
+        Perk('Replace two +0 cards with two PIERCE 3 $_rolling cards'),
+        Perk('Replace two +1 cards with two +2 cards'),
+        Perk('Replace three +1 cards with three +1 CURSE cards'),
+        Perk(
+          'Add two +1 "Gain 1 TROPHY" cards',
+          quantity: 3,
+        ),
+        Perk('$_ignoreScenarioEffects and remove two +0 cards'),
+        Perk(
+            '$_wheneverYouLongRest, you may Loot one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+        Perk('$_atTheStartOfEachScenario, gain 2 TROPHY'),
+        Perk(
+          'While you have INVISIBLE, gain advantage on all your attacks',
+          quantity: 3,
+          grouped: true,
+        ),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _crashingTide: [
+      Perks([
+        Perk(
+          'Replace one -1 card with two PIERCE 3 $_rolling cards',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace one -1 card with one +0 "plusone Target" card',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace one +0 card with one +1 "$_shield 1" $_rolling card',
+          quantity: 2,
+        ),
+        Perk(
+          'Add two +1 "If you performed a TIDE action this round, +2 instead" cards',
+          quantity: 2,
+        ),
+        Perk(
+          'Add one +2 MUDDLE card',
+          quantity: 2,
+        ),
+        Perk('Add one +1 DISARM card'),
+        Perk(
+          'Add two "HEAL 1, self" $_rolling cards',
+          quantity: 2,
+        ),
+        Perk(
+            '$_ignoreItemMinusOneEffects, and, whenever you would gain IMPAIR, prevent the condition'),
+        Perk(
+            'Whenever you declare a long rest during card selection, gain $_shield 1 for the round'),
+        Perk(
+          'Gain advantage on all your attacks performed while occupying or targeting enemies occupying water hexes',
+          quantity: 3,
+          grouped: true,
+        ),
       ]),
     ],
   };
@@ -5161,6 +5442,7 @@ abstract class CharacterData {
   static const _amberAegis = 'aa';
   static const _arcane = 'Arcane';
   static const _armored = 'Armored';
+  static const _atTheStartOfEachScenario = 'At the start of each scenario';
   static const _artificer = 'af';
   static const _bannerSpear = 'bannerspear';
   static const _beastTyrant = 'bt';
