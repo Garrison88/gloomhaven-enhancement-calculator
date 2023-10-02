@@ -281,27 +281,11 @@ class DatabaseMigrations {
                 tempTablePerks,
                 perk.toMap(suffix),
               );
-
-              // if (id == 725) {
-              //   id++;
-              // }
               // This handles for a mistake when first defining the Infuser perks
               // One perk that has two checks was only given one
-              // The perk in question is ID:723 - in production, this has one perk
-              // when it should have two
-              // infuser_base_9a and infuser_base_9b
-              // if (perk.classCode == 'infuser' &&
-              //     perk.perkDetails.startsWith('Add two "plusone ATTACK') &&
-              //     i == 1) {
-              //   id++;
-              // }
-              // if (id >= 723) {
-              //   debugPrint('GOT HERE: ${perk.perkDetails}\n${perk.quantity}');
-              //   id++;
-              // }
-              // if (id >= 723 && perk.classCode == 'infuser') {
-              //   id++;
-              // }
+              if (id >= 726) {
+                id--;
+              }
               CharacterPerk? matchingCharacterPerk;
 
               matchingCharacterPerk = characterPerks.firstWhereOrNull(
@@ -315,22 +299,17 @@ class DatabaseMigrations {
                       matchingCharacterPerk?.associatedCharacterUuid,
                 );
                 if (character != null) {
-                  if (matchingCharacterPerk.associatedPerkId == '723') {
+                  if (id == 725 && index == '11') {
                     await txn.insert(
                       tableCharacterPerks,
                       CharacterPerk(
                         character.uuid,
-                        'infuser_base_9b',
+                        '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
                         false,
                       ).toMap(),
                     );
                   }
                   debugPrint('MATCHING PERK FOUND');
-                  // final List<Map<String, dynamic>> characters = await txn.query(
-                  //   tableCharacters,
-                  //   where: '$columnCharacterUuid = ?',
-                  //   whereArgs: [matchingCharacterPerk.associatedCharacterUuid],
-                  // );
 
                   await txn.update(
                     tableCharacterPerks,
