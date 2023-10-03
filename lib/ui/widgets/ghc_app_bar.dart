@@ -28,14 +28,16 @@ class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _GHCAppBarState extends State<GHCAppBar> {
   @override
   void initState() {
-    context
-        .read<CharactersModel>()
-        .enhancementCalcScrollController
-        .addListener(_enhancementCalcScrollListener);
-    context
-        .read<CharactersModel>()
-        .charScreenScrollController
-        .addListener(_charScreenScrollListener);
+    context.read<CharactersModel>().enhancementCalcScrollController.addListener(
+          () => _scrollListener(
+            context.read<CharactersModel>().enhancementCalcScrollController,
+          ),
+        );
+    context.read<CharactersModel>().charScreenScrollController.addListener(
+          () => _scrollListener(
+            context.read<CharactersModel>().charScreenScrollController,
+          ),
+        );
     super.initState();
   }
 
@@ -46,33 +48,9 @@ class _GHCAppBarState extends State<GHCAppBar> {
     super.dispose();
   }
 
-  _charScreenScrollListener() {
-    ScrollController scrollController =
-        context.read<CharactersModel>().charScreenScrollController;
-    if (scrollController.hasClients &&
-        scrollController.positions.length == 1 &&
-        scrollController.offset <= scrollController.position.minScrollExtent) {
-      //call setState only when values are about to change
-      if (!context.read<CharactersModel>().isScrolledToTop) {
-        setState(() {
-          //reach the top
-          context.read<CharactersModel>().isScrolledToTop = true;
-        });
-      }
-    } else {
-      //call setState only when values are about to change
-      if (context.read<CharactersModel>().isScrolledToTop) {
-        setState(() {
-          //not the top
-          context.read<CharactersModel>().isScrolledToTop = false;
-        });
-      }
-    }
-  }
-
-  _enhancementCalcScrollListener() {
-    ScrollController scrollController =
-        context.read<CharactersModel>().enhancementCalcScrollController;
+  _scrollListener(
+    ScrollController scrollController,
+  ) {
     if (scrollController.hasClients &&
         scrollController.positions.length == 1 &&
         scrollController.offset <= scrollController.position.minScrollExtent) {

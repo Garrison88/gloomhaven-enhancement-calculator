@@ -4571,7 +4571,7 @@ abstract class CharacterData {
         ),
         Perk('$_ignoreScenarioEffects and remove two +0 cards'),
         Perk(
-            '$_wheneverYouLongRest, you may Loot one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+            '$_wheneverYouLongRest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
         Perk('$_atTheStartOfEachScenario, gain 2 TROPHY'),
         Perk(
           'While you have INVISIBLE, gain advantage on all your attacks',
