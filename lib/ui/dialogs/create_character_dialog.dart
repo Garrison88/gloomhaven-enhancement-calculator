@@ -40,7 +40,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _prosperityLevelTextFieldController =
       TextEditingController();
   bool _gloomhavenMode = true;
-  PlayerClass _selectedClass = CharacterData.playerClasses[0];
+  PlayerClass? _selectedClass;
   Faker faker = Faker();
   late String placeholderName;
   FocusNode nameFocusNode = FocusNode();
@@ -56,7 +56,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   @override
   void initState() {
     super.initState();
-    _classTextFieldController.text = _selectedClass.name;
     _levelTextFieldController.text = '1';
     placeholderName = _generateRandomName();
   }
@@ -78,57 +77,6 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
 
   // PersonalGoal _personalGoal;
 
-  // OverlayEntry _overlayEntryBuilder() {
-  //   return OverlayEntry(
-  //     builder: (context) {
-  //       return Stack(
-  //         children: <Widget>[
-  //           Positioned.fill(
-  //             child: GestureDetector(
-  //               onTap: closeMenu,
-  //               child: Container(
-  //                 color: Colors.transparent,
-  //               ),
-  //             ),
-  //           ),
-  //           Positioned(
-  //             top: buttonPosition.dy / 2,
-  //             left: buttonPosition.dx,
-  //             width: buttonSize.width,
-  //             child: Material(
-  //               color: Colors.transparent,
-  //               child: Card(
-  //                 child: ListView.builder(
-  //                   padding: EdgeInsets.zero,
-  //                   shrinkWrap: true,
-  //                   itemCount: _levels.length,
-  //                   itemBuilder: (
-  //                     context,
-  //                     index,
-  //                   ) {
-  //                     return ListTile(
-  //                       visualDensity: VisualDensity.compact,
-  //                       onTap: () {
-  //                         _levelTextFieldController.text =
-  //                             _levels[index].toString();
-  //                         closeMenu();
-  //                       },
-  //                       title: Text(
-  //                         'Level ${_levels[index].toString()}',
-  //                         textAlign: TextAlign.center,
-  //                       ),
-  //                     );
-  //                   },
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -137,176 +85,161 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
           maxWidth: maxDialogWidth,
           minWidth: maxDialogWidth,
         ),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: IconButton(
-                //     icon: const Icon(
-                //       Icons.info_outline_rounded,
-                //     ),
-                //     onPressed: () => showDialog<void>(
-                //       context: context,
-                //       builder: (_) {
-                //         return InfoDialog(
-                //           title: Strings.newCharacterInfoTitle,
-                //           message: Strings.newCharacterInfoBody(context),
-                //         );
-                //       },
-                //     ),
-                //   ),
-                // ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        autofocus: true,
-                        textCapitalization: TextCapitalization.words,
-                        autocorrect: false,
-                        focusNode: nameFocusNode,
-                        decoration: InputDecoration(
-                          hintText: placeholderName,
-                          labelText: 'Name',
-                        ),
-                        controller: _nameTextFieldController,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const FaIcon(FontAwesomeIcons.dice),
-                      onPressed: () {
-                        _nameTextFieldController.clear();
-                        FocusScope.of(context).requestFocus(nameFocusNode);
-                        setState(() {
-                          placeholderName = _generateRandomName();
-                        });
-                      },
-                    ),
-                  ],
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              ListTile(
+                minVerticalPadding: 0,
+                contentPadding: EdgeInsets.zero,
+                title: TextFormField(
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.words,
+                  autocorrect: false,
+                  focusNode: nameFocusNode,
+                  decoration: InputDecoration(
+                    hintText: placeholderName,
+                    labelText: 'Name',
+                  ),
+                  controller: _nameTextFieldController,
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: _classTextFieldController,
-                        decoration: InputDecoration(
-                          labelText:
-                              'Class${_variant != Variant.base ? ' (${CharacterData.classVariants[_variant]})' : ''}',
-                        ),
-                        onTap: () async {
-                          SelectedPlayerClass? selectedPlayerClass =
-                              await showSearch<SelectedPlayerClass>(
-                            context: context,
-                            delegate: CustomSearchDelegate(
-                              CharacterData.playerClasses,
+                trailing: IconButton(
+                  icon: const FaIcon(FontAwesomeIcons.dice),
+                  onPressed: () {
+                    _nameTextFieldController.clear();
+                    FocusScope.of(context).requestFocus(nameFocusNode);
+                    setState(() {
+                      placeholderName = _generateRandomName();
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                minVerticalPadding: 0,
+                title: TextFormField(
+                  validator: (value) =>
+                      _selectedClass == null ? 'Please select a Class' : null,
+                  readOnly: true,
+                  controller: _classTextFieldController,
+                  decoration: InputDecoration(
+                    labelText:
+                        'Class${_variant != Variant.base ? ' (${CharacterData.classVariants[_variant]})' : ''}',
+                  ),
+                  onTap: () async {
+                    SelectedPlayerClass? selectedPlayerClass =
+                        await showSearch<SelectedPlayerClass>(
+                      context: context,
+                      delegate: CustomSearchDelegate(
+                        CharacterData.playerClasses,
+                      ),
+                    );
+                    if (selectedPlayerClass != null) {
+                      FocusScope.of(context).requestFocus(nameFocusNode);
+
+                      setState(() {
+                        _classTextFieldController.text =
+                            selectedPlayerClass.playerClass.name;
+                        _variant = selectedPlayerClass.variant!;
+                        _selectedClass = selectedPlayerClass.playerClass;
+                      });
+                      _formKey.currentState?.validate();
+                    }
+                  },
+                ),
+                trailing: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: _selectedClass == null
+                        ? const Icon(Icons.open_in_new)
+                        : SvgPicture.asset(
+                            'images/class_icons/${_selectedClass!.icon}',
+                            colorFilter: ColorFilter.mode(
+                              Color(
+                                _selectedClass!.primaryColor,
+                              ),
+                              BlendMode.srcIn,
                             ),
-                          );
-                          if (selectedPlayerClass != null) {
-                            FocusScope.of(context).requestFocus(nameFocusNode);
-                            setState(() {
-                              _classTextFieldController.text =
-                                  selectedPlayerClass.playerClass.name;
-                              _variant = selectedPlayerClass.variant!;
-                              _selectedClass = selectedPlayerClass.playerClass;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: SvgPicture.asset(
-                          'images/class_icons/${_selectedClass.icon}',
-                          colorFilter: ColorFilter.mode(
-                            Color(
-                              _selectedClass.primaryColor,
-                            ),
-                            BlendMode.srcIn,
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        enableInteractiveSelection: false,
-                        key: _levelKey,
-                        controller: _levelTextFieldController,
-                        readOnly: true,
-                        onTap: () async => await _showLevelGridDialog(context),
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.arrow_drop_down),
-                          suffixIconConstraints: BoxConstraints(
-                            maxHeight: 0,
-                            minWidth: 48,
-                          ),
-                          labelText: 'Starting level',
-                        ),
-                      ),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                minVerticalPadding: 0,
+                title: TextFormField(
+                  enableInteractiveSelection: false,
+                  key: _levelKey,
+                  controller: _levelTextFieldController,
+                  readOnly: true,
+                  onTap: () async => await _showLevelGridDialog(context),
+                  decoration: const InputDecoration(
+                    suffixIcon: Icon(Icons.arrow_drop_down),
+                    suffixIconConstraints: BoxConstraints(
+                      maxHeight: 0,
+                      minWidth: 48,
                     ),
-                    SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: SvgPicture.asset(
-                          'images/level.svg',
-                          colorFilter: ColorFilter.mode(
-                            Theme.of(context).colorScheme.onBackground,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    labelText: 'Starting level',
+                  ),
                 ),
-                // DropdownButton<PersonalGoal>(
-                //   value: _personalGoal,
-                //   selectedItemBuilder: (BuildContext context) {
-                //     return CharacterData.personalGoals
-                //         .map<Widget>((PersonalGoal personalGoal) {
-                //       return Text('PG ${personalGoal.id}');
-                //     }).toList();
-                //   },
-                //   items: CharacterData.personalGoals
-                //       .map((PersonalGoal personalGoal) {
-                //     return DropdownMenuItem<PersonalGoal>(
-                //       child: Text('PG ${personalGoal.id}'),
-                //       value: personalGoal,
-                //     );
-                //   }).toList(),
-                //   onChanged: (personalGoal) {
-                //     setState(() {
-                //       _personalGoal = personalGoal;
-                //     });
-                //   },
-                // ),
-                // TextFormField(
-                //   enableInteractiveSelection: false,
-                //   key: _levelKey,
-                //   controller: _previousRetirementsTextFieldController,
-                //   readOnly: true,
-                //   onTap: () => isPersonalGoalMenuOpen ? closeMenu() : openMenu(),
-                //   decoration: InputDecoration(
-                //     suffixIcon: Icon(Icons.arrow_drop_down),
-                //     suffixIconConstraints: BoxConstraints(
-                //       maxHeight: 0,
-                //       minWidth: 48,
-                //     ),
-                //     labelText: 'Personal Goal',
-                //   ),
-                // ),
-                TextFormField(
+                trailing: SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: SvgPicture.asset(
+                      'images/level.svg',
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.onBackground,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // DropdownButton<PersonalGoal>(
+              //   value: _personalGoal,
+              //   selectedItemBuilder: (BuildContext context) {
+              //     return CharacterData.personalGoals
+              //         .map<Widget>((PersonalGoal personalGoal) {
+              //       return Text('PG ${personalGoal.id}');
+              //     }).toList();
+              //   },
+              //   items: CharacterData.personalGoals
+              //       .map((PersonalGoal personalGoal) {
+              //     return DropdownMenuItem<PersonalGoal>(
+              //       child: Text('PG ${personalGoal.id}'),
+              //       value: personalGoal,
+              //     );
+              //   }).toList(),
+              //   onChanged: (personalGoal) {
+              //     setState(() {
+              //       _personalGoal = personalGoal;
+              //     });
+              //   },
+              // ),
+              // TextFormField(
+              //   enableInteractiveSelection: false,
+              //   key: _levelKey,
+              //   controller: _previousRetirementsTextFieldController,
+              //   readOnly: true,
+              //   onTap: () => isPersonalGoalMenuOpen ? closeMenu() : openMenu(),
+              //   decoration: InputDecoration(
+              //     suffixIcon: Icon(Icons.arrow_drop_down),
+              //     suffixIconConstraints: BoxConstraints(
+              //       maxHeight: 0,
+              //       minWidth: 48,
+              //     ),
+              //     labelText: 'Personal Goal',
+              //   ),
+              // ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                minVerticalPadding: 0,
+                title: TextFormField(
                   enableInteractiveSelection: false,
                   controller: _previousRetirementsTextFieldController,
                   decoration: const InputDecoration(
@@ -319,8 +252,12 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   ],
                   keyboardType: TextInputType.number,
                 ),
-                if (!_gloomhavenMode)
-                  HighlightedWidget(
+              ),
+              if (!_gloomhavenMode)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  minVerticalPadding: 0,
+                  title: HighlightedWidget(
                     color: const Color(0xff6ab7ff),
                     child: TextFormField(
                       enableInteractiveSelection: false,
@@ -336,28 +273,33 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                const SizedBox(
-                  height: smallPadding,
                 ),
-                Row(
+              const SizedBox(
+                height: smallPadding,
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                minVerticalPadding: 0,
+                visualDensity: VisualDensity.compact,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.info_outline_rounded,
+                  ),
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return InfoDialog(
+                        title: Strings.newCharacterInfoTitle,
+                        message: Strings.newCharacterInfoBody(
+                          context,
+                          gloomhavenMode: _gloomhavenMode,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                title: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.info_outline_rounded,
-                      ),
-                      onPressed: () => showDialog<void>(
-                        context: context,
-                        builder: (_) {
-                          return InfoDialog(
-                            title: Strings.newCharacterInfoTitle,
-                            message: Strings.newCharacterInfoBody(
-                              context,
-                              gloomhavenMode: _gloomhavenMode,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
                     Flexible(
                       child: AutoSizeText(
                         'Gloomhaven',
@@ -402,8 +344,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -421,27 +363,30 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 ),
               ),
           onPressed: () async {
-            await widget.charactersModel.createCharacter(
-              _nameTextFieldController.text.isEmpty
-                  ? placeholderName
-                  : _nameTextFieldController.text,
-              _selectedClass,
-              initialLevel: int.parse(
-                _levelTextFieldController.text,
-              ),
-              previousRetirements:
-                  _previousRetirementsTextFieldController.text.isEmpty
-                      ? 0
-                      : int.parse(
-                          _previousRetirementsTextFieldController.text,
-                        ),
-              gloomhavenMode: _gloomhavenMode,
-              prosperityLevel: _prosperityLevelTextFieldController.text != ''
-                  ? int.parse(_prosperityLevelTextFieldController.text)
-                  : 0,
-              variant: _variant,
-            );
-            Navigator.pop(context, true);
+            if (_formKey.currentState != null &&
+                _formKey.currentState!.validate()) {
+              await widget.charactersModel.createCharacter(
+                _nameTextFieldController.text.isEmpty
+                    ? placeholderName
+                    : _nameTextFieldController.text,
+                _selectedClass!,
+                initialLevel: int.parse(
+                  _levelTextFieldController.text,
+                ),
+                previousRetirements:
+                    _previousRetirementsTextFieldController.text.isEmpty
+                        ? 0
+                        : int.parse(
+                            _previousRetirementsTextFieldController.text,
+                          ),
+                gloomhavenMode: _gloomhavenMode,
+                prosperityLevel: _prosperityLevelTextFieldController.text != ''
+                    ? int.parse(_prosperityLevelTextFieldController.text)
+                    : 0,
+                variant: _variant,
+              );
+              Navigator.pop(context, true);
+            }
           },
           label: Text(
             'Create',
