@@ -365,10 +365,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
   ) async {
     bool hideMessage = SharedPrefs().hideCustomClassesWarningMessage;
     bool? proceed = true;
-    Variant? variant = Variant.base;
     SelectedPlayerClass userChoice = SelectedPlayerClass(
       playerClass: selectedPlayerClass,
-      variant: variant,
     );
     if ((selectedPlayerClass.category == ClassCategory.custom) &&
         !hideMessage) {
@@ -545,7 +543,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       proceed = variant != null;
       userChoice = SelectedPlayerClass(
         playerClass: selectedPlayerClass,
-        variant: variant ?? Variant.base,
+        variant: variant,
       );
       // return userChoice;
     }
@@ -556,8 +554,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
 class SelectedPlayerClass {
   SelectedPlayerClass({
     required this.playerClass,
-    required this.variant,
+    this.variant = Variant.base,
   });
   final PlayerClass playerClass;
-  final Variant variant;
+  final Variant? variant;
 }

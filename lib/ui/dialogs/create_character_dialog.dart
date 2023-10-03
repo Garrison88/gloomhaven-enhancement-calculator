@@ -44,7 +44,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
   Faker faker = Faker();
   late String placeholderName;
   FocusNode nameFocusNode = FocusNode();
-  late Variant _variant;
+  Variant _variant = Variant.base;
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey _levelKey = LabeledGlobalKey("button_icon");
@@ -193,26 +193,27 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       child: TextFormField(
                         readOnly: true,
                         controller: _classTextFieldController,
-                        decoration: const InputDecoration(
-                          labelText: 'Class',
+                        decoration: InputDecoration(
+                          labelText:
+                              'Class${_variant != Variant.base ? ' (${CharacterData.classVariants[_variant]})' : ''}',
                         ),
-                        onTap: () {
-                          showSearch<SelectedPlayerClass>(
+                        onTap: () async {
+                          SelectedPlayerClass? selectedPlayerClass =
+                              await showSearch<SelectedPlayerClass>(
                             context: context,
                             delegate: CustomSearchDelegate(
                               CharacterData.playerClasses,
                             ),
-                          ).then((classAndVariant) {
+                          );
+                          if (selectedPlayerClass != null) {
                             FocusScope.of(context).requestFocus(nameFocusNode);
-                            if (classAndVariant != null) {
-                              setState(() {
-                                _classTextFieldController.text =
-                                    classAndVariant.playerClass.name;
-                                _variant = classAndVariant.variant;
-                                _selectedClass = classAndVariant.playerClass;
-                              });
-                            }
-                          });
+                            setState(() {
+                              _classTextFieldController.text =
+                                  selectedPlayerClass.playerClass.name;
+                              _variant = selectedPlayerClass.variant!;
+                              _selectedClass = selectedPlayerClass.playerClass;
+                            });
+                          }
                         },
                       ),
                     ),
