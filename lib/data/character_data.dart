@@ -4619,6 +4619,198 @@ abstract class CharacterData {
         ),
       ]),
     ],
+    // Crosschecked and confirmed
+    _thornreaper: [
+      Perks([
+        Perk(
+          '$_replace $_one -1 $_card with $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card',
+          quantity: 2,
+        ),
+        Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+        Perk(
+          'Add three $_rolling "+1 if LIGHT is Strong or Waning" cards',
+          quantity: 2,
+        ),
+        Perk('$_add $_two $_rolling LIGHT $_cards'),
+        Perk(
+          '$_add $_three $_rolling "EARTH if LIGHT is Strong or Waning" $_cards',
+        ),
+        Perk(
+          '$_add $_one "Create hazardous terrain in $_one hex within RANGE 1" $_card',
+        ),
+        Perk(
+          'Add one $_rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain $_retaliate 3" card',
+          quantity: 2,
+        ),
+        Perk(
+          'Add one $_rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain $_shield 3" card',
+          quantity: 2,
+        ),
+        Perk(
+          'Ignore $_negative item $_effects and $_addL $_one $_rolling "+1 if LIGHT is Strong or Waning" $_card',
+        ),
+        Perk(
+          'Gain $_shield 1 while you occupy hazardous terrain',
+          quantity: 2,
+          grouped: true,
+        ),
+      ]),
+    ],
+
+    // Crosschecked and confirmed
+    _incarnate: [
+      Perks([
+        Perk(
+            '$_replace $_one -2 $_card with $_one $_rolling ALL_STANCES $_card'),
+        Perk(
+            '$_replace $_one -1 $_card with $_one $_rolling PIERCE 2, FIRE $_card'),
+        Perk(
+            '$_replace $_one -1 $_card with $_one $_rolling "$_shield 1, Self, EARTH" $_card'),
+        Perk(
+            '$_replace $_one -1 $_card with $_one $_rolling PUSH 1, AIR $_card'),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE / CONQUEROR : EMPOWER, Self" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / CONQUEROR : EMPOWER, Self" $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / RITUALIST : ENFEEBLE" $_card',
+          quantity: 2,
+        ),
+        Perk(
+            '$_add $_one $_rolling "RECOVER $_one One_Hand or Two_Hand item" $_card'),
+        Perk('Each time you long rest, perform: ALL_STANCES'),
+        Perk('You may bring one additional One_Hand item into each scenario'),
+        Perk('Each time you short rest, RECOVER one spent One_Hand item'),
+        Perk('$_ignoreNegativeItemEffects and $_removeL one -1 $_card'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _rimehearth: [
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_one $_rolling WOUND $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_replace $_one +0 $_card with $_one $_rolling "HEAL 3, WOUND, Self" $_card'),
+          Perk('$_replace $_two +0 $_cards with $_two $_rolling FIRE $_cards'),
+          Perk(
+              '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 WOUND $_card, and $_one +1 "HEAL 1, Self" $_card'),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 ICE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 CHILL $_card',
+            quantity: 2,
+          ),
+          Perk('$_replace $_one +2 $_card with $_one +3 CHILL $_card'),
+          Perk(
+            '$_add $_one +2 FIRE/ICE $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_one +0 BRITTLE $_card'),
+          Perk(
+              'At the start of each $_scenario, you may either gain WOUND to generate FIRE or gain CHILL to generate ICE'),
+          Perk(
+              '$_ignoreNegativeItemEffects and $_add $_one $_rolling FIRE/ICE $_card'),
+        ],
+      ),
+    ],
+    // Crosschecked and confirmed
+    _shardrender: [
+      Perks([
+        Perk('Remove one -2 card'),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +1 card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one $_rolling "$_shield 1, Self" card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace two +0 cards with two +0 "Move one character token on a CRYSTALLIZE back one space" cards',
+          quantity: 2,
+        ),
+        Perk(
+          'Replace one +0 card with one $_rolling +1 "+2 instead if the attack has PIERCE" card',
+          quantity: 2,
+        ),
+        Perk(
+            'Add two +1 "+2 instead if you CRYSTALLIZE PERSIST one space" cards'),
+        Perk('Add one +0 BRITTLE card'),
+        Perk(
+          '$_ignoreNegativeItemEffects and at the start of each scenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+            'Once each scenario, when you would suffer damage from an attack, gain "$_shield 3" for that attack'),
+        Perk('Each time you long rest, perform "$_regenerate, Self"'),
+      ]),
+    ],
+    // Crosschecked and confirmed
+    _tempest: [
+      Perks([
+        Perk('Replace one -2 card with one -1 AIR/LIGHT card'),
+        Perk('Replace one -1 AIR/LIGHT card with one +1 AIR/LIGHT card'),
+        Perk(
+          'Replace one -1 card with one +0 WOUND card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_replace one -1 card with one $_rolling "$_regenerate, RANGE 1" card',
+          quantity: 2,
+        ),
+        Perk('Replace one +0 card with one +2 MUDDLE card'),
+        Perk('Replace two +0 cards with one +1 $_immobilize card'),
+        Perk(
+          'Add one +1 "DODGE, Self" card',
+          quantity: 2,
+        ),
+        Perk('Add one +2 AIR/LIGHT card'),
+        Perk('Whenever you dodge an attack, gain one SPARK'),
+        Perk(
+          '$_wheneverYouLongRest, you may gain DODGE',
+          quantity: 2,
+          grouped: true,
+        ),
+        Perk(
+            '$_wheneverYouShortRest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
+      ]),
+    ],
+    _vanquisher: [
+      Perks([
+        Perk('Replace two -1 cards with one +0 MUDDLE card'),
+        Perk('Replace two -1 cards with one -1 "HEAL 2, Self" card'),
+        Perk('Replace one -2 card with one -1 POISON WOUND card'),
+        Perk(
+          '$_replace one +0 card with one +1 "HEAL 1, Self" card',
+          quantity: 2,
+        ),
+        Perk(
+            'Replace two +0 cards with one +0 CURSE card and one +0 $_immobilize card'),
+        Perk(
+          'Replace one +1 card with one +2 FIRE/AIR card',
+          quantity: 2,
+        ),
+        Perk('Replace one +2 card with one $_rolling "Gain one RAGE" card'),
+        Perk(
+          'Add one +1 "$_retaliate 1, Self" card and one $_rolling PIERCE 3 card',
+          quantity: 2,
+        ),
+        Perk('Add one +0 "BLESS, Self" card'),
+        Perk('Add two +1 "+2 instead if you suffer 1 damage" cards'),
+        Perk('Add one +2 "+3 instead if you suffer 1 damage" card'),
+        Perk('$_ignoreNegativeItemEffects and remove one -1 card'),
+      ]),
+    ],
   };
 
   static final List<PersonalGoal> personalGoals = [

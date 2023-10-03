@@ -283,6 +283,8 @@ class DatabaseMigrations {
               );
               // This handles for a mistake when first defining the Infuser perks
               // One perk that has two checks was only given one
+              // All perks after 726 (the last Infuser perk) should reference an
+              // index one lower than the perk id
               if (id >= 726) {
                 id--;
               }
