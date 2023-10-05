@@ -300,14 +300,47 @@ class DatabaseMigrations {
                       element?.uuid ==
                       matchingCharacterPerk?.associatedCharacterUuid,
                 );
+
                 if (character != null) {
+                  // if character is Infuser and
+                  // 724 is selected, make 725 selected and
+                  // 725 is selected, make 726 selected
+                  bool? addedPerkIsSelected;
+                  if (character.playerClass.classCode == 'infuser') {
+                    CharacterPerk? charPerk724 =
+                        characterPerks.firstWhereOrNull(
+                            (element) => element?.associatedPerkId == '724');
+                    if (charPerk724 != null &&
+                        charPerk724.characterPerkIsSelected) {
+                      await txn.update(
+                        tableCharacterPerks,
+                        {
+                          columnCharacterPerkIsSelected: '0',
+                        },
+                        where: '$columnAssociatedPerkId = ?',
+                        whereArgs: ['724'],
+                      );
+                      await txn.update(
+                        tableCharacterPerks,
+                        {
+                          columnCharacterPerkIsSelected: '1',
+                        },
+                        where: '$columnAssociatedPerkId = ?',
+                        whereArgs: ['725'],
+                      );
+                    }
+                    CharacterPerk? charPerk725 =
+                        characterPerks.firstWhereOrNull(
+                            (element) => element?.associatedPerkId == '725');
+                    addedPerkIsSelected = charPerk725?.characterPerkIsSelected;
+                  }
                   if (id == 725 && index == '11') {
                     await txn.insert(
                       tableCharacterPerks,
                       CharacterPerk(
                         character.uuid,
                         '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
-                        false,
+                        addedPerkIsSelected ?? false,
                       ).toMap(),
                     );
                   }
