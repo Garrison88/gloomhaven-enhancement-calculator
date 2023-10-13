@@ -311,15 +311,8 @@ class DatabaseMigrations {
                     // 724 is selected, make 725 selected and
                     // 725 is selected, make 726 selected
                     bool? addedPerkIsSelected;
-                    // if (character.playerClass.classCode == 'infuser') {
                     if (matchingCharacterPerk.associatedPerkId == '724' &&
                         matchingCharacterPerk.characterPerkIsSelected) {
-                      // CharacterPerk? charPerk724 =
-                      //     characterPerks.firstWhereOrNull((element) =>
-                      //         element.associatedPerkId == '724');
-                      // // This ensures the second grouped (missing) Perk is deselected
-                      // if (charPerk724 != null &&
-                      //     charPerk724.characterPerkIsSelected) {
                       await txn.update(
                         tableCharacterPerks,
                         {
@@ -344,35 +337,25 @@ class DatabaseMigrations {
                           character.uuid,
                         ],
                       );
-                      // }
                     }
-                    // if (id == 725) {
                     if (matchingCharacterPerk.associatedPerkId == '725' &&
                         matchingCharacterPerk.characterPerkIsSelected) {
                       addedPerkIsSelected = true;
-                      // await txn.update(
-                      //   tableCharacterPerks,
-                      //   {
-                      //     columnCharacterPerkIsSelected: '1',
-                      //   },
-                      //   where:
-                      //       '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                      //   whereArgs: [
-                      //     '726',
-                      //     character.uuid,
-                      //   ],
-                      // );
-                    }
-                    // TODO: this might need to be put back in
-                    // addedPerkIsSelected =
-                    //     charPerk725?.characterPerkIsSelected;
-                    // }
-                    if (id == 725) {
-                      print('got here');
+                      await txn.update(
+                        tableCharacterPerks,
+                        {
+                          columnCharacterPerkIsSelected: '0',
+                        },
+                        where:
+                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
+                        whereArgs: [
+                          '725',
+                          character.uuid,
+                        ],
+                      );
                     }
                     if (character.playerClass.classCode == 'infuser' &&
-                        index == '11' &&
-                        i == 0) {
+                        index == '11') {
                       await txn.insert(
                         tableCharacterPerks,
                         CharacterPerk(
@@ -382,7 +365,6 @@ class DatabaseMigrations {
                         ).toMap(),
                       );
                     }
-                    // }
                     debugPrint('MATCHING PERK FOUND');
 
                     await txn.update(
