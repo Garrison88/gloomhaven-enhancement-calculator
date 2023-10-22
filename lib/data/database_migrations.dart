@@ -318,15 +318,12 @@ class DatabaseMigrations {
                     // 725 is selected, make 726 selected
                     // if id is 724, we are at the second of the grouped perks.
                     // ID always increases by 1, regardless of the loop
-                    if (id == 724) {
-                      print(matchingCharacterPerk.associatedPerkId);
-                    }
 
                     if (matchingCharacterPerk.associatedPerkId == '724') {
                       List<Map<String, dynamic>> perk725List = await txn.query(
                         tableCharacterPerks,
                         where:
-                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid',
+                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
                         whereArgs: [
                           '725',
                           character.uuid,
@@ -342,10 +339,6 @@ class DatabaseMigrations {
                           perk725.characterPerkIsSelected,
                         ).toMap(),
                       );
-                      // if (perk725.characterPerkIsSelected) {
-                      //   addedPerkIsSelected = true;
-                      // }
-                      // if (matchingCharacterPerk.characterPerkIsSelected) {
                       await txn.update(
                         tableCharacterPerks,
                         {
@@ -361,23 +354,6 @@ class DatabaseMigrations {
                           character.uuid,
                         ],
                       );
-                      // }
-                      // if (matchingCharacterPerk.characterPerkIsSelected) {
-                      //   await txn.update(
-                      //     tableCharacterPerks,
-                      //     {
-                      //       columnCharacterPerkIsSelected: '1',
-                      //     },
-                      //     where:
-                      //         '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                      //     whereArgs: [
-                      //       '725',
-                      //       character.uuid,
-                      //     ],
-                      //   );
-                      // }
-                      // }
-                      //   debugPrint('MATCHING PERK IS 724');
                       await txn.update(
                         tableCharacterPerks,
                         {
@@ -391,65 +367,6 @@ class DatabaseMigrations {
                         ],
                       );
                     }
-                    //   List<Map<String, dynamic>> perk725List = await txn.query(
-                    //     tableCharacterPerks,
-                    //     where:
-                    //         '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid',
-                    //     whereArgs: [
-                    //       '725',
-                    //       character.uuid,
-                    //     ],
-                    // );
-                    // CharacterPerk perk725 =
-                    //     CharacterPerk.fromMap(perk725List[0]);
-                    // if (perk725.characterPerkIsSelected) {
-                    //   addedPerkIsSelected = true;
-                    // }
-                    // if (matchingCharacterPerk.characterPerkIsSelected) {
-                    // await txn.update(
-                    //   tableCharacterPerks,
-                    //   {
-                    //     columnCharacterPerkIsSelected: '1',
-                    //   },
-                    //   where:
-                    //       '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                    //   whereArgs: [
-                    //     '725',
-                    //     character.uuid,
-                    //   ],
-                    // );
-                    //   }
-                    // }
-                    // if (matchingCharacterPerk.associatedPerkId == '725' &&
-                    //     matchingCharacterPerk.characterPerkIsSelected) {
-                    //   addedPerkIsSelected = true;
-                    //   await txn.update(
-                    //     tableCharacterPerks,
-                    //     {
-                    //       columnCharacterPerkIsSelected: '0',
-                    //     },
-                    //     where:
-                    //         '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                    //     whereArgs: [
-                    //       '725',
-                    //       character.uuid,
-                    //     ],
-                    //   );
-                    // }
-                    // if (character.playerClass.classCode == 'infuser' &&
-                    //     index == '11') {
-                    //   await txn.insert(
-                    //     tableCharacterPerks,
-                    //     CharacterPerk(
-                    //       character.uuid,
-                    //       '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
-                    //       addedPerkIsSelected ?? false,
-                    //     ).toMap(),
-                    //   );
-                    //   addedPerkIsSelected = null;
-                    // }
-                    // debugPrint('MATCHING PERK FOUND');
-
                     await txn.update(
                       tableCharacterPerks,
                       {
@@ -464,7 +381,6 @@ class DatabaseMigrations {
                       ],
                     );
                   }
-                  // debugPrint('INSERTED PERK ID IS: $id');
                 }
               }
             }
