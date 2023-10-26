@@ -38,6 +38,12 @@ class DatabaseHelper {
 
   Future<Database> get database async => _database ??= await _initDatabase();
 
+  static const String tableMetaData = 'MetaData';
+
+  static const String columnDatabaseVersion = 'DatabaseVersion';
+  static const String columnAppVersion = 'AppVersion';
+  static const String columnAppBuildNumber = 'AppBuildNumber';
+
   // open the database
   _initDatabase() async {
     // The path_provider plugin gets the right directory for Android or iOS.
@@ -71,6 +77,12 @@ class DatabaseHelper {
   ) async {
     await db.transaction(
       (txn) async {
+        await txn.execute('''
+        $createTable $tableMetaData (
+          $columnDatabaseVersion $integerType,
+          $columnAppVersion $textType,
+          $columnAppBuildNumber $integerType
+        )''');
         await txn.execute('''
         $createTable $tableCharacters (
           $columnCharacterId $idType,
@@ -187,6 +199,10 @@ class DatabaseHelper {
           await DatabaseMigrations.includeResources(txn);
         }
         if (oldVersion <= 7) {
+          await DatabaseMigrations.createMetaDataTable(
+            txn,
+            newVersion,
+          );
           await DatabaseMigrations.addVariantColumnToCharacterTable(txn);
           await DatabaseMigrations.convertCharacterPerkIdColumnFromIntToText(
               txn);
@@ -195,6 +211,11 @@ class DatabaseHelper {
           await DatabaseMigrations.includeClassVariantsAndPerksAsMap(txn);
           await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
         }
+        // Going forward, always call DatabaseMigrations.updateMetaDataTable
+        await DatabaseMigrations.updateMetaDataTable(
+          txn,
+          newVersion,
+        );
       },
     );
   }
@@ -381,7 +402,7 @@ class DatabaseHelper {
   ) async {
     Database db = await database;
     List<CharacterPerk> list = [];
-    List result = await db.query(
+    List<Map<String, Object?>> result = await db.query(
       tableCharacterPerks,
       where: '$columnAssociatedCharacterUuid = ?',
       whereArgs: [characterUuid],
@@ -399,7 +420,7 @@ class DatabaseHelper {
   ) async {
     Database db = await database;
     List<CharacterMastery> list = [];
-    List result = await db.query(
+    List<Map<String, Object?>> result = await db.query(
       tableCharacterMasteries,
       where: '$columnAssociatedCharacterUuid = ?',
       whereArgs: [characterUuid],
@@ -416,7 +437,7 @@ class DatabaseHelper {
     Character character,
   ) async {
     Database db = await database;
-    var result = await db.query(
+    List<Map<String, Object?>> result = await db.query(
       tablePerks,
       where: '$columnPerkClass = ? AND $columnPerkVariant = ?',
       whereArgs: [

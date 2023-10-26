@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
@@ -161,6 +162,44 @@ class DatabaseMigrations {
     );
   }
 
+  static createMetaDataTable(
+    Transaction txn,
+    int version,
+  ) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    await txn.execute('''
+        ${DatabaseHelper.createTable} ${DatabaseHelper.tableMetaData} (
+          ${DatabaseHelper.columnDatabaseVersion} ${DatabaseHelper.integerType},
+          ${DatabaseHelper.columnAppVersion} ${DatabaseHelper.textType},
+          ${DatabaseHelper.columnAppBuildNumber} ${DatabaseHelper.integerType},
+          LastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )''');
+
+    await txn.insert(
+      DatabaseHelper.tableMetaData,
+      {
+        DatabaseHelper.columnDatabaseVersion: version,
+        DatabaseHelper.columnAppVersion: packageInfo.version,
+        DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+      },
+    );
+  }
+
+  static updateMetaDataTable(
+    Transaction txn,
+    int databaseVersion,
+  ) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    await txn.update(
+      DatabaseHelper.tableMetaData,
+      {
+        DatabaseHelper.columnDatabaseVersion: databaseVersion,
+        DatabaseHelper.columnAppVersion: packageInfo.version,
+        DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+      },
+    );
+  }
+
   static addVariantColumnToCharacterTable(Transaction txn) async {
     await txn.rawInsert(
       'ALTER TABLE $tableCharacters ADD COLUMN $columnVariant ${DatabaseHelper.textType} DEFAULT \'${Variant.base.name}\'',
@@ -174,7 +213,7 @@ class DatabaseMigrations {
 ''');
 
     await txn.execute('''
-  CREATE TABLE $tableCharacterPerks (
+  ${DatabaseHelper.createTable} $tableCharacterPerks (
     $columnAssociatedCharacterUuid ${DatabaseHelper.textType},
     $columnAssociatedPerkId ${DatabaseHelper.textType},
     $columnCharacterPerkIsSelected ${DatabaseHelper.boolType}

@@ -1,12 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
-import '../data/character_data.dart';
 import 'player_class.dart';
 
 const String tableCharacters = 'Characters';
@@ -59,7 +59,6 @@ class Character {
   List<CharacterMastery> characterMasteries = [];
   List<PerkRow> perkRows = [];
   List<Perk> perkRowPerks = [];
-  // bool includeMasteries = true;
   Character({
     this.id,
     required this.uuid,
