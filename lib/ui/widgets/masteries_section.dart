@@ -9,10 +9,10 @@ class MasteriesSection extends StatefulWidget {
   final Character character;
 
   const MasteriesSection({
-    Key? key,
+    super.key,
     required this.charactersModel,
     required this.character,
-  }) : super(key: key);
+  });
   @override
   State<StatefulWidget> createState() => MasteriesSectionState();
 }

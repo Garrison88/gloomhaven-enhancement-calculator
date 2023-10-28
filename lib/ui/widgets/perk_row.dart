@@ -12,16 +12,16 @@ class PerkRow extends StatefulWidget {
   final List<Perk> perks;
 
   const PerkRow({
-    Key? key,
+    super.key,
     required this.character,
     required this.perks,
-  }) : super(key: key);
+  });
 
   @override
-  _PerkRowState createState() => _PerkRowState();
+  PerkRowState createState() => PerkRowState();
 }
 
-class _PerkRowState extends State<PerkRow> {
+class PerkRowState extends State<PerkRow> {
   final List<String?> perkIds = [];
 
   double height = 0;

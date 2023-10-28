@@ -11,13 +11,13 @@ class ResourceCard extends StatelessWidget {
   final Function() decreaseCount;
   final bool canEdit;
   const ResourceCard({
-    Key? key,
+    super.key,
     required this.resource,
     required this.count,
     required this.increaseCount,
     required this.decreaseCount,
     required this.canEdit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +45,13 @@ class ResourceDetails extends StatelessWidget {
   final Function() increaseCount;
   final bool canEdit;
   const ResourceDetails({
-    Key? key,
+    super.key,
     required this.resource,
     required this.count,
     required this.decreaseCount,
     required this.increaseCount,
     required this.canEdit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

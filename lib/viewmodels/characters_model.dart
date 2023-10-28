@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,11 +47,11 @@ class CharactersModel with ChangeNotifier {
       notifyListeners();
       return;
     }
-    int _index = 0;
+    int index = 0;
     if (character != null) {
-      _index = _characters.indexOf(character);
+      index = _characters.indexOf(character);
     } else if (retiredCharactersAreHidden && currentCharacter == null) {
-      _index = 0;
+      index = 0;
     } else if (currentCharacter != null && currentCharacter!.isRetired) {
       List<Character> tempList = characters;
       int tempIndex = tempList.indexOf(currentCharacter!);
@@ -61,12 +60,12 @@ class CharactersModel with ChangeNotifier {
       } while (tempIndex < tempList.length &&
           tempList.elementAt(tempIndex).isRetired);
       try {
-        _index = characters
+        index = characters
             .where((character) => !character.isRetired)
             .toList()
             .indexOf(tempList.elementAt(tempIndex));
       } on RangeError catch (_) {
-        _index = characters
+        index = characters
                 .where((character) => !character.isRetired)
                 .toList()
                 .length -
@@ -75,24 +74,24 @@ class CharactersModel with ChangeNotifier {
     } else if (currentCharacter != null &&
         !currentCharacter!.isRetired &&
         showRetired) {
-      _index = characters
+      index = characters
           .where((character) => !character.isRetired)
           .toList()
           .indexOf(currentCharacter!);
     } else {
       if (currentCharacter != null) {
-        _index = _characters.indexOf(currentCharacter!);
+        index = _characters.indexOf(currentCharacter!);
       }
     }
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    if (!_index.isNegative) {
+    if (!index.isNegative) {
       jumpToPage(
-        _index,
+        index,
       );
     }
     _setCurrentCharacter(
-      index: _index,
+      index: index,
     );
     notifyListeners();
   }

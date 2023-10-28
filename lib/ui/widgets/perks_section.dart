@@ -7,9 +7,9 @@ class PerksSection extends StatelessWidget {
   final Character character;
 
   const PerksSection({
-    Key? key,
+    super.key,
     required this.character,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,9 +44,9 @@ class PerksSection extends StatelessWidget {
         ),
         ListView(
           padding: EdgeInsets.zero,
-          children: character.perkRows,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
+          children: character.perkRows,
         ),
       ],
     );

@@ -16,10 +16,8 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class Home extends StatefulWidget {
   const Home({
-    Key? key,
-  }) : super(
-          key: key,
-        );
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -108,6 +106,12 @@ class _HomeState extends State<Home> {
       appBar: const GHCAppBar(),
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
+        controller: context.read<AppModel>().pageController,
+        onPageChanged: (index) {
+          charactersModel.isEditMode = false;
+          context.read<AppModel>().page = index;
+          setState(() {});
+        },
         children: [
           FutureBuilder<List<Character>>(
             future: future,
@@ -136,12 +140,6 @@ class _HomeState extends State<Home> {
           ),
           const EnhancementCalculatorPage(),
         ],
-        controller: context.read<AppModel>().pageController,
-        onPageChanged: (index) {
-          charactersModel.isEditMode = false;
-          context.read<AppModel>().page = index;
-          setState(() {});
-        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       // floatingActionButtonLocation:
@@ -158,15 +156,6 @@ class _HomeState extends State<Home> {
           //   ),
           // ),
           heroTag: null,
-          child: Icon(
-            appModel.page == 1
-                ? Icons.clear_rounded
-                : charactersModel.characters.isEmpty
-                    ? Icons.add
-                    : charactersModel.isEditMode
-                        ? Icons.edit_off_rounded
-                        : Icons.edit_rounded,
-          ),
           onPressed: context.read<AppModel>().page == 1
               ? () => context.read<EnhancementCalculatorModel>().resetCost()
               // must watch
@@ -183,6 +172,15 @@ class _HomeState extends State<Home> {
                         }
                       })
                   : () => charactersModel.toggleEditMode(),
+          child: Icon(
+            appModel.page == 1
+                ? Icons.clear_rounded
+                : charactersModel.characters.isEmpty
+                    ? Icons.add
+                    : charactersModel.isEditMode
+                        ? Icons.edit_off_rounded
+                        : Icons.edit_rounded,
+          ),
         );
       }),
       bottomNavigationBar: const GHCBottomNavigationBar(),

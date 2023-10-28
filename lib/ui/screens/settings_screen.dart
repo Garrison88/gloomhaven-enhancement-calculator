@@ -29,11 +29,11 @@ class SettingsScreen extends StatefulWidget {
   final EnhancementCalculatorModel enhancementCalculatorModel;
 
   const SettingsScreen({
-    Key? key,
+    super.key,
     required this.appModel,
     required this.charactersModel,
     required this.enhancementCalculatorModel,
-  }) : super(key: key);
+  });
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -237,6 +237,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     },
                                   ),
                                   TextButton(
+                                    onPressed: envelopeXSolved
+                                        ? () {
+                                            Navigator.of(context).pop(true);
+                                          }
+                                        : null,
                                     child: Text(
                                       'Solve',
                                       style: TextStyle(
@@ -247,11 +252,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             : Theme.of(context).disabledColor,
                                       ),
                                     ),
-                                    onPressed: envelopeXSolved
-                                        ? () {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        : null,
                                   ),
                                 ],
                               );
@@ -355,6 +355,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     },
                                   ),
                                   TextButton(
+                                    onPressed: envelopeVSolved
+                                        ? () {
+                                            Navigator.of(context).pop(true);
+                                          }
+                                        : null,
                                     child: Text(
                                       'Unlock',
                                       style: TextStyle(
@@ -365,11 +370,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             : Theme.of(context).disabledColor,
                                       ),
                                     ),
-                                    onPressed: envelopeVSolved
-                                        ? () {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        : null,
                                   ),
                                 ],
                               );
@@ -884,35 +884,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SettingsSection(title: 'TESTING'),
               ListTile(
-                title: Text('Create All'),
+                title: const Text('Create All'),
                 onTap: () => widget.charactersModel.createCharactersTest(),
               ),
               ListTile(
-                title: Text('Create Gloomhaven'),
+                title: const Text('Create Gloomhaven'),
                 onTap: () => widget.charactersModel.createCharactersTest(
                   classCategory: ClassCategory.gloomhaven,
                 ),
               ),
               ListTile(
-                title: Text('Create Jaws of the Lion'),
+                title: const Text('Create Jaws of the Lion'),
                 onTap: () => widget.charactersModel.createCharactersTest(
                   classCategory: ClassCategory.jawsOfTheLion,
                 ),
               ),
               ListTile(
-                title: Text('Create Frosthaven'),
+                title: const Text('Create Frosthaven'),
                 onTap: () => widget.charactersModel.createCharactersTest(
                   classCategory: ClassCategory.frosthaven,
                 ),
               ),
               ListTile(
-                title: Text('Create Crimson Scales'),
+                title: const Text('Create Crimson Scales'),
                 onTap: () => widget.charactersModel.createCharactersTest(
                   classCategory: ClassCategory.crimsonScales,
                 ),
               ),
               ListTile(
-                title: Text('Create Custom'),
+                title: const Text('Create Custom'),
                 onTap: () => widget.charactersModel.createCharactersTest(
                   classCategory: ClassCategory.custom,
                 ),

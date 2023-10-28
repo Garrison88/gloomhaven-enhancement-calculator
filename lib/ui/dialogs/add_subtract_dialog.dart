@@ -6,17 +6,17 @@ class AddSubtractDialog extends StatefulWidget {
   const AddSubtractDialog(
     this.currentValue,
     this.hintText, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int currentValue;
   final String hintText;
 
   @override
-  _AddSubtractDialogState createState() => _AddSubtractDialogState();
+  AddSubtractDialogState createState() => AddSubtractDialogState();
 }
 
-class _AddSubtractDialogState extends State<AddSubtractDialog> {
+class AddSubtractDialogState extends State<AddSubtractDialog> {
   final TextEditingController _addSubtractTextEditingController =
       TextEditingController();
 

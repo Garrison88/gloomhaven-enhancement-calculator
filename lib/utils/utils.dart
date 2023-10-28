@@ -661,15 +661,15 @@ class SizeProviderWidget extends StatefulWidget {
   final Function(Size?) onChildSize;
 
   const SizeProviderWidget({
-    Key? key,
+    super.key,
     required this.onChildSize,
     required this.child,
-  }) : super(key: key);
+  });
   @override
-  _SizeProviderWidgetState createState() => _SizeProviderWidgetState();
+  SizeProviderWidgetState createState() => SizeProviderWidgetState();
 }
 
-class _SizeProviderWidgetState extends State<SizeProviderWidget> {
+class SizeProviderWidgetState extends State<SizeProviderWidget> {
   @override
   void initState() {
     super.initState();
@@ -693,18 +693,18 @@ class HighlightedWidget extends StatefulWidget {
   final bool animateBorder;
 
   const HighlightedWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.color = Colors.grey,
     this.duration = const Duration(milliseconds: 350),
     this.animateBorder = false,
-  }) : super(key: key);
+  });
 
   @override
-  _HighlightedWidgetState createState() => _HighlightedWidgetState();
+  HighlightedWidgetState createState() => HighlightedWidgetState();
 }
 
-class _HighlightedWidgetState extends State<HighlightedWidget>
+class HighlightedWidgetState extends State<HighlightedWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _colorAnimation;
@@ -780,7 +780,7 @@ RichText buildStyledText(String details, BuildContext context) {
     inlineList.add(
       TextSpan(
         text: italicText,
-        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontStyle: FontStyle.italic,
             ),
       ),
@@ -797,7 +797,7 @@ RichText buildStyledText(String details, BuildContext context) {
   return RichText(
     text: TextSpan(
       children: inlineList,
-      style: Theme.of(context).textTheme.bodyText1,
+      style: Theme.of(context).textTheme.bodyLarge,
     ),
   );
 }

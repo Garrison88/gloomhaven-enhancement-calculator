@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 
 class CharactersScreen extends StatefulWidget {
   const CharactersScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<CharactersScreen> createState() => _CharactersScreenState();

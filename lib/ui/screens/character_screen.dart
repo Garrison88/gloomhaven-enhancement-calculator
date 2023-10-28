@@ -17,10 +17,8 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 class CharacterScreen extends StatelessWidget {
   const CharacterScreen({
     required this.character,
-    Key? key,
-  }) : super(
-          key: key,
-        );
+    super.key,
+  });
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -132,8 +130,7 @@ class CharacterScreen extends StatelessWidget {
 class _RetirementsAndPocketItemsSection extends StatelessWidget {
   const _RetirementsAndPocketItemsSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -213,8 +210,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
 class _NameAndClassSection extends StatelessWidget {
   const _NameAndClassSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -318,8 +314,7 @@ class _NameAndClassSection extends StatelessWidget {
 class _StatsSection extends StatelessWidget {
   const _StatsSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -539,8 +534,7 @@ class _StatsSection extends StatelessWidget {
 class _ResourcesSection extends StatefulWidget {
   const _ResourcesSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
   @override
   State<_ResourcesSection> createState() => _ResourcesSectionState();
@@ -749,8 +743,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
 class _NotesSection extends StatelessWidget {
   const _NotesSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -791,8 +784,7 @@ class _NotesSection extends StatelessWidget {
 class _BattleGoalCheckmarksSection extends StatelessWidget {
   const _BattleGoalCheckmarksSection({
     required this.character,
-    Key? key,
-  }) : super(key: key);
+  });
   final Character character;
 
   @override

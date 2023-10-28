@@ -12,11 +12,11 @@ class InfoDialog extends StatefulWidget {
   final EnhancementCategory? category;
 
   const InfoDialog({
-    Key? key,
+    super.key,
     this.title,
     this.message,
     this.category,
-  }) : super(key: key);
+  });
 
   @override
   State<InfoDialog> createState() => _InfoDialogState();
@@ -34,13 +34,13 @@ class _InfoDialogState extends State<InfoDialog> {
     if (list == null) {
       icons.add(
         Padding(
+          padding: const EdgeInsets.only(
+            right: (smallPadding / 2),
+          ),
           child: SvgPicture.asset(
             'images/plus_one.svg',
             height: iconSize,
             width: iconSize,
-          ),
-          padding: const EdgeInsets.only(
-            right: (smallPadding / 2),
           ),
         ),
       );
@@ -48,6 +48,9 @@ class _InfoDialogState extends State<InfoDialog> {
       for (final Enhancement enhancement in list) {
         icons.add(
           Padding(
+            padding: const EdgeInsets.only(
+              right: (smallPadding / 2),
+            ),
             child: SvgPicture.asset(
               'images/${enhancement.iconPath}',
               height: iconSize,
@@ -59,9 +62,6 @@ class _InfoDialogState extends State<InfoDialog> {
                           BlendMode.srcIn,
                         )
                       : null,
-            ),
-            padding: const EdgeInsets.only(
-              right: (smallPadding / 2),
             ),
           ),
         );

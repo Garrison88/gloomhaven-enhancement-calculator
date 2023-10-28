@@ -13,8 +13,8 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class EnhancementCalculatorPage extends StatefulWidget {
   const EnhancementCalculatorPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<EnhancementCalculatorPage> createState() =>
@@ -465,8 +465,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
 class EnhancementDivider extends StatelessWidget {
   const EnhancementDivider({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

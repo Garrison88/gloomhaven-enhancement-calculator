@@ -18,9 +18,9 @@ class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
   const CreateCharacterDialog({
-    Key? key,
+    super.key,
     required this.charactersModel,
-  }) : super(key: key);
+  });
 
   @override
   _CreateCharacterDialogState createState() => _CreateCharacterDialogState();

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/constants.dart';
-import '../../utils/utils.dart';
-import '../../viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 
 class MasteryRow extends StatefulWidget {
   final Character character;
   final Mastery mastery;
 
   const MasteryRow({
-    Key? key,
+    super.key,
     required this.character,
     required this.mastery,
-  }) : super(key: key);
+  });
 
   @override
-  _MasteryRowState createState() => _MasteryRowState();
+  MasteryRowState createState() => MasteryRowState();
 }
 
-class _MasteryRowState extends State<MasteryRow> {
+class MasteryRowState extends State<MasteryRow> {
   double height = 0;
 
   @override

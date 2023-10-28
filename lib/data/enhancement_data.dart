@@ -328,6 +328,7 @@ class EnhancementData {
     for (int x = 0; x <= 8; x++) {
       list.add(
         DropdownMenuItem(
+          value: x,
           child: RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyMedium,
@@ -364,7 +365,6 @@ class EnhancementData {
               ],
             ),
           ),
-          value: x,
         ),
       );
     }
@@ -382,6 +382,7 @@ class EnhancementData {
     for (int x = 0; x <= 3; x++) {
       list.add(
         DropdownMenuItem(
+          value: x,
           child: RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyMedium,
@@ -415,7 +416,6 @@ class EnhancementData {
               ],
             ),
           ),
-          value: x,
         ),
       );
     }
@@ -438,6 +438,7 @@ class EnhancementData {
       list.add(
         enhancement.category == EnhancementCategory.title
             ? DropdownMenuItem(
+                value: enhancement,
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -483,9 +484,9 @@ class EnhancementData {
                           ],
                   ),
                 ),
-                value: enhancement,
               )
             : DropdownMenuItem(
+                value: enhancement,
                 child: Row(
                   children: <Widget>[
                     // add small +1 icon beside move if it's eligible
@@ -646,7 +647,6 @@ class EnhancementData {
                     ),
                   ],
                 ),
-                value: enhancement,
               ),
       );
     }

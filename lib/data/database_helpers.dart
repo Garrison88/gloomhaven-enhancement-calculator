@@ -1,18 +1,19 @@
 import 'dart:convert' as convert;
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
 
-import 'database_migrations.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../models/character.dart';
-import '../models/character_perk.dart';
-import '../models/perk.dart';
-import 'character_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+
+import 'database_migrations.dart';
 
 // singleton class to manage the database
 class DatabaseHelper {
@@ -284,6 +285,14 @@ class DatabaseHelper {
       await restoreBackup(fallBack);
       throw error ?? 'Error restoring backup';
     });
+    // await dbs.transaction((txn) async {
+    //   // await DatabaseMigrations.addVariantColumnToCharacterTable(txn);
+    //   await DatabaseMigrations.convertCharacterPerkIdColumnFromIntToText(txn);
+    //   await DatabaseMigrations.convertCharacterMasteryIdColumnFromIntToText(
+    //       txn);
+    //   await DatabaseMigrations.includeClassVariantsAndPerksAsMap(txn);
+    //   await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
+    // });
   }
 
   Future _clearAllTables() async {

@@ -13,10 +13,8 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_mo
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GHCAppBar({
-    Key? key,
-  }) : super(
-          key: key,
-        );
+    super.key,
+  });
 
   @override
   State<GHCAppBar> createState() => _GHCAppBarState();
