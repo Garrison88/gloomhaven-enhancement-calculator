@@ -36,57 +36,96 @@ class _HomeState extends State<Home> {
         showDialog<void>(
           barrierDismissible: false,
           context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: const Text(
-                'New in version 4',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
-              content: Container(
-                constraints: const BoxConstraints(
-                  maxWidth: maxDialogWidth,
-                  minWidth: maxDialogWidth,
-                ),
-                child: const SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text("1. Added all 'Frosthaven' classes"),
-                      Text(
-                          "2. Added all remaining 'Crimson Scales', add-on, and 'Trail of Ashes' classes (show Custom Classes in the Settings menu)"),
-                      Text('3. Added Resources section'),
-                      Text(
-                          "4. Added a toggle for the Enhancement Calculator to use 'Gloomhaven' or 'Frosthaven' rules"),
-                      Text(
-                          '5. Optional random name generator in Create Character dialog'),
-                      Text(
-                          "6. Added support for 'Temporary Enhancement' Variant mode in Enhancement Calculator"),
-                      Text(
-                          '7. Replaced many icons, UI/UX improvements, and many behind-the-scenes performance improvements'),
-                      SizedBox(
-                        height: 16,
+          builder: (context) {
+            bool iUnderstand = false;
+            return StatefulBuilder(
+              builder: (
+                _,
+                innerSetState,
+              ) {
+                return AlertDialog(
+                  title: const Text(
+                    'New in version 4.2.0\n(includes breaking changes. Confirm below to dismiss this dialog.)',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                  content: Container(
+                    constraints: const BoxConstraints(
+                      maxWidth: maxDialogWidth,
+                      minWidth: maxDialogWidth,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                              "1. Added all Frosthaven variants of Gloomhaven and JotL classes. When creating a new character, you have the option to choose the 'Base' version or the 'Frosthaven Crossover' version. The later will include Masteries, Traits, and a revamped Perk list."),
+                          const Text(
+                              "2. Corrected an error present in the 'Astral' perk list."),
+                          Text(
+                            'Breaking change:',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                              "3. Migrated the database to a new format where Perks are now identified by their associated class ID. This shouldn't affecrt your existing data, but will mean you cannot restore backups created before version 4.2.0. Please contact the developer through the Settings menu if this is something you require."),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text('Upcoming:'),
+                          const Text(
+                              "Frosthaven crossover variants of 'Crimson Scales' classes"),
+                          const SizedBox(height: 16),
+                          const Text(
+                              'Please reach out to the developer through the Support section in the Settings menu with any questions, comments, or critiques'),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Expanded(
+                                child: Text(
+                                  "I understand that I won't be able to restore backups created before version 4.2.0.",
+                                ),
+                              ),
+                              Checkbox(
+                                value: iUnderstand,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    innerSetState(
+                                      () {
+                                        iUnderstand = value;
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      Text('Upcoming:'),
-                      Text(
-                          "Frosthaven crossover variants of 'Gloomhaven' and 'Crimson Scales' classes"),
-                      SizedBox(height: 16),
-                      Text(
-                          'Please reach out to the developer through the Support section in the Settings menu with any questions, comments, or critiques'),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Got it!',
-                  ),
-                )
-              ],
+                  actions: [
+                    TextButton(
+                      onPressed: iUnderstand
+                          ? () => Navigator.of(context).pop()
+                          : null,
+                      child: Text(
+                        iUnderstand
+                            ? 'Got it!'
+                            : 'Confirm before continuing...',
+                      ),
+                    )
+                  ],
+                );
+              },
             );
           },
         );

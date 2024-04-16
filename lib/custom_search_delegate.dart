@@ -457,7 +457,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                               },
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

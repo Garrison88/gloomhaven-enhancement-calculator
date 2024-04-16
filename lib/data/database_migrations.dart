@@ -433,28 +433,34 @@ class DatabaseMigrations {
     Transaction txn,
     String tempTablePerks,
   ) async {
-    await Future.forEach(CharacterData.perksMap.entries, (entry) async {
-      final classCode = entry.key;
-      final perkLists =
-          entry.value.where((element) => element.variant != Variant.base);
+    await Future.forEach(
+      CharacterData.perksMap.entries,
+      (entry) async {
+        final classCode = entry.key;
+        final perkLists = entry.value.where(
+          (element) => element.variant != Variant.base,
+        );
 
-      for (Perks list in perkLists) {
-        for (Perk perk in list.perks) {
-          perk.variant = list.variant;
-          perk.classCode = classCode;
-          for (int i = 0; i < perk.quantity; i++) {
-            try {
-              await txn.insert(
-                tempTablePerks,
-                perk.toMap('${list.perks.indexOf(perk)}${indexToLetter(i)}'),
-              );
-            } catch (e) {
-              debugPrint('ERROR WITH PERKS2 TABLE: $e');
+        for (Perks list in perkLists) {
+          for (Perk perk in list.perks) {
+            perk.variant = list.variant;
+            perk.classCode = classCode;
+            for (int i = 0; i < perk.quantity; i++) {
+              try {
+                await txn.insert(
+                  tempTablePerks,
+                  perk.toMap(
+                    '${list.perks.indexOf(perk)}${indexToLetter(i)}',
+                  ),
+                );
+              } catch (e) {
+                debugPrint('ERROR WITH PERKS2 TABLE: $e');
+              }
             }
           }
         }
-      }
-    });
+      },
+    );
   }
 
   static Future<void> _dropCharacterPerksTableAndRenameTemp(
@@ -528,7 +534,6 @@ class DatabaseMigrations {
           );
 
           if (matchingCharacterMastery != null) {
-            // debugPrint('MATCHING MASTERY FOUND');
             final List<Map<String, dynamic>> characters = await txn.query(
               tableCharacters,
               where: '$columnCharacterUuid = ?',

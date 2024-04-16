@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,6 +36,7 @@ class DatabaseHelper {
     tableCharacters,
     tableCharacterPerks,
     tableCharacterMasteries,
+    tableMetaData,
   ];
 
   Future<Database> get database async => _database ??= await _initDatabase();
@@ -78,12 +80,21 @@ class DatabaseHelper {
   ) async {
     await db.transaction(
       (txn) async {
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
         await txn.execute('''
         $createTable $tableMetaData (
           $columnDatabaseVersion $integerType,
           $columnAppVersion $textType,
           $columnAppBuildNumber $integerType
         )''');
+        await txn.insert(
+          DatabaseHelper.tableMetaData,
+          {
+            DatabaseHelper.columnDatabaseVersion: version,
+            DatabaseHelper.columnAppVersion: packageInfo.version,
+            DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+          },
+        );
         await txn.execute('''
         $createTable $tableCharacters (
           $columnCharacterId $idType,
@@ -115,24 +126,27 @@ class DatabaseHelper {
           $columnPerkIsGrouped $boolType DEFAULT 0,
           $columnPerkVariant $textType
         )''');
-        await Future.forEach(CharacterData.perksMap.entries, (entry) async {
-          final classCode = entry.key;
-          final perkLists = entry.value;
-          for (Perks list in perkLists) {
-            for (Perk perk in list.perks) {
-              perk.variant = list.variant;
-              perk.classCode = classCode;
-              for (int i = 0; i < perk.quantity; i++) {
-                await txn.insert(
-                  tablePerks,
-                  perk.toMap(
-                    '${list.perks.indexOf(perk)}${indexToLetter(i)}',
-                  ),
-                );
+        await Future.forEach(
+          CharacterData.perksMap.entries,
+          (entry) async {
+            final classCode = entry.key;
+            final perkLists = entry.value;
+            for (Perks list in perkLists) {
+              for (Perk perk in list.perks) {
+                perk.variant = list.variant;
+                perk.classCode = classCode;
+                for (int i = 0; i < perk.quantity; i++) {
+                  await txn.insert(
+                    tablePerks,
+                    perk.toMap(
+                      '${list.perks.indexOf(perk)}${indexToLetter(i)}',
+                    ),
+                  );
+                }
               }
             }
-          }
-        });
+          },
+        );
         await txn.execute('''
         $createTable $tableCharacterPerks (
           $columnAssociatedCharacterUuid $textType,
@@ -146,22 +160,25 @@ class DatabaseHelper {
           $columnMasteryDetails $textType,
           $columnMasteryVariant $textType
         )''');
-        await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
-          final classCode = entry.key;
-          final masteriesList = entry.value;
-          for (Masteries list in masteriesList) {
-            for (Mastery mastery in list.masteries) {
-              mastery.variant = list.variant;
-              mastery.classCode = classCode;
-              await txn.insert(
-                tableMasteries,
-                mastery.toMap(
-                  '${list.masteries.indexOf(mastery)}',
-                ),
-              );
+        await Future.forEach(
+          CharacterData.masteriesMap.entries,
+          (entry) async {
+            final classCode = entry.key;
+            final masteriesList = entry.value;
+            for (Masteries list in masteriesList) {
+              for (Mastery mastery in list.masteries) {
+                mastery.variant = list.variant;
+                mastery.classCode = classCode;
+                await txn.insert(
+                  tableMasteries,
+                  mastery.toMap(
+                    '${list.masteries.indexOf(mastery)}',
+                  ),
+                );
+              }
             }
-          }
-        });
+          },
+        );
         await txn.execute('''
         $createTable $tableCharacterMasteries (
           $columnAssociatedCharacterUuid $textType,
@@ -253,6 +270,13 @@ class DatabaseHelper {
 
     List json = convert.jsonDecode(backup);
 
+    // if (json[0] is List<String>) {
+    if (!json[0].contains('MetaData')) {
+      print('NO META DATA TABLE');
+      throw ('No Meta Data Table');
+    }
+    // }
+
     for (var i = 0; i < json[0].length; i++) {
       for (var k = 0; k < json[1][i].length; k++) {
         // This handles the case where a user tries to restore a backup
@@ -285,14 +309,6 @@ class DatabaseHelper {
       await restoreBackup(fallBack);
       throw error ?? 'Error restoring backup';
     });
-    // await dbs.transaction((txn) async {
-    //   // await DatabaseMigrations.addVariantColumnToCharacterTable(txn);
-    //   await DatabaseMigrations.convertCharacterPerkIdColumnFromIntToText(txn);
-    //   await DatabaseMigrations.convertCharacterMasteryIdColumnFromIntToText(
-    //       txn);
-    //   await DatabaseMigrations.includeClassVariantsAndPerksAsMap(txn);
-    //   await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
-    // });
   }
 
   Future _clearAllTables() async {
