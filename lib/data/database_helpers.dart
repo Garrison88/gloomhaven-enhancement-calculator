@@ -272,7 +272,7 @@ class DatabaseHelper {
 
     // if (json[0] is List<String>) {
     if (!json[0].contains('MetaData')) {
-      print('NO META DATA TABLE');
+      debugPrint('NO META DATA TABLE');
       throw ('No Meta Data Table');
     }
     // }

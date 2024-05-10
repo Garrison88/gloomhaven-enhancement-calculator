@@ -2885,35 +2885,37 @@ abstract class CharacterData {
           Perk('Add two +0 "HEAL 1, self" $_rolling cards'),
           Perk(_ignoreItemMinusOneEffects),
           Perk(
-              '[Rapid Recovery:] Whenever you heal from a long rest, add +1 HEAL'),
+              '[Rapid Recovery:] Whenever you heal from a long rest, add plusone HEAL'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
     ],
     _soothsinger: [
-      Perks([
-        Perk(
-          '$_remove $_two -1 $_cards',
-          quantity: 2,
-        ),
-        Perk('$_remove $_one -2 $_card'),
-        Perk(
-          '$_replace $_two +1 $_cards with $_one +4 $_card',
-          quantity: 2,
-        ),
-        Perk('$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
-        Perk('$_replace $_one +0 $_card with $_one +1 DISARM $_card'),
-        Perk('$_replace $_one +0 $_card with $_one +2 WOUND $_card'),
-        Perk('$_replace $_one +0 $_card with $_one +2 POISON $_card'),
-        Perk('$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
-        Perk('$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
-        Perk('$_replace $_one -1 $_card with $_one +0 STUN $_card'),
-        Perk('$_add $_three $_rolling +1 $_cards'),
-        Perk(
-          '$_add $_two $_rolling CURSE $_cards',
-          quantity: 2,
-        ),
-      ]),
+      Perks(
+        [
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_replace $_two +1 $_cards with $_one +4 $_card',
+            quantity: 2,
+          ),
+          Perk('$_replace $_one +0 $_card with $_one +1 IMMOBILIZE $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 DISARM $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 WOUND $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 POISON $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 CURSE $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +3 MUDDLE $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 STUN $_card'),
+          Perk('$_add $_three $_rolling +1 $_cards'),
+          Perk(
+            '$_add $_two $_rolling CURSE $_cards',
+            quantity: 2,
+          ),
+        ],
+      ),
       // Crosschecked and confirmed
       Perks(
         [

@@ -24,31 +24,6 @@ class Utils {
         ),
       );
     }
-
-    // if (details.contains('*')) {
-    //   String perkDescription = details.substring(
-    //     details.indexOf('*') + 1,
-    //     details.lastIndexOf('*'),
-    //   );
-    //   start = details.indexOf('*');
-    //   end = details.lastIndexOf('*');
-    //   // details =
-    //   //     details.substring(details.indexOf('*'), details.lastIndexOf('*') + 1);
-    //   details = details.replaceRange(
-    //     details.indexOf('*'),
-    //     details.lastIndexOf('*') + 1,
-    //     '',
-    //   );
-    // details = details.substring(start, end) + textToInsert + original.substring(index);
-    // inlineList.add(
-    //   TextSpan(
-    //     text: perkDescription,
-    //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-    //           fontStyle: FontStyle.italic,
-    //         ),
-    //   ),
-    // );
-    // }
     List<String> list = details.split(' ');
     for (String element in list) {
       String? assetPath;
