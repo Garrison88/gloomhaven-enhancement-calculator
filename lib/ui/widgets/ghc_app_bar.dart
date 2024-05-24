@@ -133,8 +133,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             'images/switch_gh.png',
                           ),
                           activeColor: const Color(0xff005cb2),
-                          trackColor: MaterialStateProperty.resolveWith(
-                            (states) => states.contains(MaterialState.selected)
+                          trackColor: WidgetStateProperty.resolveWith(
+                            (states) => states.contains(WidgetState.selected)
                                 ? const Color(0xff6ab7ff)
                                 : const Color(0xffa98274),
                           ),
@@ -260,9 +260,9 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                     .textButtonTheme
                                     .style
                                     ?.copyWith(
-                                      backgroundColor: MaterialStateProperty
+                                      backgroundColor: WidgetStateProperty
                                           .resolveWith<Color>(
-                                        (Set<MaterialState> states) =>
+                                        (Set<WidgetState> states) =>
                                             Colors.red.withOpacity(0.75),
                                       ),
                                     ),

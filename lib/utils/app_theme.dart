@@ -22,8 +22,8 @@ class AppTheme {
         textButtonTheme: _textButtonThemeData(),
         checkboxTheme: _checkboxThemeData(),
         colorScheme: ColorScheme.light(
-          background: Colors.white,
-          onBackground: Colors.black87,
+          surface: Colors.white,
+          onSurface: Colors.black87,
           primary: _getPrimaryThemeColor(),
           onPrimary:
               ThemeData.estimateBrightnessForColor(_getPrimaryThemeColor()) ==
@@ -129,11 +129,11 @@ TextTheme _defaultTextTheme() => const TextTheme().copyWith(
     );
 
 CheckboxThemeData _checkboxThemeData() => CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith(
+      fillColor: WidgetStateProperty.resolveWith(
         _getCheckboxColor,
       ),
-      checkColor: MaterialStateProperty.resolveWith(
-        (Set<MaterialState> states) => states.contains(MaterialState.disabled)
+      checkColor: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) => states.contains(WidgetState.disabled)
             ? ThemeData.estimateBrightnessForColor(_getPrimaryThemeColor()) ==
                     Brightness.dark
                 ? Colors.white
@@ -182,11 +182,11 @@ SnackBarThemeData _snackBarThemeData() => SnackBarThemeData(
 //       ).secondaryColor,
 //     );
 
-Color? _getCheckboxColor(Set<MaterialState> states) =>
-    states.contains(MaterialState.selected) &&
-            states.contains(MaterialState.disabled)
+Color? _getCheckboxColor(Set<WidgetState> states) =>
+    states.contains(WidgetState.selected) &&
+            states.contains(WidgetState.disabled)
         ? lighten(_getPrimaryThemeColor(), 30)
-        : states.contains(MaterialState.selected)
+        : states.contains(WidgetState.selected)
             ? _getPrimaryThemeColor()
             : null;
 

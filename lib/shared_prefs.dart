@@ -236,6 +236,14 @@ class SharedPrefs {
         value,
       );
 
+  bool get showUpdate420Dialog =>
+      _sharedPrefs.getBool('showUpdate420Dialog') ?? true;
+
+  set showUpdate420Dialog(bool value) => _sharedPrefs.setBool(
+        'showUpdate420Dialog',
+        value,
+      );
+
   bool getPlayerClassIsUnlocked(String classCode) =>
       _sharedPrefs.getBool(classCode) ?? false;
 

@@ -262,7 +262,6 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     throw UnimplementedError();
   }
 }
@@ -359,6 +358,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
     );
   }
 
+  /// This method shows a dialog which gives the user the option to select
+  /// a specific version of the class, if available.
   Future<SelectedPlayerClass?> _onClassSelected(
     BuildContext context,
     PlayerClass selectedPlayerClass,
@@ -370,176 +371,12 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
     );
     if ((selectedPlayerClass.category == ClassCategory.custom) &&
         !hideMessage) {
-      proceed = await showDialog<bool?>(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                'Custom Classes',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            ),
-            content: StatefulBuilder(
-              builder: (
-                thisLowerContext,
-                innerSetState,
-              ) {
-                return Container(
-                  constraints: const BoxConstraints(
-                    maxWidth: maxDialogWidth,
-                    minWidth: maxDialogWidth,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(
-                                text:
-                                    "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
-                              ),
-                              TextSpan(
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                text: 'Discord server',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    Uri uri = Uri(
-                                      scheme: 'https',
-                                      host: 'discord.gg',
-                                      path: 'gSRz6sB',
-                                    );
-                                    var urllaunchable = await canLaunchUrl(
-                                      uri,
-                                    );
-                                    if (urllaunchable) {
-                                      await launchUrl(
-                                        uri,
-                                      );
-                                    } else {
-                                      // print(
-                                      //     "URL can't be launched.");
-                                    }
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 35),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const Text(
-                              "Don't show again",
-                              overflow: TextOverflow.visible,
-                            ),
-                            Checkbox(
-                              value: hideMessage,
-                              onChanged: (bool? value) {
-                                if (value != null) {
-                                  innerSetState(
-                                    () {
-                                      SharedPrefs()
-                                              .hideCustomClassesWarningMessage =
-                                          value;
-                                      hideMessage = !hideMessage;
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(
-                  'Cancel',
-                ),
-                onPressed: () => Navigator.pop(
-                  context,
-                  false,
-                ),
-              ),
-              TextButton(
-                child: const Text(
-                  'Continue',
-                ),
-                onPressed: () => Navigator.pop(
-                  context,
-                  true,
-                ),
-              ),
-            ],
-          );
-        },
-      );
+      proceed = await _showCustomClassWarningDialog(hideMessage);
     }
-    // TODO: This can be removed once all classes are converted over to use the Map
-    // Until then, it will throw an error if the classes Perks are not in PerksMap
+    // TODO: This can be removed once all classes (Crimson Scales and custom) are converted over to use the Map
     if (PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!.length >
         1) {
-      Variant? variant = await showDialog<Variant?>(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'images/class_icons/${selectedPlayerClass.icon}',
-                  width: iconSize + 5,
-                  height: iconSize + 5,
-                  colorFilter: ColorFilter.mode(
-                    Color(
-                      selectedPlayerClass.primaryColor,
-                    ),
-                    BlendMode.srcIn,
-                  ),
-                ),
-                const SizedBox(width: smallPadding * 2),
-                Text(
-                  selectedPlayerClass.name,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-              ],
-            ),
-            content: const Text(
-              'Version',
-              textAlign: TextAlign.center,
-            ),
-            actions:
-                PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!
-                    .map((perkList) {
-              return TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(perkList.variant);
-                },
-                child: Text(
-                  CharacterData.classVariants[perkList.variant]!,
-                  textAlign: TextAlign.end,
-                ),
-              );
-            }).toList()
-                  ..add(TextButton(
-                      onPressed: (() => Navigator.of(context).pop()),
-                      child: const Text('Cancel'))),
-          );
-        },
-      );
+      Variant? variant = await _showVariantDialog(selectedPlayerClass);
       proceed = variant != null;
       userChoice = SelectedPlayerClass(
         playerClass: selectedPlayerClass,
@@ -548,6 +385,177 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
       // return userChoice;
     }
     return proceed == true ? userChoice : null;
+  }
+
+  Future<bool?> _showCustomClassWarningDialog(bool hideMessage) async {
+    return await showDialog<bool?>(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              'Custom Classes',
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+          ),
+          content: StatefulBuilder(
+            builder: (
+              thisLowerContext,
+              innerSetState,
+            ) {
+              return Container(
+                constraints: const BoxConstraints(
+                  maxWidth: maxDialogWidth,
+                  minWidth: maxDialogWidth,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(
+                              text:
+                                  "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
+                            ),
+                            TextSpan(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                              text: 'Discord server',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  Uri uri = Uri(
+                                    scheme: 'https',
+                                    host: 'discord.gg',
+                                    path: 'gSRz6sB',
+                                  );
+                                  var urllaunchable = await canLaunchUrl(
+                                    uri,
+                                  );
+                                  if (urllaunchable) {
+                                    await launchUrl(
+                                      uri,
+                                    );
+                                  } else {
+                                    // print(
+                                    //     "URL can't be launched.");
+                                  }
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 35),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text(
+                            "Don't show again",
+                            overflow: TextOverflow.visible,
+                          ),
+                          Checkbox(
+                            value: hideMessage,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                innerSetState(
+                                  () {
+                                    SharedPrefs()
+                                            .hideCustomClassesWarningMessage =
+                                        value;
+                                    hideMessage = !hideMessage;
+                                  },
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'Cancel',
+              ),
+              onPressed: () => Navigator.pop(
+                context,
+                false,
+              ),
+            ),
+            TextButton(
+              child: const Text(
+                'Continue',
+              ),
+              onPressed: () => Navigator.pop(
+                context,
+                true,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Variant?> _showVariantDialog(PlayerClass selectedPlayerClass) async {
+    return await showDialog<Variant?>(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'images/class_icons/${selectedPlayerClass.icon}',
+                width: iconSize + 5,
+                height: iconSize + 5,
+                colorFilter: ColorFilter.mode(
+                  Color(
+                    selectedPlayerClass.primaryColor,
+                  ),
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(width: smallPadding * 2),
+              Text(
+                selectedPlayerClass.name,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ],
+          ),
+          content: const Text(
+            'Version',
+            textAlign: TextAlign.center,
+          ),
+          actions:
+              PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!
+                  .map((perkList) {
+            return TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(perkList.variant);
+              },
+              child: Text(
+                CharacterData.classVariants[perkList.variant]!,
+                textAlign: TextAlign.end,
+              ),
+            );
+          }).toList()
+                ..add(TextButton(
+                    onPressed: (() => Navigator.of(context).pop()),
+                    child: const Text('Cancel'))),
+        );
+      },
+    );
   }
 }
 

@@ -19,7 +19,7 @@ main() async {
     SharedPrefs().removeAll();
     SharedPrefs().clearSharedPrefs = false;
   }
-  SharedPrefs().showUpdate4Dialog = true;
+  SharedPrefs().showUpdate4Dialog = false;
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       systemNavigationBarIconBrightness:

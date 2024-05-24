@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,6 +23,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
+  // TODO: this should be 8 for the release of 4.2.0
   static const _databaseVersion = 8;
 
   // Make this a singleton class.
@@ -46,6 +48,7 @@ class DatabaseHelper {
   static const String columnDatabaseVersion = 'DatabaseVersion';
   static const String columnAppVersion = 'AppVersion';
   static const String columnAppBuildNumber = 'AppBuildNumber';
+  static const String columnLastUpdated = 'LastUpdated';
 
   // open the database
   _initDatabase() async {
@@ -70,6 +73,7 @@ class DatabaseHelper {
   static const String textType = 'TEXT NOT NULL';
   static const String boolType = 'BOOL NOT NULL';
   static const String integerType = 'INTEGER NOT NULL';
+  static const String dateTimeType = 'DATETIME DEFAULT CURRENT_TIMESTAMP';
   static const String createTable = 'CREATE TABLE';
   static const String dropTable = 'DROP TABLE';
 
@@ -80,20 +84,9 @@ class DatabaseHelper {
   ) async {
     await db.transaction(
       (txn) async {
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        await txn.execute('''
-        $createTable $tableMetaData (
-          $columnDatabaseVersion $integerType,
-          $columnAppVersion $textType,
-          $columnAppBuildNumber $integerType
-        )''');
-        await txn.insert(
-          DatabaseHelper.tableMetaData,
-          {
-            DatabaseHelper.columnDatabaseVersion: version,
-            DatabaseHelper.columnAppVersion: packageInfo.version,
-            DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
-          },
+        await DatabaseMigrations.createMetaDataTable(
+          txn,
+          version,
         );
         await txn.execute('''
         $createTable $tableCharacters (
@@ -136,10 +129,12 @@ class DatabaseHelper {
                 perk.variant = list.variant;
                 perk.classCode = classCode;
                 for (int i = 0; i < perk.quantity; i++) {
+                  String index =
+                      (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
                   await txn.insert(
                     tablePerks,
                     perk.toMap(
-                      '${list.perks.indexOf(perk)}${indexToLetter(i)}',
+                      '$index${indexToLetter(i)}',
                     ),
                   );
                 }

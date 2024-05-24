@@ -45,7 +45,7 @@ class Perk {
 class Perks {
   Perks(
     this.perks, {
-    this.variant = Variant.base,
+    required this.variant,
   });
 
   List<Perk> perks;

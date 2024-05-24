@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     future = context.read<CharactersModel>().loadCharacters();
-    if (SharedPrefs().showUpdate4Dialog) {
+    if (SharedPrefs().showUpdate420Dialog) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         showDialog<void>(
           barrierDismissible: false,
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
               ) {
                 return AlertDialog(
                   title: const Text(
-                    'New in version 4.2.0\n(includes breaking changes. Confirm below to dismiss this dialog.)',
+                    'New in version 4.2.0',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30,
@@ -61,9 +61,11 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Text(
-                              "1. Added all Frosthaven variants of Gloomhaven and JotL classes. When creating a new character, you have the option to choose the 'Base' version or the 'Frosthaven Crossover' version. The later will include Masteries, Traits, and a revamped Perk list."),
+                              '1. Added all Frosthaven variants of Gloomhaven and JotL classes (Crimson Scales upcoming).'),
+                          const SizedBox(height: 16),
                           const Text(
                               "2. Corrected an error present in the 'Astral' perk list."),
+                          const SizedBox(height: 16),
                           Text(
                             'Breaking change:',
                             style: Theme.of(context)
@@ -75,13 +77,7 @@ class _HomeState extends State<Home> {
                             textAlign: TextAlign.center,
                           ),
                           const Text(
-                              "3. Migrated the database to a new format where Perks are now identified by their associated class ID. This shouldn't affecrt your existing data, but will mean you cannot restore backups created before version 4.2.0. Please contact the developer through the Settings menu if this is something you require."),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          const Text('Upcoming:'),
-                          const Text(
-                              "Frosthaven crossover variants of 'Crimson Scales' classes"),
+                              "3. A necessary database migration means you cannot restore backups created before version 4.2.0. Please create a new backup now to replace the deprecated one."),
                           const SizedBox(height: 16),
                           const Text(
                               'Please reach out to the developer through the Support section in the Settings menu with any questions, comments, or critiques'),
@@ -115,7 +111,10 @@ class _HomeState extends State<Home> {
                   actions: [
                     TextButton(
                       onPressed: iUnderstand
-                          ? () => Navigator.of(context).pop()
+                          ? () {
+                              SharedPrefs().showUpdate420Dialog = false;
+                              Navigator.of(context).pop();
+                            }
                           : null,
                       child: Text(
                         iUnderstand
@@ -129,7 +128,7 @@ class _HomeState extends State<Home> {
             );
           },
         );
-        SharedPrefs().showUpdate4Dialog = false;
+        // SharedPrefs().showUpdate420Dialog = false;
       });
     }
   }

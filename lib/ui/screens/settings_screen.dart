@@ -36,10 +36,10 @@ class SettingsScreen extends StatefulWidget {
   });
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  SettingsScreenState createState() => SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class SettingsScreenState extends State<SettingsScreen> {
   final ScrollController scrollController = ScrollController();
   bool isBottom = false;
   @override
@@ -277,9 +277,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       width: iconSize,
                                       height: iconSize,
                                       colorFilter: ColorFilter.mode(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
+                                        Theme.of(context).colorScheme.onSurface,
                                         BlendMode.srcIn,
                                       ),
                                     ),
@@ -395,9 +393,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       width: iconSize,
                                       height: iconSize,
                                       colorFilter: ColorFilter.mode(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
+                                        Theme.of(context).colorScheme.onSurface,
                                         BlendMode.srcIn,
                                       ),
                                     ),

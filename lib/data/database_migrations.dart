@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -172,7 +173,7 @@ class DatabaseMigrations {
           ${DatabaseHelper.columnDatabaseVersion} ${DatabaseHelper.integerType},
           ${DatabaseHelper.columnAppVersion} ${DatabaseHelper.textType},
           ${DatabaseHelper.columnAppBuildNumber} ${DatabaseHelper.integerType},
-          LastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ${DatabaseHelper.columnLastUpdated} ${DatabaseHelper.dateTimeType}
         )''');
 
     await txn.insert(
@@ -190,12 +191,15 @@ class DatabaseMigrations {
     int databaseVersion,
   ) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    DateTime now = DateTime.now().toUtc();
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     await txn.update(
       DatabaseHelper.tableMetaData,
       {
         DatabaseHelper.columnDatabaseVersion: databaseVersion,
         DatabaseHelper.columnAppVersion: packageInfo.version,
         DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+        DatabaseHelper.columnLastUpdated: formattedDate,
       },
     );
   }
@@ -309,7 +313,6 @@ class DatabaseMigrations {
             entry.value.where((element) => element.variant == Variant.base);
 
         for (Perks list in perkLists) {
-          // bool? addedPerkIsSelected;
           for (Perk perk in list.perks) {
             perk.classCode = classKey;
             String index =
@@ -349,9 +352,6 @@ class DatabaseMigrations {
                   );
 
                   if (character != null) {
-                    if (character.playerClass.classCode == 'infuser') {
-                      debugPrint(character.uuid);
-                    }
                     // if character is Infuser and
                     // 724 is selected, make 725 selected and
                     // 725 is selected, make 726 selected

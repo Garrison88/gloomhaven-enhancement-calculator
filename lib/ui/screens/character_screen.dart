@@ -180,7 +180,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                   'images/equipment_slots/pocket.svg',
                   width: iconSize,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.onBackground,
+                    Theme.of(context).colorScheme.onSurface,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -191,7 +191,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
-                          color: Theme.of(context).colorScheme.background,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                   ),
                 ),
@@ -248,7 +248,7 @@ class _NameAndClassSection extends StatelessWidget {
                   'images/level.svg',
                   width: iconSize * 1.5,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.onBackground,
+                    Theme.of(context).colorScheme.onSurface,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -256,7 +256,7 @@ class _NameAndClassSection extends StatelessWidget {
                   '${Character.level(character.xp)}',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontSize: titleFontSize - 7,
-                        color: Theme.of(context).colorScheme.background,
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                 ),
               ],
@@ -284,7 +284,7 @@ class _NameAndClassSection extends StatelessWidget {
                 'images/trait.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.onBackground,
+                  Theme.of(context).colorScheme.onSurface,
                   BlendMode.srcIn,
                 ),
               ),
@@ -330,7 +330,7 @@ class _StatsSection extends StatelessWidget {
                 'images/xp.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.onBackground,
+                  Theme.of(context).colorScheme.onSurface,
                   BlendMode.srcIn,
                 ),
               ),
@@ -429,7 +429,7 @@ class _StatsSection extends StatelessWidget {
                 'images/gold.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.onBackground,
+                  Theme.of(context).colorScheme.onSurface,
                   BlendMode.srcIn,
                 ),
               ),
@@ -504,7 +504,7 @@ class _StatsSection extends StatelessWidget {
                   'images/goal.svg',
                   width: iconSize,
                   colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.onBackground,
+                    Theme.of(context).colorScheme.onSurface,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -548,7 +548,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: Theme.of(context).colorScheme.onBackground,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         borderRadius: BorderRadius.circular(4),
       ),

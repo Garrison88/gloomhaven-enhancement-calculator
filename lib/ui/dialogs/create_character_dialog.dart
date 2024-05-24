@@ -23,10 +23,10 @@ class CreateCharacterDialog extends StatefulWidget {
   });
 
   @override
-  _CreateCharacterDialogState createState() => _CreateCharacterDialogState();
+  CreateCharacterDialogState createState() => CreateCharacterDialogState();
 }
 
-class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
+class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   final TextEditingController _nameTextFieldController =
       TextEditingController();
   final TextEditingController _classTextFieldController =
@@ -193,7 +193,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     child: SvgPicture.asset(
                       'images/level.svg',
                       colorFilter: ColorFilter.mode(
-                        Theme.of(context).colorScheme.onBackground,
+                        Theme.of(context).colorScheme.onSurface,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -316,8 +316,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
                           'images/switch_gh.png',
                         ),
                         activeColor: const Color(0xff005cb2),
-                        trackColor: MaterialStateProperty.resolveWith(
-                          (states) => states.contains(MaterialState.selected)
+                        trackColor: WidgetStateProperty.resolveWith(
+                          (states) => states.contains(WidgetState.selected)
                               ? const Color(0xff6ab7ff)
                               : const Color(0xffa98274),
                         ),
@@ -358,8 +358,8 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
         ),
         ElevatedButton.icon(
           style: Theme.of(context).textButtonTheme.style?.copyWith(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) => Colors.green.withOpacity(0.75),
+                backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                  (Set<WidgetState> states) => Colors.green.withOpacity(0.75),
                 ),
               ),
           onPressed: () async {
@@ -413,7 +413,7 @@ class _CreateCharacterDialogState extends State<CreateCharacterDialog> {
             'images/level.svg',
             width: iconSize + 5,
             colorFilter: ColorFilter.mode(
-              Theme.of(context).colorScheme.onBackground,
+              Theme.of(context).colorScheme.onSurface,
               BlendMode.srcIn,
             ),
           ),
