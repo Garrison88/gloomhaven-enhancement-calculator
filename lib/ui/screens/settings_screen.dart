@@ -214,6 +214,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     children: [
                                       const Text(
                                           'Enter the solution to the puzzle'),
+                                      const SizedBox(height: 8),
                                       TextField(
                                         autofocus: true,
                                         onChanged: (String val) {
@@ -223,6 +224,10 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                     'bladeswarm';
                                           });
                                         },
+                                        decoration: const InputDecoration(
+                                          labelText: 'Solution',
+                                          border: OutlineInputBorder(),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -330,15 +335,22 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     children: [
                                       const Text(
                                           'What is the password for unlocking this envelope?'),
+                                      const SizedBox(height: 8),
                                       TextField(
                                         autofocus: true,
                                         onChanged: (String val) {
-                                          setState(() {
-                                            envelopeVSolved =
-                                                val.toLowerCase().trim() ==
-                                                    'ashes';
-                                          });
+                                          setState(
+                                            () {
+                                              envelopeVSolved =
+                                                  val.toLowerCase().trim() ==
+                                                      'ashes';
+                                            },
+                                          );
                                         },
+                                        decoration: const InputDecoration(
+                                          labelText: 'Password',
+                                          border: OutlineInputBorder(),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -656,12 +668,16 @@ class SettingsScreenState extends State<SettingsScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (Platform.isAndroid)
+                              if (Platform.isAndroid) ...[
                                 const Text(
                                     'If another backup file already exists in the Downloads folder with the same name, it will be overwritten'),
+                                const SizedBox(height: 8),
+                              ],
                               TextField(
                                 decoration: const InputDecoration(
-                                    labelText: 'Filename'),
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Filename',
+                                ),
                                 controller: fileNameController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
@@ -947,7 +963,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                             Uri(
                               scheme: 'https',
                               host: 'discord.gg',
-                              path: 'FxuKNzDAmj',
+                              path: 'UwuGf4hdnA',
                             ),
                           );
                         },

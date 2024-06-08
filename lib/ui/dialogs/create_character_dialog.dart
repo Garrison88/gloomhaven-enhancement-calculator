@@ -101,8 +101,15 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   decoration: InputDecoration(
                     hintText: placeholderName,
                     labelText: 'Name',
+                    border: const OutlineInputBorder(),
                   ),
                   controller: _nameTextFieldController,
+                  onChanged: (value) {
+                    setState(() {
+                      placeholderName = value;
+                      _nameTextFieldController.text = value;
+                    });
+                  },
                 ),
                 trailing: IconButton(
                   icon: const FaIcon(FontAwesomeIcons.dice),
@@ -115,6 +122,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   },
                 ),
               ),
+              const SizedBox(height: 12),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,
@@ -124,6 +132,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   readOnly: true,
                   controller: _classTextFieldController,
                   decoration: InputDecoration(
+                    // hintText: 'Class',
+                    border: const OutlineInputBorder(),
                     labelText:
                         'Class${_variant != Variant.base ? ' (${CharacterData.classVariants[_variant]})' : ''}',
                   ),
@@ -167,6 +177,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   ),
                 ),
               ),
+              const SizedBox(height: 12),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,
@@ -183,6 +194,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       minWidth: 48,
                     ),
                     labelText: 'Starting level',
+                    border: OutlineInputBorder(),
                   ),
                 ),
                 trailing: SizedBox(
@@ -236,6 +248,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
               //     labelText: 'Personal Goal',
               //   ),
               // ),
+              const SizedBox(height: 12),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,
@@ -244,6 +257,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   controller: _previousRetirementsTextFieldController,
                   decoration: const InputDecoration(
                     labelText: 'Previous retirements',
+                    border: OutlineInputBorder(),
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(
@@ -253,7 +267,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   keyboardType: TextInputType.number,
                 ),
               ),
-              if (!_gloomhavenMode)
+              if (!_gloomhavenMode) ...[
+                const SizedBox(height: 12),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   minVerticalPadding: 0,
@@ -264,6 +279,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       controller: _prosperityLevelTextFieldController,
                       decoration: const InputDecoration(
                         labelText: 'Prosperity level',
+                        border: OutlineInputBorder(),
                       ),
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
@@ -274,6 +290,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     ),
                   ),
                 ),
+              ],
+
               const SizedBox(
                 height: smallPadding,
               ),

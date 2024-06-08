@@ -148,6 +148,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 enhancementCalculatorModel.cardLevel = value;
                               }
                             },
+                            isExpanded: true,
                           ),
                         ),
                       ),
@@ -199,6 +200,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                     .previousEnhancements = value;
                               }
                             },
+                            isExpanded: true,
                           ),
                         ),
                       ),
@@ -230,12 +232,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       const Text(
                         'Enhancement Type',
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<Enhancement>(
-                            alignment: Alignment.center,
-                            hint: Text(
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<Enhancement>(
+                          alignment: Alignment.center,
+                          hint: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
                               'Type',
                               style: DropdownMenuThemeData(
                                       textStyle: Theme.of(context)
@@ -244,19 +246,20 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                   .textStyle
                                   ?.copyWith(color: Colors.grey),
                             ),
-                            value: enhancementCalculatorModel.enhancement,
-                            items: EnhancementData.enhancementTypes(
-                              context,
-                              gloomhavenMode: SharedPrefs().gloomhavenMode,
-                              enhancerLvl2: SharedPrefs().enhancerLvl2,
-                            ),
-                            onChanged: (Enhancement? selectedEnhancement) {
-                              if (selectedEnhancement != null) {
-                                enhancementCalculatorModel
-                                    .enhancementSelected(selectedEnhancement);
-                              }
-                            },
                           ),
+                          isExpanded: true,
+                          value: enhancementCalculatorModel.enhancement,
+                          items: EnhancementData.enhancementTypes(
+                            context,
+                            gloomhavenMode: SharedPrefs().gloomhavenMode,
+                            enhancerLvl2: SharedPrefs().enhancerLvl2,
+                          ),
+                          onChanged: (Enhancement? selectedEnhancement) {
+                            if (selectedEnhancement != null) {
+                              enhancementCalculatorModel
+                                  .enhancementSelected(selectedEnhancement);
+                            }
+                          },
                         ),
                       ),
                     ],

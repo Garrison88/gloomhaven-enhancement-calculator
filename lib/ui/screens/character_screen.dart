@@ -152,7 +152,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Previous retirements',
               border: charactersModel.isEditMode && !character.isRetired
-                  ? null
+                  ? const OutlineInputBorder()
                   : InputBorder.none,
             ),
             controller: charactersModel.previousRetirementsController,
@@ -225,6 +225,10 @@ class _NameAndClassSection extends StatelessWidget {
                     character..name = value,
                   );
                 },
+                decoration: const InputDecoration(
+                  label: Text('Name'),
+                  border: OutlineInputBorder(),
+                ),
                 minLines: 1,
                 maxLines: 2,
                 controller: charactersModel.nameController,
@@ -362,6 +366,10 @@ class _StatsSection extends StatelessWidget {
                                   RegExp('[\\.|\\,|\\ |\\-]'))
                             ],
                             keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              label: Text('XP'),
+                              border: OutlineInputBorder(),
+                            ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.exposure),
@@ -459,6 +467,10 @@ class _StatsSection extends StatelessWidget {
                                   RegExp('[\\.|\\,|\\ |\\-]'))
                             ],
                             keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              label: Text('Gold'),
+                              border: OutlineInputBorder(),
+                            ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.exposure),
@@ -769,7 +781,8 @@ class _NotesSection extends StatelessWidget {
                 },
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
-                  hintText: 'Notes',
+                  label: Text('Notes'),
+                  border: OutlineInputBorder(),
                 ),
                 controller: charactersModel.notesController,
               )

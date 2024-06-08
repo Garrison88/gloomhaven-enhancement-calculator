@@ -433,7 +433,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                                   Uri uri = Uri(
                                     scheme: 'https',
                                     host: 'discord.gg',
-                                    path: 'gSRz6sB',
+                                    path:
+                                        'gloomhaven-custom-content-unity-guild-728375347732807825',
                                   );
                                   var urllaunchable = await canLaunchUrl(
                                     uri,
