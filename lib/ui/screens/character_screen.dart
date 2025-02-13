@@ -572,6 +572,9 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
           dividerColor: Colors.transparent,
         ),
         child: ExpansionTile(
+          iconColor: widget.character.primaryClassColor(
+            Theme.of(context).brightness,
+          ),
           onExpansionChanged: (value) =>
               SharedPrefs().resourcesExpanded = value,
           initiallyExpanded: SharedPrefs().resourcesExpanded,
@@ -608,6 +611,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   // ),
                   ResourceCard(
                     resource: CharacterData.resources[0],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceLumber,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -622,6 +630,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[1],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceMetal,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -636,6 +649,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[2],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceHide,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -650,6 +668,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[3],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceArrowvine,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -666,6 +689,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[4],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceAxenut,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -680,6 +708,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[5],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceCorpsecap,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -696,6 +729,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[6],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceFlamefruit,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -712,6 +750,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[7],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceRockroot,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character
@@ -728,6 +771,11 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                   ),
                   ResourceCard(
                     resource: CharacterData.resources[8],
+                    color: widget.character
+                        .primaryClassColor(
+                          Theme.of(context).brightness,
+                        )
+                        .withValues(alpha: 0.1),
                     count: widget.character.resourceSnowthistle,
                     increaseCount: () => charactersModel.updateCharacter(
                       widget.character

@@ -263,7 +263,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                                       backgroundColor: WidgetStateProperty
                                           .resolveWith<Color>(
                                         (Set<WidgetState> states) =>
-                                            Colors.red.withOpacity(0.75),
+                                            Colors.red.withValues(alpha: 0.75),
                                       ),
                                     ),
                                 onPressed: () => Navigator.pop(

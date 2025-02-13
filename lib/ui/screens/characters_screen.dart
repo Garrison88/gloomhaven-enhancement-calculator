@@ -92,7 +92,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                             .watch<CharactersModel>()
                             .characters[index]
                             .primaryClassColor(Theme.of(context).brightness)
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         BlendMode.srcIn,
                       ),
                     ),

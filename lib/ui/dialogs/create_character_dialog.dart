@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:faker/faker.dart';
+import 'package:faker/faker.dart' as faker;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -41,7 +41,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       TextEditingController();
   bool _gloomhavenMode = true;
   PlayerClass? _selectedClass;
-  Faker faker = Faker();
+  late faker.Faker _faker;
   late String placeholderName;
   FocusNode nameFocusNode = FocusNode();
   Variant _variant = Variant.base;
@@ -56,6 +56,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   @override
   void initState() {
     super.initState();
+    // faker.Faker();
+    _faker = faker.Faker();
     _levelTextFieldController.text = '1';
     placeholderName = _generateRandomName();
   }
@@ -72,7 +74,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   }
 
   String _generateRandomName() {
-    return '${faker.person.firstName()} ${faker.person.lastName()}';
+    return '${_faker.person.firstName()} ${_faker.person.lastName()}';
   }
 
   // PersonalGoal _personalGoal;
@@ -377,7 +379,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
         ElevatedButton.icon(
           style: Theme.of(context).textButtonTheme.style?.copyWith(
                 backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                  (Set<WidgetState> states) => Colors.green.withOpacity(0.75),
+                  (Set<WidgetState> states) =>
+                      Colors.green.withValues(alpha: 0.75),
                 ),
               ),
           onPressed: () async {

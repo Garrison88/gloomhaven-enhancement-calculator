@@ -41,7 +41,7 @@ class AppTheme {
         ),
         snackBarTheme: _snackBarThemeData(),
         dividerTheme: DividerThemeData(
-          color: Colors.grey.withOpacity(0.5),
+          color: Colors.grey.withValues(alpha: 0.5),
         ),
       );
 
@@ -84,7 +84,7 @@ class AppTheme {
         ),
         snackBarTheme: _snackBarThemeData(),
         dividerTheme: DividerThemeData(
-          color: Colors.grey.withOpacity(0.5),
+          color: Colors.grey.withValues(alpha: 0.5),
         ),
       );
 }

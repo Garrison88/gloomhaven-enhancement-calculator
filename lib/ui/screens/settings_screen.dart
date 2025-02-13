@@ -113,7 +113,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                   activeThumbImage: const AssetImage('images/elem_dark.png'),
                   activeColor: const Color(0xff1f272e),
                   inactiveThumbColor: const Color(0xffeda50b),
-                  inactiveTrackColor: const Color(0xffeda50b).withOpacity(0.75),
+                  inactiveTrackColor:
+                      const Color(0xffeda50b).withValues(alpha: 0.75),
                   activeTrackColor: const Color(0xff1f272e),
                   inactiveThumbImage: const AssetImage('images/elem_light.png'),
                   value: widget.appModel.themeMode == ThemeMode.dark,
@@ -631,7 +632,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(.75),
+                            .withValues(alpha: .75),
                       ),
                     ),
                   ),

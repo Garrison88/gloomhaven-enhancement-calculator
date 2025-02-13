@@ -1,11 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../models/resource.dart';
-import '../../data/constants.dart';
+
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/models/resource.dart';
 
 class ResourceCard extends StatelessWidget {
   final Resource resource;
+  final Color color;
   final int count;
   final Function() increaseCount;
   final Function() decreaseCount;
@@ -13,6 +15,7 @@ class ResourceCard extends StatelessWidget {
   const ResourceCard({
     super.key,
     required this.resource,
+    required this.color,
     required this.count,
     required this.increaseCount,
     required this.decreaseCount,
@@ -28,6 +31,7 @@ class ResourceCard extends StatelessWidget {
         elevation: 4,
         child: ResourceDetails(
           resource: resource,
+          color: color,
           count: count,
           decreaseCount: decreaseCount,
           increaseCount: increaseCount,
@@ -40,6 +44,7 @@ class ResourceCard extends StatelessWidget {
 
 class ResourceDetails extends StatelessWidget {
   final Resource resource;
+  final Color color;
   final int count;
   final Function() decreaseCount;
   final Function() increaseCount;
@@ -47,6 +52,7 @@ class ResourceDetails extends StatelessWidget {
   const ResourceDetails({
     super.key,
     required this.resource,
+    required this.color,
     required this.count,
     required this.decreaseCount,
     required this.increaseCount,
@@ -72,9 +78,7 @@ class ResourceDetails extends StatelessWidget {
             child: SvgPicture.asset(
               resource.icon,
               colorFilter: ColorFilter.mode(
-                Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.black87.withOpacity(0.05),
+                color,
                 BlendMode.srcIn,
               ),
             ),

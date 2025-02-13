@@ -2141,6 +2141,19 @@ abstract class CharacterData {
       ),
     ],
     // Custom
+    _vimthreader: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, perform a heal ability and cause a figure to suffer DAMAGE each round',
+          ),
+          Mastery(
+            masteryDetails: 'Gain the attributes of 12 different monster types',
+          ),
+        ],
+      )
+    ],
     // _incarnate: [
     //   Masteries(
     //     [
@@ -3469,6 +3482,45 @@ abstract class CharacterData {
           )
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+    ],
+    _vimthreader: [
+      Perks(
+        [
+          Perk(
+              '$_replace $_one -2 $_card with $_one -1 "If the target has an attribute, $_addL +2, WOUND, POISON, MUDDLE" $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 ENFEEBLE $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "EMPOWER, RANGE 2" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "HEAL 1, TARGET 1 ally" $_card',
+            quantity: 3,
+          ),
+          Perk('$_replace $_one +2 $_card with $_four +1 $_rolling $_cards'),
+          Perk('$_add $_two PIERCE 2 POISON $_rolling $_cards'),
+          Perk(
+            '$_add $_three "HEAL 1, RANGE 1" $_rolling $_cards',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffects and $_removeL $_one +0 $_card'),
+          // here
+          Perk('$_ignoreItemMinusOneEffects and $_removeL $_one +0 $_card'),
+          Perk(
+              '$_wheneverYouShortRest, $_one adjacent enemy suffers DAMAGE 1, and you perform "HEAL 1, self"'),
+          Perk(
+            '$_atTheStartOfEachScenario, you may suffer DAMAGE 1 to grant all allies and self MOVE 3',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+              'Once each $_scenario, $_removeL all $_negative conditions you have. One adjacent enemy suffers DAMAGE equal to the number of conditions removed'),
+        ],
+        variant: Variant.base,
       ),
     ],
     _voidwarden: [
@@ -5703,6 +5755,14 @@ abstract class CharacterData {
       category: ClassCategory.custom,
       primaryColor: 0xff7bd071,
     ),
+    PlayerClass(
+      race: _harrower,
+      name: 'Vimthreader',
+      classCode: _vimthreader,
+      icon: 'vimthreader.svg',
+      category: ClassCategory.custom,
+      primaryColor: 0xffc26969,
+    ),
   ];
 
   static final List<Resource> resources = [
@@ -5864,6 +5924,7 @@ abstract class CharacterData {
   static const _valrath = 'Valrath';
   static const _vanquisher = 'vanquisher';
   static const _vermling = 'Vermling';
+  static const _vimthreader = 'vimthreader';
   static const _voidwarden = 'vw';
   static const _wheneverYouLongRest = 'Whenever you long rest';
   static const _wheneverYouShortRest = 'Whenever you short rest';
