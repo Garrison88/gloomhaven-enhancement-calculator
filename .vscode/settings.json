@@ -1,0 +1,30 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "workbench.colorCustomizations": {
+        "terminal.background": "#151515",
+        "terminal.foreground": "#D0D0D0",
+        "terminalCursor.background": "#D0D0D0",
+        "terminalCursor.foreground": "#D0D0D0",
+        "terminal.ansiBlack": "#151515",
+        "terminal.ansiBlue": "#6FC2EF",
+        "terminal.ansiBrightBlack": "#505050",
+        "terminal.ansiBrightBlue": "#6FC2EF",
+        "terminal.ansiBrightCyan": "#12CFC0",
+        "terminal.ansiBrightGreen": "#ACC267",
+        "terminal.ansiBrightMagenta": "#E1A3EE",
+        "terminal.ansiBrightRed": "#FB9FB1",
+        "terminal.ansiBrightWhite": "#F5F5F5",
+        "terminal.ansiBrightYellow": "#DDB26F",
+        "terminal.ansiCyan": "#12CFC0",
+        "terminal.ansiGreen": "#ACC267",
+        "terminal.ansiMagenta": "#E1A3EE",
+        "terminal.ansiRed": "#FB9FB1",
+        "terminal.ansiWhite": "#D0D0D0",
+        "terminal.ansiYellow": "#DDB26F",
+        "activityBar.background": "#19322A",
+        "titleBar.activeBackground": "#23473B",
+        "titleBar.activeForeground": "#F6FBF9"
+    },
+    "svn.ignoreMissingSvnWarning": true,
+    "java.compile.nullAnalysis.mode": "automatic"
+}
