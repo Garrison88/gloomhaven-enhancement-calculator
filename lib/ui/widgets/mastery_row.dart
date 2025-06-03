@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 

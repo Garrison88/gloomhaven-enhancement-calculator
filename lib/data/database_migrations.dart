@@ -1,19 +1,23 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository.dart';
+import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository_legacy.dart';
+import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
+import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository_legacy.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/legacy_perk.dart' as legacy;
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/legacy_mastery.dart'
+import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/legacy_perk.dart'
     as legacy;
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/legacy_mastery.dart'
+    as legacy;
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class DatabaseMigrations {
@@ -27,7 +31,7 @@ class DatabaseMigrations {
           ${legacy.columnPerkIsGrouped} ${DatabaseHelper.boolType}
         )''').then(
       (_) async {
-        for (legacy.Perk perk in CharacterData.legacyPerks) {
+        for (legacy.Perk perk in PerksRepositoryLegacy.legacyPerks) {
           for (int i = 0; i < perk.numOfPerks; i++) {
             await txn.insert(
               tablePerks,
@@ -117,7 +121,7 @@ class DatabaseMigrations {
           $columnMasteryDetails ${DatabaseHelper.textType}
         )''').then(
       (_) async {
-        for (legacy.Mastery mastery in CharacterData.masteries) {
+        for (legacy.Mastery mastery in MasteriesRepositoryLegacy.masteries) {
           await txn.insert(
             tableMasteries,
             mastery.toMap(),
@@ -306,7 +310,7 @@ class DatabaseMigrations {
     final List<Character?> characters =
         charactersMaps.map((e) => Character.fromMap(e)).toList();
     await Future.forEach(
-      CharacterData.perksMap.entries,
+      PerksRepository.perksMap.entries,
       (entry) async {
         final classKey = entry.key;
         final perkLists =
@@ -434,7 +438,7 @@ class DatabaseMigrations {
     String tempTablePerks,
   ) async {
     await Future.forEach(
-      CharacterData.perksMap.entries,
+      PerksRepository.perksMap.entries,
       (entry) async {
         final classCode = entry.key;
         final perkLists = entry.value.where(
@@ -514,7 +518,8 @@ class DatabaseMigrations {
         await txn.query(tableCharacterMasteries);
     final List<CharacterMastery?> characterMasteries =
         characterMasteriesMaps.map((e) => CharacterMastery.fromMap(e)).toList();
-    await Future.forEach(CharacterData.masteriesMap.entries, (entry) async {
+    await Future.forEach(MasteriesRepository.masteriesMap.entries,
+        (entry) async {
       final classKey = entry.key;
       final masteryLists = entry.value;
 

@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
@@ -137,7 +137,7 @@ class CharactersModel with ChangeNotifier {
   }) async {
     var random = Random();
     if (classCategory == null) {
-      for (PlayerClass playerClass in CharacterData.playerClasses) {
+      for (PlayerClass playerClass in PlayerClasses.playerClasses) {
         await createCharacter(
           playerClass.name,
           playerClass,
@@ -149,7 +149,7 @@ class CharactersModel with ChangeNotifier {
         debugPrint('Created ${playerClass.name}');
       }
     } else {
-      for (PlayerClass playerClass in CharacterData.playerClasses.where(
+      for (PlayerClass playerClass in PlayerClasses.playerClasses.where(
         (element) => element.category == classCategory,
       )) {
         await createCharacter(
@@ -200,7 +200,7 @@ class CharactersModel with ChangeNotifier {
       name: name,
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
-      xp: CharacterData.xpByLevel(initialLevel),
+      xp: PlayerClasses.xpByLevel(initialLevel),
       gold:
           gloomhavenMode ? 15 * (initialLevel + 1) : 10 * prosperityLevel + 20,
       variant: variant,

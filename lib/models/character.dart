@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 
 import 'player_class.dart';
@@ -87,7 +87,7 @@ class Character {
     // This handles for legacy characters that don't have a uuid
     uuid = map[columnCharacterUuid] ?? map[columnCharacterId].toString();
     name = map[columnCharacterName];
-    playerClass = CharacterData.playerClassByClassCode(
+    playerClass = PlayerClasses.playerClassByClassCode(
       map[columnCharacterClassCode].toLowerCase(),
     );
     previousRetirements = map[columnPreviousRetirements];
@@ -151,9 +151,9 @@ class Character {
         playerClass.secondaryColor ?? playerClass.primaryColor,
       );
 
-  static int level(int xp) => CharacterData.levelByXp(xp);
+  static int level(int xp) => PlayerClasses.levelByXp(xp);
 
-  static int xpForNextLevel(int level) => CharacterData.nextXpByLevel(level);
+  static int xpForNextLevel(int level) => PlayerClasses.nextXpByLevel(level);
 
   static int maximumPerks(Character character) {
     int sum = 0;

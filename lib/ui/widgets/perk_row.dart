@@ -3,7 +3,7 @@ import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
-import '../../models/perk.dart';
+import '../../models/perk/perk.dart';
 import '../../utils/utils.dart';
 import '../../viewmodels/characters_model.dart';
 

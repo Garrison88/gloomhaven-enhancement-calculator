@@ -1,4 +1,4 @@
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
 
 const String tableCharacterMasteries = 'CharacterMasteries';
 const String columnAssociatedMasteryId = 'MasteryID';

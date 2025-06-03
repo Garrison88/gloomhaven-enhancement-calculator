@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'data/constants.dart';
 import 'models/player_class.dart';
@@ -546,7 +546,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
                 Navigator.of(context).pop(perkList.variant);
               },
               child: Text(
-                CharacterData.classVariants[perkList.variant]!,
+                ClassVariants.classVariants[perkList.variant]!,
                 textAlign: TextAlign.end,
               ),
             );

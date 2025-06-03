@@ -5,7 +5,7 @@ class Enhancement {
   final String name;
   final int ghCost;
   final int? fhCost;
-  String? iconPath;
+  final String? iconPath;
   final bool invertIconColor;
 
   Enhancement(
