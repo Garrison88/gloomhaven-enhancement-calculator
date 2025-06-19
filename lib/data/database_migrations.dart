@@ -1,27 +1,62 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository.dart';
 import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository_legacy.dart';
 import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
 import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository_legacy.dart';
+import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/legacy_mastery.dart'
+    as legacy;
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/legacy_perk.dart'
+    as legacy;
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
-import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk/legacy_perk.dart'
-    as legacy;
-import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery/legacy_mastery.dart'
-    as legacy;
-import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
-
 class DatabaseMigrations {
-  static regeneratePerksTable(Transaction txn) async {
+  static Future<void> regeneratePerksTable(Transaction txn) async {
+    await txn.execute('DROP TABLE IF EXISTS $tablePerks');
+    await txn.execute('''
+        ${DatabaseHelper.createTable} $tablePerks(
+          $columnPerkId ${DatabaseHelper.idTextPrimaryType},
+          $columnPerkClass ${DatabaseHelper.textType},
+          $columnPerkDetails ${DatabaseHelper.textType},
+          $columnPerkIsGrouped ${DatabaseHelper.boolType} DEFAULT 0,
+          $columnPerkVariant ${DatabaseHelper.textType}
+        )''');
+    await Future.forEach(
+      PerksRepository.perksMap.entries,
+      (MapEntry<String, List<Perks>> entry) async {
+        final classCode = entry.key;
+        final perkLists = entry.value;
+        for (Perks list in perkLists) {
+          for (Perk perk in list.perks) {
+            perk.variant = list.variant;
+            perk.classCode = classCode;
+            for (int i = 0; i < perk.quantity; i++) {
+              String index =
+                  (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
+              await txn.insert(
+                tablePerks,
+                perk.toMap(
+                  '$index${indexToLetter(i)}',
+                ),
+              );
+            }
+          }
+        }
+      },
+    );
+  }
+
+  @Deprecated('Use `regeneratePerksTable` as of database schema version >= 8')
+  static Future<void> regenerateLegacyPerksTable(Transaction txn) async {
     await txn.execute('DROP TABLE IF EXISTS ${legacy.tablePerks}');
     await txn.execute('''
         ${DatabaseHelper.createTable} ${legacy.tablePerks}(
