@@ -1,4 +1,6 @@
 // Character races
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+
 class CharacterRaces {
   static const aesther = 'Aesther';
   static const algox = 'Algox';
@@ -30,7 +32,7 @@ class CharacterTraits {
 
 /// Class codes for all character classes across all games
 class ClassCodes {
-  // Gloomhaven Base Classes
+  // Gloomhaven starting classes
   static const brute = 'br';
   static const tinkerer = 'ti';
   static const spellweaver = 'sw';
@@ -38,7 +40,7 @@ class ClassCodes {
   static const cragheart = 'ch';
   static const mindthief = 'mt';
 
-  // Gloomhaven Unlockable Classes
+  // Gloomhaven unlockable classes
   static const sunkeeper = 'sk';
   static const quartermaster = 'qm';
   static const summoner = 'su';
@@ -63,7 +65,7 @@ class ClassCodes {
   static const redGuard = 'rg';
   static const voidwarden = 'vw';
 
-  // Frosthaven Starting Classes
+  // Frosthaven starting classes
   static const drifter = 'drifter';
   static const blinkBlade = 'blinkblade';
   static const bannerSpear = 'bannerspear';
@@ -71,7 +73,7 @@ class ClassCodes {
   static const boneshaper = 'boneshaper';
   static const geminate = 'geminate';
 
-  // Frosthaven Unlockable Classes
+  // Frosthaven unlockable classes
   static const infuser = 'infuser';
   static const pyroclast = 'pyroclast';
   static const shattersong = 'shattersong';
@@ -102,7 +104,7 @@ class ClassCodes {
   static const thornreaper = 'thornreaper';
   static const vanquisher = 'vanquisher';
 
-  // Custom Classes
+  // Custom classes
   static const brewmaster = 'bm';
   static const frostborn = 'fb';
   static const incarnate = 'incarnate';
@@ -114,6 +116,15 @@ class ClassCodes {
 
   // Private constructor to prevent instantiation
   const ClassCodes._();
+}
+
+class ClassVariants {
+  static Map<Variant, String> classVariants = {
+    Variant.base: 'Base',
+    Variant.frosthavenCrossover: 'Frosthaven Crossover',
+    Variant.v2: 'Version II',
+    Variant.v3: 'Version III',
+  };
 }
 
 // Experience levels

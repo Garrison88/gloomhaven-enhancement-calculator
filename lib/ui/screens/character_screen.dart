@@ -2,9 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/resources_repository.dart';
+import 'package:gloomhaven_enhancement_calc/models/resource_field.dart';
 import 'package:provider/provider.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -590,213 +591,54 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
                 runSpacing: smallPadding,
                 spacing: smallPadding,
                 alignment: WrapAlignment.spaceEvenly,
-                children: <ResourceCard>[
-                  // ...CharacterData.resources.map(
-                  //   ((resource) => ResourceCard(
-                  //         resource: resource,
-                  //         count: widget.character.resourceHide,
-                  //         increaseCount: () =>
-                  //             charactersModel.updateCharacter(
-                  //           widget.character
-                  //             ..resourceHide =
-                  //                 widget.character.resourceHide + 1,
-                  //         ),
-                  //         decreaseCount: () =>
-                  //             charactersModel.updateCharacter(
-                  //           widget.character
-                  //             ..resourceHide =
-                  //                 widget.character.resourceHide - 1,
-                  //         ),
-                  //       )),
-                  // ),
-                  ResourceCard(
-                    resource: CharacterData.resources[0],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceLumber,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceLumber = widget.character.resourceLumber + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceLumber = widget.character.resourceLumber - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[1],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceMetal,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceMetal = widget.character.resourceMetal + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceMetal = widget.character.resourceMetal - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[2],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceHide,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceHide = widget.character.resourceHide + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceHide = widget.character.resourceHide - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[3],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceArrowvine,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceArrowvine =
-                            widget.character.resourceArrowvine + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceArrowvine =
-                            widget.character.resourceArrowvine - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[4],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceAxenut,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceAxenut = widget.character.resourceAxenut + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceAxenut = widget.character.resourceAxenut - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[5],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceCorpsecap,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceCorpsecap =
-                            widget.character.resourceCorpsecap + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceCorpsecap =
-                            widget.character.resourceCorpsecap - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[6],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceFlamefruit,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceFlamefruit =
-                            widget.character.resourceFlamefruit + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceFlamefruit =
-                            widget.character.resourceFlamefruit - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[7],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceRockroot,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceRockroot =
-                            widget.character.resourceRockroot + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceRockroot =
-                            widget.character.resourceRockroot - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                  ResourceCard(
-                    resource: CharacterData.resources[8],
-                    color: widget.character
-                        .primaryClassColor(
-                          Theme.of(context).brightness,
-                        )
-                        .withValues(alpha: 0.1),
-                    count: widget.character.resourceSnowthistle,
-                    increaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceSnowthistle =
-                            widget.character.resourceSnowthistle + 1,
-                    ),
-                    decreaseCount: () => charactersModel.updateCharacter(
-                      widget.character
-                        ..resourceSnowthistle =
-                            widget.character.resourceSnowthistle - 1,
-                    ),
-                    canEdit: charactersModel.isEditMode &&
-                        !widget.character.isRetired,
-                  ),
-                ],
+                children: _buildResourceCards(
+                  context,
+                  widget.character,
+                  charactersModel,
+                ),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Generate resource cards
+  List<Widget> _buildResourceCards(
+    BuildContext context,
+    Character character,
+    CharactersModel charactersModel,
+  ) {
+    return resourceFields.entries.map((entry) {
+      final ResourceFieldData fieldData = entry.value;
+      return ResourceCard(
+        resource: ResourcesRepository.resources[fieldData.resourceIndex],
+        color: character
+            .primaryClassColor(Theme.of(context).brightness)
+            .withValues(alpha: 0.1),
+        count: fieldData.getter(character),
+        onIncrease: () {
+          // Create a copy of the character and update it
+          final updatedCharacter = character;
+          fieldData.setter(
+            updatedCharacter,
+            fieldData.getter(character) + 1,
+          );
+          charactersModel.updateCharacter(updatedCharacter);
+        },
+        onDecrease: () {
+          // Create a copy of the character and update it
+          final updatedCharacter = character;
+          fieldData.setter(
+            updatedCharacter,
+            fieldData.getter(character) - 1,
+          );
+          charactersModel.updateCharacter(updatedCharacter);
+        },
+        canEdit: charactersModel.isEditMode && !character.isRetired,
+      );
+    }).toList();
   }
 }
 

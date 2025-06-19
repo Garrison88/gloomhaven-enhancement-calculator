@@ -1,5 +1,5 @@
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 
 enum ClassCategory {
   gloomhaven,
@@ -41,5 +41,5 @@ class PlayerClass {
   });
 
   static List<Perks>? perkListByClassCode(String classCode) =>
-      CharacterData.perksMap[classCode];
+      PerksRepository.perksMap[classCode];
 }

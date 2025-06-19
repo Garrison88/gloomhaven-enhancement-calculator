@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
@@ -11,7 +13,6 @@ import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
@@ -137,14 +138,14 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     // hintText: 'Class',
                     border: const OutlineInputBorder(),
                     labelText:
-                        'Class${_variant != Variant.base ? ' (${CharacterData.classVariants[_variant]})' : ''}',
+                        'Class${_variant != Variant.base ? ' (${ClassVariants.classVariants[_variant]})' : ''}',
                   ),
                   onTap: () async {
                     SelectedPlayerClass? selectedPlayerClass =
                         await showSearch<SelectedPlayerClass>(
                       context: context,
                       delegate: CustomSearchDelegate(
-                        CharacterData.playerClasses,
+                        PlayerClasses.playerClasses,
                       ),
                     );
                     if (selectedPlayerClass != null) {

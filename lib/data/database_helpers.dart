@@ -2,16 +2,17 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository.dart';
+import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:gloomhaven_enhancement_calc/data/character_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/character_perk.dart';
-import 'package:gloomhaven_enhancement_calc/models/mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
+import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 
 import 'database_migrations.dart';
 
@@ -117,7 +118,7 @@ class DatabaseHelper {
           $columnPerkVariant $textType
         )''');
         await Future.forEach(
-          CharacterData.perksMap.entries,
+          PerksRepository.perksMap.entries,
           (entry) async {
             final classCode = entry.key;
             final perkLists = entry.value;
@@ -153,7 +154,7 @@ class DatabaseHelper {
           $columnMasteryVariant $textType
         )''');
         await Future.forEach(
-          CharacterData.masteriesMap.entries,
+          MasteriesRepository.masteriesMap.entries,
           (entry) async {
             final classCode = entry.key;
             final masteriesList = entry.value;
