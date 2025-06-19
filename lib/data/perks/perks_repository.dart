@@ -1369,7 +1369,7 @@ class PerksRepository {
       Perks(
         [
           Perk(
-              '$_replace $_one -2 $_card with $_one -1 "If the target has an attribute, $_addLowercase +2, WOUND, POISON, MUDDLE" $_card'),
+              '$_replace $_one -2 $_card with $_one -1 "If the target has an attribute, $_addLowercase WOUND, POISON, MUDDLE" $_card'),
           Perk(
             '$_replace $_one -1 $_card with $_one +0 ENFEEBLE $_card',
             quantity: 2,
