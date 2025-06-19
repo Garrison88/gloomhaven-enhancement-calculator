@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 8;
+  static const _databaseVersion = 9;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -191,19 +191,19 @@ class DatabaseHelper {
       (txn) async {
         if (oldVersion <= 4) {
           // Add perks for Crimson Scales classes
-          await DatabaseMigrations.regeneratePerksTable(txn);
+          await DatabaseMigrations.regenerateLegacyPerksTable(txn);
           // Add Uuid column to CharactersTable and CharacterPerks table,
           // and change schema for both
           await DatabaseMigrations.migrateToUuids(txn);
         }
         if (oldVersion <= 5) {
           // Cleanup perks and add Ruinmaw
-          await DatabaseMigrations.regeneratePerksTable(txn);
+          await DatabaseMigrations.regenerateLegacyPerksTable(txn);
         }
         if (oldVersion <= 6) {
           // Include all Frosthaven class perks
           // Include Thornreaper, Incarnate, and Rimehearth perks
-          await DatabaseMigrations.regeneratePerksTable(txn);
+          await DatabaseMigrations.regenerateLegacyPerksTable(txn);
           // Include class Masteries
           await DatabaseMigrations.includeClassMasteries(txn);
           // Include Resources
@@ -221,6 +221,9 @@ class DatabaseHelper {
               txn);
           await DatabaseMigrations.includeClassVariantsAndPerksAsMap(txn);
           await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
+        }
+        if (oldVersion <= 8) {
+          await DatabaseMigrations.regeneratePerksTable(txn);
         }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
         await DatabaseMigrations.updateMetaDataTable(
