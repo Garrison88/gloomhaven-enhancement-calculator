@@ -586,7 +586,7 @@ class MasteriesRepository {
     //     [
     //       Mastery(
     //         masteryDetails:
-    //             'Never end your turn with the same spirit you started in that turn',
+    //             'Never end your turn in the same spirit you started in that turn',
     //       ),
     //       Mastery(
     //         masteryDetails:
@@ -595,5 +595,19 @@ class MasteriesRepository {
     //     ],
     //   ),
     // ],
+    ClassCodes.core: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Kill the last enemy to die in the scenario and finish with nine ability cards in your lost pile',
+          ),
+          Mastery(
+            masteryDetails:
+                'Trigger an ongoing effect on ~Chaotic ~Recursion six or more times in one round',
+          ),
+        ],
+      ),
+    ],
   };
 }

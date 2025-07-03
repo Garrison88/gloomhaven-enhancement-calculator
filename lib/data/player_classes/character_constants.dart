@@ -113,6 +113,7 @@ class ClassCodes {
   static const shardrender = 'shardrender';
   static const tempest = 'tempest';
   static const vimthreader = 'vimthreader';
+  static const core = 'core';
 
   // Private constructor to prevent instantiation
   const ClassCodes._();

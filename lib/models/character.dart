@@ -187,6 +187,7 @@ class Character {
   // TODO: modify this to include Custom and Crimson Scales once they have masteries
   bool includeMasteries() =>
       playerClass.classCode == 'vimthreader' ||
+      playerClass.classCode == 'core' ||
       playerClass.category == ClassCategory.frosthaven ||
       variant == Variant.frosthavenCrossover;
 }
