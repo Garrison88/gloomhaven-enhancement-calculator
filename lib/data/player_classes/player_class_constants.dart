@@ -771,6 +771,14 @@ class PlayerClasses {
       category: ClassCategory.custom,
       primaryColor: 0xffc26969,
     ),
+    PlayerClass(
+      race: CharacterRaces.unfettered,
+      name: 'C.O.R.E.',
+      classCode: ClassCodes.core,
+      icon: 'core.svg',
+      category: ClassCategory.custom,
+      primaryColor: 0xffc26969,
+    ),
   ];
 
   static PlayerClass playerClassByClassCode(String classCode) {
