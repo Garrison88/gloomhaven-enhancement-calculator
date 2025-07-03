@@ -22,7 +22,6 @@ class PerksRepository {
   static const _rolling = 'Rolling';
 
   // Effects and conditions
-  static const _effects = 'effects';
   static const _immobilize = 'IMMOBILIZE';
   static const _regenerate = 'REGENERATE';
   static const _retaliate = 'RETALIATE';
@@ -33,23 +32,27 @@ class PerksRepository {
   static const _stun = 'STUN';
   static const _disarm = 'DISARM';
   static const _muddle = 'MUDDLE';
-  static const _fire = 'FIRE';
-  static const _light = 'LIGHT';
   static const _wound = 'WOUND';
   static const _heal = 'HEAL';
   static const _curse = 'CURSE';
 
-  // Modifiers
-  static const _negative = 'negative';
+  // Elements
+  static const _fire = 'FIRE';
+  static const _light = 'LIGHT';
+  static const _dark = 'DARK';
+  static const _earth = 'EARTH';
+  static const _air = 'AIR';
+  static const _ice = 'ICE';
 
-  // Scenario-related
+  // Scenario and Item related
+  static const _negative = 'negative';
   static const _scenario = 'scenario';
   static const _atTheStartOfEachScenario = 'At the start of each scenario';
-
-  // Item-related
   static const _ignoreItemMinusOneEffects =
       'Ignore item item_minus_one effects';
   static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
+  static const _ignoreNegativeScenarioEffects =
+      'Ignore negative scenario effects';
   static const _ignoreScenarioEffects = 'Ignore scenario effects';
 
   // Rest-related
@@ -85,7 +88,7 @@ class PerksRepository {
           ),
           Perk('$_add $_one +1 "$_shield  Self" $_card'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -161,7 +164,7 @@ class PerksRepository {
             '$_add $_one +0 ADD TARGET $_card',
           ),
           Perk(
-            'Ignore $_negative $_scenario $_effects',
+            _ignoreNegativeScenarioEffects,
           ),
         ],
         variant: Variant.base,
@@ -217,11 +220,13 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +2 ICE $_card',
+            '$_add $_one +2 $_ice $_card',
             quantity: 2,
           ),
-          Perk('$_add $_one $_rolling EARTH and $_one $_rolling AIR $_card'),
-          Perk('$_add $_one $_rolling $_light and $_one $_rolling DARK $_card'),
+          Perk(
+              '$_add $_one $_rolling $_earth and $_one $_rolling $_air $_card'),
+          Perk(
+              '$_add $_one $_rolling $_light and $_one $_rolling $_dark $_card'),
         ],
         variant: Variant.base,
       ),
@@ -233,9 +238,9 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Replace one -1 card with one +0 AIR $_rolling card and one +0 EARTH $_rolling card'),
+              'Replace one -1 card with one +0 $_air $_rolling card and one +0 $_earth $_rolling card'),
           Perk(
-              'Replace one -1 card with one +0 $_light $_rolling card and one +0 DARK $_rolling card'),
+              'Replace one -1 card with one +0 $_light $_rolling card and one +0 $_dark $_rolling card'),
           Perk('Replace one +0 card with one +1 $_wound card'),
           Perk('Replace one +0 card with one +1 $_immobilize card'),
           Perk('Replace one +0 card with one +1 $_stun card'),
@@ -245,7 +250,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Add one +2 ICE card',
+            'Add one +2 $_ice card',
             quantity: 2,
           ),
           Perk(_ignoreScenarioEffects),
@@ -280,7 +285,7 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_muddle $_cards'),
           Perk('$_add $_one $_rolling INVISIBLE $_card'),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -335,12 +340,12 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_push 2 $_cards'),
           Perk(
-            '$_add $_two $_rolling EARTH $_cards',
+            '$_add $_two $_rolling $_earth $_cards',
             quantity: 2,
           ),
-          Perk('$_add $_two $_rolling AIR $_cards'),
-          Perk('Ignore $_negative item $_effects'),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk('$_add $_two $_rolling $_air $_cards'),
+          Perk(_ignoreNegativeItemEffects),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -360,10 +365,10 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Add one +2 $_muddle card and one +0 AIR $_rolling card',
+            'Add one +2 $_muddle card and one +0 $_air $_rolling card',
             quantity: 2,
           ),
-          Perk('Add four +0 EARTH $_rolling cards'),
+          Perk('Add four +0 $_earth $_rolling cards'),
           Perk(_ignoreItemMinusOneEffects),
           Perk(_ignoreScenarioEffects),
           Perk(
@@ -386,7 +391,7 @@ class PerksRepository {
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
           Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
           Perk(
-            '$_add $_one +2 ICE $_card',
+            '$_add $_one +2 $_ice $_card',
             quantity: 2,
           ),
           Perk(
@@ -399,7 +404,7 @@ class PerksRepository {
           Perk('$_add $_one $_rolling $_stun $_card'),
           Perk(
               '$_add $_one $_rolling $_disarm $_card and $_one $_rolling $_muddle $_card'),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -415,7 +420,7 @@ class PerksRepository {
           Perk('Replace two +0 cards with three +0 $_muddle $_rolling cards'),
           Perk('Replace two +1 cards with two +2 cards'),
           Perk(
-            'Add one +2 ICE card',
+            'Add one +2 $_ice card',
             quantity: 2,
           ),
           Perk(
@@ -457,8 +462,8 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling "$_shield 1, Self" $_cards'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_two +1 $_cards'),
-          Perk('Ignore $_negative $_scenario $_effects'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_two +1 $_cards'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -519,7 +524,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_two +1 $_cards'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_two +1 $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -573,10 +578,11 @@ class PerksRepository {
             '$_add $_two $_rolling $_heal 1 $_cards',
             quantity: 3,
           ),
-          Perk('$_add $_one $_rolling $_fire and $_one $_rolling AIR $_card'),
-          Perk('$_add $_one $_rolling DARK and $_one $_rolling EARTH $_card'),
+          Perk('$_add $_one $_rolling $_fire and $_one $_rolling $_air $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_two +1 $_cards'),
+              '$_add $_one $_rolling $_dark and $_one $_rolling $_earth $_card'),
+          Perk(
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_two +1 $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -589,9 +595,9 @@ class PerksRepository {
           ),
           Perk('Replace one -2 card with one +0 card'),
           Perk(
-              'Replace two +0 cards with one +0 $_fire $_rolling card and one +0 EARTH $_rolling card'),
+              'Replace two +0 cards with one +0 $_fire $_rolling card and one +0 $_earth $_rolling card'),
           Perk(
-              'Replace two +0 cards with one +0 AIR $_rolling card and one +0 DARK $_rolling card'),
+              'Replace two +0 cards with one +0 $_air $_rolling card and one +0 $_dark $_rolling card'),
           Perk('Replace two +1 cards with two +2 cards'),
           Perk('Add two +0 $_wound $_rolling cards'),
           Perk('Add two +0 POISON $_rolling cards'),
@@ -618,11 +624,11 @@ class PerksRepository {
           ),
           Perk('$_remove four +0 $_cards'),
           Perk(
-            '$_add $_one -1 DARK $_card',
+            '$_add $_one -1 $_dark $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 DARK $_card with $_one +1 DARK $_card',
+            '$_replace $_one -1 $_dark $_card with $_one +1 $_dark $_card',
             quantity: 2,
           ),
           Perk(
@@ -637,7 +643,7 @@ class PerksRepository {
           Perk('$_add $_two $_rolling $_curse $_cards'),
           Perk('$_add $_one $_rolling ADD TARGET $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_two +1 $_cards'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_two +1 $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -647,7 +653,7 @@ class PerksRepository {
             'Remove two -1 cards',
             quantity: 2,
           ),
-          Perk('Replace one -2 card with one -1 DARK card'),
+          Perk('Replace one -2 card with one -1 $_dark card'),
           Perk(
               'Replace one +0 card with one +0 "plusone Target" $_rolling card'),
           Perk(
@@ -659,7 +665,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Add one +1 DARK card',
+            'Add one +1 $_dark card',
             quantity: 2,
           ),
           Perk('Add two +0 $_curse $_rolling cards'),
@@ -688,7 +694,7 @@ class PerksRepository {
           ),
           Perk('$_add $_two +1 $_cards'),
           Perk(
-            '$_add $_one +1 AIR $_card',
+            '$_add $_one +1 $_air $_card',
             quantity: 3,
           ),
           Perk('$_add $_three $_rolling POISON $_cards'),
@@ -699,7 +705,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one +1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -714,7 +720,7 @@ class PerksRepository {
             'Replace one +0 card with one +2 card',
             quantity: 2,
           ),
-          Perk('Add three +1 AIR cards'),
+          Perk('Add three +1 $_air cards'),
           Perk('Add three +0 POISON $_rolling cards'),
           Perk('Add two +0 $_immobilize $_rolling cards'),
           Perk(
@@ -759,7 +765,7 @@ class PerksRepository {
             '$_add $_one +2 $_fire $_card',
             quantity: 2,
           ),
-          Perk('Ignore $_negative item $_effects'),
+          Perk(_ignoreNegativeItemEffects),
         ],
         variant: Variant.base,
       ),
@@ -872,7 +878,7 @@ class PerksRepository {
             '$_add $_one $_rolling ADD TARGET $_card',
             quantity: 2,
           ),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -980,13 +986,13 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_three +0 $_fire $_cards'),
-          Perk('$_add $_three +0 ICE $_cards'),
-          Perk('$_add $_three +0 AIR $_cards'),
-          Perk('$_add $_three +0 EARTH $_cards'),
+          Perk('$_add $_three +0 $_ice $_cards'),
+          Perk('$_add $_three +0 $_air $_cards'),
+          Perk('$_add $_three +0 $_earth $_cards'),
           Perk(
-              '$_replace $_two +0 $_cards with $_one +0 $_fire $_card and $_one +0 EARTH $_card'),
+              '$_replace $_two +0 $_cards with $_one +0 $_fire $_card and $_one +0 $_earth $_card'),
           Perk(
-              '$_replace $_two +0 $_cards with $_one +0 ICE $_card and $_one +0 AIR $_card'),
+              '$_replace $_two +0 $_cards with $_one +0 $_ice $_card and $_one +0 $_air $_card'),
           Perk('$_add $_two +1 $_push 1 $_cards'),
           Perk('$_add $_one +1 $_wound $_card'),
           Perk('$_add $_one +0 $_stun $_card'),
@@ -1008,9 +1014,9 @@ class PerksRepository {
           Perk('$_replace $_one +0 $_card with $_one +1 $_wound $_card'),
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
           Perk('$_add $_four +0 $_fire $_cards'),
-          Perk('$_add $_four +0 ICE $_cards'),
-          Perk('$_add $_four +0 AIR $_cards'),
-          Perk('$_add $_four +0 EARTH $_cards'),
+          Perk('$_add $_four +0 $_ice $_cards'),
+          Perk('$_add $_four +0 $_air $_cards'),
+          Perk('$_add $_four +0 $_earth $_cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
             '[Elemental Proficiency:] $_atTheStartOfEachScenario and whenever you long rest, Any_Element',
@@ -1046,8 +1052,8 @@ class PerksRepository {
             '$_add $_two $_rolling $_heal 1 $_cards',
             quantity: 3,
           ),
-          Perk('$_add $_two $_rolling EARTH $_cards'),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk('$_add $_two $_rolling $_earth $_cards'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -1072,7 +1078,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              '$_ignoreScenarioEffects and $_addLowercase $_two +0 EARTH $_rolling $_cards'),
+              '$_ignoreScenarioEffects and $_addLowercase $_two +0 $_earth $_rolling $_cards'),
           Perk(
             '[Bear Treat:] During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "MOVE 3; LOOT 1; If the loot ability was performed: $_heal 3, self"',
             quantity: 2,
@@ -1087,10 +1093,10 @@ class PerksRepository {
         [
           Perk('$_remove $_one -2 $_card'),
           Perk('$_remove four +0 $_cards'),
-          Perk('$_replace $_one -1 $_card with $_one +1 AIR $_card'),
-          Perk('$_replace $_one -1 $_card with $_one +1 EARTH $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +1 $_air $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +1 $_earth $_card'),
           Perk('$_replace $_one -1 $_card with $_one +1 $_light $_card'),
-          Perk('$_replace $_one -1 $_card with $_one +1 DARK $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +1 $_dark $_card'),
           Perk(
             '$_add $_two $_rolling $_heal 1 $_cards',
             quantity: 2,
@@ -1105,9 +1111,9 @@ class PerksRepository {
           ),
           Perk('$_add $_one +2 $_muddle $_card'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one +1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1122,10 +1128,10 @@ class PerksRepository {
             '$_replace $_one -1 $_card with $_one +0 POISON $_card',
             quantity: 2,
           ),
-          Perk('$_replace $_one +0 $_card with $_one +1 AIR $_card'),
-          Perk('$_replace $_one +0 $_card with $_one +1 EARTH $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 $_air $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 $_earth $_card'),
           Perk('$_replace $_one +0 $_card with $_one +1 $_light $_card'),
-          Perk('$_replace $_one +0 $_card with $_one +1 DARK $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +1 $_dark $_card'),
           Perk(
             '$_add $_one +2 $_muddle $_card',
             quantity: 2,
@@ -1157,7 +1163,7 @@ class PerksRepository {
           ),
           Perk(
               '$_replace $_one +0 $_card with $_one +1 "$_shield 1, Affect any Ally" $_card'),
-          Perk('$_replace $_one +0 $_card with $_one +2 DARK $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 $_dark $_card'),
           Perk('$_replace $_one +0 $_card with $_one +2 $_light $_card'),
           Perk('$_replace $_one +0 $_card with $_one +3 $_muddle $_card'),
           Perk('$_replace $_one +0 $_card with $_one +2 $_curse $_card'),
@@ -1168,7 +1174,7 @@ class PerksRepository {
           Perk('$_add $_two $_rolling "$_heal 1, Self" $_cards'),
           Perk('$_add $_two $_rolling $_curse $_cards'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_two +1 $_cards'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_two +1 $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -1185,7 +1191,7 @@ class PerksRepository {
           ),
           Perk(
               '$_replace $_one +0 $_card with $_one +1 "Any ally gains SHIELD 1" $_card'),
-          Perk('$_replace $_one +0 $_card with $_one +2 DARK $_card'),
+          Perk('$_replace $_one +0 $_card with $_one +2 $_dark $_card'),
           Perk('$_replace $_one +0 $_card with $_one +2 $_light $_card'),
           Perk('$_replace $_one +0 $_card with $_one +3 $_muddle $_card'),
           Perk('$_replace $_one +0 $_card with $_one +2 $_curse $_card'),
@@ -1196,7 +1202,7 @@ class PerksRepository {
           Perk('$_add $_two +0 $_curse $_rolling $_cards'),
           Perk('$_ignoreScenarioEffects and add $_two +1 $_cards'),
           Perk(
-              '[Tip the Scales:] Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/DARK to place one card on the bottom of the deck'),
+              '[Tip the Scales:] Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1220,7 +1226,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +1 $_card with $_one +2 EARTH $_card',
+            '$_replace $_one +1 $_card with $_one +2 $_earth $_card',
             quantity: 2,
           ),
           Perk(
@@ -1247,7 +1253,7 @@ class PerksRepository {
           Perk('$_replace $_one +1 $_card with $_two +2 $_cards'),
           Perk('$_replace $_one +1 $_card with $_one +2 $_fire $_card',
               quantity: 2),
-          Perk('$_replace $_one +1 $_card with $_one +2 EARTH $_card',
+          Perk('$_replace $_one +1 $_card with $_one +2 $_earth $_card',
               quantity: 2),
           Perk('$_add $_two +0 "All adjacent enemies suffer DAMAGE 1" $_cards'),
           Perk('$_ignoreScenarioEffects and $_remove $_one -1 $_card'),
@@ -1275,7 +1281,7 @@ class PerksRepository {
           Perk('$_replace $_one +0 $_card with $_one +0 $_stun $_card'),
           Perk('$_replace $_one +1 $_card with $_one +1 $_stun $_card'),
           Perk(
-            '$_add $_one +2 AIR $_card',
+            '$_add $_one +2 $_air $_card',
             quantity: 3,
           ),
           Perk(
@@ -1302,11 +1308,11 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-            '$_add $_one +2 AIR $_card',
+            '$_add $_one +2 $_air $_card',
             quantity: 3,
           ),
           Perk(
-              '[Hasty Pick-up:] Once each scenario, during your turn, if the Favourite is in a hex on the map, you may consume_AIR to return it to its ability card')
+              '[Hasty Pick-up:] Once each scenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1462,11 +1468,11 @@ class PerksRepository {
           Perk('$_remove $_two -1 $_cards'),
           Perk('$_remove $_one -2 $_card'),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 DARK $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_dark $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 ICE $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_ice $_card',
             quantity: 2,
           ),
           Perk(
@@ -1503,12 +1509,12 @@ class PerksRepository {
             '$_replace $_one +0 $_card with $_one +1 $_curse $_card',
             quantity: 2,
           ),
-          Perk('$_add $_two +1 ICE $_cards'),
-          Perk('$_add $_two +1 DARK $_cards'),
+          Perk('$_add $_two +1 $_ice $_cards'),
+          Perk('$_add $_two +1 $_dark $_cards'),
           Perk('$_add $_one +3 $_card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Grave Defense:] Whenever you rest, you may consume_ICE/DARK to give $_ward to one ally who has POISON')
+              '[Grave Defense:] Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has POISON')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1535,11 +1541,11 @@ class PerksRepository {
             '$_add $_one $_rolling "$_retaliate 1, RANGE 3" $_card',
             quantity: 2,
           ),
-          Perk('$_add $_one +2 $_fire/EARTH $_card'),
+          Perk('$_add $_one +2 $_fire/$_earth $_card'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
           Perk(
-              'Ignore $_scenario $_effects and $_addLowercase $_one "+X, where X is the number of active Cultivate actions" card'),
+              '$_ignoreScenarioEffects and $_addLowercase $_one "+X, where X is the number of active Cultivate actions" card'),
         ],
         variant: Variant.base,
       ),
@@ -1602,9 +1608,9 @@ class PerksRepository {
           Perk('$_add $_two $_rolling "$_shield 1, Self" $_cards'),
           Perk('$_add $_two $_rolling "$_heal 1, Self" $_cards'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
           Perk(
-              'Ignore $_negative item $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeItemEffects and $_removeLowercase $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1636,7 +1642,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one +1 $_card'),
           Perk(
             'Each time you long rest, perform Shrug_Off 1',
             quantity: 2,
@@ -1669,13 +1675,13 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '$_add $_one $_rolling "$_push 1 or PULL 1, AIR" $_card and $_one $_rolling "$_immobilize, ICE" $_card'),
+              '$_add $_one $_rolling "$_push 1 or PULL 1, $_air" $_card and $_one $_rolling "$_immobilize, $_ice" $_card'),
           Perk(
               '$_add $_one $_rolling "$_heal 1, RANGE 3, $_light" $_card and $_one $_rolling "$_pierce 2, $_fire" $_card'),
           Perk(
               '$_add $_three $_rolling "Consume_Any_Element : Any_Element" $_cards'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one -1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one -1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1699,11 +1705,11 @@ class PerksRepository {
           Perk(
               '$_replace $_one +1 $_card with $_two +1 "$_rolling +1, if summon is attacking" $_cards'),
           Perk('$_add $_one +0 $_wound, $_pierce 1 $_card'),
-          Perk('$_add $_one +1 EARTH $_card', quantity: 2),
+          Perk('$_add $_one +1 $_earth $_card', quantity: 2),
           Perk(
               '$_add $_two $_rolling "$_pierce 2, ignore $_retaliate on the target" $_cards'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one +1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one +1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1731,9 +1737,9 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_wound $_cards'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_one $_rolling $_fire $_card'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling $_fire $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one $_rolling $_fire $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one $_rolling $_fire $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1752,7 +1758,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 ICE CHILL $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_ice CHILL $_card',
             quantity: 2,
           ),
           Perk('$_replace $_one +1 $_card with $_one +3 $_card'),
@@ -1764,7 +1770,7 @@ class PerksRepository {
           Perk('$_add $_three $_rolling CHILL $_cards'),
           Perk('$_add $_three $_rolling $_push 1 $_cards'),
           Perk('Ignore difficult and hazardous terrain during move actions'),
-          Perk('Ignore $_scenario $_effects'),
+          Perk(_ignoreScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -1781,7 +1787,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one -2 EARTH $_card and $_two +2 DARK $_cards',
+            '$_add $_one -2 $_earth $_card and $_two +2 $_dark $_cards',
             quantity: 2,
           ),
           Perk(
@@ -1801,7 +1807,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_addLowercase $_one +0 "$_ward, Self" $_card'),
+              '$_ignoreNegativeScenarioEffects and $_addLowercase $_one +0 "$_ward, Self" $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1836,7 +1842,7 @@ class PerksRepository {
           Perk(
               'Ignore damage, $_negative conditions, and modifiers from Events, and $_removeLowercase $_one -1 $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one -1 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one -1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1868,10 +1874,10 @@ class PerksRepository {
           ),
           Perk('$_add $_one $_rolling $_disarm $_card'),
           Perk(
-            '$_add $_one $_rolling $_heal 2 EARTH $_card',
+            '$_add $_one $_rolling $_heal 2 $_earth $_card',
             quantity: 2,
           ),
-          Perk('Ignore $_negative $_scenario $_effects'),
+          Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
       ),
@@ -1903,7 +1909,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Ignore $_negative item $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeItemEffects and $_removeLowercase $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1914,7 +1920,8 @@ class PerksRepository {
           Perk('$_remove $_two -1 $_cards'),
           Perk(
               '$_replace $_two +0 $_cards with $_one $_rolling $_light $_card'),
-          Perk('$_replace $_two +0 $_cards with $_one $_rolling EARTH $_card'),
+          Perk(
+              '$_replace $_two +0 $_cards with $_one $_rolling $_earth $_card'),
           Perk(
             '$_replace $_one -1 $_card with $_one +0 $_curse $_card',
             quantity: 2,
@@ -1937,7 +1944,7 @@ class PerksRepository {
           ),
           Perk('At the start of your first turn each $_scenario, gain BLESS'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1947,10 +1954,10 @@ class PerksRepository {
         [
           Perk('$_remove four +0 $_cards'),
           Perk('$_replace $_one +0 $_card with $_one +2 $_card'),
-          Perk('$_replace $_one -1 $_card with $_one +0 ICE $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 $_ice $_card'),
           Perk('$_replace $_one -1 $_card with $_one +0 $_fire $_card'),
           Perk('$_replace $_one -1 $_card with $_one +0 $_light $_card'),
-          Perk('$_replace $_one -1 $_card with $_one +0 DARK $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 $_dark $_card'),
           Perk(
               '$_replace $_one -2 $_card with $_one -2 "Perform $_one Glow ability" $_card'),
           Perk(
@@ -1966,9 +1973,9 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
           Perk(
-              'Ignore $_negative item $_effects and $_addLowercase $_one $_rolling "Consume_Any_Element : Any_Element" $_card'),
+              '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling "Consume_Any_Element : Any_Element" $_card'),
         ],
         variant: Variant.base,
       ),
@@ -1987,11 +1994,11 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 AIR $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_air $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 DARK $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_dark $_card',
             quantity: 2,
           ),
           Perk('$_replace $_one +0 $_card with $_one +1 $_pierce 2 $_card'),
@@ -2000,7 +2007,7 @@ class PerksRepository {
           Perk('$_add $_one $_rolling ADD TARGET $_card'),
           Perk('$_replace $_one +1 $_card with $_one +2 $_push 2 $_card'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2014,7 +2021,7 @@ class PerksRepository {
           ),
           Perk(
               '$_replace $_one -2 $_card with $_one -1 "INVISIBLE, Self" $_card'),
-          Perk('$_replace $_two -1 $_cards with $_one +0 DARK $_card'),
+          Perk('$_replace $_two -1 $_cards with $_one +0 $_dark $_card'),
           Perk(
             '$_replace $_one -1 $_card with $_one +1 $_light $_card',
             quantity: 2,
@@ -2033,7 +2040,7 @@ class PerksRepository {
               '$_add $_two $_rolling "Force the target to perform a \'MOVE 1\' ability" $_cards'),
           Perk('$_add $_two $_rolling "$_heal 1, RANGE 1" $_cards'),
           Perk(
-              'Ignore $_negative $_scenario $_effects and $_removeLowercase $_one +0 $_card'),
+              '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2066,7 +2073,7 @@ class PerksRepository {
           Perk(
               'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "MOVE 1"'),
           Perk(
-              'Ignore $_negative $_scenario $_effects, and $_removeLowercase $_one -1 $_card'),
+              '$_ignoreNegativeScenarioEffects, and $_removeLowercase $_one -1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2203,7 +2210,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-            '$_add $_one +2 DARK $_card',
+            '$_add $_one +2 $_dark $_card',
             quantity: 2,
           ),
           Perk(
@@ -2218,7 +2225,7 @@ class PerksRepository {
           Perk(
               '$_wheneverYouLongRest, you may move $_one SHADOW up to 3 hexes'),
           Perk(
-              '$_wheneverYouShortRest, you may consume_DARK to perform $_muddle, $_curse, RANGE 2 as if you were occupying a hex with a SHADOW'),
+              '$_wheneverYouShortRest, you may consume_$_dark to perform $_muddle, $_curse, RANGE 2 as if you were occupying a hex with a SHADOW'),
           Perk(
               'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
         ],
@@ -2246,7 +2253,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +2 EARTH/DARK $_card',
+            '$_add $_one +2 $_earth/$_dark $_card',
             quantity: 3,
           ),
           Perk('$_ignoreScenarioEffects and $_addLowercase $_two +1 $_cards'),
@@ -2305,17 +2312,17 @@ class PerksRepository {
       Perks(
         [
           Perk(
-              '$_replace $_one -2 $_card with $_one -1 $_card and $_one -1 AIR EARTH DARK $_card'),
+              '$_replace $_one -2 $_card with $_one -1 $_card and $_one -1 $_air $_earth $_dark $_card'),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 AIR/EARTH $_card',
+            '$_replace $_one -1 $_card with $_one +0 $_air/$_earth $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 AIR/DARK $_card',
+            '$_replace $_one -1 $_card with $_one +0 $_air/$_dark $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 EARTH/DARK $_card',
+            '$_replace $_one -1 $_card with $_one +0 $_earth/$_dark $_card',
             quantity: 2,
           ),
           Perk(
@@ -2363,7 +2370,7 @@ class PerksRepository {
           ),
           Perk('Replace two +1 cards with two +2 cards'),
           Perk(
-            'Add two +1 $_fire/EARTH cards',
+            'Add two +1 $_fire/$_earth cards',
             quantity: 2,
           ),
           Perk('Add two +1 $_muddle $_rolling cards'),
@@ -2395,7 +2402,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Replace two +1 cards with two +2 AIR/$_light cards',
+            'Replace two +1 cards with two +2 $_air/$_light cards',
             quantity: 2,
           ),
           Perk(
@@ -2408,7 +2415,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '$_wheneverYouShortRest, you may consume_AIR to perform STRENGTHEN, RANGE 3 and consume_$_light to perform BLESS, RANGE 3',
+            '$_wheneverYouShortRest, you may consume_$_air to perform STRENGTHEN, RANGE 3 and consume_$_light to perform BLESS, RANGE 3',
             quantity: 2,
             grouped: true,
           ),
@@ -2466,7 +2473,7 @@ class PerksRepository {
               '$_replace $_one -2 $_card with $_one -2 $_curse $_curse $_card'),
           Perk('$_replace $_one -1 $_card with $_one +0 $_disarm $_card'),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 $_fire/AIR $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_fire/$_air $_card',
             quantity: 3,
           ),
           Perk('$_replace $_one +0 $_card with $_one +2 $_card'),
@@ -2505,7 +2512,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_two +1 ICE/AIR $_cards',
+            '$_add $_two +1 $_ice/$_air $_cards',
             quantity: 2,
           ),
           Perk(
@@ -2520,9 +2527,9 @@ class PerksRepository {
             '$_add $_one "$_heal 1, $_ward, Target 1 ally" $_rolling $_card',
             quantity: 2,
           ),
-          Perk('$_wheneverYouLongRest, you may ICE/AIR'),
+          Perk('$_wheneverYouLongRest, you may $_ice/$_air'),
           Perk(
-            '$_wheneverYouShortRest, you may consume_ICE to perform $_regenerate, RANGE 3 and consume_AIR to perform $_ward, RANGE 3',
+            '$_wheneverYouShortRest, you may consume_$_ice to perform $_regenerate, RANGE 3 and consume_$_air to perform $_ward, RANGE 3',
             quantity: 2,
             grouped: true,
           ),
@@ -2549,7 +2556,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 ICE/EARTH $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_ice/$_earth $_card',
             quantity: 2,
           ),
           Perk(
@@ -2564,7 +2571,7 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
           Perk(
-              'Whenever you heal from a long rest, you may consume_ICE/EARTH to add plustwo $_heal'),
+              'Whenever you heal from a long rest, you may consume_$_ice/$_earth to add plustwo $_heal'),
           Perk(
             'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
             quantity: 2,
@@ -2706,7 +2713,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '$_ignoreItemMinusOneEffects, and, whenever you would gain IMPAIR, prevent the condition'),
+              '$_ignoreItemMinusOneEffects, and, whenever you would gain IMP$_air, prevent the condition'),
           Perk(
               'Whenever you declare a long rest during card selection, gain $_shield 1 for the round'),
           Perk(
@@ -2732,7 +2739,7 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_light $_cards'),
           Perk(
-            '$_add $_three $_rolling "EARTH if $_light is Strong or Waning" $_cards',
+            '$_add $_three $_rolling "$_earth if $_light is Strong or Waning" $_cards',
           ),
           Perk(
             '$_add $_one "Create hazardous terrain in $_one hex within RANGE 1" $_card',
@@ -2746,7 +2753,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Ignore $_negative item $_effects and $_addLowercase $_one $_rolling "+1 if $_light is Strong or Waning" $_card',
+            '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling "+1 if $_light is Strong or Waning" $_card',
           ),
           Perk(
             'Gain $_shield 1 while you occupy hazardous terrain',
@@ -2765,9 +2772,9 @@ class PerksRepository {
           Perk(
               '$_replace $_one -1 $_card with $_one $_rolling $_pierce 2, $_fire $_card'),
           Perk(
-              '$_replace $_one -1 $_card with $_one $_rolling "$_shield 1, Self, EARTH" $_card'),
+              '$_replace $_one -1 $_card with $_one $_rolling "$_shield 1, Self, $_earth" $_card'),
           Perk(
-              '$_replace $_one -1 $_card with $_one $_rolling $_push 1, AIR $_card'),
+              '$_replace $_one -1 $_card with $_one $_rolling $_push 1, $_air $_card'),
           Perk(
             '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE / CONQUEROR : EMPOWER, Self" $_card',
             quantity: 2,
@@ -2805,7 +2812,7 @@ class PerksRepository {
           Perk(
               '$_replace $_three +1 $_cards with $_one $_rolling +1 card, $_one +1 $_wound $_card, and $_one +1 "$_heal 1, Self" $_card'),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 ICE $_card',
+            '$_replace $_one +0 $_card with $_one +1 $_ice $_card',
             quantity: 2,
           ),
           Perk(
@@ -2814,14 +2821,14 @@ class PerksRepository {
           ),
           Perk('$_replace $_one +2 $_card with $_one +3 CHILL $_card'),
           Perk(
-            '$_add $_one +2 $_fire/ICE $_card',
+            '$_add $_one +2 $_fire/$_ice $_card',
             quantity: 2,
           ),
           Perk('$_add $_one +0 BRITTLE $_card'),
           Perk(
-              'At the start of each $_scenario, you may either gain $_wound to generate $_fire or gain CHILL to generate ICE'),
+              'At the start of each $_scenario, you may either gain $_wound to generate $_fire or gain CHILL to generate $_ice'),
           Perk(
-              '$_ignoreNegativeItemEffects and $_add $_one $_rolling $_fire/ICE $_card'),
+              '$_ignoreNegativeItemEffects and $_add $_one $_rolling $_fire/$_ice $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2864,8 +2871,9 @@ class PerksRepository {
     ClassCodes.tempest: [
       Perks(
         [
-          Perk('Replace one -2 card with one -1 AIR/$_light card'),
-          Perk('Replace one -1 AIR/$_light card with one +1 AIR/$_light card'),
+          Perk('Replace one -2 card with one -1 $_air/$_light card'),
+          Perk(
+              'Replace one -1 $_air/$_light card with one +1 $_air/$_light card'),
           Perk(
             'Replace one -1 card with one +0 $_wound card',
             quantity: 2,
@@ -2880,7 +2888,7 @@ class PerksRepository {
             'Add one +1 "DODGE, Self" card',
             quantity: 2,
           ),
-          Perk('Add one +2 AIR/$_light card'),
+          Perk('Add one +2 $_air/$_light card'),
           Perk('Whenever you dodge an attack, gain one SPARK'),
           Perk(
             '$_wheneverYouLongRest, you may gain DODGE',
@@ -2906,7 +2914,7 @@ class PerksRepository {
           Perk(
               'Replace two +0 cards with one +0 $_curse card and one +0 $_immobilize card'),
           Perk(
-            'Replace one +1 card with one +2 $_fire/AIR card',
+            'Replace one +1 card with one +2 $_fire/$_air card',
             quantity: 2,
           ),
           Perk('Replace one +2 card with one $_rolling "Gain one RAGE" card'),
