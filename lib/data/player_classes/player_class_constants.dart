@@ -777,7 +777,7 @@ class PlayerClasses {
       classCode: ClassCodes.core,
       icon: 'core.svg',
       category: ClassCategory.custom,
-      primaryColor: 0xffc26969,
+      primaryColor: 0xffff7700,
     ),
   ];
 
