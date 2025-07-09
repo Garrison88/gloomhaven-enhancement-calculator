@@ -1,18 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
-import 'package:uuid/uuid.dart';
-
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
-import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
+import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
+import 'package:uuid/uuid.dart';
 
 class CharactersModel with ChangeNotifier {
   CharactersModel({
@@ -38,10 +36,23 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool isEditMode = false;
 
+  @override
+  void dispose() {
+    pageController.dispose();
+    charScreenScrollController.dispose();
+    enhancementCalcScrollController.dispose();
+    previousRetirementsController.dispose();
+    nameController.dispose();
+    xpController.dispose();
+    goldController.dispose();
+    notesController.dispose();
+    super.dispose();
+  }
+
   void toggleShowRetired({
     Character? character,
   }) {
-    // HERE THERE BE DRAGONS
+    // 🐉🐲 HERE THERE BE DRAGONS 🐲🐉
     if (_characters.isEmpty) {
       showRetired = !showRetired;
       notifyListeners();
@@ -344,48 +355,21 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  Future<List<CharacterPerk>> _loadPerks(
-    Character character,
-  ) async {
-    List<Map<String, Object?>> perks = await databaseHelper.queryPerks(
-      character,
-    );
+  Future<List<CharacterPerk>> _loadPerks(Character character) async {
+    // Load perks from database
+    await _loadCharacterPerks(character);
+
+    // Return character-specific perk selections
+    return await databaseHelper.queryCharacterPerks(character.uuid);
+  }
+
+  Future<void> _loadCharacterPerks(Character character) async {
+    final List<Map<String, Object?>> perks =
+        await databaseHelper.queryPerks(character);
+
     for (var perkMap in perks) {
-      character.perks.add(
-        Perk.fromMap(perkMap),
-      );
+      character.perks.add(Perk.fromMap(perkMap));
     }
-    String details = '';
-    for (Perk perk in character.perks) {
-      if (details.isEmpty) {
-        details = perk.perkDetails;
-        character.perkRowPerks.add(perk);
-        continue;
-      }
-      if (details == perk.perkDetails) {
-        character.perkRowPerks.add(perk);
-        continue;
-      }
-      if (details != perk.perkDetails) {
-        character.perkRows.add(
-          PerkRow(
-            character: character,
-            perks: character.perkRowPerks,
-          ),
-        );
-        character.perkRowPerks = [perk];
-        details = perk.perkDetails;
-      }
-    }
-    character.perkRows.add(
-      PerkRow(
-        character: character,
-        perks: character.perkRowPerks,
-      ),
-    );
-    return await databaseHelper.queryCharacterPerks(
-      character.uuid,
-    );
   }
 
   Future<List<CharacterMastery>> _loadMasteries(

@@ -2,18 +2,17 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/data/player_classes/resources_repository.dart';
-import 'package:gloomhaven_enhancement_calc/models/resource_field.dart';
-import 'package:provider/provider.dart';
-
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/resources_repository.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/resource_field.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/masteries_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perks_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/resource_card.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
+import 'package:provider/provider.dart';
 
 class CharacterScreen extends StatelessWidget {
   const CharacterScreen({
@@ -604,7 +603,6 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
     );
   }
 
-  // Generate resource cards
   List<Widget> _buildResourceCards(
     BuildContext context,
     Character character,
