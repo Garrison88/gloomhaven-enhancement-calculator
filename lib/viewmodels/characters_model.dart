@@ -49,61 +49,84 @@ class CharactersModel with ChangeNotifier {
     super.dispose();
   }
 
-  void toggleShowRetired({
-    Character? character,
-  }) {
-    // 🐉🐲 HERE THERE BE DRAGONS 🐲🐉
+  void toggleShowRetired({Character? character}) {
     if (_characters.isEmpty) {
-      showRetired = !showRetired;
-      notifyListeners();
+      _toggleSettingOnly();
       return;
     }
-    int index = 0;
-    if (character != null) {
-      index = _characters.indexOf(character);
-    } else if (retiredCharactersAreHidden && currentCharacter == null) {
-      index = 0;
-    } else if (currentCharacter != null && currentCharacter!.isRetired) {
-      List<Character> tempList = characters;
-      int tempIndex = tempList.indexOf(currentCharacter!);
-      do {
-        tempIndex++;
-      } while (tempIndex < tempList.length &&
-          tempList.elementAt(tempIndex).isRetired);
-      try {
-        index = characters
-            .where((character) => !character.isRetired)
-            .toList()
-            .indexOf(tempList.elementAt(tempIndex));
-      } on RangeError catch (_) {
-        index = characters
-                .where((character) => !character.isRetired)
-                .toList()
-                .length -
-            1;
-      }
-    } else if (currentCharacter != null &&
-        !currentCharacter!.isRetired &&
-        showRetired) {
-      index = characters
-          .where((character) => !character.isRetired)
-          .toList()
-          .indexOf(currentCharacter!);
+
+    final int targetIndex = _calculateTargetIndex(character);
+    _applyToggleAndNavigate(targetIndex);
+  }
+
+  void _toggleSettingOnly() {
+    showRetired = !showRetired;
+    notifyListeners();
+  }
+
+  int _calculateTargetIndex(Character? providedCharacter) {
+    // If specific character provided, use it
+    if (providedCharacter != null) {
+      return _characters.indexOf(providedCharacter);
+    }
+
+    // If no current character and retired are hidden, go to first
+    if (currentCharacter == null && retiredCharactersAreHidden) {
+      return 0;
+    }
+
+    // Handle current character scenarios
+    if (currentCharacter != null) {
+      return _getIndexForCurrentCharacter();
+    }
+
+    return 0; // Fallback
+  }
+
+  int _getIndexForCurrentCharacter() {
+    if (currentCharacter!.isRetired) {
+      return _findIndexWhenCurrentIsRetired();
+    } else if (showRetired) {
+      return _findIndexWhenCurrentIsActive();
     } else {
-      if (currentCharacter != null) {
-        index = _characters.indexOf(currentCharacter!);
+      return _characters.indexOf(currentCharacter!);
+    }
+  }
+
+  int _findIndexWhenCurrentIsRetired() {
+    // Find next non-retired character after current
+    final currentIndex = characters.indexOf(currentCharacter!);
+
+    for (int i = currentIndex + 1; i < characters.length; i++) {
+      if (!characters[i].isRetired) {
+        // Convert to non-retired list index
+        return _getNonRetiredCharacters().indexOf(characters[i]);
       }
     }
+
+    // No non-retired character found after current, go to last non-retired
+    final nonRetiredList = _getNonRetiredCharacters();
+    return nonRetiredList.isNotEmpty ? nonRetiredList.length - 1 : 0;
+  }
+
+  int _findIndexWhenCurrentIsActive() {
+    // Current character is active, find its position in non-retired list
+    return _getNonRetiredCharacters().indexOf(currentCharacter!);
+  }
+
+  List<Character> _getNonRetiredCharacters() {
+    return _characters.where((character) => !character.isRetired).toList();
+  }
+
+  void _applyToggleAndNavigate(int targetIndex) {
     showRetired = !showRetired;
     SharedPrefs().showRetiredCharacters = showRetired;
-    if (!index.isNegative) {
-      jumpToPage(
-        index,
-      );
+
+    if (targetIndex >= 0) {
+      jumpToPage(targetIndex);
+      _setCurrentCharacter(index: targetIndex);
     }
-    _setCurrentCharacter(
-      index: index,
-    );
+
     notifyListeners();
   }
 
@@ -122,7 +145,7 @@ class CharactersModel with ChangeNotifier {
 
   Future<List<Character>> loadCharacters() async {
     // if (kDebugMode) {
-    //   await createAllCharactersTest();
+    // await createCharactersTest();
     // }
     List<Character> loadedCharacters =
         await databaseHelper.queryAllCharacters();
@@ -143,6 +166,7 @@ class CharactersModel with ChangeNotifier {
     return characters;
   }
 
+  // Usable for testing purposes to create all characters with random attributes.
   Future<void> createCharactersTest({
     ClassCategory? classCategory,
   }) async {
