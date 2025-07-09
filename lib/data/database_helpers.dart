@@ -49,7 +49,7 @@ class DatabaseHelper {
   static const String columnLastUpdated = 'LastUpdated';
 
   // open the database
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
     // The path_provider plugin gets the right directory for Android or iOS.
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String databasePath = join(

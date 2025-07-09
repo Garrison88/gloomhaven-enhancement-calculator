@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
@@ -12,8 +14,6 @@ import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/utils/utils.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
-import 'package:gloomhaven_enhancement_calc/custom_search_delegate.dart';
-import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
@@ -57,7 +57,6 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
   @override
   void initState() {
     super.initState();
-    // faker.Faker();
     _faker = faker.Faker();
     _levelTextFieldController.text = '1';
     placeholderName = _generateRandomName();
@@ -71,6 +70,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
     _levelTextFieldController.dispose();
     _previousRetirementsTextFieldController.dispose();
     _prosperityLevelTextFieldController.dispose();
+    nameFocusNode.dispose();
     super.dispose();
   }
 
@@ -425,9 +425,9 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
     );
   }
 
-  // Function to show the dialog with a grid of numbers.
+  // Function to show the dialog with a grid of numbers representing the Character's starting level.
   Future<void> _showLevelGridDialog(BuildContext context) async {
-    final result = await showDialog<int>(
+    final int? result = await showDialog<int>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
