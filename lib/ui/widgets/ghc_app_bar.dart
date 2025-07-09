@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -10,6 +7,8 @@ import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
   const GHCAppBar({
@@ -24,29 +23,35 @@ class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _GHCAppBarState extends State<GHCAppBar> {
+  late VoidCallback _charScrollListener;
+  late VoidCallback _enhancementScrollListener;
+
   @override
   void initState() {
-    context.read<CharactersModel>().enhancementCalcScrollController.addListener(
-          () => _scrollListener(
-            context.read<CharactersModel>().enhancementCalcScrollController,
-          ),
-        );
-    context.read<CharactersModel>().charScreenScrollController.addListener(
-          () => _scrollListener(
-            context.read<CharactersModel>().charScreenScrollController,
-          ),
-        );
     super.initState();
+    final charactersModel = context.read<CharactersModel>();
+
+    _charScrollListener =
+        () => _scrollListener(charactersModel.charScreenScrollController);
+    _enhancementScrollListener =
+        () => _scrollListener(charactersModel.enhancementCalcScrollController);
+
+    charactersModel.charScreenScrollController.addListener(_charScrollListener);
+    charactersModel.enhancementCalcScrollController
+        .addListener(_enhancementScrollListener);
   }
 
   @override
   void dispose() {
-    context.read<CharactersModel>().charScreenScrollController.dispose();
-    context.read<CharactersModel>().enhancementCalcScrollController.dispose();
+    final charactersModel = context.read<CharactersModel>();
+    charactersModel.charScreenScrollController
+        .removeListener(_charScrollListener);
+    charactersModel.enhancementCalcScrollController
+        .removeListener(_enhancementScrollListener);
     super.dispose();
   }
 
-  _scrollListener(
+  void _scrollListener(
     ScrollController scrollController,
   ) {
     if (scrollController.hasClients &&
