@@ -181,6 +181,8 @@ class Character {
           variant == Variant.base));
 
   // TODO: modify this to include Custom and Crimson Scales once they have masteries
+  // for now, have to manually add the Custom Classes that have masteries but aren't
+  // yet Frosthaven Crossover versions
   bool includeMasteries() =>
       playerClass.classCode == 'vimthreader' ||
       playerClass.classCode == 'core' ||

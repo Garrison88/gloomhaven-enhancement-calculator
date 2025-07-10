@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 9;
+  static const _databaseVersion = 10;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -223,6 +223,11 @@ class DatabaseHelper {
           await DatabaseMigrations.includeClassVariantsAndMasteriesAsMap(txn);
         }
         if (oldVersion <= 8) {
+          // Added Vimthreader class
+          await DatabaseMigrations.regeneratePerksTable(txn);
+        }
+        if (oldVersion <= 9) {
+          // Added CORE class
           await DatabaseMigrations.regeneratePerksTable(txn);
         }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
