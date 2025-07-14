@@ -773,7 +773,7 @@ class PlayerClasses {
     ),
     PlayerClass(
       race: CharacterRaces.unfettered,
-      name: 'C.O.R.E.',
+      name: 'CORE',
       classCode: ClassCodes.core,
       icon: 'core.svg',
       category: ClassCategory.custom,
