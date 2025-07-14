@@ -20,6 +20,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseMigrations {
+  static Future<void> regeneratePerksAndMasteriesTables(
+    Transaction txn,
+  ) async {
+    await regeneratePerksTable(txn);
+    await regenerateMasteriesTable(txn);
+  }
+
   static Future<void> regeneratePerksTable(Transaction txn) async {
     await txn.execute('DROP TABLE IF EXISTS $tablePerks');
     await txn.execute('''
@@ -49,6 +56,36 @@ class DatabaseMigrations {
                 ),
               );
             }
+          }
+        }
+      },
+    );
+  }
+
+  static Future<void> regenerateMasteriesTable(Transaction txn) async {
+    await txn.execute('DROP TABLE IF EXISTS $tableMasteries');
+    await txn.execute('''
+        ${DatabaseHelper.createTable} $tableMasteries (
+          $columnMasteryId ${DatabaseHelper.idTextPrimaryType},
+          $columnMasteryClass ${DatabaseHelper.textType},
+          $columnMasteryDetails ${DatabaseHelper.textType},
+          $columnMasteryVariant ${DatabaseHelper.textType}
+        )''');
+    await Future.forEach(
+      MasteriesRepository.masteriesMap.entries,
+      (entry) async {
+        final classCode = entry.key;
+        final masteriesList = entry.value;
+        for (Masteries list in masteriesList) {
+          for (Mastery mastery in list.masteries) {
+            mastery.variant = list.variant;
+            mastery.classCode = classCode;
+            await txn.insert(
+              tableMasteries,
+              mastery.toMap(
+                '${list.masteries.indexOf(mastery)}',
+              ),
+            );
           }
         }
       },

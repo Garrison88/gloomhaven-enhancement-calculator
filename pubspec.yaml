@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 4.2.1+276
+version: 4.2.1+279
 
 environment:
   sdk: ">=3.4.1 <4.0.0"
@@ -34,7 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.14.1
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
 
 flutter_launcher_icons: # dart run flutter_launcher_icons
@@ -44,6 +44,7 @@ flutter_launcher_icons: # dart run flutter_launcher_icons
   image_path_android: "icons/android/launcher_icon.png"
   adaptive_icon_background: "#262626"
   adaptive_icon_foreground: "icons/android/foreground.png"
+  adaptive_icon_foreground_inset: 0
   remove_alpha_ios: true
 
 flutter:

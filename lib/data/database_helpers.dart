@@ -228,7 +228,7 @@ class DatabaseHelper {
         }
         if (oldVersion <= 9) {
           // Added CORE class
-          await DatabaseMigrations.regeneratePerksTable(txn);
+          await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
         await DatabaseMigrations.updateMetaDataTable(
