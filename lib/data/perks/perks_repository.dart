@@ -10,11 +10,15 @@ class PerksRepository {
   static const _removeLowercase = 'remove';
   static const _replace = 'Replace';
 
-  // Numbers as words
+  // Numbers
   static const _one = 'one';
   static const _two = 'two';
   static const _three = 'three';
   static const _four = 'four';
+
+  // Words as numbers
+  static const _plusOne = 'plusone';
+  static const _plusTwo = 'plustwo';
 
   // Card-related terms
   static const _card = 'card';
@@ -22,6 +26,7 @@ class PerksRepository {
   static const _rolling = 'Rolling';
 
   // Effects and conditions
+  static const _damage = 'DAMAGE';
   static const _immobilize = 'IMMOBILIZE';
   static const _regenerate = 'REGENERATE';
   static const _retaliate = 'RETALIATE';
@@ -35,6 +40,13 @@ class PerksRepository {
   static const _wound = 'WOUND';
   static const _heal = 'HEAL';
   static const _curse = 'CURSE';
+  static const _strengthen = 'STRENGTHEN';
+  static const _project = 'PROJECT';
+  static const _barrierPlus = 'BARRIER_PLUS';
+
+  static const _attack = 'ATTACK';
+  static const _range = 'RANGE';
+  static const _move = 'MOVE';
 
   // Elements
   static const _fire = 'FIRE';
@@ -54,10 +66,11 @@ class PerksRepository {
   static const _ignoreNegativeScenarioEffects =
       'Ignore negative scenario effects';
   static const _ignoreScenarioEffects = 'Ignore scenario effects';
+  static const _onceEachScenario = 'Once each scenario';
 
   // Rest-related
-  static const _wheneverYouLongRest = 'Whenever you long rest';
-  static const _wheneverYouShortRest = 'Whenever you short rest';
+  static const _longRest = 'Whenever you long rest';
+  static const _shortRest = 'Whenever you short rest';
 
   static final Map<String, List<Perks>> perksMap = {
     // BRUTE
@@ -108,7 +121,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace one +0 card with one +0 "plusone Target" $_rolling card',
+            '$_replace one +0 card with one +0 "$_plusOne Target" $_rolling card',
             quantity: 2,
           ),
           Perk(
@@ -121,7 +134,7 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects and $_addLowercase $_one +1 "$_shield 1" card'),
           Perk(
-              '[Rested and Ready:] $_wheneverYouLongRest, add +1 MOVE to your first move ability the following round'),
+              '[Rested and Ready:] $_longRest, add +1 $_move to your first move ability the following round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -177,7 +190,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('Replace one -2 card with one +0 card'),
-          Perk('Replace one +0 card with one +0 "plusone Target" card'),
+          Perk('Replace one +0 card with one +0 "$_plusOne Target" card'),
           Perk(
             'Replace one +0 card with one +1 $_wound card',
             quantity: 2,
@@ -191,7 +204,7 @@ class PerksRepository {
           Perk('Add two +1 "$_heal 2, self" cards'),
           Perk('$_ignoreScenarioEffects and add two +0 $_fire $_rolling cards'),
           Perk(
-            '[Rejuvenating Vapor:] $_wheneverYouLongRest, you may perform "$_heal 2, RANGE 3"',
+            '[Rejuvenating Vapor:] $_longRest, you may perform "$_heal 2, $_range 3"',
             quantity: 2,
             grouped: true,
           ),
@@ -255,7 +268,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Etheric Bond:] $_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
+              '[Etheric Bond:] $_shortRest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -313,7 +326,7 @@ class PerksRepository {
           Perk('Add one +0 "INVISIBLE, self", $_rolling card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Cloak of Invisibility:] Once each scenario, during your turn, perform "INVISIBLE, self"',
+            '[Cloak of Invisibility:] $_onceEachScenario, during your turn, perform "INVISIBLE, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -372,7 +385,7 @@ class PerksRepository {
           Perk(_ignoreItemMinusOneEffects),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Earthquakes:] Whenever a new room is revealed, control all enemies in the newly revealed room: MOVE 1, this movement must end in an empty hex',
+            '[Earthquakes:] Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
             quantity: 2,
             grouped: true,
           ),
@@ -535,7 +548,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('Replace two +0 cards with two +0 $_pierce 3 $_rolling cards'),
-          Perk('Replace one +0 card with one +0 "plusone Target" card'),
+          Perk('Replace one +0 card with one +0 "$_plusOne Target" card'),
           Perk(
             'Replace one +0 card with one +2 card',
             quantity: 2,
@@ -551,7 +564,7 @@ class PerksRepository {
           Perk('Add one +0 $_stun $_rolling card'),
           Perk('$_ignoreItemMinusOneEffects, and add two +1 cards'),
           Perk(
-            '[Well Supplied:] Once each scenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
+            '[Well Supplied:] $_onceEachScenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
             quantity: 2,
             grouped: true,
           ),
@@ -607,7 +620,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffects and add two +1 cards'),
           Perk(
-            '[Phase Out:] Once each scenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain INVISIBLE',
+            '[Phase Out:] $_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain INVISIBLE',
             quantity: 2,
             grouped: true,
           ),
@@ -655,7 +668,7 @@ class PerksRepository {
           ),
           Perk('Replace one -2 card with one -1 $_dark card'),
           Perk(
-              'Replace one +0 card with one +0 "plusone Target" $_rolling card'),
+              'Replace one +0 card with one +0 "$_plusOne Target" $_rolling card'),
           Perk(
             'Replace two +0 cards with three +0 $_muddle $_rolling cards',
             quantity: 2,
@@ -730,7 +743,7 @@ class PerksRepository {
           Perk('Add two +0 $_curse $_rolling cards'),
           Perk('$_ignoreScenarioEffects and add one +1 card'),
           Perk(
-            '[Xorn\'s Boon:] Once each scenario, during your turn, cause each enemy that has POISON to suffer DAMAGE 1 and gain $_muddle and each ally who has POISON to suffer DAMAGE 1 and gain STRENGTHEN',
+            '[Xorn\'s Boon:] $_onceEachScenario, during your turn, cause each enemy that has POISON to suffer $_damage 1 and gain $_muddle and each ally who has POISON to suffer $_damage 1 and gain $_strengthen',
             quantity: 2,
             grouped: true,
           ),
@@ -796,7 +809,7 @@ class PerksRepository {
           Perk('Add two +0 "$_heal 1, self" $_rolling cards'),
           Perk(_ignoreItemMinusOneEffects),
           Perk(
-              '[Rapid Recovery:] Whenever you heal from a long rest, add plusone $_heal'),
+              '[Rapid Recovery:] Whenever you heal from a long rest, add $_plusOne $_heal'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -890,7 +903,7 @@ class PerksRepository {
             quantity: 4,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +0 "plusone Target" $_rolling $_card',
+            '$_replace $_one +0 $_card with $_one +0 "$_plusOne Target" $_rolling $_card',
             quantity: 2,
           ),
           Perk('$_replace $_one +0 $_card with $_one +0 $_stun $_card'),
@@ -1009,7 +1022,7 @@ class PerksRepository {
           Perk('$_remove $_one -2 $_card'),
           Perk('$_remove $_four +0 $_cards'),
           Perk(
-              '$_replace $_one -1 $_card with $_one +0 "plusone Target" $_card'),
+              '$_replace $_one -1 $_card with $_one +0 "$_plusOne Target" $_card'),
           Perk('$_replace $_one +0 $_card with $_one +0 $_stun $_card'),
           Perk('$_replace $_one +0 $_card with $_one +1 $_wound $_card'),
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
@@ -1080,7 +1093,7 @@ class PerksRepository {
           Perk(
               '$_ignoreScenarioEffects and $_addLowercase $_two +0 $_earth $_rolling $_cards'),
           Perk(
-            '[Bear Treat:] During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "MOVE 3; LOOT 1; If the loot ability was performed: $_heal 3, self"',
+            '[Bear Treat:] During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "$_move 3; LOOT 1; If the loot ability was performed: $_heal 3, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -1234,7 +1247,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +0 "All adjacent enemies suffer 1 DAMAGE" $_card',
+            '$_add $_one +0 "All adjacent enemies suffer 1 $_damage" $_card',
             quantity: 2,
           ),
         ],
@@ -1255,10 +1268,11 @@ class PerksRepository {
               quantity: 2),
           Perk('$_replace $_one +1 $_card with $_one +2 $_earth $_card',
               quantity: 2),
-          Perk('$_add $_two +0 "All adjacent enemies suffer DAMAGE 1" $_cards'),
+          Perk(
+              '$_add $_two +0 "All adjacent enemies suffer $_damage 1" $_cards'),
           Perk('$_ignoreScenarioEffects and $_remove $_one -1 $_card'),
           Perk(
-            '[Remodeling:] Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within RANGE 2 (of you)',
+            '[Remodeling:] Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within $_range 2 (of you)',
             quantity: 2,
             grouped: true,
           )
@@ -1312,7 +1326,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              '[Hasty Pick-up:] Once each scenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
+              '[Hasty Pick-up:] $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1392,7 +1406,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "EMPOWER, RANGE 2" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "EMPOWER, $_range 2" $_card',
             quantity: 2,
           ),
           Perk(
@@ -1402,7 +1416,7 @@ class PerksRepository {
           Perk('$_replace $_one +2 $_card with $_four +1 $_rolling $_cards'),
           Perk('$_add $_two $_pierce 2 POISON $_rolling $_cards'),
           Perk(
-            '$_add $_three "$_heal 1, RANGE 1" $_rolling $_cards',
+            '$_add $_three "$_heal 1, $_range 1" $_rolling $_cards',
             quantity: 2,
           ),
           Perk('$_ignoreScenarioEffects and $_removeLowercase $_one +0 $_card'),
@@ -1410,14 +1424,14 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects and $_removeLowercase $_one +0 $_card'),
           Perk(
-              '$_wheneverYouShortRest, $_one adjacent enemy suffers DAMAGE 1, and you perform "$_heal 1, self"'),
+              '$_shortRest, $_one adjacent enemy suffers $_damage 1, and you perform "$_heal 1, self"'),
           Perk(
-            '$_atTheStartOfEachScenario, you may suffer DAMAGE 1 to grant all allies and self MOVE 3',
+            '$_atTheStartOfEachScenario, you may suffer $_damage 1 to grant all allies and self $_move 3',
             quantity: 2,
             grouped: true,
           ),
           Perk(
-              'Once each $_scenario, $_removeLowercase all $_negative conditions you have. One adjacent enemy suffers DAMAGE equal to the number of conditions removed'),
+              'Once each $_scenario, $_removeLowercase all $_negative conditions you have. One adjacent enemy suffers $_damage equal to the number of conditions removed'),
         ],
         variant: Variant.base,
       ),
@@ -1439,11 +1453,11 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +0 "Add plusone ATTACK for each condition you have" $_card',
+            '$_add $_one +0 "Add $_plusOne $_attack for each condition you have" $_card',
             quantity: 2,
           ),
           Perk(
-            '$_add $_two "$_heal 1, RANGE 1" $_rolling $_cards',
+            '$_add $_two "$_heal 1, $_range 1" $_rolling $_cards',
             quantity: 2,
           ),
           Perk(
@@ -1454,7 +1468,7 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects and $_removeLowercase $_one +0 $_card'),
           Perk(
-              '$_atTheStartOfEachScenario, you may perform "STRENGTHEN, $_wound, self" or "$_ward, $_immobilize, self"'),
+              '$_atTheStartOfEachScenario, you may perform "$_strengthen, $_wound, self" or "$_ward, $_immobilize, self"'),
           Perk('Once each $_scenario, avoid an Overdrive exhaustion check'),
           Perk(
               'Once each $_scenario, during your turn, $_removeLowercase any number of $_negative conditions you have'),
@@ -1523,7 +1537,7 @@ class PerksRepository {
       Perks(
         [
           Perk(
-              '$_replace $_one -2 $_card with $_one -1 "Place $_one Colony token of your choice on any empty hex within RANGE 2" $_card'),
+              '$_replace $_one -2 $_card with $_one -1 "Place $_one Colony token of your choice on any empty hex within $_range 2" $_card'),
           Perk('$_remove $_two -1 $_cards'),
           Perk('$_remove four +0 $_cards'),
           Perk('$_replace $_one -1 $_card with $_one +2 $_muddle $_card'),
@@ -1538,7 +1552,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one $_rolling "$_retaliate 1, RANGE 3" $_card',
+            '$_add $_one $_rolling "$_retaliate 1, $_range 3" $_card',
             quantity: 2,
           ),
           Perk('$_add $_one +2 $_fire/$_earth $_card'),
@@ -1600,9 +1614,9 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '$_replace $_one +1 $_card with $_two +1 "$_retaliate 1, RANGE 3" $_cards'),
+              '$_replace $_one +1 $_card with $_two +1 "$_retaliate 1, $_range 3" $_cards'),
           Perk('$_add $_two +1 "PULL 3, Self, toward the target" $_cards'),
-          Perk('$_add $_one +0 "STRENGTHEN, Self" $_card'),
+          Perk('$_add $_one +0 "$_strengthen, Self" $_card'),
           Perk('$_add $_one +0 $_stun $_card'),
           Perk('$_add $_one +1 $_wound $_card'),
           Perk('$_add $_two $_rolling "$_shield 1, Self" $_cards'),
@@ -1655,29 +1669,29 @@ class PerksRepository {
       Perks(
         [
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element to $_addLowercase +2 ATTACK" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "Consume_Any_Element to $_addLowercase +2 $_attack" $_card',
             quantity: 3,
           ),
           Perk(
               '$_replace $_one -2 $_card with $_one -2 "RECOVER $_one random $_card from your discard pile" $_card'),
           Perk(
-            '$_replace $_two +0 $_cards with $_one +1 "$_heal 1, Affect $_one Ally within RANGE 2" $_card',
+            '$_replace $_two +0 $_cards with $_one +1 "$_heal 1, Affect $_one Ally within $_range 2" $_card',
             quantity: 2,
           ),
           Perk(
-              '$_replace $_two +0 $_cards with $_one +1 "$_shield 1, Affect $_one Ally within RANGE 2" $_card'),
+              '$_replace $_two +0 $_cards with $_one +1 "$_shield 1, Affect $_one Ally within $_range 2" $_card'),
           Perk(
             '$_replace $_one +1 $_card with $_one +2 Any_Element $_card',
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +1 "STRENGTHEN, Affect $_one Ally within RANGE 2" $_card',
+            '$_add $_one +1 "$_strengthen, Affect $_one Ally within $_range 2" $_card',
             quantity: 2,
           ),
           Perk(
               '$_add $_one $_rolling "$_push 1 or PULL 1, $_air" $_card and $_one $_rolling "$_immobilize, $_ice" $_card'),
           Perk(
-              '$_add $_one $_rolling "$_heal 1, RANGE 3, $_light" $_card and $_one $_rolling "$_pierce 2, $_fire" $_card'),
+              '$_add $_one $_rolling "$_heal 1, $_range 3, $_light" $_card and $_one $_rolling "$_pierce 2, $_fire" $_card'),
           Perk(
               '$_add $_three $_rolling "Consume_Any_Element : Any_Element" $_cards'),
           Perk(
@@ -1719,7 +1733,7 @@ class PerksRepository {
         [
           Perk('$_remove $_two -1 $_cards'),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "STRENGTHEN, Ally" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "$_strengthen, Ally" $_card',
             quantity: 2,
           ),
           Perk(
@@ -1730,9 +1744,9 @@ class PerksRepository {
           Perk('$_replace $_one +0 $_card with $_one +1 $_wound $_card'),
           Perk('$_replace $_two +1 $_cards with $_one +2 $_fire $_card'),
           Perk('$_replace $_two +1 $_cards with $_one +2 $_wound $_card'),
-          Perk('$_add $_one +1 "STRENGTHEN, Ally" $_card'),
+          Perk('$_add $_one +1 "$_strengthen, Ally" $_card'),
           Perk(
-            '$_add $_two $_rolling "$_heal 1, RANGE 1" $_cards',
+            '$_add $_two $_rolling "$_heal 1, $_range 1" $_cards',
             quantity: 2,
           ),
           Perk('$_add $_two $_rolling $_wound $_cards'),
@@ -1803,7 +1817,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "Create a Void pit in an empty hex within RANGE 2" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "Create a Void pit in an empty hex within $_range 2" $_card',
             quantity: 2,
           ),
           Perk(
@@ -1902,7 +1916,7 @@ class PerksRepository {
           Perk('$_replace $_one +1 $_card with $_one +2 $_wound $_card'),
           Perk('$_add $_one +1 "$_disarm if the target is Shackled" $_card'),
           Perk(
-              '$_add $_one +1 "Create a 2 DAMAGE trap in an empty hex within RANGE 2" $_card'),
+              '$_add $_one +1 "Create a 2 $_damage trap in an empty hex within $_range 2" $_card'),
           Perk('$_add $_two $_rolling "$_heal 1, Self" $_cards'),
           Perk(
             '$_add $_one +2 Shackle $_card',
@@ -2033,12 +2047,12 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_immobilize $_cards'),
           Perk(
-            '$_add $_one +1 "$_heal 1, RANGE 3" $_card',
+            '$_add $_one +1 "$_heal 1, $_range 3" $_card',
             quantity: 2,
           ),
           Perk(
-              '$_add $_two $_rolling "Force the target to perform a \'MOVE 1\' ability" $_cards'),
-          Perk('$_add $_two $_rolling "$_heal 1, RANGE 1" $_cards'),
+              '$_add $_two $_rolling "Force the target to perform a \'$_move 1\' ability" $_cards'),
+          Perk('$_add $_two $_rolling "$_heal 1, $_range 1" $_cards'),
           Perk(
               '$_ignoreNegativeScenarioEffects and $_removeLowercase $_one +0 $_card'),
         ],
@@ -2071,7 +2085,7 @@ class PerksRepository {
           Perk(
               'Become SATED each time you lose a $_card to negate suffering damage'),
           Perk(
-              'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "MOVE 1"'),
+              'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "$_move 1"'),
           Perk(
               '$_ignoreNegativeScenarioEffects, and $_removeLowercase $_one -1 $_card'),
         ],
@@ -2104,7 +2118,7 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects and $_addLowercase $_one +1 $_card'),
           Perk(
-            '$_wheneverYouLongRest, you may move $_one of your character tokens backward $_one slot',
+            '$_longRest, you may move $_one of your character tokens backward $_one slot',
             quantity: 2,
             grouped: true,
           ),
@@ -2133,7 +2147,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addLowercase plustwo ATTACK" $_rolling $_card',
+            '$_replace $_one +0 $_card with $_one "Place this $_card in your active area. On your next attack, discard this $_card to $_addLowercase $_plusTwo $_attack" $_rolling $_card',
             quantity: 3,
           ),
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
@@ -2146,9 +2160,9 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '$_wheneverYouShortRest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
+              '$_shortRest, you may spend $_one unspent SPENT item for no effect to RECOVER a different spent item'),
           Perk(
-              'At the start of your first turn each $_scenario, you may perform MOVE 3'),
+              'At the start of your first turn each $_scenario, you may perform $_move 3'),
           Perk('Whenever you would gain $_immobilize, prevent the condition'),
         ],
         variant: Variant.base,
@@ -2162,7 +2176,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "$_add plusone ATTACK for each ally adjacent to the target" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_add $_plusOne $_attack for each ally adjacent to the target" $_card',
             quantity: 2,
           ),
           Perk(
@@ -2184,9 +2198,9 @@ class PerksRepository {
           Perk(
               '$_ignoreItemMinusOneEffects and $_removeLowercase $_one -1 $_card'),
           Perk(
-              'At the end of each of your long rests, grant $_one ally within RANGE 3: MOVE 2'),
+              'At the end of each of your long rests, grant $_one ally within $_range 3: $_move 2'),
           Perk(
-              'Whenever you open a door with a move ability, $_addLowercase +3 MOVE'),
+              'Whenever you open a door with a move ability, $_addLowercase +3 $_move'),
           Perk(
             'Once each $_scenario, during your turn, gain $_shield 2 for the round',
             grouped: true,
@@ -2222,10 +2236,9 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(_ignoreScenarioEffects),
+          Perk('$_longRest, you may move $_one SHADOW up to 3 hexes'),
           Perk(
-              '$_wheneverYouLongRest, you may move $_one SHADOW up to 3 hexes'),
-          Perk(
-              '$_wheneverYouShortRest, you may consume_$_dark to perform $_muddle, $_curse, RANGE 2 as if you were occupying a hex with a SHADOW'),
+              '$_shortRest, you may consume_$_dark to perform $_muddle, $_curse, $_range 2 as if you were occupying a hex with a SHADOW'),
           Perk(
               'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage'),
         ],
@@ -2260,7 +2273,7 @@ class PerksRepository {
           Perk(
               'Immediately before each of your rests, you may kill $_one of your summons to perform BLESS, self'),
           Perk(
-              'Once each $_scenario, when any character ally would become exhausted by suffering DAMAGE, you may suffer DAMAGE 2 to reduce their hit point value to 1 instead'),
+              'Once each $_scenario, when any character ally would become exhausted by suffering $_damage, you may suffer $_damage 2 to reduce their hit point value to 1 instead'),
           Perk(
             'At the start of each $_scenario, you may play a level 1 $_card from your hand to perform a summon action of the $_card',
             quantity: 2,
@@ -2296,7 +2309,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '$_wheneverYouShortRest, you may $_removeLowercase $_one $_negative condition from $_one ally within RANGE 3'),
+              '$_shortRest, you may $_removeLowercase $_one $_negative condition from $_one ally within $_range 3'),
           Perk(
               'Once each $_scenario, when you would give yourself a $_negative condition, prevent the condition'),
           Perk(
@@ -2334,7 +2347,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_two "plusone ATTACK for each pair of active INFUSION" $_rolling $_cards',
+            '$_add $_two "$_plusOne $_attack for each pair of active INFUSION" $_rolling $_cards',
             quantity: 2,
           ),
           Perk(_ignoreScenarioEffects),
@@ -2344,7 +2357,7 @@ class PerksRepository {
             grouped: true,
           ),
           Perk(
-              '$_wheneverYouShortRest, you may Consume_Any_Element to RECOVER $_one spent One_Hand or Two_Hand item'),
+              '$_shortRest, you may Consume_Any_Element to RECOVER $_one spent One_Hand or Two_Hand item'),
           Perk(
               'Once each $_scenario, during ordering of initiative, after all ability cards have been revealed, Any_Element'),
         ],
@@ -2376,9 +2389,9 @@ class PerksRepository {
           Perk('Add two +1 $_muddle $_rolling cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '$_wheneverYouLongRest, you may destroy one adjacent obstacle to gain $_ward'),
+              '$_longRest, you may destroy one adjacent obstacle to gain $_ward'),
           Perk(
-              '$_wheneverYouShortRest, you may consume_$_fire to perform $_wound, Target 1 enemy occupying or adjacent to hazardous terrain'),
+              '$_shortRest, you may consume_$_fire to perform $_wound, Target 1 enemy occupying or adjacent to hazardous terrain'),
           Perk(
             'You and all allies are unaffected by hazardous terrain you create',
             quantity: 3,
@@ -2415,7 +2428,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '$_wheneverYouShortRest, you may consume_$_air to perform STRENGTHEN, RANGE 3 and consume_$_light to perform BLESS, RANGE 3',
+            '$_shortRest, you may consume_$_air to perform $_strengthen, $_range 3 and consume_$_light to perform BLESS, $_range 3',
             quantity: 2,
             grouped: true,
           ),
@@ -2436,11 +2449,11 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "Create $_one DAMAGE 1 trap in an empty hex adjacent to the target" card',
+            '$_replace $_one -1 $_card with $_one +0 "Create $_one $_damage 1 trap in an empty hex adjacent to the target" card',
             quantity: 3,
           ),
           Perk(
-            '$_replace $_two +0 $_cards with $_two +0 "Add DAMAGE 2 or $_heal 2 to a trap within RANGE 2 of you" $_cards',
+            '$_replace $_two +0 $_cards with $_two +0 "Add $_damage 2 or $_heal 2 to a trap within $_range 2 of you" $_cards',
             quantity: 3,
           ),
           Perk(
@@ -2453,11 +2466,11 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '$_wheneverYouLongRest, you may create $_one DAMAGE 1 trap in an adjacent empty hex'),
+              '$_longRest, you may create $_one $_damage 1 trap in an adjacent empty hex'),
           Perk(
               'Whenever you enter a hex with a trap, you may choose to not spring the trap'),
           Perk(
-              '$_atTheStartOfEachScenario, you may create $_one DAMAGE 2 trap in an adjacent empty hex'),
+              '$_atTheStartOfEachScenario, you may create $_one $_damage 2 trap in an adjacent empty hex'),
         ],
         variant: Variant.base,
       ),
@@ -2483,14 +2496,14 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_add $_one +0 "Add plusone ATTACK for each negative condition you have" $_card',
+            '$_add $_one +0 "Add $_plusOne $_attack for each negative condition you have" $_card',
             quantity: 2,
           ),
           Perk('$_ignoreScenarioEffects and $_add $_two +1 $_cards'),
           Perk(
               'Each round in which you long rest, you may ignore all negative conditions you have. If you do, they cannot be removed that round'),
           Perk(
-              'Whenever you become exhausted, first perform $_curse, Target all, RANGE 3'),
+              'Whenever you become exhausted, first perform $_curse, Target all, $_range 3'),
           Perk(
             'Increase your maximum hit point value by 5',
             quantity: 2,
@@ -2516,20 +2529,20 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_two +0 $_cards with $_two "If this action forces the target to move, it suffers DAMAGE 1" $_rolling $_cards',
+            '$_replace $_two +0 $_cards with $_two "If this action forces the target to move, it suffers $_damage 1" $_rolling $_cards',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "STRENGTHEN, Target 1 ally" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_strengthen, Target 1 ally" $_card',
             quantity: 2,
           ),
           Perk(
             '$_add $_one "$_heal 1, $_ward, Target 1 ally" $_rolling $_card',
             quantity: 2,
           ),
-          Perk('$_wheneverYouLongRest, you may $_ice/$_air'),
+          Perk('$_longRest, you may $_ice/$_air'),
           Perk(
-            '$_wheneverYouShortRest, you may consume_$_ice to perform $_regenerate, RANGE 3 and consume_$_air to perform $_ward, RANGE 3',
+            '$_shortRest, you may consume_$_ice to perform $_regenerate, $_range 3 and consume_$_air to perform $_ward, $_range 3',
             quantity: 2,
             grouped: true,
           ),
@@ -2569,11 +2582,11 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              '$_ignoreItemMinusOneEffects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add plusone MOVE'),
+              '$_ignoreItemMinusOneEffects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add $_plusOne $_move'),
           Perk(
-              'Whenever you heal from a long rest, you may consume_$_ice/$_earth to add plustwo $_heal'),
+              'Whenever you heal from a long rest, you may consume_$_ice/$_earth to add $_plusTwo $_heal'),
           Perk(
-            'Once each scenario, when you would suffer DAMAGE, you may negate the DAMAGE',
+            '$_onceEachScenario, when you would suffer $_damage, you may negate the $_damage',
             quantity: 2,
             grouped: true,
           ),
@@ -2586,7 +2599,7 @@ class PerksRepository {
         [
           Perk('$_remove $_one -2 $_card and $_one +1 $_card'),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "After this attack ability, grant one of your summons: MOVE 2" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "After this attack ability, grant one of your summons: $_move 2" $_card',
             quantity: 3,
           ),
           Perk(
@@ -2604,7 +2617,7 @@ class PerksRepository {
           Perk('$_add $_two POISON $_rolling $_cards'),
           Perk('$_add $_two $_wound $_rolling $_cards'),
           Perk(
-            '$_wheneverYouLongRest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
+            '$_longRest, you may do so on any initiative value, choosing your initiative after all ability cards have been revealed, and you decide how your summons perform their abilities for the round',
             quantity: 2,
             grouped: true,
           ),
@@ -2626,7 +2639,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +0 "The target and all enemies adjacent to it suffer DAMAGE 1" $_card',
+            '$_replace $_one +0 $_card with $_one +0 "The target and all enemies adjacent to it suffer $_damage 1" $_card',
             quantity: 2,
           ),
           Perk(
@@ -2639,11 +2652,11 @@ class PerksRepository {
           ),
           Perk('$_add $_one +3 $_card'),
           Perk('$_ignoreItemMinusOneEffects and add two +1 $_cards'),
-          Perk('$_wheneverYouLongRest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
+          Perk('$_longRest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
           Perk(
-              'Whenever you would gain POISON, you may suffer DAMAGE 1 to prevent the condition'),
+              'Whenever you would gain POISON, you may suffer $_damage 1 to prevent the condition'),
           Perk(
-            'Once each scenario, when you would become exhausted, instead gain $_stun and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
+            '$_onceEachScenario, when you would become exhausted, instead gain $_stun and INVISIBLE, lose all your cards, RECOVER four lost cards, and then discard the recovered cards',
             quantity: 3,
             grouped: true,
           ),
@@ -2673,7 +2686,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffects and remove two +0 cards'),
           Perk(
-              '$_wheneverYouLongRest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
+              '$_longRest, you may LOOT one adjacent hex. If you gain any loot tokens, gain 1 TROPHY'),
           Perk('$_atTheStartOfEachScenario, gain 2 TROPHY'),
           Perk(
             'While you have INVISIBLE, gain advantage on all your attacks',
@@ -2692,7 +2705,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            'Replace one -1 card with one +0 "plusone Target" card',
+            'Replace one -1 card with one +0 "$_plusOne Target" card',
             quantity: 2,
           ),
           Perk(
@@ -2742,7 +2755,7 @@ class PerksRepository {
             '$_add $_three $_rolling "$_earth if $_light is Strong or Waning" $_cards',
           ),
           Perk(
-            '$_add $_one "Create hazardous terrain in $_one hex within RANGE 1" $_card',
+            '$_add $_one "Create hazardous terrain in $_one hex within $_range 1" $_card',
           ),
           Perk(
             'Add one $_rolling "On the next attack targeting you while occupying hazardous terrain, discard this card to gain $_retaliate 3" card',
@@ -2862,7 +2875,7 @@ class PerksRepository {
             grouped: true,
           ),
           Perk(
-              'Once each scenario, when you would suffer damage from an attack, gain "$_shield 3" for that attack'),
+              '$_onceEachScenario, when you would suffer damage from an attack, gain "$_shield 3" for that attack'),
           Perk('Each time you long rest, perform "$_regenerate, Self"'),
         ],
         variant: Variant.base,
@@ -2879,7 +2892,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_replace one -1 card with one $_rolling "$_regenerate, RANGE 1" card',
+            '$_replace one -1 card with one $_rolling "$_regenerate, $_range 1" card',
             quantity: 2,
           ),
           Perk('Replace one +0 card with one +2 $_muddle card'),
@@ -2891,12 +2904,12 @@ class PerksRepository {
           Perk('Add one +2 $_air/$_light card'),
           Perk('Whenever you dodge an attack, gain one SPARK'),
           Perk(
-            '$_wheneverYouLongRest, you may gain DODGE',
+            '$_longRest, you may gain DODGE',
             quantity: 2,
             grouped: true,
           ),
           Perk(
-              '$_wheneverYouShortRest, you may consume_SPARK one Spark. If you do, one enemy within RANGE 2 suffers one damage'),
+              '$_shortRest, you may consume_SPARK one Spark. If you do, one enemy within $_range 2 suffers one damage'),
         ],
         variant: Variant.base,
       ),
@@ -2926,6 +2939,53 @@ class PerksRepository {
           Perk('Add two +1 "+2 instead if you suffer 1 damage" cards'),
           Perk('Add one +2 "+3 instead if you suffer 1 damage" card'),
           Perk('$_ignoreNegativeItemEffects and remove one -1 card'),
+        ],
+        variant: Variant.base,
+      ),
+    ],
+    ClassCodes.dome: [
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 $_strengthen Target 1 ally $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "Grant the ally with $_project : $_attack 2" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +0 "Place this card in your active area. On your next attack granting ability, discard this card to add $_plusTwo $_attack" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_two +0 $_cards with $_two +0 $_pierce 3 $_rolling $_cards',
+          ),
+          Perk(
+            '$_add $_three $_barrierPlus 1 $_rolling $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +2 $_light $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_regenerate, self" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            'Your summons gain $_retaliate 1. Whenever one of your summons dies, perform: $_barrierPlus 3',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'At the end of each of your rests, perform: $_barrierPlus 1 and $_project $_range 4',
+          ),
+          Perk(
+            '$_onceEachScenario, at the end of an ally\'s turn, perform: $_barrierPlus 5 and $_project, Target that ally',
+            quantity: 2,
+            grouped: true,
+          ),
         ],
         variant: Variant.base,
       ),

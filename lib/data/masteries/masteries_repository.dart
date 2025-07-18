@@ -609,5 +609,19 @@ class MasteriesRepository {
         ],
       ),
     ],
+    ClassCodes.dome: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Only declare rests while your helper bot is adjacent to a figure, but not adjacent to you.',
+          ),
+          Mastery(
+            masteryDetails:
+                'Never end your turn with 0 or 1 barrier, and absorb (partially or fully) at least 10 attacks with your barrier.',
+          ),
+        ],
+      ),
+    ],
   };
 }
