@@ -126,6 +126,8 @@ const standardAssets = {
   'SPARK': AssetConfig('spark.svg', invertColor: true),
   'consume_SPARK': AssetConfig('spark.svg', invertColor: true),
   'RAGE': AssetConfig('class_icons/vanquisher.svg', invertColor: true),
+  'PROJECT': AssetConfig('project.svg', invertColor: true),
+  'BARRIER_PLUS': AssetConfig('barrier_plus.svg', invertColor: true),
 
   // Special mechanics
   'LUMINARY_HEXES': AssetConfig('luminary_hexes.svg'),

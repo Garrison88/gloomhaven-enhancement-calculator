@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 10;
+  static const _databaseVersion = 11;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();

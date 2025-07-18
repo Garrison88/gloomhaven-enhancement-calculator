@@ -186,6 +186,7 @@ class Character {
   bool includeMasteries() =>
       playerClass.classCode == 'vimthreader' ||
       playerClass.classCode == 'core' ||
+      playerClass.classCode == 'dome' ||
       playerClass.category == ClassCategory.frosthaven ||
       variant == Variant.frosthavenCrossover;
 }
