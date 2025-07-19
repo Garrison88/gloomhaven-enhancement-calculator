@@ -63,8 +63,9 @@ const standardAssets = {
   'MOVE': AssetConfig('move.svg', invertColor: true),
   'MOVE+1': AssetConfig('move.svg', invertColor: true),
   'JUMP': AssetConfig('jump.svg', invertColor: true),
-  'Rolling': AssetConfig('rolling.svg'),
   'SHIELD': AssetConfig('shield.svg', invertColor: true),
+  'PUSH': AssetConfig('push.svg'),
+  'PULL': AssetConfig('pull.svg'),
 
   // Status effects
   'STUN': AssetConfig('stun.svg'),
@@ -74,8 +75,6 @@ const standardAssets = {
   'REGENERATE': AssetConfig('regenerate.svg'),
   'DISARM': AssetConfig('disarm.svg'),
   'BLESS': AssetConfig('bless.svg'),
-  'PUSH': AssetConfig('push.svg'),
-  'PULL': AssetConfig('pull.svg'),
   'IMMOBILIZE': AssetConfig('immobilize.svg'),
   'POISON': AssetConfig('poison.svg'),
   'MUDDLE': AssetConfig('muddle.svg'),
@@ -90,7 +89,6 @@ const standardAssets = {
   'ENFEEBLE': AssetConfig('enfeeble.svg'),
   'INFECT': AssetConfig('infect.svg'),
   'DODGE': AssetConfig('dodge.svg'),
-  'IMMUNE': AssetConfig('immune.svg'),
   'IMPAIR': AssetConfig('impair.svg'),
   'BANE': AssetConfig('bane.svg'),
 
@@ -102,8 +100,10 @@ const standardAssets = {
   'RETALIATE': AssetConfig('retaliate.svg', invertColor: true),
   'ATTACK': AssetConfig('attack.svg', invertColor: true),
   'ATTACK+1': AssetConfig('attack.svg', invertColor: true),
+  'Rolling': AssetConfig('rolling.svg'),
 
   // Class-specific abilities and icons
+  //TODO: copy the asset from the class_icons folder instead of using the class icon
   'Shackle': AssetConfig('class_icons/chainguard.svg', invertColor: true),
   'Shackled': AssetConfig('class_icons/chainguard.svg', invertColor: true),
   'Cultivate': AssetConfig('cultivate.svg', invertColor: true),
@@ -128,8 +128,7 @@ const standardAssets = {
   'RAGE': AssetConfig('class_icons/vanquisher.svg', invertColor: true),
   'PROJECT': AssetConfig('project.svg', invertColor: true),
   'BARRIER_PLUS': AssetConfig('barrier_plus.svg', invertColor: true),
-
-  // Special mechanics
+  'CRITTERS': AssetConfig('critters.svg', invertColor: true),
   'LUMINARY_HEXES': AssetConfig('luminary_hexes.svg'),
   'SHADOW': AssetConfig('shadow.svg'),
   'TIME_TOKEN': AssetConfig('time_token.svg'),
@@ -194,9 +193,13 @@ const standardAssets = {
 };
 
 // Function to get asset configuration
-AssetConfig getAssetConfig(String element, bool darkTheme) {
+AssetConfig getAssetConfig(
+  String element,
+  bool darkTheme,
+) {
   // Clean the input string
-  final cleanElement = element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
+  final String cleanElement =
+      element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
 
   // Check theme-specific assets first
   final themeAsset = themeSpecificAssets[cleanElement];
