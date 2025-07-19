@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 11;
+  static const _databaseVersion = 12;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -232,6 +232,10 @@ class DatabaseHelper {
         }
         if (oldVersion <= 10) {
           // Added DOME class
+          await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+        }
+        if (oldVersion <= 11) {
+          // Added Skitterclaw class
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
