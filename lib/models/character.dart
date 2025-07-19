@@ -187,6 +187,7 @@ class Character {
       playerClass.classCode == 'vimthreader' ||
       playerClass.classCode == 'core' ||
       playerClass.classCode == 'dome' ||
+      playerClass.classCode == 'skitterclaw' ||
       playerClass.category == ClassCategory.frosthaven ||
       variant == Variant.frosthavenCrossover;
 }

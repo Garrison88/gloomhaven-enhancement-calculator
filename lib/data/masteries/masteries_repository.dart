@@ -623,5 +623,20 @@ class MasteriesRepository {
         ],
       ),
     ],
+    ClassCodes.skitterclaw: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Have at least one Latched summon on four different enemies',
+          ),
+          Mastery(
+            masteryDetails:
+                'Have your summons perform twelve attacks in one round',
+          ),
+        ],
+        variant: Variant.base,
+      ),
+    ],
   };
 }

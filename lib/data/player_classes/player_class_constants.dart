@@ -787,6 +787,14 @@ class PlayerClasses {
       category: ClassCategory.custom,
       primaryColor: 0xff95B7E1,
     ),
+    PlayerClass(
+      race: CharacterRaces.vermling,
+      name: 'Skitterclaw',
+      classCode: ClassCodes.skitterclaw,
+      icon: 'skitterclaw.svg',
+      category: ClassCategory.custom,
+      primaryColor: 0xffDDAC82,
+    ),
   ];
 
   static PlayerClass playerClassByClassCode(String classCode) {
