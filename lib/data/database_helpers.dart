@@ -230,6 +230,10 @@ class DatabaseHelper {
           // Added CORE class
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
+        if (oldVersion <= 10) {
+          // Added DOME class
+          await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+        }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
         await DatabaseMigrations.updateMetaDataTable(
           txn,
