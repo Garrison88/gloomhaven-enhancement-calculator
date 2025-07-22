@@ -3015,10 +3015,10 @@ class PerksRepository {
             '$_add $_one +1 "All Latched enemies suffer $_damage 1" $_card',
             quantity: 2,
           ),
-          Perk('$_ignoreScenarioEffects and $_add $_one +1 $_card'),
+          Perk('$_ignoreScenarioEffects and $_addLowercase $_one +1 $_card'),
           Perk('You may summon $_critters summons in adjacent occupied hexes'),
           Perk(
-            '$_oncePerScenario, when you or an ally would suffer $_damage from an attack, remove a Latched summon from the attacker or the target to negate the damage instead',
+            '$_oncePerScenario, when you or an ally would suffer $_damage from an attack, $_removeLowercase a Latched summon from the attacker or the target to negate the damage instead',
             quantity: 2,
             grouped: true,
           ),
