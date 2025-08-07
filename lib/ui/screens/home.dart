@@ -177,6 +177,7 @@ class _HomeState extends State<Home> {
               }
             },
           ),
+          const Text('Town Sheet'),
           const EnhancementCalculatorPage(),
         ],
       ),
@@ -194,7 +195,7 @@ class _HomeState extends State<Home> {
           //   ),
           // ),
           heroTag: null,
-          onPressed: context.read<AppModel>().page == 1
+          onPressed: context.read<AppModel>().page == 2
               ? () => context.read<EnhancementCalculatorModel>().resetCost()
               // must watch
               : context.watch<CharactersModel>().characters.isEmpty
@@ -210,15 +211,15 @@ class _HomeState extends State<Home> {
                         }
                       })
                   : () => charactersModel.toggleEditMode(),
-          child: Icon(
-            appModel.page == 1
-                ? Icons.clear_rounded
-                : charactersModel.characters.isEmpty
-                    ? Icons.add
-                    : charactersModel.isEditMode
-                        ? Icons.edit_off_rounded
-                        : Icons.edit_rounded,
-          ),
+          child: Icon(appModel.page == 0
+              ? charactersModel.characters.isEmpty
+                  ? Icons.add
+                  : charactersModel.isEditMode
+                      ? Icons.edit_off_rounded
+                      : Icons.edit_rounded
+              : appModel.page == 1
+                  ? Icons.edit_rounded
+                  : Icons.clear_rounded),
         );
       }),
       bottomNavigationBar: const GHCBottomNavigationBar(),

@@ -29,6 +29,16 @@ class GHCBottomNavigationBar extends StatelessWidget {
           icon: SizedBox(
             height: 35,
             child: Icon(
+              Icons.location_city_rounded,
+              size: iconSize,
+            ),
+          ),
+          label: 'TOWN',
+        ),
+        BottomNavigationBarItem(
+          icon: SizedBox(
+            height: 35,
+            child: Icon(
               Icons.auto_awesome_rounded,
               size: iconSize,
             ),

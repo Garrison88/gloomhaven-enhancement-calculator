@@ -99,7 +99,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                     : Colors.white,
               ),
             )
-          : context.watch<AppModel>().page == 1
+          : context.watch<AppModel>().page == 2
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   // mainAxisAlignment: MainAxisAlignment.center,
