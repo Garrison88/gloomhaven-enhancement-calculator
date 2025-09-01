@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/campaign_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
@@ -45,7 +46,12 @@ Future<void> main() async {
             showRetired: SharedPrefs().showRetiredCharacters,
             databaseHelper: DatabaseHelper.instance,
           ),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CampaignModel(
+            databaseHelper: DatabaseHelper.instance,
+          ),
+        ),
       ],
       child: Builder(
         builder: (context) {

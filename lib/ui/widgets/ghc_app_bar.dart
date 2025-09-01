@@ -86,7 +86,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
       // leading: Icon(Icons.settings),
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
       centerTitle: true,
-      title: context.watch<AppModel>().page == 0 &&
+      title: context.watch<AppModel>().page <= 1 &&
               charactersModel.characters.length > 1
           ? SmoothPageIndicator(
               controller: charactersModel.pageController,

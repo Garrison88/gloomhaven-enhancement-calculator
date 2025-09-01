@@ -12,6 +12,7 @@ enum ClassCategory {
 enum Variant {
   base,
   frosthavenCrossover,
+  jotl,
   v2,
   v3,
   v4,

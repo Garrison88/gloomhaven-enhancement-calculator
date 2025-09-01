@@ -33,7 +33,7 @@ class GHCBottomNavigationBar extends StatelessWidget {
               size: iconSize,
             ),
           ),
-          label: 'TOWN',
+          label: 'CAMPAIGNS',
         ),
         BottomNavigationBarItem(
           icon: SizedBox(

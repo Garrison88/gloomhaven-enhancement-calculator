@@ -2,8 +2,13 @@ import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/campaign_database_migrations.dart';
 import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository.dart';
 import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
+import 'package:gloomhaven_enhancement_calc/models/campaign/campaign.dart';
+import 'package:gloomhaven_enhancement_calc/models/campaign/event.dart';
+import 'package:gloomhaven_enhancement_calc/models/campaign/global_achievement.dart';
+import 'package:gloomhaven_enhancement_calc/models/campaign/party_achievement.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,6 +42,11 @@ class DatabaseHelper {
     tableCharacterPerks,
     tableCharacterMasteries,
     tableMetaData,
+    tableCampaigns,
+    tableGlobalAchievements,
+    tablePartyAchievements,
+    tableCampaignUnlocks,
+    tableCampaignEvents,
   ];
 
   Future<Database> get database async => _database ??= await _initDatabase();
@@ -178,6 +188,8 @@ class DatabaseHelper {
           $columnAssociatedMasteryId $textType,
           $columnCharacterMasteryAchieved $boolType
         )''');
+        await CampaignMigrations.addCampaignTables(txn);
+        await CampaignMigrations.linkCharactersToCampaigns(txn);
       },
     );
   }
@@ -237,6 +249,11 @@ class DatabaseHelper {
         if (oldVersion <= 11) {
           // Added Skitterclaw class
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+        }
+        if (oldVersion <= 12) {
+          // Add campaign tracking tables
+          await CampaignMigrations.addCampaignTables(txn);
+          await CampaignMigrations.linkCharactersToCampaigns(txn);
         }
         // Going forward, always call DatabaseMigrations.updateMetaDataTable
         await DatabaseMigrations.updateMetaDataTable(

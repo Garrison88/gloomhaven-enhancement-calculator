@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:gloomhaven_enhancement_calc/data/campaign_database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_campaign_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/campaign_model.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
@@ -138,6 +141,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
     final charactersModel = context.read<CharactersModel>();
+    final CampaignModel campaignModel = context.read<CampaignModel>();
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
       // extendBody: true,
@@ -198,19 +202,35 @@ class _HomeState extends State<Home> {
           onPressed: context.read<AppModel>().page == 2
               ? () => context.read<EnhancementCalculatorModel>().resetCost()
               // must watch
-              : context.watch<CharactersModel>().characters.isEmpty
+              : context.read<AppModel>().page == 1
                   ? () => showDialog<bool>(
                         barrierDismissible: false,
                         context: context,
-                        builder: (_) => CreateCharacterDialog(
-                          charactersModel: charactersModel,
+                        builder: (_) => CreateCampaignDialog(
+                          onCreateCampaign: (
+                            partyName,
+                            gameVariant,
+                          ) {
+                            campaignModel.createCampaign(
+                              partyName: partyName,
+                              gameVariant: gameVariant,
+                            );
+                          },
                         ),
-                      ).then((value) {
-                        if (value != null && value) {
-                          context.read<AppModel>().updateTheme();
-                        }
-                      })
-                  : () => charactersModel.toggleEditMode(),
+                      )
+                  : context.watch<CharactersModel>().characters.isEmpty
+                      ? () => showDialog<bool>(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => CreateCharacterDialog(
+                              charactersModel: charactersModel,
+                            ),
+                          ).then((value) {
+                            if (value != null && value) {
+                              context.read<AppModel>().updateTheme();
+                            }
+                          })
+                      : () => charactersModel.toggleEditMode(),
           child: Icon(appModel.page == 0
               ? charactersModel.characters.isEmpty
                   ? Icons.add
