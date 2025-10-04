@@ -19,6 +19,19 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In 3 different scenarios, kill an enemy that you Pushed or Pulled that round',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, across 3 consecutive rounds, play 6 different ability cards and cause enemies to suffer 7 or more damage during each of those rounds',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.tinkerer: [
       Masteries(
@@ -635,7 +648,6 @@ class MasteriesRepository {
                 'Have your summons perform twelve attacks in one round',
           ),
         ],
-        variant: Variant.base,
       ),
     ],
   };

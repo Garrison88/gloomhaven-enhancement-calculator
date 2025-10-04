@@ -7,6 +7,9 @@ class PlayerClasses {
     PlayerClass(
         race: CharacterRaces.inox,
         name: 'Brute',
+        variantNames: {
+          Variant.gloomhaven2E: 'Bruiser',
+        },
         classCode: ClassCodes.brute,
         icon: 'brute.svg',
         category: ClassCategory.gloomhaven,

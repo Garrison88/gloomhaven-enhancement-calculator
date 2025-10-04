@@ -180,6 +180,8 @@ class Character {
       (playerClass.category != ClassCategory.frosthaven &&
           variant == Variant.base));
 
+  String getRaceAndClassName() => playerClass.getFullDisplayName(variant);
+
   // TODO: modify this to include Custom and Crimson Scales once they have masteries
   // for now, have to manually add the Custom Classes that have masteries but aren't
   // yet Frosthaven Crossover versions
@@ -189,5 +191,6 @@ class Character {
       playerClass.classCode == 'dome' ||
       playerClass.classCode == 'skitterclaw' ||
       playerClass.category == ClassCategory.frosthaven ||
-      variant == Variant.frosthavenCrossover;
+      variant == Variant.frosthavenCrossover ||
+      variant == Variant.gloomhaven2E;
 }

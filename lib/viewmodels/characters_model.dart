@@ -403,7 +403,7 @@ class CharactersModel with ChangeNotifier {
       return [];
     }
     List<Map<String, Object?>> masteries = await databaseHelper.queryMasteries(
-      character.playerClass.classCode,
+      character,
     );
     for (var masteryMap in masteries) {
       character.masteries.add(
