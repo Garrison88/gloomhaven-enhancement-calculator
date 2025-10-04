@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/campaign_database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/data/world_database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/campaign.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/event.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/global_achievement.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/party_achievement.dart';
 
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
+import 'package:gloomhaven_enhancement_calc/models/world/world.dart';
 import 'package:uuid/uuid.dart';
 
 class CampaignModel with ChangeNotifier {
@@ -16,23 +18,35 @@ class CampaignModel with ChangeNotifier {
 
   DatabaseHelper databaseHelper;
 
+  // World management
+  World? _currentWorld;
+  List<World> _worlds = [];
+
+  // Campaign/Party management
   Campaign? _currentCampaign;
-  List<Campaign> _campaigns = [];
+  List<Campaign> _campaignsInWorld = [];
+
+  // Shared world data
   List<GlobalAchievement> _globalAchievements = [];
+
+  // Campaign-specific data
   List<PartyAchievement> _partyAchievements = [];
   List<CampaignUnlock> _campaignUnlocks = [];
   List<CampaignEvent> _cityEvents = [];
   List<CampaignEvent> _roadEvents = [];
 
   // Controllers for editing
+  final worldNameController = TextEditingController();
   final partyNameController = TextEditingController();
   final sanctuaryDonationController = TextEditingController();
   final notesController = TextEditingController();
   final locationController = TextEditingController();
 
   // Getters
+  World? get currentWorld => _currentWorld;
+  List<World> get worlds => _worlds;
   Campaign? get currentCampaign => _currentCampaign;
-  List<Campaign> get campaigns => _campaigns;
+  List<Campaign> get campaignsInWorld => _campaignsInWorld;
   List<GlobalAchievement> get globalAchievements => _globalAchievements;
   List<PartyAchievement> get partyAchievements => _partyAchievements;
   List<CampaignUnlock> get campaignUnlocks => _campaignUnlocks;
@@ -52,6 +66,7 @@ class CampaignModel with ChangeNotifier {
 
   @override
   void dispose() {
+    worldNameController.dispose();
     partyNameController.dispose();
     sanctuaryDonationController.dispose();
     notesController.dispose();
@@ -61,80 +76,184 @@ class CampaignModel with ChangeNotifier {
 
   // Initialize and load data
   Future<void> initialize() async {
-    await loadCampaigns();
-    await loadActiveCampaign();
+    await loadWorlds();
+    if (_worlds.isNotEmpty) {
+      await loadActiveWorld();
+    }
   }
 
-  Future<void> loadCampaigns() async {
+  // World operations
+  Future<void> loadWorlds() async {
     final db = await databaseHelper.database;
-    _campaigns = await CampaignDatabaseHelper.queryAllCampaigns(db);
+    _worlds = await WorldDatabaseHelper.queryAllWorlds(db);
     notifyListeners();
   }
 
-  Future<void> loadActiveCampaign() async {
+  Future<void> loadActiveWorld() async {
     final db = await databaseHelper.database;
-    _currentCampaign = await CampaignDatabaseHelper.queryActiveCampaign(db);
+    _currentWorld = await WorldDatabaseHelper.queryActiveWorld(db);
 
-    if (_currentCampaign != null) {
-      await loadCampaignData(_currentCampaign!.uuid);
-      _updateControllers();
+    if (_currentWorld != null) {
+      await loadWorldData(_currentWorld!);
     }
     notifyListeners();
   }
 
-  Future<void> loadCampaignData(String campaignUuid) async {
+  Future<void> loadWorldData(World world) async {
     final db = await databaseHelper.database;
 
+    // Load campaigns in this world
+    _campaignsInWorld =
+        await WorldDatabaseHelper.queryCampaignsInWorld(db, world.uuid);
+
+    // Load global achievements for this world
     _globalAchievements =
-        await CampaignDatabaseHelper.queryGlobalAchievements(db, campaignUuid);
-    _partyAchievements =
-        await CampaignDatabaseHelper.queryPartyAchievements(db, campaignUuid);
-    _campaignUnlocks =
-        await CampaignDatabaseHelper.queryCampaignUnlocks(db, campaignUuid);
-    _cityEvents = await CampaignDatabaseHelper.queryCampaignEvents(
-      db,
-      campaignUuid,
-      type: EventType.city,
-    );
-    _roadEvents = await CampaignDatabaseHelper.queryCampaignEvents(
-      db,
-      campaignUuid,
-      type: EventType.road,
-    );
+        await WorldDatabaseHelper.queryGlobalAchievements(db, world.uuid);
+
+    // Try to load active campaign in this world
+    _currentCampaign =
+        await UpdatedCampaignDatabaseHelper.queryActiveCampaignInWorld(
+            db, world.uuid);
+
+    if (_currentCampaign != null) {
+      await loadCampaignData(_currentCampaign!);
+    }
 
     notifyListeners();
   }
 
-  // Campaign CRUD operations
-  Future<void> createCampaign({
-    required String partyName,
+  Future<void> createWorld({
+    required String name,
     Variant gameVariant = Variant.base,
   }) async {
-    final campaign = Campaign(
+    final world = World(
       uuid: const Uuid().v1(),
-      partyName: partyName,
+      name: name,
       gameVariant: gameVariant,
     );
 
     final db = await databaseHelper.database;
 
-    // Deactivate current campaign if exists
-    if (_currentCampaign != null) {
+    // Deactivate current world if exists
+    if (_currentWorld != null) {
+      _currentWorld!.isActive = false;
+      await WorldDatabaseHelper.updateWorld(db, _currentWorld!);
+    }
+
+    // Insert new world
+    world.id = await WorldDatabaseHelper.insertWorld(db, world);
+
+    _worlds.add(world);
+    _currentWorld = world;
+    _campaignsInWorld.clear();
+    _currentCampaign = null;
+    _globalAchievements.clear();
+
+    notifyListeners();
+  }
+
+  Future<void> switchWorld(World world) async {
+    if (_currentWorld?.uuid == world.uuid) return;
+
+    final db = await databaseHelper.database;
+
+    // Deactivate current world
+    if (_currentWorld != null) {
+      _currentWorld!.isActive = false;
+      await WorldDatabaseHelper.updateWorld(db, _currentWorld!);
+    }
+
+    // Activate selected world
+    world.isActive = true;
+    await WorldDatabaseHelper.updateWorld(db, world);
+
+    _currentWorld = world;
+    await loadWorldData(world);
+
+    notifyListeners();
+  }
+
+  Future<void> deleteWorld(World world) async {
+    final db = await databaseHelper.database;
+    await WorldDatabaseHelper.deleteWorld(db, world.uuid);
+
+    _worlds.remove(world);
+
+    if (_currentWorld?.uuid == world.uuid) {
+      _currentWorld = null;
+      _currentCampaign = null;
+      _clearAllData();
+
+      // Load first available world if any
+      if (_worlds.isNotEmpty) {
+        await switchWorld(_worlds.first);
+      }
+    }
+
+    notifyListeners();
+  }
+
+  // Campaign operations
+  Future<void> loadCampaignData(Campaign campaign) async {
+    final db = await databaseHelper.database;
+
+    // Party achievements are campaign-specific
+    _partyAchievements =
+        await CampaignDatabaseHelper.queryPartyAchievements(db, campaign.uuid);
+    _campaignUnlocks =
+        await CampaignDatabaseHelper.queryCampaignUnlocks(db, campaign.uuid);
+    _cityEvents = await CampaignDatabaseHelper.queryCampaignEvents(
+      db,
+      campaign.uuid,
+      type: EventType.city,
+    );
+    _roadEvents = await CampaignDatabaseHelper.queryCampaignEvents(
+      db,
+      campaign.uuid,
+      type: EventType.road,
+    );
+
+    _updateControllers();
+    notifyListeners();
+  }
+
+  Future<void> createCampaign({
+    required String partyName,
+    String? worldUuid,
+  }) async {
+    // Use provided world UUID or current world
+    final targetWorldUuid = worldUuid ?? _currentWorld?.uuid;
+
+    if (targetWorldUuid == null) {
+      throw Exception('Cannot create party without selecting a world');
+    }
+
+    final campaign = Campaign(
+      uuid: const Uuid().v1(),
+      worldUuid: targetWorldUuid,
+      partyName: partyName,
+    );
+
+    final db = await databaseHelper.database;
+
+    // Deactivate other campaigns in this world
+    if (_currentCampaign != null &&
+        _currentCampaign!.worldUuid == targetWorldUuid) {
       _currentCampaign!.isActive = false;
       await CampaignDatabaseHelper.updateCampaign(db, _currentCampaign!);
     }
 
     // Insert new campaign
-    campaign.id = await CampaignDatabaseHelper.insertCampaign(db, campaign);
+    campaign.id =
+        await UpdatedCampaignDatabaseHelper.insertCampaign(db, campaign);
 
-    // Initialize unlocks and events
+    // Initialize unlocks and events for the new campaign
     await CampaignDatabaseHelper.initializeCampaignUnlocks(db, campaign.uuid);
     await CampaignDatabaseHelper.initializeCampaignEvents(db, campaign.uuid);
 
-    _campaigns.add(campaign);
+    _campaignsInWorld.add(campaign);
     _currentCampaign = campaign;
-    await loadCampaignData(campaign.uuid);
-    _updateControllers();
+    await loadCampaignData(campaign);
 
     notifyListeners();
   }
@@ -144,8 +263,9 @@ class CampaignModel with ChangeNotifier {
 
     final db = await databaseHelper.database;
 
-    // Deactivate current campaign
-    if (_currentCampaign != null) {
+    // Deactivate current campaign in this world
+    if (_currentCampaign != null &&
+        _currentCampaign!.worldUuid == campaign.worldUuid) {
       _currentCampaign!.isActive = false;
       await CampaignDatabaseHelper.updateCampaign(db, _currentCampaign!);
     }
@@ -155,8 +275,7 @@ class CampaignModel with ChangeNotifier {
     await CampaignDatabaseHelper.updateCampaign(db, campaign);
 
     _currentCampaign = campaign;
-    await loadCampaignData(campaign.uuid);
-    _updateControllers();
+    await loadCampaignData(campaign);
 
     notifyListeners();
   }
@@ -165,26 +284,144 @@ class CampaignModel with ChangeNotifier {
     final db = await databaseHelper.database;
     await CampaignDatabaseHelper.deleteCampaign(db, campaign.uuid);
 
-    _campaigns.remove(campaign);
+    _campaignsInWorld.remove(campaign);
 
     if (_currentCampaign?.uuid == campaign.uuid) {
       _currentCampaign = null;
-      _globalAchievements.clear();
       _partyAchievements.clear();
       _campaignUnlocks.clear();
       _cityEvents.clear();
       _roadEvents.clear();
 
-      // Load first available campaign if any
-      if (_campaigns.isNotEmpty) {
-        await switchCampaign(_campaigns.first);
+      // Load first available campaign in world if any
+      if (_campaignsInWorld.isNotEmpty) {
+        await switchCampaign(_campaignsInWorld.first);
       }
     }
 
     notifyListeners();
   }
 
-  // Update campaign properties
+  // Global Achievement management (now world-scoped)
+  Future<void> addGlobalAchievement({
+    required String name,
+    required String associatedCampaignUuid,
+    String? type,
+    String details = '',
+  }) async {
+    if (_currentWorld == null) return;
+
+    final achievement = GlobalAchievement(
+      worldUuid: _currentWorld!.uuid,
+      associatedCampaignUuid: associatedCampaignUuid,
+      name: name,
+      type: type,
+      details: details,
+      unlockedAt: DateTime.now(),
+    );
+
+    final db = await databaseHelper.database;
+    achievement.id =
+        await WorldDatabaseHelper.insertGlobalAchievement(db, achievement);
+
+    // Reload achievements (in case one was overwritten)
+    _globalAchievements = await WorldDatabaseHelper.queryGlobalAchievements(
+      db,
+      _currentWorld!.uuid,
+    );
+
+    await _checkUnlockProgress();
+    notifyListeners();
+  }
+
+  // Helper methods
+  void _clearAllData() {
+    _globalAchievements.clear();
+    _partyAchievements.clear();
+    _campaignUnlocks.clear();
+    _cityEvents.clear();
+    _roadEvents.clear();
+  }
+
+  void _updateControllers() {
+    if (_currentWorld != null) {
+      worldNameController.text = _currentWorld!.name;
+    }
+    if (_currentCampaign != null) {
+      partyNameController.text = _currentCampaign!.partyName;
+      sanctuaryDonationController.text =
+          _currentCampaign!.sanctuaryDonations.toString();
+      notesController.text = _currentCampaign!.notes;
+      locationController.text = _currentCampaign!.currentLocation;
+    }
+  }
+
+  Future<void> _checkUnlockProgress() async {
+    if (_currentCampaign == null || _currentWorld == null) return;
+
+    final db = await databaseHelper.database;
+    bool hasChanges = false;
+
+    for (final unlock in _campaignUnlocks) {
+      int oldProgress = unlock.progress;
+
+      // Update progress based on unlock type
+      switch (unlock.type) {
+        case UnlockType.envelope:
+          if (unlock.name == 'Envelope A') {
+            unlock.progress = ancientTechnologyCount;
+          } else if (unlock.name == 'Envelope B') {
+            unlock.progress = _currentCampaign!.sanctuaryDonations;
+          }
+          break;
+
+        case UnlockType.characterClass:
+          if (unlock.name == 'Sun Class') {
+            unlock.progress = _currentCampaign!.reputation;
+          } else if (unlock.name == 'Eclipse Class') {
+            unlock.progress = _currentCampaign!.reputation;
+          }
+          break;
+
+        case UnlockType.achievement:
+          if (unlock.name == 'The Drake Aided') {
+            int count = 0;
+            if (_partyAchievements.any((a) => a.name == "The Drake's Command"))
+              count++;
+            if (_partyAchievements.any((a) => a.name == "The Drake's Treasure"))
+              count++;
+            unlock.progress = count;
+          }
+          break;
+
+        case UnlockType.other:
+          if (unlock.name.contains('reputation')) {
+            unlock.progress = _currentCampaign!.reputation;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      // Check if newly unlocked
+      if (oldProgress != unlock.progress) {
+        hasChanges = true;
+
+        if (!unlock.isUnlocked && unlock.conditionMet) {
+          unlock.isUnlocked = true;
+        }
+
+        await CampaignDatabaseHelper.updateCampaignUnlock(db, unlock);
+      }
+    }
+
+    if (hasChanges) {
+      notifyListeners();
+    }
+  }
+
+  // All other existing methods remain the same but properly check for world/campaign context
   Future<void> updateCampaign(Campaign updatedCampaign) async {
     final db = await databaseHelper.database;
     await CampaignDatabaseHelper.updateCampaign(db, updatedCampaign);
@@ -216,7 +453,6 @@ class CampaignModel with ChangeNotifier {
 
     if (newLevel > _currentCampaign!.prosperity) {
       _currentCampaign!.prosperity = newLevel;
-      // Prosperity increased!
     }
 
     await updateCampaign(_currentCampaign!);
@@ -230,36 +466,7 @@ class CampaignModel with ChangeNotifier {
     await updateCampaign(_currentCampaign!);
   }
 
-  // Achievement management
-  Future<void> addGlobalAchievement({
-    required String name,
-    String? type,
-    String details = '',
-  }) async {
-    if (_currentCampaign == null) return;
-
-    final achievement = GlobalAchievement(
-      name: name,
-      type: type,
-      details: details,
-      unlockedAt: DateTime.now(),
-      associatedCampaignUuid: _currentCampaign!.uuid,
-    );
-
-    final db = await databaseHelper.database;
-    achievement.id =
-        await CampaignDatabaseHelper.insertGlobalAchievement(db, achievement);
-
-    // Reload achievements (in case one was overwritten)
-    _globalAchievements = await CampaignDatabaseHelper.queryGlobalAchievements(
-      db,
-      _currentCampaign!.uuid,
-    );
-
-    await _checkUnlockProgress();
-    notifyListeners();
-  }
-
+  // Remove global achievement
   Future<void> removeGlobalAchievement(GlobalAchievement achievement) async {
     if (achievement.id == null) return;
 
@@ -271,6 +478,7 @@ class CampaignModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // Party Achievement management
   Future<void> addPartyAchievement({
     required String name,
     String details = '',
@@ -346,81 +554,33 @@ class CampaignModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Check and update unlock progress
-  Future<void> _checkUnlockProgress() async {
-    if (_currentCampaign == null) return;
-
-    final db = await databaseHelper.database;
-    bool hasChanges = false;
-
-    for (final unlock in _campaignUnlocks) {
-      int oldProgress = unlock.progress;
-
-      // Update progress based on unlock type
-      switch (unlock.type) {
-        case UnlockType.envelope:
-          if (unlock.name == 'Envelope A') {
-            unlock.progress = ancientTechnologyCount;
-          } else if (unlock.name == 'Envelope B') {
-            unlock.progress = _currentCampaign!.sanctuaryDonations;
-          }
-          break;
-
-        case UnlockType.characterClass:
-          if (unlock.name == 'Sun Class') {
-            unlock.progress = _currentCampaign!.reputation;
-          } else if (unlock.name == 'Eclipse Class') {
-            unlock.progress = _currentCampaign!.reputation;
-          }
-          break;
-
-        case UnlockType.achievement:
-          if (unlock.name == 'The Drake Aided') {
-            int count = 0;
-            if (_partyAchievements.any((a) => a.name == "The Drake's Command"))
-              count++;
-            if (_partyAchievements.any((a) => a.name == "The Drake's Treasure"))
-              count++;
-            unlock.progress = count;
-          }
-          break;
-
-        case UnlockType.other:
-          if (unlock.name.contains('reputation')) {
-            unlock.progress = _currentCampaign!.reputation;
-          }
-          break;
-
-        default:
-          break;
-      }
-
-      // Check if newly unlocked
-      if (oldProgress != unlock.progress) {
-        hasChanges = true;
-
-        if (!unlock.isUnlocked && unlock.conditionMet) {
-          unlock.isUnlocked = true;
-          // Could trigger notification here
-        }
-
-        await CampaignDatabaseHelper.updateCampaignUnlock(db, unlock);
-      }
-    }
-
-    if (hasChanges) {
-      notifyListeners();
-    }
+  // Helper method to check if a world has any parties
+  bool worldHasParties(String worldUuid) {
+    return _campaignsInWorld.any((c) => c.worldUuid == worldUuid);
   }
 
-  // Helper methods
-  void _updateControllers() {
-    if (_currentCampaign != null) {
-      partyNameController.text = _currentCampaign!.partyName;
-      sanctuaryDonationController.text =
-          _currentCampaign!.sanctuaryDonations.toString();
-      notesController.text = _currentCampaign!.notes;
-      locationController.text = _currentCampaign!.currentLocation;
-    }
+  // Helper method to get active world's variant
+  Variant? get currentWorldVariant => _currentWorld?.gameVariant;
+
+  // Helper method to check for specific global achievements
+  bool hasGlobalAchievement(String name) {
+    return _globalAchievements.any((a) => a.name == name && a.isActive);
+  }
+
+  // Helper method to get active City Rule
+  String? getActiveCityRule() {
+    final cityRule = _globalAchievements.firstWhere(
+      (a) => a.type == AchievementTypes.cityRule && a.isActive,
+      orElse: () => GlobalAchievement(
+          worldUuid: '', associatedCampaignUuid: '', name: ''),
+    );
+    return cityRule.name.isNotEmpty ? cityRule.name : null;
+  }
+
+  // Helper method to count achievements by type
+  int countAchievementsByType(String type) {
+    return _globalAchievements
+        .where((a) => a.type == type && a.isActive)
+        .length;
   }
 }

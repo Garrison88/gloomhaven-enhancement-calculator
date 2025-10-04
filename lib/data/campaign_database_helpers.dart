@@ -1,14 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/campaign.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/event.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/global_achievement.dart';
 import 'package:gloomhaven_enhancement_calc/models/campaign/party_achievement.dart';
+import 'package:gloomhaven_enhancement_calc/models/world/world.dart';
 import 'package:sqflite/sqflite.dart';
 
 // Extension to DatabaseHelper for campaign-related operations
 class CampaignDatabaseHelper {
   // Campaign CRUD operations
   static Future<int> insertCampaign(Database db, Campaign campaign) async {
+    // Verify world exists
+    final worldExists = await db.query(
+      tableWorlds,
+      where: '$columnWorldUuid = ?',
+      whereArgs: [campaign.worldUuid],
+      limit: 1,
+    );
+
+    if (worldExists.isEmpty) {
+      throw Exception('Cannot create party without a world');
+    }
+
     return await db.insert(tableCampaigns, campaign.toMap());
   }
 
@@ -61,11 +73,14 @@ class CampaignDatabaseHelper {
     return campaigns;
   }
 
-  static Future<Campaign?> queryActiveCampaign(Database db) async {
+  static Future<Campaign?> queryActiveCampaignInWorld(
+    Database db,
+    String worldUuid,
+  ) async {
     List<Map<String, dynamic>> maps = await db.query(
       tableCampaigns,
-      where: '$columnIsActive = ?',
-      whereArgs: [1],
+      where: '$columnCampaignWorldUuid = ? AND $columnIsActive = ?',
+      whereArgs: [worldUuid, 1],
       limit: 1,
     );
     if (maps.isNotEmpty) {
@@ -74,13 +89,13 @@ class CampaignDatabaseHelper {
     return null;
   }
 
-  // Global Achievement operations
   static Future<int> insertGlobalAchievement(
     Database db,
     GlobalAchievement achievement,
   ) async {
-    // Check if achievement with same type exists
-    if (achievement.type != null) {
+    // For singleton types (like City Rule), check if one exists FOR THIS CAMPAIGN
+    if (achievement.type != null &&
+        AchievementTypes.singletonTypes.contains(achievement.type)) {
       List<Map<String, dynamic>> existing = await db.query(
         tableGlobalAchievements,
         where:
@@ -88,8 +103,8 @@ class CampaignDatabaseHelper {
         whereArgs: [achievement.type, achievement.associatedCampaignUuid],
       );
 
-      // If type exists, update instead of insert (overwrite)
       if (existing.isNotEmpty) {
+        // Overwrite the existing singleton
         await db.update(
           tableGlobalAchievements,
           achievement.toMap(),
@@ -97,6 +112,24 @@ class CampaignDatabaseHelper {
               '$columnAchievementType = ? AND $columnAssociatedCampaignUuid = ?',
           whereArgs: [achievement.type, achievement.associatedCampaignUuid],
         );
+        return existing.first[columnAchievementId];
+      }
+    }
+    // For cumulative types (like Ancient Technology), check for exact duplicates
+    else if (achievement.type == AchievementTypes.ancientTechnology) {
+      List<Map<String, dynamic>> existing = await db.query(
+        tableGlobalAchievements,
+        where:
+            '$columnAchievementName = ? AND $columnAchievementType = ? AND $columnAssociatedCampaignUuid = ?',
+        whereArgs: [
+          achievement.name,
+          achievement.type,
+          achievement.associatedCampaignUuid
+        ],
+      );
+
+      // Don't insert exact duplicates
+      if (existing.isNotEmpty) {
         return existing.first[columnAchievementId];
       }
     }
@@ -112,20 +145,33 @@ class CampaignDatabaseHelper {
     );
   }
 
-  static Future<List<GlobalAchievement>> queryGlobalAchievements(
+  // Query ALL global achievements (not filtered by campaign)
+  static Future<List<GlobalAchievement>> queryAllGlobalAchievements(
     Database db,
     String campaignUuid,
   ) async {
     List<GlobalAchievement> achievements = [];
     List<Map<String, dynamic>> maps = await db.query(
       tableGlobalAchievements,
-      where: '$columnAssociatedCampaignUuid = ?',
-      whereArgs: [campaignUuid],
+      where: '$columnAssociatedCampaignUuid = ? AND $columnIsActive = ?',
+      whereArgs: [campaignUuid, 1],
     );
     for (final map in maps) {
       achievements.add(GlobalAchievement.fromMap(map));
     }
     return achievements;
+  }
+
+  // Count specific achievement types
+  static Future<int> countAchievementsByType(
+    Database db,
+    String type,
+  ) async {
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM $tableGlobalAchievements WHERE $columnAchievementType = ? AND $columnIsActive = 1',
+      [type],
+    );
+    return result.first['count'] as int;
   }
 
   // Party Achievement operations

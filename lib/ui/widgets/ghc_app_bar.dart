@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_campaign_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/campaign_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
@@ -81,12 +83,13 @@ class _GHCAppBarState extends State<GHCAppBar> {
         context.read<EnhancementCalculatorModel>();
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
+    final campaignModel = context.watch<CampaignModel>();
     return AppBar(
       automaticallyImplyLeading: false,
       // leading: Icon(Icons.settings),
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
       centerTitle: true,
-      title: context.watch<AppModel>().page <= 1 &&
+      title: context.watch<AppModel>().page == 0 &&
               charactersModel.characters.length > 1
           ? SmoothPageIndicator(
               controller: charactersModel.pageController,
@@ -99,76 +102,81 @@ class _GHCAppBarState extends State<GHCAppBar> {
                     : Colors.white,
               ),
             )
-          : context.watch<AppModel>().page == 2
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // hack to center Switch
-                    const Visibility(
-                      maintainAnimation: true,
-                      maintainState: true,
-                      maintainSize: true,
-                      visible: false,
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.settings,
+          : context.watch<AppModel>().page == 1 &&
+                  campaignModel.campaigns.isNotEmpty
+              ? Text(campaignModel.currentCampaign?.partyName ?? '')
+              : context.watch<AppModel>().page == 2
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // hack to center Switch
+                        const Visibility(
+                          maintainAnimation: true,
+                          maintainState: true,
+                          maintainSize: true,
+                          visible: false,
+                          child: IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              Icons.settings,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Image.asset(
-                          'images/titles/gloomhaven.png',
-                          scale: 6.25,
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Image.asset(
+                              'images/titles/gloomhaven.png',
+                              scale: 6.25,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Center(
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: Theme.of(context).colorScheme.copyWith(
-                                outline: Colors.transparent,
+                        Center(
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme:
+                                  Theme.of(context).colorScheme.copyWith(
+                                        outline: Colors.transparent,
+                                      ),
+                            ),
+                            child: Switch(
+                              inactiveThumbImage: const AssetImage(
+                                'images/switch_gh.png',
                               ),
-                        ),
-                        child: Switch(
-                          inactiveThumbImage: const AssetImage(
-                            'images/switch_gh.png',
+                              activeColor: const Color(0xff005cb2),
+                              trackColor: WidgetStateProperty.resolveWith(
+                                (states) =>
+                                    states.contains(WidgetState.selected)
+                                        ? const Color(0xff6ab7ff)
+                                        : const Color(0xffa98274),
+                              ),
+                              value: !SharedPrefs().gloomhavenMode,
+                              onChanged: (value) {
+                                SharedPrefs().gloomhavenMode = !value;
+                                Provider.of<EnhancementCalculatorModel>(
+                                  context,
+                                  listen: false,
+                                ).gameVersionToggled();
+                                setState(() {});
+                              },
+                            ),
                           ),
-                          activeColor: const Color(0xff005cb2),
-                          trackColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.selected)
-                                ? const Color(0xff6ab7ff)
-                                : const Color(0xffa98274),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset(
+                              'images/titles/frosthaven.png',
+                              scale: 7,
+                            ),
                           ),
-                          value: !SharedPrefs().gloomhavenMode,
-                          onChanged: (value) {
-                            SharedPrefs().gloomhavenMode = !value;
-                            Provider.of<EnhancementCalculatorModel>(
-                              context,
-                              listen: false,
-                            ).gameVersionToggled();
-                            setState(() {});
-                          },
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset(
-                          'images/titles/frosthaven.png',
-                          scale: 7,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : Container(),
+                      ],
+                    )
+                  : Container(),
       actions: <Widget>[
-        if (charactersModel.isEditMode)
+        if (appModel.page == 0 && charactersModel.isEditMode)
           Tooltip(
             message: charactersModel.currentCharacter!.isRetired
                 ? 'Unretire'
@@ -325,6 +333,28 @@ class _GHCAppBarState extends State<GHCAppBar> {
                         }
                       });
                     },
+            ),
+          ),
+        if (appModel.page == 1)
+          Tooltip(
+            message: 'Create Campaign',
+            child: IconButton(
+              icon: Icon(Icons.format_list_bulleted_add),
+              onPressed: () => showDialog<void>(
+                barrierDismissible: false,
+                context: context,
+                builder: (_) => CreateCampaignDialog(
+                  onCreateCampaign: (
+                    partyName,
+                    gameVariant,
+                  ) {
+                    campaignModel.createCampaign(
+                      partyName: partyName,
+                      gameVariant: gameVariant,
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         Tooltip(

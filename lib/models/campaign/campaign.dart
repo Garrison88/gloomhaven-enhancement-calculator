@@ -4,6 +4,9 @@ import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 const String tableCampaigns = 'Campaigns';
 const String columnCampaignId = 'CampaignID';
 const String columnCampaignUuid = 'CampaignUUID';
+const String columnAssociatedCampaignUuid =
+    'AssociatedCampaignUUID'; // Links to Campaign for achievements
+const String columnCampaignWorldUuid = 'WorldUUID'; // Links to World
 const String columnPartyName = 'PartyName';
 const String columnReputation = 'Reputation';
 const String columnProsperity = 'Prosperity';
@@ -15,10 +18,11 @@ const String columnCreatedAt = 'CreatedAt';
 const String columnGameVariant = 'GameVariant';
 const String columnIsActive = 'IsActive';
 
-// Campaign model class
+// Campaign model class (represents a party within a world)
 class Campaign {
   int? id;
   String uuid;
+  String worldUuid; // Links this party to a world
   String partyName;
   int reputation;
   int prosperity;
@@ -27,7 +31,6 @@ class Campaign {
   String currentLocation;
   String notes;
   DateTime createdAt;
-  Variant gameVariant;
   bool isActive;
 
   // Calculated properties
@@ -62,6 +65,7 @@ class Campaign {
   Campaign({
     this.id,
     required this.uuid,
+    required this.worldUuid,
     required this.partyName,
     this.reputation = 0,
     this.prosperity = 1,
@@ -70,7 +74,6 @@ class Campaign {
     this.currentLocation = 'Gloomhaven',
     this.notes = '',
     DateTime? createdAt,
-    this.gameVariant = Variant.base,
     this.isActive = true,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -78,6 +81,7 @@ class Campaign {
   Campaign.fromMap(Map<String, dynamic> map)
       : id = map[columnCampaignId],
         uuid = map[columnCampaignUuid],
+        worldUuid = map[columnCampaignWorldUuid],
         partyName = map[columnPartyName],
         reputation = map[columnReputation],
         prosperity = map[columnProsperity],
@@ -86,16 +90,13 @@ class Campaign {
         currentLocation = map[columnCurrentLocation],
         notes = map[columnNotes],
         createdAt = DateTime.parse(map[columnCreatedAt]),
-        gameVariant = Variant.values.firstWhere(
-          (v) => v.name == map[columnGameVariant],
-          orElse: () => Variant.base,
-        ),
         isActive = map[columnIsActive] == 1;
 
   // Convert to map for database storage
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnCampaignUuid: uuid,
+      columnCampaignWorldUuid: worldUuid,
       columnPartyName: partyName,
       columnReputation: reputation,
       columnProsperity: prosperity,
@@ -104,7 +105,6 @@ class Campaign {
       columnCurrentLocation: currentLocation,
       columnNotes: notes,
       columnCreatedAt: createdAt.toIso8601String(),
-      columnGameVariant: gameVariant.name,
       columnIsActive: isActive ? 1 : 0,
     };
     if (id != null) {
@@ -129,18 +129,17 @@ class Campaign {
     bool? isActive,
   }) {
     return Campaign(
-      id: id ?? this.id,
-      uuid: uuid ?? this.uuid,
-      partyName: partyName ?? this.partyName,
-      reputation: reputation ?? this.reputation,
-      prosperity: prosperity ?? this.prosperity,
-      prosperityCheckmarks: prosperityCheckmarks ?? this.prosperityCheckmarks,
-      sanctuaryDonations: sanctuaryDonations ?? this.sanctuaryDonations,
-      currentLocation: currentLocation ?? this.currentLocation,
-      notes: notes ?? this.notes,
-      createdAt: createdAt ?? this.createdAt,
-      gameVariant: gameVariant ?? this.gameVariant,
-      isActive: isActive ?? this.isActive,
-    );
+        id: id ?? this.id,
+        uuid: uuid ?? this.uuid,
+        partyName: partyName ?? this.partyName,
+        reputation: reputation ?? this.reputation,
+        prosperity: prosperity ?? this.prosperity,
+        prosperityCheckmarks: prosperityCheckmarks ?? this.prosperityCheckmarks,
+        sanctuaryDonations: sanctuaryDonations ?? this.sanctuaryDonations,
+        currentLocation: currentLocation ?? this.currentLocation,
+        notes: notes ?? this.notes,
+        createdAt: createdAt ?? this.createdAt,
+        isActive: isActive ?? this.isActive,
+        worldUuid: worldUuid ?? this.worldUuid);
   }
 }

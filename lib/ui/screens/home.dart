@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gloomhaven_enhancement_calc/data/campaign_database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_campaign_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/campaign_tracker_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/campaign_model.dart';
 import 'package:provider/provider.dart';
 
@@ -141,7 +142,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
     final charactersModel = context.read<CharactersModel>();
-    final CampaignModel campaignModel = context.read<CampaignModel>();
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
       // extendBody: true,
@@ -181,7 +181,7 @@ class _HomeState extends State<Home> {
               }
             },
           ),
-          const Text('Town Sheet'),
+          const CampaignTrackerScreen(),
           const EnhancementCalculatorPage(),
         ],
       ),
@@ -190,59 +190,52 @@ class _HomeState extends State<Home> {
       //         ? FloatingActionButtonLocation.endFloat
       //         : FloatingActionButtonLocation.centerDocked,
 
-      floatingActionButton: Builder(builder: (context) {
-        return FloatingActionButton(
-          // shape: const CircleBorder(),
-          // backgroundColor: Color(
-          //   int.parse(
-          //     SharedPrefs().themeColor,
-          //   ),
-          // ),
-          heroTag: null,
-          onPressed: context.read<AppModel>().page == 2
-              ? () => context.read<EnhancementCalculatorModel>().resetCost()
-              // must watch
-              : context.read<AppModel>().page == 1
-                  ? () => showDialog<bool>(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (_) => CreateCampaignDialog(
-                          onCreateCampaign: (
-                            partyName,
-                            gameVariant,
-                          ) {
-                            campaignModel.createCampaign(
-                              partyName: partyName,
-                              gameVariant: gameVariant,
-                            );
-                          },
-                        ),
-                      )
-                  : context.watch<CharactersModel>().characters.isEmpty
-                      ? () => showDialog<bool>(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_) => CreateCharacterDialog(
-                              charactersModel: charactersModel,
-                            ),
-                          ).then((value) {
-                            if (value != null && value) {
-                              context.read<AppModel>().updateTheme();
-                            }
-                          })
-                      : () => charactersModel.toggleEditMode(),
-          child: Icon(appModel.page == 0
-              ? charactersModel.characters.isEmpty
-                  ? Icons.add
-                  : charactersModel.isEditMode
-                      ? Icons.edit_off_rounded
-                      : Icons.edit_rounded
-              : appModel.page == 1
-                  ? Icons.edit_rounded
-                  : Icons.clear_rounded),
-        );
-      }),
+      floatingActionButton: appModel.page != 1
+          ? Builder(
+              builder: (context) {
+                return FloatingActionButton(
+                  heroTag: null,
+                  onPressed: onPressed,
+                  child: Icon(appModel.page == 0
+                      ? charactersModel.characters.isEmpty
+                          ? Icons.add
+                          : charactersModel.isEditMode
+                              ? Icons.edit_off_rounded
+                              : Icons.edit_rounded
+                      : appModel.page == 1
+                          ? Icons.edit_rounded
+                          : Icons.clear_rounded),
+                );
+              },
+            )
+          : null,
       bottomNavigationBar: const GHCBottomNavigationBar(),
     );
+  }
+
+  void onPressed() {
+    final appModel = context.read<AppModel>();
+    final charactersModel = context.read<CharactersModel>();
+    switch (appModel.page) {
+      case 0:
+        if (charactersModel.characters.isEmpty) {
+          showDialog<bool>(
+            barrierDismissible: false,
+            context: context,
+            builder: (_) => CreateCharacterDialog(
+              charactersModel: charactersModel,
+            ),
+          ).then((value) {
+            if (value != null && value) {
+              context.read<AppModel>().updateTheme();
+            }
+          });
+        } else {
+          charactersModel.toggleEditMode();
+        }
+      case 2:
+        context.read<EnhancementCalculatorModel>().resetCost();
+      default:
+    }
   }
 }

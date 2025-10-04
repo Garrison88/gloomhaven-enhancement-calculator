@@ -28,7 +28,6 @@ class CampaignMigrations {
       )
     ''');
 
-    // Create Global Achievements table
     await txn.execute('''
       ${DatabaseHelper.createTable} $tableGlobalAchievements (
         $columnAchievementId ${DatabaseHelper.idType},
@@ -40,6 +39,13 @@ class CampaignMigrations {
         $columnAssociatedCampaignUuid ${DatabaseHelper.textType},
         FOREIGN KEY ($columnAssociatedCampaignUuid) REFERENCES $tableCampaigns($columnCampaignUuid)
       )
+    ''');
+
+    // Create unique index for singleton types
+    await txn.execute('''
+      CREATE UNIQUE INDEX idx_singleton_achievements 
+      ON $tableGlobalAchievements($columnAchievementType) 
+      WHERE $columnAchievementType IN ('City Rule', 'The Drake Aided', 'End of the Invasion', 'End of Corruption')
     ''');
 
     // Create Party Achievements table

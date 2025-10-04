@@ -112,7 +112,7 @@ class CampaignOverviewCard extends StatelessWidget {
             const Spacer(),
             TextButton.icon(
               icon: const Icon(Icons.add, size: 16),
-              label: const Text('Add Checkmark'),
+              label: const Text('Add'),
               onPressed: () => _showProsperityDialog(context),
             ),
           ],
@@ -261,8 +261,9 @@ class CampaignOverviewCard extends StatelessWidget {
           children: [
             const Text('How many prosperity checkmarks to add?'),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [1, 2, 3, 4, 5].map((count) {
                 return ElevatedButton(
                   onPressed: () {
