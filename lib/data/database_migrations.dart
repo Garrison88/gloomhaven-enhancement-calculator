@@ -580,8 +580,9 @@ class DatabaseMigrations {
     );
   }
 
-  // TODO: Masteries can be handled the same regardless of Variant because no new ones have been added
-  // (or have they? considering JotL FHCO character sheets...)
+  // TODO: Masteries can be handled the same regardless of Variant because no
+  // new ones have been added (or have they? considering JotL FHCO character
+  // sheets...)
   static Future<void> _handleVariantMasteries(
     Transaction txn,
     String tempTableMasteries,

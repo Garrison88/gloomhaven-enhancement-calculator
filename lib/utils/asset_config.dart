@@ -23,6 +23,9 @@ final themeSpecificAssets = {
   'RECOVER': (bool darkTheme) => AssetConfig(
         darkTheme ? 'recover_card.svg' : 'recover_card_light.svg',
       ),
+  'REFRESH': (bool darkTheme) => AssetConfig(
+        darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg',
+      ),
   'SPENT': (bool darkTheme) => AssetConfig(
         darkTheme ? 'spent.svg' : 'spent_light.svg',
       ),
@@ -58,6 +61,8 @@ const standardAssets = {
   // Equipment slots
   'One_Hand': AssetConfig('equipment_slots/one_handed.svg', invertColor: true),
   'Two_Hand': AssetConfig('equipment_slots/two_handed.svg', invertColor: true),
+  'Head': AssetConfig('equipment_slots/head.svg', invertColor: true),
+  'Body': AssetConfig('equipment_slots/body.svg', invertColor: true),
 
   // Movement and actions
   'MOVE': AssetConfig('move.svg', invertColor: true),

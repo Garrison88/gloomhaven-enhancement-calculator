@@ -270,7 +270,7 @@ class _NameAndClassSection extends StatelessWidget {
             ),
             Flexible(
               child: AutoSizeText(
-                '${character.playerClass.race} ${character.playerClass.name}',
+                character.getRaceAndClassName(),
                 maxLines: 1,
                 style: const TextStyle(fontSize: titleFontSize),
               ),

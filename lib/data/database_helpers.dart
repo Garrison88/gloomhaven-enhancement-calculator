@@ -357,7 +357,7 @@ class DatabaseHelper {
     );
     if (character.includeMasteries()) {
       final masteries = await queryMasteries(
-        character.playerClass.classCode,
+        character,
       );
       masteries.asMap().forEach(
         (key, mastery) async {
@@ -483,13 +483,16 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, Object?>>> queryMasteries(
-    String classCode,
+    Character character,
   ) async {
     Database db = await database;
-    var result = await db.query(
+    List<Map<String, Object?>> result = await db.query(
       tableMasteries,
-      where: '$columnMasteryClass = ?',
-      whereArgs: [classCode],
+      where: '$columnMasteryClass = ? AND $columnMasteryVariant = ?',
+      whereArgs: [
+        character.playerClass.classCode,
+        character.variant.name,
+      ],
     );
     return result.toList();
   }

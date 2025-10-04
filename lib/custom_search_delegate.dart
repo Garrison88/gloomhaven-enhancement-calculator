@@ -313,7 +313,7 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
               ),
               title: Text(
                 showHidden || !selectedPlayerClass.locked
-                    ? selectedPlayerClass.name
+                    ? selectedPlayerClass.getCombinedDisplayNames()
                     : '???',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: showHidden || !selectedPlayerClass.locked

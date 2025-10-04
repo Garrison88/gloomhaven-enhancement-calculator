@@ -125,6 +125,7 @@ class ClassVariants {
   static Map<Variant, String> classVariants = {
     Variant.base: 'Base',
     Variant.frosthavenCrossover: 'Frosthaven Crossover',
+    Variant.gloomhaven2E: 'Gloomhaven 2E',
     Variant.v2: 'Version II',
     Variant.v3: 'Version III',
   };
