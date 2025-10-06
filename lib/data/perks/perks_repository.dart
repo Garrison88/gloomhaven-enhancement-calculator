@@ -48,10 +48,12 @@ class PerksRepository {
   static const _poison = 'POISON';
   static const _critters = 'CRITTERS';
   static const _invisible = 'INVISIBLE';
+  static const _impair = 'IMPAIR';
 
   static const _attack = 'ATTACK';
   static const _range = 'RANGE';
   static const _move = 'MOVE';
+  static const _teleport = 'TELEPORT';
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
@@ -523,6 +525,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // CRAGHEART
     ClassCodes.cragheart: [
       Perks(
         [
@@ -581,6 +584,39 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "Create one 1-hex obstacle tile in an empty hex adjacent to the target" $_rolling $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_two +1 $_push 1 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +2 $_immobilize $_card',
+            quantity: 3,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one $_muddle $_rolling $_card'),
+          Perk(_ignoreItemMinusOneEffects),
+          Perk(
+              'Once each $_scenario, during your turn, you may destroy one 1-hex obstacle within $_range 5 to $_teleport to the hex it occupied'),
+          Perk(
+              'At the end of each of your rests, you may destroy one 1-hex obstacle within $_range 3 to $_earth'),
+          Perk(
+            'Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.mindthief: [
       Perks(
@@ -637,6 +673,42 @@ class PerksRepository {
               '[Lying Low:] You are considered to be last in initiative order when determining monster focus'),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_two -1 $_cards with $_one +0 "After the attack ability, control the target: $_move 1" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "Add $_plusOne $_attack for each $_negative condition the target has" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_two +1 $_immobilize $_cards'),
+          Perk(
+            '$_add $_one +2 $_ice $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_add $_one "$_invisible, self" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_rolling $_card'),
+          Perk(
+              'Whenever you control the attack of an enemy, you may have the enemy use your attack modifier deck'),
+          Perk(
+              'You are considered to be last in initiative order when determining monster focus'),
+          Perk(
+            'At the end of each of your rests, you may consume_$_ice/$_dark to control one enemy within $_range 5: $_attack 1',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.sunkeeper: [
@@ -2903,7 +2975,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '$_ignoreItemMinusOneEffects, and, whenever you would gain IMP$_air, prevent the condition'),
+              '$_ignoreItemMinusOneEffects, and, whenever you would gain $_impair, prevent the condition'),
           Perk(
               'Whenever you declare a long rest during card selection, gain $_shield 1 for the round'),
           Perk(

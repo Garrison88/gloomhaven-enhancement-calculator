@@ -126,6 +126,19 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, create, destroy, or move at least one obstacle tile each round',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, heal 8 or more hit points during a single round, deal 8 or more damage with a ranged attack ability, and deal 8 or more damage with a melee attack ability',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.mindthief: [
       Masteries(
@@ -139,6 +152,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, kill 5 or more enemies with control abilities',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, trigger the on-attack effect from four different Augments at least 3 times each',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.sunkeeper: [
