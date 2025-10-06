@@ -213,33 +213,58 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
     );
   }
 
+  bool _matchesClassOrVariantName(PlayerClass playerClass, String query) {
+    final queryLower = query.toLowerCase();
+
+    // Check base name
+    if (playerClass.name.toLowerCase().contains(queryLower)) {
+      return true;
+    }
+
+    // Check variant names
+    if (playerClass.variantNames != null) {
+      for (final variantName in playerClass.variantNames!.values) {
+        if (variantName.toLowerCase().contains(queryLower)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   List<PlayerClass> _filteredList(List<PlayerClass> playerClasses) {
+    // Map each category to its filter flag
+    final categoryFilters = {
+      ClassCategory.gloomhaven: gh,
+      ClassCategory.jawsOfTheLion: jotl,
+      ClassCategory.frosthaven: fh,
+      ClassCategory.crimsonScales: cs,
+      ClassCategory.custom: cc,
+    };
+
     return playerClasses.where((playerClass) {
+      // Filter out classes that shouldn't be rendered
       if (_doNotRenderPlayerClass(
         playerClass,
         hideLockedClass: hideLockedClasses,
       )) {
         return false;
       }
-      if (!gh && !jotl && !fh && !cs && !cc) {
-        return playerClass.name.toLowerCase().contains(query.toLowerCase());
+
+      // Name/variant must match query
+      if (!_matchesClassOrVariantName(playerClass, query)) {
+        return false;
       }
 
-      return (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-              playerClass.category == ClassCategory.gloomhaven &&
-              gh) ||
-          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-              playerClass.category == ClassCategory.jawsOfTheLion &&
-              jotl) ||
-          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-              playerClass.category == ClassCategory.frosthaven &&
-              fh) ||
-          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-              playerClass.category == ClassCategory.crimsonScales &&
-              cs) ||
-          (playerClass.name.toLowerCase().contains(query.toLowerCase()) &&
-              playerClass.category == ClassCategory.custom &&
-              cc);
+      // If no category filters are active, include all
+      final anyFilterActive = categoryFilters.values.any((filter) => filter);
+      if (!anyFilterActive) {
+        return true;
+      }
+
+      // Include if this class's category filter is active
+      return categoryFilters[playerClass.category] ?? false;
     }).toList()
       // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
       ..removeWhere((element) => element.classCode == 'rw');

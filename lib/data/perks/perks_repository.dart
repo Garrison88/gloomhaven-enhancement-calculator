@@ -423,6 +423,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SCOUNDREL/SILENT KNIFE
     ClassCodes.scoundrel: [
       Perks(
         [
@@ -482,6 +483,44 @@ class PerksRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk('$_remove $_one -2 $_card'),
+          Perk('$_remove $_two -1 $_cards'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "Gain one money token if this attack targeted an adjacent enemy" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +1 "$_invisible, self" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +1 $_disarm $_card',
+            quantity: 2,
+          ),
+          Perk(
+            'At the end of each of your rests, you may place one of your money tokens in the hex occupied by an enemy within $_range 3 to perform: $_attack 1, Target that enemy, $_range 3',
+          ),
+          Perk(
+            'Whenever you complete a city event, draw an attack modifier card as though you were performing an $_attack 4. Gain an amount of gold equal to the $_damage the attack would have dealt',
+          ),
+          Perk(
+            '$_onceEachScenario, during your turn, you may perform: $_invisible, self',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.cragheart: [

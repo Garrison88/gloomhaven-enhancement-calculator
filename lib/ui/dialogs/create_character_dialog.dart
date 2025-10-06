@@ -152,9 +152,10 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                       FocusScope.of(context).requestFocus(nameFocusNode);
 
                       setState(() {
-                        _classTextFieldController.text =
-                            selectedPlayerClass.playerClass.name;
                         _variant = selectedPlayerClass.variant!;
+                        _classTextFieldController.text = selectedPlayerClass
+                            .playerClass
+                            .getDisplayName(_variant);
                         _selectedClass = selectedPlayerClass.playerClass;
                       });
                       _formKey.currentState?.validate();

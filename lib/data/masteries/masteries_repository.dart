@@ -100,6 +100,18 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, only attack enemies that are adjacent to one of your allies or adjacent to none of their allies, and perform at least 10 attacks',
+          ),
+          Mastery(
+            masteryDetails: 'End 3 scenarios with 12 or more money tokens',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.cragheart: [
       Masteries(
