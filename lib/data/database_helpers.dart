@@ -238,11 +238,13 @@ class DatabaseHelper {
           // Added Skitterclaw class
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
-        // Going forward, always call DatabaseMigrations.updateMetaDataTable
+        // Always update metadata table and regenerate the Perks and Masteries
+        // tables
         await DatabaseMigrations.updateMetaDataTable(
           txn,
           newVersion,
         );
+        await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       },
     );
   }

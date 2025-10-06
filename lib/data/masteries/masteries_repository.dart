@@ -47,6 +47,18 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, during each of your turns, give an enemy a negative condition, give an ally a positive condition, heal an ally, or grant an ally shield',
+          ),
+          Mastery(
+            masteryDetails: 'Perform 11 different LOSS actions',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.spellweaver: [
       Masteries(
@@ -59,6 +71,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, consume both ${PerkAndMasteryConstants.fire} and ${PerkAndMasteryConstants.ice} during the same turn 6 times',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform 4 different LOSS actions twice each',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.scoundrel: [

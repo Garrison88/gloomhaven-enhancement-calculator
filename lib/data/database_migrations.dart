@@ -24,7 +24,7 @@ class DatabaseMigrations {
     Transaction txn,
   ) async {
     await regeneratePerksTable(txn);
-    await regenerateMasteriesTable(txn);
+    await _regenerateMasteriesTable(txn);
   }
 
   static Future<void> regeneratePerksTable(Transaction txn) async {
@@ -62,7 +62,7 @@ class DatabaseMigrations {
     );
   }
 
-  static Future<void> regenerateMasteriesTable(Transaction txn) async {
+  static Future<void> _regenerateMasteriesTable(Transaction txn) async {
     await txn.execute('DROP TABLE IF EXISTS $tableMasteries');
     await txn.execute('''
         ${DatabaseHelper.createTable} $tableMasteries (
