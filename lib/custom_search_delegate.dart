@@ -13,11 +13,7 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   ) : _playerClasses = playerClass;
   final List<PlayerClass> _playerClasses;
 
-  bool gh = false;
-  bool jotl = false;
-  bool fh = false;
-  bool cs = false;
-  bool cc = false;
+  final Set<ClassCategory> _selectedCategories = {};
   bool hideLockedClasses = false;
 
   @override
@@ -44,14 +40,65 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
     );
   }
 
+  /// Helper method to get the label style for FilterChips
+  TextStyle? _getFilterChipLabelStyle(BuildContext context, bool isSelected) {
+    if (!isSelected) return null;
+
+    final isDark = ThemeData.estimateBrightnessForColor(
+          Theme.of(context).colorScheme.primary,
+        ) ==
+        Brightness.dark;
+
+    return Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: isDark ? Colors.white : Colors.black,
+        );
+  }
+
+  /// Helper method to build a FilterChip with consistent styling
+  Widget _buildFilterChip({
+    required BuildContext context,
+    required String label,
+    required bool selected,
+    required ValueChanged<bool> onSelected,
+  }) {
+    return FilterChip(
+      visualDensity: VisualDensity.compact,
+      elevation: selected ? 4 : 0,
+      labelStyle: _getFilterChipLabelStyle(context, selected),
+      selected: selected,
+      onSelected: onSelected,
+      label: Text(label),
+    );
+  }
+
+  Widget _buildCategoryFilterChip({
+    required BuildContext context,
+    required ClassCategory category,
+    required String label,
+    required StateSetter stateSetter,
+  }) {
+    final isSelected = _selectedCategories.contains(category);
+    return _buildFilterChip(
+      context: context,
+      label: label,
+      selected: isSelected,
+      onSelected: (value) {
+        stateSetter(() {
+          if (value) {
+            _selectedCategories.add(category);
+          } else {
+            _selectedCategories.remove(category);
+          }
+        });
+      },
+    );
+  }
+
+  @override
   @override
   Widget buildSuggestions(BuildContext context) {
     return StatefulBuilder(
-      builder: (
-        BuildContext context,
-        StateSetter stateSetter,
-      ) {
-        // List<PlayerClass> filteredPlayerClasses = ;
+      builder: (BuildContext context, StateSetter stateSetter) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -64,122 +111,37 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
                 runSpacing: smallPadding,
                 spacing: smallPadding,
                 children: [
-                  FilterChip(
-                    visualDensity: VisualDensity.compact,
-                    elevation: gh ? 4 : 0,
-                    labelStyle:
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: gh
-                                  ? ThemeData.estimateBrightnessForColor(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black
-                                  : null,
-                            ),
-                    selected: gh,
-                    onSelected: (value) => stateSetter(() {
-                      gh = value;
-                    }),
-                    label: const Text(
-                      'Gloomhaven',
-                    ),
+                  _buildCategoryFilterChip(
+                    context: context,
+                    category: ClassCategory.gloomhaven,
+                    label: 'Gloomhaven',
+                    stateSetter: stateSetter,
                   ),
-                  FilterChip(
-                    visualDensity: VisualDensity.compact,
-                    elevation: jotl ? 4 : 0,
-                    labelStyle:
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: jotl
-                                  ? ThemeData.estimateBrightnessForColor(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black
-                                  : null,
-                            ),
-                    selected: jotl,
-                    onSelected: (value) => stateSetter(() {
-                      jotl = value;
-                    }),
-                    label: const Text(
-                      'Jaws of the Lion',
-                    ),
+                  _buildCategoryFilterChip(
+                    context: context,
+                    category: ClassCategory.jawsOfTheLion,
+                    label: 'Jaws of the Lion',
+                    stateSetter: stateSetter,
                   ),
-                  FilterChip(
-                    visualDensity: VisualDensity.compact,
-                    elevation: fh ? 4 : 0,
-                    labelStyle:
-                        Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: fh
-                                  ? ThemeData.estimateBrightnessForColor(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary) ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black
-                                  : null,
-                            ),
-                    selected: fh,
-                    onSelected: (value) => stateSetter(() {
-                      fh = value;
-                    }),
-                    label: const Text(
-                      'Frosthaven',
-                    ),
+                  _buildCategoryFilterChip(
+                    context: context,
+                    category: ClassCategory.frosthaven,
+                    label: 'Frosthaven',
+                    stateSetter: stateSetter,
                   ),
                   if (SharedPrefs().customClasses)
-                    FilterChip(
-                      visualDensity: VisualDensity.compact,
-                      elevation: cs ? 4 : 0,
-                      labelStyle:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: cs
-                                    ? ThemeData.estimateBrightnessForColor(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary) ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black
-                                    : null,
-                              ),
-                      selected: cs,
-                      onSelected: (value) => stateSetter(() {
-                        cs = value;
-                      }),
-                      label: const Text(
-                        'Crimson Scales',
-                      ),
+                    _buildCategoryFilterChip(
+                      context: context,
+                      category: ClassCategory.crimsonScales,
+                      label: 'Crimson Scales',
+                      stateSetter: stateSetter,
                     ),
                   if (SharedPrefs().customClasses)
-                    FilterChip(
-                      visualDensity: VisualDensity.compact,
-                      elevation: cc ? 4 : 0,
-                      labelStyle:
-                          Theme.of(context).textTheme.titleMedium?.copyWith(
-                                color: cc
-                                    ? ThemeData.estimateBrightnessForColor(
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary) ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black
-                                    : null,
-                              ),
-                      selected: cc,
-                      onSelected: (value) => stateSetter(() {
-                        cc = value;
-                      }),
-                      label: const Text(
-                        'Custom Classes',
-                      ),
+                    _buildCategoryFilterChip(
+                      context: context,
+                      category: ClassCategory.custom,
+                      label: 'Custom Classes',
+                      stateSetter: stateSetter,
                     ),
                 ],
               ),
@@ -190,11 +152,9 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
                 style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.right,
               ),
-              onChanged: (bool? value) => {
-                stateSetter(() {
-                  hideLockedClasses = value ?? false;
-                }),
-              },
+              onChanged: (bool? value) => stateSetter(() {
+                hideLockedClasses = value ?? false;
+              }),
               value: hideLockedClasses,
             ),
             Expanded(
@@ -234,15 +194,6 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   }
 
   List<PlayerClass> _filteredList(List<PlayerClass> playerClasses) {
-    // Map each category to its filter flag
-    final categoryFilters = {
-      ClassCategory.gloomhaven: gh,
-      ClassCategory.jawsOfTheLion: jotl,
-      ClassCategory.frosthaven: fh,
-      ClassCategory.crimsonScales: cs,
-      ClassCategory.custom: cc,
-    };
-
     return playerClasses.where((playerClass) {
       // Filter out classes that shouldn't be rendered
       if (_doNotRenderPlayerClass(
@@ -258,15 +209,14 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
       }
 
       // If no category filters are active, include all
-      final anyFilterActive = categoryFilters.values.any((filter) => filter);
-      if (!anyFilterActive) {
+      if (_selectedCategories.isEmpty) {
         return true;
       }
 
-      // Include if this class's category filter is active
-      return categoryFilters[playerClass.category] ?? false;
+      // Include if this class's category is selected
+      return _selectedCategories.contains(playerClass.category);
     }).toList()
-      // TODO: remove this when reintroducing the Rootwhisperer - see Character Data
+      // TODO: remove this when reintroducing the Rootwhisperer
       ..removeWhere((element) => element.classCode == 'rw');
   }
 
@@ -303,80 +253,65 @@ class _WordSuggestionList extends StatefulWidget {
   final ValueChanged<String> onSelected;
 
   @override
-  __WordSuggestionListState createState() => __WordSuggestionListState();
+  _WordSuggestionListState createState() => _WordSuggestionListState();
 }
 
-class __WordSuggestionListState extends State<_WordSuggestionList> {
+class _WordSuggestionListState extends State<_WordSuggestionList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: widget.suggestions.length,
-      itemBuilder: (
-        BuildContext context,
-        int index,
-      ) {
+      itemBuilder: (BuildContext context, int index) {
         final PlayerClass selectedPlayerClass = widget.suggestions[index];
-        bool showHidden = SharedPrefs().getPlayerClassIsUnlocked(
+        final bool isUnlocked = SharedPrefs().getPlayerClassIsUnlocked(
           selectedPlayerClass.classCode,
         );
-        return StatefulBuilder(
-          builder: (
-            thisLowerContext,
-            innerSetState,
-          ) {
-            return ListTile(
-              leading: SvgPicture.asset(
-                'images/class_icons/${selectedPlayerClass.icon}',
-                width: iconSize + 5,
-                height: iconSize + 5,
-                colorFilter: ColorFilter.mode(
-                  Color(
-                    selectedPlayerClass.primaryColor,
-                  ),
-                  BlendMode.srcIn,
+
+        return ListTile(
+          leading: SvgPicture.asset(
+            'images/class_icons/${selectedPlayerClass.icon}',
+            width: iconSize + 5,
+            height: iconSize + 5,
+            colorFilter: ColorFilter.mode(
+              Color(selectedPlayerClass.primaryColor),
+              BlendMode.srcIn,
+            ),
+          ),
+          title: Text(
+            isUnlocked || !selectedPlayerClass.locked
+                ? selectedPlayerClass.getCombinedDisplayNames()
+                : '???',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: isUnlocked || !selectedPlayerClass.locked
+                      ? null
+                      : Theme.of(context).disabledColor,
                 ),
-              ),
-              title: Text(
-                showHidden || !selectedPlayerClass.locked
-                    ? selectedPlayerClass.getCombinedDisplayNames()
-                    : '???',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: showHidden || !selectedPlayerClass.locked
-                          ? null
-                          : Theme.of(context).disabledColor,
-                    ),
-              ),
-              trailing: selectedPlayerClass.locked
-                  ? IconButton(
-                      onPressed: () {
-                        SharedPrefs().setPlayerClassIsUnlocked(
-                          selectedPlayerClass.classCode,
-                          !showHidden,
-                        );
-                        innerSetState(() {
-                          showHidden = !showHidden;
-                        });
-                      },
-                      icon: Icon(
-                        showHidden
-                            ? Icons.visibility_rounded
-                            : Icons.visibility_off_rounded,
-                      ),
-                    )
-                  : null,
-              onTap: () async {
-                SelectedPlayerClass? choice = await _onClassSelected(
-                  context,
-                  selectedPlayerClass,
-                );
-                if (choice != null) {
-                  Navigator.pop<SelectedPlayerClass>(
-                    context,
-                    choice,
-                  );
-                }
-              },
+          ),
+          trailing: selectedPlayerClass.locked
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      SharedPrefs().setPlayerClassIsUnlocked(
+                        selectedPlayerClass.classCode,
+                        !isUnlocked,
+                      );
+                    });
+                  },
+                  icon: Icon(
+                    isUnlocked
+                        ? Icons.visibility_rounded
+                        : Icons.visibility_off_rounded,
+                  ),
+                )
+              : null,
+          onTap: () async {
+            SelectedPlayerClass? choice = await _onClassSelected(
+              context,
+              selectedPlayerClass,
             );
+            if (choice != null && context.mounted) {
+              Navigator.pop<SelectedPlayerClass>(context, choice);
+            }
           },
         );
       },
@@ -398,7 +333,8 @@ class __WordSuggestionListState extends State<_WordSuggestionList> {
         !hideMessage) {
       proceed = await _showCustomClassWarningDialog(hideMessage);
     }
-    // TODO: This can be removed once all classes (Crimson Scales and custom) are converted over to use the Map
+    // TODO: This can be removed once all classes (Crimson Scales and custom)
+    // are converted over to use the Map
     if (PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!.length >
         1) {
       Variant? variant = await _showVariantDialog(selectedPlayerClass);
