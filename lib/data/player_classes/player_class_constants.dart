@@ -51,6 +51,9 @@ class PlayerClasses {
     PlayerClass(
       race: CharacterRaces.human,
       name: 'Scoundrel',
+      variantNames: {
+        Variant.gloomhaven2E: 'Silent Knife',
+      },
       classCode: ClassCodes.scoundrel,
       icon: 'scoundrel.svg',
       category: ClassCategory.gloomhaven,

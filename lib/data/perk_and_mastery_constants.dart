@@ -41,6 +41,10 @@ class PerkAndMasteryConstants {
   static const wheneverYouLongRest = 'Whenever you long rest';
   static const wheneverYouShortRest = 'Whenever you short rest';
 
+  // Elements
+  static const fire = 'FIRE';
+  static const ice = 'ICE';
+
   // Private constructor to prevent instantiation
   const PerkAndMasteryConstants._();
 }

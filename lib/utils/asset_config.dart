@@ -29,6 +29,9 @@ final themeSpecificAssets = {
   'SPENT': (bool darkTheme) => AssetConfig(
         darkTheme ? 'spent.svg' : 'spent_light.svg',
       ),
+  'LOSS': (bool darkTheme) => AssetConfig(
+        darkTheme ? 'loss.svg' : 'loss_light.svg',
+      ),
   'DAMAGE': (bool darkTheme) => AssetConfig(
         darkTheme ? 'damage.svg' : 'damage_light.svg',
       ),
@@ -63,12 +66,14 @@ const standardAssets = {
   'Two_Hand': AssetConfig('equipment_slots/two_handed.svg', invertColor: true),
   'Head': AssetConfig('equipment_slots/head.svg', invertColor: true),
   'Body': AssetConfig('equipment_slots/body.svg', invertColor: true),
+  'Pocket': AssetConfig('equipment_slots/pocket.svg', invertColor: true),
 
   // Movement and actions
   'MOVE': AssetConfig('move.svg', invertColor: true),
   'MOVE+1': AssetConfig('move.svg', invertColor: true),
   'JUMP': AssetConfig('jump.svg', invertColor: true),
   'SHIELD': AssetConfig('shield.svg', invertColor: true),
+  'TELEPORT': AssetConfig('teleport.svg', invertColor: true),
   'PUSH': AssetConfig('push.svg'),
   'PULL': AssetConfig('pull.svg'),
 

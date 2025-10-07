@@ -178,7 +178,8 @@ class Character {
 
   bool showTraits() => !(playerClass.traits.isEmpty ||
       (playerClass.category != ClassCategory.frosthaven &&
-          variant == Variant.base));
+              variant == Variant.base ||
+          variant == Variant.gloomhaven2E));
 
   String getRaceAndClassName() => playerClass.getFullDisplayName(variant);
 

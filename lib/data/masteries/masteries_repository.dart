@@ -47,6 +47,18 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, during each of your turns, give an enemy a negative condition, give an ally a positive condition, heal an ally, or grant an ally shield',
+          ),
+          Mastery(
+            masteryDetails: 'Perform 11 different LOSS actions',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.spellweaver: [
       Masteries(
@@ -59,6 +71,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, consume both ${PerkAndMasteryConstants.fire} and ${PerkAndMasteryConstants.ice} during the same turn 6 times',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform 4 different LOSS actions twice each',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.scoundrel: [
@@ -75,6 +100,18 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, only attack enemies that are adjacent to one of your allies or adjacent to none of their allies, and perform at least 10 attacks',
+          ),
+          Mastery(
+            masteryDetails: 'End 3 scenarios with 12 or more money tokens',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.cragheart: [
       Masteries(
@@ -89,6 +126,19 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, create, destroy, or move at least one obstacle tile each round',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, heal 8 or more hit points during a single round, deal 8 or more damage with a ranged attack ability, and deal 8 or more damage with a melee attack ability',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.mindthief: [
       Masteries(
@@ -102,6 +152,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, kill 5 or more enemies with control abilities',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, trigger the on-attack effect from four different Augments at least 3 times each',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.sunkeeper: [
