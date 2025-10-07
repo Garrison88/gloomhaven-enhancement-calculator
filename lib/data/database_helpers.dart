@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = "GloomhavenCompanion.db";
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 12;
+  static const _databaseVersion = 13;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -238,13 +238,16 @@ class DatabaseHelper {
           // Added Skitterclaw class
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
-        // Always update metadata table and regenerate the Perks and Masteries
-        // tables
+        if (oldVersion <= 12) {
+          // Added Bruiser, Tinkerer, Spellweaver, Silent Knife, Cragheart,
+          // and Mindthief Gloomhaven Second Edition classes
+          await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+        }
+        // Always update metadata table
         await DatabaseMigrations.updateMetaDataTable(
           txn,
           newVersion,
         );
-        await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       },
     );
   }

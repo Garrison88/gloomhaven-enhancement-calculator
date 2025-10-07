@@ -200,7 +200,7 @@ class PerksRepository {
             grouped: true,
           ),
           Perk(
-            '$_wheneverYouLongRest, $_addLowercase +1 $_move to your first move ability the following round',
+            '$_wheneverYouLongRest, $_addLowercase $_plusOne $_move to your first move ability the following round',
           ),
           Perk(
             'Each character gains advantage on their first attack during the first round of each scenario',

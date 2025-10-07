@@ -73,6 +73,7 @@ const standardAssets = {
   'MOVE+1': AssetConfig('move.svg', invertColor: true),
   'JUMP': AssetConfig('jump.svg', invertColor: true),
   'SHIELD': AssetConfig('shield.svg', invertColor: true),
+  'TELEPORT': AssetConfig('teleport.svg', invertColor: true),
   'PUSH': AssetConfig('push.svg'),
   'PULL': AssetConfig('pull.svg'),
 
