@@ -180,19 +180,46 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, infuse or consume LIGHT during each of your turns',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, deal 8 or more damage with an attack 3 or more times',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // QUARTERMASTER
     ClassCodes.quartermaster: [
       Masteries(
         [
           Mastery(
             masteryDetails:
-                "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of ~Reinforced ~Steel",
+                'Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of ~Reinforced ~Steel',
           ),
           Mastery(
             masteryDetails: 'LOOT six or more loot tokens in a single turn',
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, spend 50 SUPPLIES to refresh 50 gold of lost items 3 times',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, give yourself or an ally an item from the Quartermaster item Supply each round except when performing a long rest',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.summoner: [
@@ -209,7 +236,21 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Perform 3 different summon actions before your first rest and keep those cards in your active area for the entire scenario',
+          ),
+          Mastery(
+            masteryDetails:
+                'Perform 6 different summon abilities from your ability cards over the course of the first rounds of 6 scenarios',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // NIGHTSHROUD
     ClassCodes.nightshroud: [
       Masteries(
         [
@@ -222,6 +263,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, infuse or consume DARK during each of your turns',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform an attack ability during your turn in 5 consecutive rounds',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.plagueherald: [

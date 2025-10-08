@@ -43,6 +43,8 @@ final themeSpecificAssets = {
 // Create a map for standard assets
 const standardAssets = {
   // Attack modifiers
+  'NULL': AssetConfig('attack_modifiers/null.svg'),
+  'SHUFFLE': AssetConfig('shuffle.svg', invertColor: true),
   '-2': AssetConfig('attack_modifiers/minus_2.svg'),
   '-1': AssetConfig('attack_modifiers/minus_1.svg'),
   '+0': AssetConfig('attack_modifiers/plus_0.svg'),

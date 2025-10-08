@@ -25,6 +25,8 @@ class PerksRepository {
   static const _cards = 'cards';
   static const _rolling = 'Rolling';
   static const _loss = 'LOSS';
+  static const _shuffle = 'SHUFFLE';
+  static const _null = 'NULL';
 
   // Effects and conditions
   static const _damage = 'DAMAGE';
@@ -57,6 +59,11 @@ class PerksRepository {
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
+
+  // Class specific
+  // TODO: add these assets
+  static const _tear = 'TEAR';
+  static const _supplies = 'SUPPLIES';
 
   // Elements
   static const _fire = 'FIRE';
@@ -772,7 +779,46 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_two +0 $_light $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_shield 1" $_rolling $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two +1 "$_heal 1, $_range 3" $_cards',
+            quantity: 2,
+          ),
+          Perk(
+              '$_add $_one -1 "You or an adjacent ally may $_recover one level 1 card from the discard pile" $_card'),
+          Perk('$_add $_one $_stun $_rolling $_card'),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
+          Perk(
+              '$_ignoreItemMinusOneEffects and $_removeLowercase $_one -1 $_card'),
+          Perk(
+            'Whenever you open one or more doors during your turn, gain $_shield 1, $_retaliate 1 for the round',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk('$_wheneverYouLongRest, you may $_light'),
+          Perk(
+            'Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // QUARTERMASTER
     ClassCodes.quartermaster: [
       Perks(
         [
@@ -832,7 +878,47 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_two -1 $_cards with $_one +0 $_muddle $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +0 "Gain 10 $_supplies" $_card',
+            quantity: 3,
+          ),
+          Perk(
+              '$_replace $_two +0 $_cards with $_two $_pierce 3 $_rolling $_cards'),
+          Perk(
+            '$_replace $_one +1 $_card with $_two +0 "Gain the ~Barbed ~Strip or ~Iron ~Plate item" $_cards',
+            quantity: 2,
+          ),
+          Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
+          Perk(
+            '$_add $_one "Gain the ~Scroll ~of ~Relocation or ~Sharpened ~Dirk item" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one $_stun $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_ignoreItemMinusOneEffects and $_removeLowercase $_one +0 $_card'),
+          Perk(
+              'You may bring one additional $_pocket item into each $_scenario'),
+          Perk(
+              'Your party may purchase items from each faction as though the items\' costs were five gold less and your reputation with that faction was two greater'),
+          Perk(
+            '$_wheneverYouLongRest, gain 10 $_supplies',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // SUMMONER/SOULTETHER
     ClassCodes.summoner: [
       Perks(
         [
@@ -887,7 +973,40 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "After the attack ability, grant one of your summons: $_teleport 2" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_invisible, Target 1 of your summons" $_card',
+            quantity: 3,
+          ),
+          Perk(
+              '$_replace $_one +0 $_card with $_two $_wound $_rolling $_cards'),
+          Perk(
+              '$_replace $_one +0 $_card with $_two $_poison $_rolling $_cards'),
+          Perk('$_replace $_two +1 $_cards with $_two +1 $_curse $_cards'),
+          Perk('$_add $_one +2 $_fire/$_air $_card'),
+          Perk('$_add $_one +2 $_fire/$_dark $_card'),
+          Perk('$_add $_one +2 $_air/$_dark $_card'),
+          Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
+          Perk(
+              'At the beginning of each round in which you long rest, all your summons gain $_shield 1 for the round'),
+          Perk(
+              '$_onceEachScenario, during your turn, $_teleport one of your summons to an empty hex adjacent to you'),
+          Perk(
+            '$_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // NIGHTSHROUD
     ClassCodes.nightshroud: [
       Perks(
         [
@@ -950,6 +1069,43 @@ class PerksRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+              '$_replace $_one -1 $_card with $_two "After the attack ability, grant one adjacent ally or self: $_teleport 2" $_rolling $_cards'),
+          Perk('$_replace $_one $_null $_card with $_one -2 $_shuffle $_card'),
+          Perk(
+            '$_replace $_two +0 $_cards with $_two +1 "If this attack kills the target, shuffle one $_curse card into the monster attack modifier deck" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_dark $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +0 "Place one $_tear in a hex adjacent to the target" $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
+          Perk('$_wheneverYouLongRest, you may $_dark'),
+          Perk(
+            '$_onceEachScenario, during your turn, place one $_tear in an adjacent hex',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'If a $_curse causes an enemy to deal no $_damage during its attack, that enemy suffers $_damage 3',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.plagueherald: [
