@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -899,11 +900,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              // const SettingsSection(title: 'TESTING'),
-              // ListTile(
-              //   title: const Text('Create All'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(),
-              // ),
+              const SettingsSection(title: 'TESTING'),
+              if (kDebugMode)
+                ListTile(
+                  title: const Text('Create All'),
+                  onTap: () => widget.charactersModel.createCharactersTest(),
+                ),
               // ListTile(
               //   title: const Text('Create Gloomhaven'),
               //   onTap: () => widget.charactersModel.createCharactersTest(
