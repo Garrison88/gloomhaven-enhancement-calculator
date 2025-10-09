@@ -404,7 +404,7 @@ class EnhancementData {
                     ),
                     TextSpan(
                       text:
-                          '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g${tempEnhancements ? '*' : ''}',
+                          '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g${tempEnhancements ? ' †' : ''}',
                     ),
                     const TextSpan(text: ')'),
                   ] else ...[

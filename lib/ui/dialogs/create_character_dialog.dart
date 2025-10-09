@@ -315,6 +315,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         message: Strings.newCharacterInfoBody(
                           context,
                           gloomhavenMode: _gloomhavenMode,
+                          darkMode:
+                              Theme.of(context).brightness == Brightness.dark,
                         ),
                       );
                     },

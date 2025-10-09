@@ -90,7 +90,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     enhancementCalculatorModel.temporaryEnhancementMode = value;
                   },
                   title: const AutoSizeText(
-                    'Variant: Temporary Enhancement*',
+                    'Variant: Temporary Enhancement †',
                     maxLines: 2,
                   ),
                   secondary: IconButton(
@@ -102,8 +102,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       builder: (_) {
                         return InfoDialog(
                           title: Strings.temporaryEnhancement,
-                          message:
-                              Strings.temporaryEnhancementInfoBody(context),
+                          message: Strings.temporaryEnhancementInfoBody(
+                              context, SharedPrefs().darkTheme),
                         );
                       },
                     ),
@@ -121,7 +121,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       builder: (_) {
                         return InfoDialog(
                           title: Strings.cardLevelInfoTitle,
-                          message: Strings.cardLevelInfoBody(context),
+                          message: Strings.cardLevelInfoBody(
+                              context, SharedPrefs().darkTheme),
                         );
                       },
                     ),
@@ -169,6 +170,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           title: Strings.previousEnhancementsInfoTitle,
                           message: Strings.previousEnhancementsInfoBody(
                             context,
+                            SharedPrefs().darkTheme,
                           ),
                         );
                       },
@@ -323,8 +325,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           return InfoDialog(
                             title: Strings.lostNonPersistentInfoTitle,
                             message: Strings.lostNonPersistentInfoBody(
-                              context,
-                            ),
+                                context, SharedPrefs().darkTheme),
                           );
                         },
                       ),
@@ -392,6 +393,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             title: Strings.persistentInfoTitle,
                             message: Strings.persistentInfoBody(
                               context,
+                              SharedPrefs().darkTheme,
                             ),
                           );
                         },
@@ -449,7 +451,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     ),
                     if (enhancementCalculatorModel.temporaryEnhancementMode)
                       Text(
-                        '*',
+                        ' †',
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
                   ],

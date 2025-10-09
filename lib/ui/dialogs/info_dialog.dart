@@ -24,19 +24,17 @@ class InfoDialog extends StatefulWidget {
 
 class _InfoDialogState extends State<InfoDialog> {
   late RichText _bodyText;
-
   List<Enhancement> _titleIcons = [];
-
   late List<Enhancement> _eligibleForIcons;
 
+  /// Creates a list of icon widgets for display in the dialog
   List<Widget> _createIconsListForDialog(List<Enhancement>? list) {
     List<Widget> icons = [];
+
     if (list == null) {
       icons.add(
         Padding(
-          padding: const EdgeInsets.only(
-            right: (smallPadding / 2),
-          ),
+          padding: const EdgeInsets.only(right: smallPadding / 2),
           child: SvgPicture.asset(
             'images/plus_one.svg',
             height: iconSize,
@@ -48,9 +46,7 @@ class _InfoDialogState extends State<InfoDialog> {
       for (final Enhancement enhancement in list) {
         icons.add(
           Padding(
-            padding: const EdgeInsets.only(
-              right: (smallPadding / 2),
-            ),
+            padding: const EdgeInsets.only(right: smallPadding / 2),
             child: SvgPicture.asset(
               'images/${enhancement.iconPath}',
               height: iconSize,
@@ -67,19 +63,25 @@ class _InfoDialogState extends State<InfoDialog> {
         );
       }
     }
+
     return icons;
   }
 
   @override
   Widget build(BuildContext context) {
+    // Cache theme settings used throughout the dialog
+    final darkTheme = SharedPrefs().darkTheme;
+    final gloomhavenMode = SharedPrefs().gloomhavenMode;
+
+    // Configure dialog content based on category
     if (widget.category != null) {
       switch (widget.category) {
-        // plus one for character enhancement selected
         case EnhancementCategory.charPlusOne:
         case EnhancementCategory.target:
           _bodyText = Strings.plusOneCharacterInfoBody(
             context,
-            SharedPrefs().gloomhavenMode,
+            gloomhavenMode,
+            darkTheme,
           );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
@@ -89,11 +91,12 @@ class _InfoDialogState extends State<InfoDialog> {
               )
               .toList();
           break;
-        // plus one for summon enhancement selected
+
         case EnhancementCategory.summonPlusOne:
           _bodyText = Strings.plusOneSummonInfoBody(
             context,
-            SharedPrefs().gloomhavenMode,
+            gloomhavenMode,
+            darkTheme,
           );
           _eligibleForIcons = EnhancementData.enhancements
               .where(
@@ -102,17 +105,18 @@ class _InfoDialogState extends State<InfoDialog> {
               )
               .toList();
           break;
-        // negative enhancement selected
+
         case EnhancementCategory.negEffect:
-          _bodyText = Strings.negEffectInfoBody(context);
+          _bodyText = Strings.negEffectInfoBody(context, darkTheme);
           _titleIcons = EnhancementData.enhancements
               .where(
                 (element) => element.category == EnhancementCategory.negEffect,
               )
               .toList();
-          // remove Disarm if we're using Frosthaven rules or Ward if we're using Gloomhaven rules
+
+          // Remove Disarm if we're using Frosthaven rules or Ward if we're using Gloomhaven rules
           _titleIcons.removeWhere(
-            (element) => SharedPrefs().gloomhavenMode
+            (element) => gloomhavenMode
                 ? element.name == 'Ward'
                 : element.name == 'Disarm',
           );
@@ -135,9 +139,9 @@ class _InfoDialogState extends State<InfoDialog> {
               ),
             );
           break;
-        // positive enhancement selected
+
         case EnhancementCategory.posEffect:
-          _bodyText = Strings.posEffectInfoBody(context);
+          _bodyText = Strings.posEffectInfoBody(context, darkTheme);
           _titleIcons = EnhancementData.enhancements
               .where(
                 (element) => element.category == EnhancementCategory.posEffect,
@@ -156,8 +160,7 @@ class _InfoDialogState extends State<InfoDialog> {
               )
               .toList()
             ..removeWhere(
-              (element) =>
-                  element.name == 'Ward' && SharedPrefs().gloomhavenMode,
+              (element) => element.name == 'Ward' && gloomhavenMode,
             )
             ..add(
               Enhancement(
@@ -168,9 +171,9 @@ class _InfoDialogState extends State<InfoDialog> {
               ),
             );
           break;
-        // jump selected
+
         case EnhancementCategory.jump:
-          _bodyText = Strings.jumpInfoBody(context);
+          _bodyText = Strings.jumpInfoBody(context, darkTheme);
           _titleIcons = EnhancementData.enhancements
               .where(
                 (element) => element.category == EnhancementCategory.jump,
@@ -184,11 +187,12 @@ class _InfoDialogState extends State<InfoDialog> {
               )
               .toList();
           break;
-        // specific element selected
+
         case EnhancementCategory.specElem:
           _bodyText = Strings.specificElementInfoBody(
             context,
-            SharedPrefs().gloomhavenMode,
+            gloomhavenMode,
+            darkTheme,
           );
           _titleIcons = [
             Enhancement(
@@ -254,11 +258,12 @@ class _InfoDialogState extends State<InfoDialog> {
               ),
             );
           break;
-        // any element selected
+
         case EnhancementCategory.anyElem:
           _bodyText = Strings.anyElementInfoBody(
             context,
-            SharedPrefs().gloomhavenMode,
+            gloomhavenMode,
+            darkTheme,
           );
           _titleIcons = EnhancementData.enhancements
               .where(
@@ -281,19 +286,19 @@ class _InfoDialogState extends State<InfoDialog> {
                         ].contains(element.name) &&
                         element.category != EnhancementCategory.summonPlusOne,
               )
-              .toList();
-          _eligibleForIcons.add(
-            Enhancement(
-              EnhancementCategory.posEffect,
-              'Invisible',
-              ghCost: 0,
-              iconPath: 'invisible.svg',
-            ),
-          );
+              .toList()
+            ..add(
+              Enhancement(
+                EnhancementCategory.posEffect,
+                'Invisible',
+                ghCost: 0,
+                iconPath: 'invisible.svg',
+              ),
+            );
           break;
-        // hex selected
+
         case EnhancementCategory.hex:
-          _bodyText = Strings.hexInfoBody(context);
+          _bodyText = Strings.hexInfoBody(context, darkTheme);
           _titleIcons = [
             EnhancementData.enhancements.firstWhere(
                 (element) => element.category == EnhancementCategory.hex)
@@ -303,13 +308,13 @@ class _InfoDialogState extends State<InfoDialog> {
                 (element) => element.category == EnhancementCategory.hex)
           ];
           break;
-        // title selected (do nothing)
+
         default:
           break;
       }
     }
+
     return AlertDialog(
-      // no title provided - this will be an enhancement dialog with icons
       title: widget.title == null
           ? Center(
               child: Wrap(
@@ -319,7 +324,6 @@ class _InfoDialogState extends State<InfoDialog> {
                 children: _createIconsListForDialog(_titleIcons),
               ),
             )
-          // title provided - this will be an info dialog with a text title
           : Center(
               child: Text(
                 widget.title!,
@@ -330,43 +334,38 @@ class _InfoDialogState extends State<InfoDialog> {
       content: Container(
         constraints: const BoxConstraints(
           maxWidth: maxDialogWidth,
-          // minWidth: maxDialogWidth,
         ),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              // if title isn't provided, display eligible enhancements
-              widget.title == null
-                  ? Column(
-                      children: <Widget>[
-                        const Text(
-                          'Eligible For',
-                          style:
-                              TextStyle(decoration: TextDecoration.underline),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: smallPadding,
-                            bottom: smallPadding,
-                          ),
-                        ),
-                        Wrap(
-                          runSpacing: smallPadding,
-                          spacing: smallPadding,
-                          alignment: WrapAlignment.center,
-                          children:
-                              _createIconsListForDialog(_eligibleForIcons),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: smallPadding,
-                            bottom: smallPadding,
-                          ),
-                        ),
-                      ],
-                    )
-                  // if title isn't provided, display an empty container
-                  : Container(),
+              // If title isn't provided, display eligible enhancements
+              if (widget.title == null)
+                Column(
+                  children: <Widget>[
+                    const Text(
+                      'Eligible For',
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        top: smallPadding,
+                        bottom: smallPadding,
+                      ),
+                    ),
+                    Wrap(
+                      runSpacing: smallPadding,
+                      spacing: smallPadding,
+                      alignment: WrapAlignment.center,
+                      children: _createIconsListForDialog(_eligibleForIcons),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(
+                        top: smallPadding,
+                        bottom: smallPadding,
+                      ),
+                    ),
+                  ],
+                ),
               widget.message ?? _bodyText,
             ],
           ),
