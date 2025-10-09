@@ -114,6 +114,9 @@ const standardAssets = {
   'ATTACK+1': AssetConfig('attack.svg', invertColor: true),
   'Rolling': AssetConfig('rolling.svg'),
 
+  // Other
+  'xp': AssetConfig('xp.svg', invertColor: true),
+
   // Class-specific abilities and icons
   //TODO: copy the asset from the class_icons folder instead of using the class icon
   'Shackle': AssetConfig('class_icons/chainguard.svg', invertColor: true),
@@ -121,6 +124,7 @@ const standardAssets = {
   'Cultivate': AssetConfig('cultivate.svg', invertColor: true),
   'Chieftain': AssetConfig('class_icons/chieftain.svg', invertColor: true),
   'Boneshaper': AssetConfig('class_icons/boneshaper.svg', invertColor: true),
+  'Berserker': AssetConfig('berserker.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),
@@ -145,8 +149,6 @@ const standardAssets = {
   'SHADOW': AssetConfig('shadow.svg'),
   'TIME_TOKEN': AssetConfig('time_token.svg'),
   'PERSIST': AssetConfig('persist.svg', invertColor: true),
-  'plusone': AssetConfig(null),
-  'plustwo': AssetConfig(null),
   'RESONANCE': AssetConfig('resonance.svg'),
   'INFUSION': AssetConfig('infusion.svg'),
   'TRANSFER': AssetConfig('transfer.svg'),
@@ -210,9 +212,12 @@ AssetConfig getAssetConfig(
   bool darkTheme,
 ) {
   // Clean the input string
-  final String cleanElement =
-      element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
-
+  String cleanElement = element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
+  if (cleanElement.contains('xp')) {
+    // Element is something like xp8, so remove the last character to get the
+    // XP icon
+    cleanElement = cleanElement.substring(0, cleanElement.length - 1);
+  }
   // Check theme-specific assets first
   final themeAsset = themeSpecificAssets[cleanElement];
   if (themeAsset != null) {

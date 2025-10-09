@@ -278,6 +278,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // PLAGUEHERALD
     ClassCodes.plagueherald: [
       Masteries(
         [
@@ -292,7 +293,21 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single turn, kill 3 or more enemies without drawing an attack modifier card',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, either apply or remove poison from an ally or enemy each round',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // BERSERKER
     ClassCodes.berserker: [
       Masteries(
         [
@@ -307,7 +322,20 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails: 'Kill 20 enemies with retaliate',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, never end your turn with your current hit point value above half your maximum',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // SOOTHSINGER
     ClassCodes.soothsinger: [
       Masteries(
         [
@@ -321,6 +349,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform 7 different SONG actions',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, create 20 or more Notes and use each Note you create in a SONG',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.doomstalker: [

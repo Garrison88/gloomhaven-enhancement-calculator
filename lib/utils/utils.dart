@@ -256,7 +256,31 @@ class IconWidgetBuilder {
     bool invertColor,
     bool darkTheme,
   ) {
-    if (element.toLowerCase().contains('consume')) {
+    if (assetPath == 'xp.svg') {
+      final String xpNumber = element.characters.last;
+
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          _buildSvgPicture(
+            assetPath,
+            invertInDarkTheme: invertColor,
+            darkTheme: darkTheme,
+          ),
+          Positioned(
+            bottom: -1,
+            child: Text(
+              xpNumber,
+              style: TextStyle(
+                fontFamily: pirataOne,
+                fontSize: 20,
+                color: darkTheme ? Colors.black : Colors.white,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else if (element.toLowerCase().contains('consume')) {
       return Stack(
         fit: StackFit.expand,
         children: [
@@ -387,33 +411,50 @@ class IconWidgetBuilder {
     required List<InlineSpan> inlineList,
     required String element,
   }) {
-    switch (element) {
-      case '"plusone':
-        inlineList.add(
-          const TextSpan(text: '"+1'),
-        );
-        break;
-      case 'plusone':
-        inlineList.add(
-          const TextSpan(text: '+1'),
-        );
-        break;
-      case 'plustwo':
-        inlineList.add(
-          const TextSpan(text: '+2'),
-        );
-        break;
-      default:
-        inlineList.add(
-          element.startsWith('~')
-              ? TextSpan(
-                  text: element.substring(1),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
-                )
-              : TextSpan(text: element),
-        );
+    // Extract the core word without leading/trailing punctuation
+    final cleanElement = element.replaceAll(RegExp(r'[^a-zA-Z]'), '');
+
+// Check if it matches our special cases
+    if (cleanElement == 'plusone' ||
+        cleanElement == 'plustwo' ||
+        cleanElement == 'pluszero') {
+      // Extract leading and trailing punctuation to preserve it
+      final String leadingPunct =
+          element.substring(0, element.indexOf(cleanElement));
+      final String trailingPunct = element
+          .substring(element.indexOf(cleanElement) + cleanElement.length);
+
+      String replacement;
+      switch (cleanElement) {
+        case 'plusone':
+          replacement = '+1';
+          break;
+        case 'plustwo':
+          replacement = '+2';
+          break;
+        case 'pluszero':
+          replacement = '+0';
+          break;
+        default:
+          replacement = cleanElement;
+      }
+
+      inlineList.add(
+        TextSpan(text: '$leadingPunct$replacement$trailingPunct'),
+      );
+    } else if (element.startsWith('~')) {
+      inlineList.add(
+        TextSpan(
+          text: element.substring(1),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+        ),
+      );
+    } else {
+      inlineList.add(
+        TextSpan(text: element),
+      );
     }
   }
 }
