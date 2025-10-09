@@ -179,7 +179,7 @@ class PerksRepository {
           Perk('$_add $_one +3 card'),
           Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 "$_shield 1" card'),
           Perk(
-              '[Rested and Ready:] $_wheneverYouLongRest, add +1 $_move to your first move ability the following round'),
+              '**Rested and Ready:** $_wheneverYouLongRest, add +1 $_move to your first move ability the following round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -292,7 +292,7 @@ class PerksRepository {
           Perk('Add two +1 "$_heal 2, self" cards'),
           Perk('$_ignoreScenarioEffectsAndAdd two +0 $_fire $_rolling cards'),
           Perk(
-            '[Rejuvenating Vapor:] $_wheneverYouLongRest, you may perform "$_heal 2, $_range 3"',
+            '**Rejuvenating Vapor:** $_wheneverYouLongRest, you may perform "$_heal 2, $_range 3"',
             quantity: 2,
             grouped: true,
           ),
@@ -326,7 +326,7 @@ class PerksRepository {
             '$_ignoreScenarioEffectsAndAdd $_one +0 "$_heal 1, Target 1 ally" $_card',
           ),
           Perk(
-            '$_onceEachScenario, one adjacent ally may use one of your ~potion $_pocket items during their turn without it becoming $_loss',
+            '$_onceEachScenario, one adjacent ally may use one of your *potion* $_pocket items during their turn without it becoming $_loss',
           ),
           Perk(
             'Whenever you perform an action with $_loss, you may $_anyElement',
@@ -397,7 +397,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Etheric Bond:] $_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
+              '**Etheric Bond:** $_wheneverYouShortRest, if *Reviving Ether* is in your discard pile, first return it to your hand'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -431,7 +431,7 @@ class PerksRepository {
             '$_onceEachScenario, when you would suffer $_damage, you may gain $_invisible and $_stun to negate the $_damage',
           ),
           Perk(
-            '$_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first $_recover it',
+            '$_wheneverYouShortRest, if *Reviving Ether* is in your discard pile, first $_recover it',
           ),
           Perk(
             'At the end of each of your turns during which you performed an action with $_loss, gain $_bless',
@@ -496,7 +496,7 @@ class PerksRepository {
           Perk('Add one +0 "$_invisible, self", $_rolling card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Cloak of Invisibility:] $_onceEachScenario, during your turn, perform "$_invisible, self"',
+            '**Cloak of Invisibility:** $_onceEachScenario, during your turn, perform "$_invisible, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -594,7 +594,7 @@ class PerksRepository {
           Perk(_ignoreItemMinusOneEffects),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Earthquakes:] Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
+            '**Earthquakes:** Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
             quantity: 2,
             grouped: true,
           ),
@@ -687,7 +687,7 @@ class PerksRepository {
               'Add one +0 $_disarm $_rolling card and one +0 $_muddle $_rolling card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Lying Low:] You are considered to be last in initiative order when determining monster focus'),
+              '**Lying Low:** You are considered to be last in initiative order when determining monster focus'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -782,7 +782,7 @@ class PerksRepository {
           Perk('$_ignoreItemMinusOneEffects, and add two +1 cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Shielding Light:] Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
+            '**Shielding Light:** Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
             quantity: 2,
             grouped: true,
           ),
@@ -880,7 +880,7 @@ class PerksRepository {
           Perk('Add one +0 $_stun $_rolling card'),
           Perk('$_ignoreItemMinusOneEffects, and add two +1 cards'),
           Perk(
-            '[Well Supplied:] $_onceEachScenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
+            '**Well Supplied:** $_onceEachScenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
             quantity: 2,
             grouped: true,
           ),
@@ -900,12 +900,12 @@ class PerksRepository {
           Perk(
               '$_replace $_two +0 $_cards with $_two $_pierce 3 $_rolling $_cards'),
           Perk(
-            '$_replace $_one +1 $_card with $_two +0 "Gain the ~Barbed ~Strip or ~Iron ~Plate item" $_cards',
+            '$_replace $_one +1 $_card with $_two +0 "Gain the *Barbed Strip* or *Iron Plate* item" $_cards',
             quantity: 2,
           ),
           Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
           Perk(
-            '$_add $_one "Gain the ~Scroll ~of ~Relocation or ~Sharpened ~Dirk item" $_rolling $_card',
+            '$_add $_one "Gain the *Scroll of Relocation* or *Sharpened Dirk* item" $_rolling $_card',
             quantity: 2,
           ),
           Perk(
@@ -974,7 +974,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffectsAndAdd two +1 cards'),
           Perk(
-            '[Phase Out:] $_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
+            '**Phase Out:** $_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
             quantity: 2,
             grouped: true,
           ),
@@ -1071,7 +1071,7 @@ class PerksRepository {
           Perk('Add two +0 "$_heal 1, self" $_rolling cards'),
           Perk('$_ignoreScenarioEffectsAndAdd two +1 cards'),
           Perk(
-            '[Empowering Night:] At the start of the scenario, you may discard two cards to add a card with an action containing a persistent symbol from your pool to your hand and immediately play it, performing that action',
+            '**Empowering Night:** At the start of the scenario, you may discard two cards to add a card with an action containing a persistent symbol from your pool to your hand and immediately play it, performing that action',
             quantity: 2,
             grouped: true,
           ),
@@ -1165,7 +1165,7 @@ class PerksRepository {
           Perk('Add two +0 $_curse $_rolling cards'),
           Perk('$_ignoreScenarioEffectsAndAdd one +1 card'),
           Perk(
-            '[Xorn\'s Boon:] $_onceEachScenario, during your turn, cause each enemy that has $_poison to suffer $_damage 1 and gain $_muddle and each ally who has $_poison to suffer $_damage 1 and gain $_strengthen',
+            '**Xorn\'s Boon:** $_onceEachScenario, during your turn, cause each enemy that has $_poison to suffer $_damage 1 and gain $_muddle and each ally who has $_poison to suffer $_damage 1 and gain $_strengthen',
             quantity: 2,
             grouped: true,
           ),
@@ -1270,7 +1270,7 @@ class PerksRepository {
           Perk('Add two +0 "$_heal 1, self" $_rolling cards'),
           Perk(_ignoreItemMinusOneEffects),
           Perk(
-              '[Rapid Recovery:] Whenever you heal from a long rest, add $_plusOne $_heal'),
+              '**Rapid Recovery:** Whenever you heal from a long rest, add $_plusOne $_heal'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1359,7 +1359,7 @@ class PerksRepository {
           Perk('$_add $_three +1 $_rolling $_cards'),
           Perk('$_add $_three +0 $_curse $_rolling $_cards'),
           Perk(
-              '[Storyteller:] $_atTheEndOfEachScenario, each character in that scenario gains 8 experience if you successfully completed your battle goal'),
+              '**Storyteller:** $_atTheEndOfEachScenario, each character in that scenario gains 8 experience if you successfully completed your battle goal'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1450,7 +1450,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffectsAndAdd one +1 $_immobilize card'),
           Perk(
-              '[Marked for the Hunt:] At the beginning of each round in which you long rest, you may choose one ally to gain the benefits of any of your active Dooms as if the Dooms were in that ally\'s active area for the round'),
+              '**Marked for the Hunt:** At the beginning of each round in which you long rest, you may choose one ally to gain the benefits of any of your active Dooms as if the Dooms were in that ally\'s active area for the round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1514,7 +1514,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '[Revitalizing Medicine:] Whenever an ally performs the Heal ability of ~Medical ~Pack or ~Large ~Medical ~Pack, that character may first remove one negative condition'),
+              '**Revitalizing Medicine:** Whenever an ally performs the Heal ability of *Medical Pack* or *Large Medical Pack*, that character may first remove one negative condition'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1566,7 +1566,7 @@ class PerksRepository {
           Perk('$_add $_four +0 $_earth $_cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Elemental Proficiency:] $_atTheStartOfEachScenario and whenever you long rest, $_anyElement',
+            '**Elemental Proficiency:** $_atTheStartOfEachScenario and whenever you long rest, $_anyElement',
             quantity: 2,
             grouped: true,
           ),
@@ -1627,7 +1627,7 @@ class PerksRepository {
           Perk(
               '$_ignoreScenarioEffectsAndAdd $_two +0 $_earth $_rolling $_cards'),
           Perk(
-            '[Bear Treat:] During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "$_move 3; $_loot 1; If the loot ability was performed: $_heal 3, self"',
+            '**Bear Treat:** During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "$_move 3; $_loot 1; If the loot ability was performed: $_heal 3, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -1690,7 +1690,7 @@ class PerksRepository {
               '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
           Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
           Perk(
-              '[Spinning Up:] At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
+              '**Spinning Up:** At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1747,7 +1747,7 @@ class PerksRepository {
           Perk('$_add $_two +0 $_curse $_rolling $_cards'),
           Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
           Perk(
-              '[Tip the Scales:] Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck'),
+              '**Tip the Scales:** Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1804,7 +1804,7 @@ class PerksRepository {
               '$_add $_two +0 "All adjacent enemies suffer $_damage 1" $_cards'),
           Perk('$_ignoreScenarioEffectsAndRemove $_one -1 $_card'),
           Perk(
-            '[Remodeling:] Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within $_range 2 (of you)',
+            '**Remodeling:** Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within $_range 2 (of you)',
             quantity: 2,
             grouped: true,
           )
@@ -1858,7 +1858,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              '[Hasty Pick-up:] $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
+              '**Hasty Pick-up:** $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1919,7 +1919,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreItemMinusOneEffectsAndAdd $_two +1 $_cards'),
           Perk(
-            '[Brilliant Aegis:] Whenever you are attacked, you may consume_$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
+            '**Brilliant Aegis:** Whenever you are attacked, you may consume_$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
             quantity: 2,
             grouped: true,
           )
@@ -2057,7 +2057,7 @@ class PerksRepository {
           Perk('$_add $_one +3 $_card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Grave Defense:] Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has $_poison')
+              '**Grave Defense:** Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has $_poison')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -2645,7 +2645,7 @@ class PerksRepository {
           Perk(
               'You may bring $_one additional $_oneHand item into each $_scenario'),
           Perk(
-              'At the end of each $_scenario, you may discard up to $_two loot $_cards, except ~Random ~Item, to draw that many new loot $_cards'),
+              'At the end of each $_scenario, you may discard up to $_two loot $_cards, except *Random Item*, to draw that many new loot $_cards'),
         ],
         variant: Variant.base,
       ),

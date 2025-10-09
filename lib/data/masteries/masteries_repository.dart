@@ -200,7 +200,7 @@ class MasteriesRepository {
         [
           Mastery(
             masteryDetails:
-                'Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of ~Reinforced ~Steel',
+                'Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of *Reinforced Steel*',
           ),
           Mastery(
             masteryDetails: 'LOOT six or more loot tokens in a single turn',
@@ -313,7 +313,7 @@ class MasteriesRepository {
         [
           Mastery(
             masteryDetails:
-                'Lose at least one hit point during each of your turns, without ever performing the bottom action of ~Blood ~Pact',
+                'Lose at least one hit point during each of your turns, without ever performing the bottom action of *Blood Pact*',
           ),
           Mastery(
             masteryDetails:
@@ -399,7 +399,7 @@ class MasteriesRepository {
         [
           Mastery(
             masteryDetails:
-                'Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of ~Formless ~Power or ~Shaping ~the ~Ether',
+                'Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of *Formless Power* or *Shaping the Ether*',
           ),
           Mastery(
             masteryDetails:
@@ -775,7 +775,7 @@ class MasteriesRepository {
           ),
           Mastery(
             masteryDetails:
-                'Trigger an ongoing effect on ~Chaotic ~Recursion six or more times in one round.',
+                'Trigger an ongoing effect on *Chaotic Recursion* six or more times in one round.',
           ),
         ],
       ),
