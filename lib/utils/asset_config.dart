@@ -43,6 +43,8 @@ final themeSpecificAssets = {
 // Create a map for standard assets
 const standardAssets = {
   // Attack modifiers
+  'NULL': AssetConfig('attack_modifiers/null.svg'),
+  'SHUFFLE': AssetConfig('shuffle.svg', invertColor: true),
   '-2': AssetConfig('attack_modifiers/minus_2.svg'),
   '-1': AssetConfig('attack_modifiers/minus_1.svg'),
   '+0': AssetConfig('attack_modifiers/plus_0.svg'),
@@ -112,13 +114,16 @@ const standardAssets = {
   'ATTACK+1': AssetConfig('attack.svg', invertColor: true),
   'Rolling': AssetConfig('rolling.svg'),
 
+  // Other
+  'xp': AssetConfig('xp.svg', invertColor: true),
+
   // Class-specific abilities and icons
-  //TODO: copy the asset from the class_icons folder instead of using the class icon
   'Shackle': AssetConfig('class_icons/chainguard.svg', invertColor: true),
   'Shackled': AssetConfig('class_icons/chainguard.svg', invertColor: true),
   'Cultivate': AssetConfig('cultivate.svg', invertColor: true),
   'Chieftain': AssetConfig('class_icons/chieftain.svg', invertColor: true),
   'Boneshaper': AssetConfig('class_icons/boneshaper.svg', invertColor: true),
+  'Berserker': AssetConfig('berserker.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),
@@ -143,8 +148,6 @@ const standardAssets = {
   'SHADOW': AssetConfig('shadow.svg'),
   'TIME_TOKEN': AssetConfig('time_token.svg'),
   'PERSIST': AssetConfig('persist.svg', invertColor: true),
-  'plusone': AssetConfig(null),
-  'plustwo': AssetConfig(null),
   'RESONANCE': AssetConfig('resonance.svg'),
   'INFUSION': AssetConfig('infusion.svg'),
   'TRANSFER': AssetConfig('transfer.svg'),
@@ -202,14 +205,26 @@ const standardAssets = {
   'consume_LIGHT/DARK': AssetConfig('elem_light_or_dark.svg'),
 };
 
-// Function to get asset configuration
+/// Get asset configuration for a given element
+///
+/// This function cleans the input string and returns the appropriate
+/// asset path and color inversion settings.
+///
+/// Special handling for:
+/// - XP values (xp8 -> xp.svg)
+/// - Theme-dependent assets (different icons for light/dark themes)
+/// - Standard game assets
 AssetConfig getAssetConfig(
   String element,
   bool darkTheme,
 ) {
-  // Clean the input string
-  final String cleanElement =
-      element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
+  // Clean the input string - remove punctuation
+  String cleanElement = element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
+
+  // Handle XP pattern (xp8, xp10, etc.)
+  if (RegExp(r'^xp\d+$').hasMatch(cleanElement)) {
+    return const AssetConfig('xp.svg', invertColor: true);
+  }
 
   // Check theme-specific assets first
   final themeAsset = themeSpecificAssets[cleanElement];
@@ -218,15 +233,5 @@ AssetConfig getAssetConfig(
   }
 
   // Return standard asset or default configuration
-  return standardAssets[cleanElement] ?? AssetConfig(null);
+  return standardAssets[cleanElement] ?? const AssetConfig(null);
 }
-
-// Usage example:
-// void example() {
-//   final element = "HEAL+1";
-//   final darkTheme = true;
-
-//   final config = getAssetConfig(element, darkTheme);
-//   final assetPath = config.path;
-//   final invertColor = config.invertColor;
-// }

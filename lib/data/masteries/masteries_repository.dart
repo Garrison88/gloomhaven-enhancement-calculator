@@ -180,19 +180,46 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, infuse or consume LIGHT during each of your turns',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, deal 8 or more damage with an attack 3 or more times',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // QUARTERMASTER
     ClassCodes.quartermaster: [
       Masteries(
         [
           Mastery(
             masteryDetails:
-                "Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of ~Reinforced ~Steel",
+                'Spend, lose, or refresh one or more items on each of your turns without ever performing the top action of *Reinforced Steel*',
           ),
           Mastery(
             masteryDetails: 'LOOT six or more loot tokens in a single turn',
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, spend 50 SUPPLIES to refresh 50 gold of lost items 3 times',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, give yourself or an ally an item from the Quartermaster item Supply each round except when performing a long rest',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.summoner: [
@@ -209,7 +236,21 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Perform 3 different summon actions before your first rest and keep those cards in your active area for the entire scenario',
+          ),
+          Mastery(
+            masteryDetails:
+                'Perform 6 different summon abilities from your ability cards over the course of the first rounds of 6 scenarios',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // NIGHTSHROUD
     ClassCodes.nightshroud: [
       Masteries(
         [
@@ -223,7 +264,21 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, infuse or consume DARK during each of your turns',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform an attack ability during your turn in 5 consecutive rounds',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // PLAGUEHERALD
     ClassCodes.plagueherald: [
       Masteries(
         [
@@ -238,13 +293,27 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single turn, kill 3 or more enemies without drawing an attack modifier card',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, either apply or remove poison from an ally or enemy each round',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // BERSERKER
     ClassCodes.berserker: [
       Masteries(
         [
           Mastery(
             masteryDetails:
-                'Lose at least one hit point during each of your turns, without ever performing the bottom action of ~Blood ~Pact',
+                'Lose at least one hit point during each of your turns, without ever performing the bottom action of *Blood Pact*',
           ),
           Mastery(
             masteryDetails:
@@ -253,7 +322,20 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails: 'Kill 20 enemies with retaliate',
+          ),
+          Mastery(
+            masteryDetails:
+                'For an entire scenario, never end your turn with your current hit point value above half your maximum',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // SOOTHSINGER
     ClassCodes.soothsinger: [
       Masteries(
         [
@@ -267,6 +349,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, perform 7 different SONG actions',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, create 20 or more Notes and use each Note you create in a SONG',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.doomstalker: [
@@ -304,7 +399,7 @@ class MasteriesRepository {
         [
           Mastery(
             masteryDetails:
-                'Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of ~Formless ~Power or ~Shaping ~the ~Ether',
+                'Consume at least two different elements with each of four different attack abilities without ever performing the bottom action of *Formless Power* or *Shaping the Ether*',
           ),
           Mastery(
             masteryDetails:
@@ -680,7 +775,7 @@ class MasteriesRepository {
           ),
           Mastery(
             masteryDetails:
-                'Trigger an ongoing effect on ~Chaotic ~Recursion six or more times in one round.',
+                'Trigger an ongoing effect on *Chaotic Recursion* six or more times in one round.',
           ),
         ],
       ),

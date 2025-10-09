@@ -120,6 +120,9 @@ class PlayerClasses {
     PlayerClass(
         race: CharacterRaces.aesther,
         name: 'Summoner',
+        variantNames: {
+          Variant.gloomhaven2E: 'Soultether',
+        },
         classCode: ClassCodes.summoner,
         icon: 'summoner.svg',
         category: ClassCategory.gloomhaven,

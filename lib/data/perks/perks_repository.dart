@@ -15,8 +15,10 @@ class PerksRepository {
   static const _two = 'two';
   static const _three = 'three';
   static const _four = 'four';
+  static String xp(int num) => 'xp$num';
 
   // Words as numbers
+  static const _plusZero = 'pluszero';
   static const _plusOne = 'plusone';
   static const _plusTwo = 'plustwo';
 
@@ -25,6 +27,8 @@ class PerksRepository {
   static const _cards = 'cards';
   static const _rolling = 'Rolling';
   static const _loss = 'LOSS';
+  static const _shuffle = 'SHUFFLE';
+  static const _null = 'NULL';
 
   // Effects and conditions
   static const _damage = 'DAMAGE';
@@ -49,14 +53,24 @@ class PerksRepository {
   static const _critters = 'CRITTERS';
   static const _invisible = 'INVISIBLE';
   static const _impair = 'IMPAIR';
+  static const _brittle = 'BRITTLE';
 
   static const _attack = 'ATTACK';
   static const _range = 'RANGE';
   static const _move = 'MOVE';
   static const _teleport = 'TELEPORT';
+  // TODO: add this asset
+  static const _flying = 'FLYING';
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
+
+  // Class specific
+  // TODO: add these three assets
+  static const _tear = 'TEAR';
+  static const _supplies = 'SUPPLIES';
+  static const _song = 'SONG';
+  static const _berserker = 'Berserker';
 
   // Elements
   static const _fire = 'FIRE';
@@ -78,11 +92,16 @@ class PerksRepository {
   static const _negative = 'negative';
   static const _scenario = 'scenario';
   static const _atTheStartOfEachScenario = 'At the start of each scenario';
+  static const _atTheEndOfEachScenario = 'At the end of each scenario';
   static const _ignoreItemMinusOneEffects =
       'Ignore item item_minus_one effects';
+  static const _ignoreItemMinusOneEffectsAndAdd =
+      'Ignore item item_minus_one effects and $_addLowercase';
+  static const _ignoreItemMinusOneEffectsAndRemove =
+      'Ignore item item_minus_one effects and $_removeLowercase';
   static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
   static const _ignoreNegativeScenarioEffects =
-      'Ignore negative scenario effects';
+      'Ignore $_negative $_scenario effects';
   static const _ignoreNegativeScenarioEffectsAndAdd =
       'Ignore negative scenario effects and add';
   static const _ignoreNegativeScenarioEffectsAndRemove =
@@ -158,10 +177,9 @@ class PerksRepository {
           Perk(
               'Add one +0 $_disarm $_rolling card and one +0 $_muddle $_rolling card'),
           Perk('$_add $_one +3 card'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 "$_shield 1" card'),
           Perk(
-              '$_ignoreItemMinusOneEffects and $_addLowercase $_one +1 "$_shield 1" card'),
-          Perk(
-              '[Rested and Ready:] $_wheneverYouLongRest, add +1 $_move to your first move ability the following round'),
+              '**Rested and Ready:** $_wheneverYouLongRest, add +1 $_move to your first move ability the following round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -192,8 +210,7 @@ class PerksRepository {
           Perk('$_add $_one +3 $_card'),
           Perk(
               '$_add $_one $_disarm $_rolling and $_one $_muddle $_rolling $_card'),
-          Perk(
-              '$_ignoreItemMinusOneEffects and $_addLowercase $_two +1 $_cards'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_two +1 $_cards'),
           Perk(
             '$_onceEachScenario, during your turn, you may perform: $_loot 1, if this ability loots at least one money token, you may $_refresh one $_body item',
             quantity: 2,
@@ -275,7 +292,7 @@ class PerksRepository {
           Perk('Add two +1 "$_heal 2, self" cards'),
           Perk('$_ignoreScenarioEffectsAndAdd two +0 $_fire $_rolling cards'),
           Perk(
-            '[Rejuvenating Vapor:] $_wheneverYouLongRest, you may perform "$_heal 2, $_range 3"',
+            '**Rejuvenating Vapor:** $_wheneverYouLongRest, you may perform "$_heal 2, $_range 3"',
             quantity: 2,
             grouped: true,
           ),
@@ -309,7 +326,7 @@ class PerksRepository {
             '$_ignoreScenarioEffectsAndAdd $_one +0 "$_heal 1, Target 1 ally" $_card',
           ),
           Perk(
-            '$_onceEachScenario, one adjacent ally may use one of your ~potion $_pocket items during their turn without it becoming $_loss',
+            '$_onceEachScenario, one adjacent ally may use one of your *potion* $_pocket items during their turn without it becoming $_loss',
           ),
           Perk(
             'Whenever you perform an action with $_loss, you may $_anyElement',
@@ -380,7 +397,7 @@ class PerksRepository {
           ),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Etheric Bond:] $_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first return it to your hand'),
+              '**Etheric Bond:** $_wheneverYouShortRest, if *Reviving Ether* is in your discard pile, first return it to your hand'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -414,7 +431,7 @@ class PerksRepository {
             '$_onceEachScenario, when you would suffer $_damage, you may gain $_invisible and $_stun to negate the $_damage',
           ),
           Perk(
-            '$_wheneverYouShortRest, if ~Reviving ~Ether is in your discard pile, first $_recover it',
+            '$_wheneverYouShortRest, if *Reviving Ether* is in your discard pile, first $_recover it',
           ),
           Perk(
             'At the end of each of your turns during which you performed an action with $_loss, gain $_bless',
@@ -479,7 +496,7 @@ class PerksRepository {
           Perk('Add one +0 "$_invisible, self", $_rolling card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Cloak of Invisibility:] $_onceEachScenario, during your turn, perform "$_invisible, self"',
+            '**Cloak of Invisibility:** $_onceEachScenario, during your turn, perform "$_invisible, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -577,7 +594,7 @@ class PerksRepository {
           Perk(_ignoreItemMinusOneEffects),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Earthquakes:] Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
+            '**Earthquakes:** Whenever a new room is revealed, control all enemies in the newly revealed room: $_move 1, this movement must end in an empty hex',
             quantity: 2,
             grouped: true,
           ),
@@ -670,7 +687,7 @@ class PerksRepository {
               'Add one +0 $_disarm $_rolling card and one +0 $_muddle $_rolling card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Lying Low:] You are considered to be last in initiative order when determining monster focus'),
+              '**Lying Low:** You are considered to be last in initiative order when determining monster focus'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -765,14 +782,52 @@ class PerksRepository {
           Perk('$_ignoreItemMinusOneEffects, and add two +1 cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Shielding Light:] Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
+            '**Shielding Light:** Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
             quantity: 2,
             grouped: true,
           ),
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_two +0 $_light $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_shield 1" $_rolling $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two +1 "$_heal 1, $_range 3" $_cards',
+            quantity: 2,
+          ),
+          Perk(
+              '$_add $_one -1 "You or an adjacent ally may $_recover one level 1 card from the discard pile" $_card'),
+          Perk('$_add $_one $_stun $_rolling $_card'),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one -1 $_card'),
+          Perk(
+            'Whenever you open one or more doors during your turn, gain $_shield 1, $_retaliate 1 for the round',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk('$_wheneverYouLongRest, you may $_light'),
+          Perk(
+            'Whenever one of your heals would cause an ally\'s current hit point value to increase beyond their maximum hit point value, that ally gains $_ward',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // QUARTERMASTER
     ClassCodes.quartermaster: [
       Perks(
         [
@@ -825,14 +880,53 @@ class PerksRepository {
           Perk('Add one +0 $_stun $_rolling card'),
           Perk('$_ignoreItemMinusOneEffects, and add two +1 cards'),
           Perk(
-            '[Well Supplied:] $_onceEachScenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
+            '**Well Supplied:** $_onceEachScenario, during your turn, if you have a persistent Quartermaster ability card in your active area, you may recover up to four cards from your discard pile',
             quantity: 2,
             grouped: true,
           ),
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_two -1 $_cards with $_one +0 $_muddle $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +0 "Gain 10 $_supplies" $_card',
+            quantity: 3,
+          ),
+          Perk(
+              '$_replace $_two +0 $_cards with $_two $_pierce 3 $_rolling $_cards'),
+          Perk(
+            '$_replace $_one +1 $_card with $_two +0 "Gain the *Barbed Strip* or *Iron Plate* item" $_cards',
+            quantity: 2,
+          ),
+          Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
+          Perk(
+            '$_add $_one "Gain the *Scroll of Relocation* or *Sharpened Dirk* item" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one $_stun $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one +0 $_card'),
+          Perk(
+              'You may bring one additional $_pocket item into each $_scenario'),
+          Perk(
+              'Your party may purchase items from each faction as though the items\' costs were five gold less and your reputation with that faction was two greater'),
+          Perk(
+            '$_wheneverYouLongRest, gain 10 $_supplies',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // SUMMONER/SOULTETHER
     ClassCodes.summoner: [
       Perks(
         [
@@ -880,14 +974,47 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffectsAndAdd two +1 cards'),
           Perk(
-            '[Phase Out:] $_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
+            '**Phase Out:** $_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
             quantity: 2,
             grouped: true,
           ),
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "After the attack ability, grant one of your summons: $_teleport 2" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_invisible, Target 1 of your summons" $_card',
+            quantity: 3,
+          ),
+          Perk(
+              '$_replace $_one +0 $_card with $_two $_wound $_rolling $_cards'),
+          Perk(
+              '$_replace $_one +0 $_card with $_two $_poison $_rolling $_cards'),
+          Perk('$_replace $_two +1 $_cards with $_two +1 $_curse $_cards'),
+          Perk('$_add $_one +2 $_fire/$_air $_card'),
+          Perk('$_add $_one +2 $_fire/$_dark $_card'),
+          Perk('$_add $_one +2 $_air/$_dark $_card'),
+          Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
+          Perk(
+              'At the beginning of each round in which you long rest, all your summons gain $_shield 1 for the round'),
+          Perk(
+              '$_onceEachScenario, during your turn, $_teleport one of your summons to an empty hex adjacent to you'),
+          Perk(
+            '$_onceEachScenario, during ordering of initiative, after all ability cards have been revealed, all your summons gain $_invisible',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // NIGHTSHROUD
     ClassCodes.nightshroud: [
       Perks(
         [
@@ -944,12 +1071,49 @@ class PerksRepository {
           Perk('Add two +0 "$_heal 1, self" $_rolling cards'),
           Perk('$_ignoreScenarioEffectsAndAdd two +1 cards'),
           Perk(
-            '[Empowering Night:] At the start of the scenario, you may discard two cards to add a card with an action containing a persistent symbol from your pool to your hand and immediately play it, performing that action',
+            '**Empowering Night:** At the start of the scenario, you may discard two cards to add a card with an action containing a persistent symbol from your pool to your hand and immediately play it, performing that action',
             quantity: 2,
             grouped: true,
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_remove $_two -1 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+              '$_replace $_one -1 $_card with $_two "After the attack ability, grant one adjacent ally or self: $_teleport 2" $_rolling $_cards'),
+          Perk('$_replace $_one $_null $_card with $_one -2 $_shuffle $_card'),
+          Perk(
+            '$_replace $_two +0 $_cards with $_two +1 "If this attack kills the target, shuffle one $_curse card into the monster attack modifier deck" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 $_dark $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +1 $_card with $_one +0 "Place one $_tear in a hex adjacent to the target" $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
+          Perk('$_wheneverYouLongRest, you may $_dark'),
+          Perk(
+            '$_onceEachScenario, during your turn, place one $_tear in an adjacent hex',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'If a $_curse causes an enemy to deal no $_damage during its attack, that enemy suffers $_damage 3',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.plagueherald: [
@@ -1001,14 +1165,53 @@ class PerksRepository {
           Perk('Add two +0 $_curse $_rolling cards'),
           Perk('$_ignoreScenarioEffectsAndAdd one +1 card'),
           Perk(
-            '[Xorn\'s Boon:] $_onceEachScenario, during your turn, cause each enemy that has $_poison to suffer $_damage 1 and gain $_muddle and each ally who has $_poison to suffer $_damage 1 and gain $_strengthen',
+            '**Xorn\'s Boon:** $_onceEachScenario, during your turn, cause each enemy that has $_poison to suffer $_damage 1 and gain $_muddle and each ally who has $_poison to suffer $_damage 1 and gain $_strengthen',
             quantity: 2,
             grouped: true,
           ),
         ],
         variant: Variant.frosthavenCrossover,
-      )
+      ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "Give the target or one enemy within $_range 2 of the target $_brittle" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_curse $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card',
+            quantity: 2,
+          ),
+          Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
+          Perk(
+            '$_add $_one +1 $_stun $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_add $_three +0 "Give the target or one enemy within $_range 2 of the target $_poison" $_rolling $_cards'),
+          Perk('$_add $_two "$_heal 1, Target 1 ally" $_rolling $_cards'),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
+          Perk('You have $_flying'),
+          Perk(
+              'Whenever you heal from a long rest, you may remove $_poison from one ally to add $_plusOne $_heal'),
+          Perk(
+            '$_onceEachScenario, when an enemy that has $_brittle would die, first control that enemy and have it perform the abilities on its ability card, adding $_brittle to all its attacks, then it dies',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // BERSERKER
     ClassCodes.berserker: [
       Perks(
         [
@@ -1067,11 +1270,47 @@ class PerksRepository {
           Perk('Add two +0 "$_heal 1, self" $_rolling cards'),
           Perk(_ignoreItemMinusOneEffects),
           Perk(
-              '[Rapid Recovery:] Whenever you heal from a long rest, add $_plusOne $_heal'),
+              '**Rapid Recovery:** Whenever you heal from a long rest, add $_plusOne $_heal'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk('$_remove $_one -2 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "$_heal 1, self" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_two +0 $_cards with $_one +1 "You may suffer $_damage 2 to add $_plusTwo $_attack" $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_replace $_one +0 $_card with $_two $_wound $_rolling $_cards'),
+          Perk(
+            '$_add $_one +2 $_fire $_card',
+            quantity: 2,
+          ),
+          Perk('$_add $_one $_stun $_rolling $_card'),
+          Perk(
+              '$_add $_one 2x "Suffer $_damage equal to half your current hit point value (rounded down)" $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 $_card'),
+          Perk('Whenever you heal from a long rest, $_addLowercase +1 $_heal'),
+          Perk(
+            '$_onceEachScenario, when $_damage from an attack would reduce your current hit point value to less than 1, instead set your current hit point value to 1 and perform: $_attack 2, Target the attacker',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'At the end of each of your turns, you may control all adjacent enemies: $_attack $_plusZero, Target $_berserker',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // SOOTHSINGER
     ClassCodes.soothsinger: [
       Perks(
         [
@@ -1120,10 +1359,47 @@ class PerksRepository {
           Perk('$_add $_three +1 $_rolling $_cards'),
           Perk('$_add $_three +0 $_curse $_rolling $_cards'),
           Perk(
-              '[Storyteller:] At the end of each scenario, each character in that scenario gains 8 experience if you successfully completed your battle goal'),
+              '**Storyteller:** $_atTheEndOfEachScenario, each character in that scenario gains 8 experience if you successfully completed your battle goal'),
         ],
         variant: Variant.frosthavenCrossover,
-      )
+      ),
+      Perks(
+        [
+          Perk(
+              '$_replace $_one -2 $_card with $_one -2 "$_bless, Target 2" $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 "Skip moving your character tokens on active $_song at the end of this round" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 $_stun $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_two +0 $_cards with $_one +1 "$_strengthen, Target 1 ally" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card and $_one +1 $_card with $_two +2 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one "Grant one ally: $_move 2 or $_attack 2" $_rolling $_card',
+            quantity: 3,
+          ),
+          Perk('$_add $_three $_curse $_rolling $_cards'),
+          Perk(
+              '$_atTheEndOfEachScenario, each character in that scenario gains ${xp(8)} if you completed your battle goal'),
+          Perk(
+              'Whenever you perform a $_song action, if you have any unused Notes, gain one Note of your choice in addition to any other Note gained that round'),
+          Perk(
+            'During ordering of initiative in rounds in which you declare a long rest, gain one Note of your choice, and each of your allies may decrease their initiative by 10',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.doomstalker: [
       Perks(
@@ -1174,7 +1450,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffectsAndAdd one +1 $_immobilize card'),
           Perk(
-              '[Marked for the Hunt:] At the beginning of each round in which you long rest, you may choose one ally to gain the benefits of any of your active Dooms as if the Dooms were in that ally\'s active area for the round'),
+              '**Marked for the Hunt:** At the beginning of each round in which you long rest, you may choose one ally to gain the benefits of any of your active Dooms as if the Dooms were in that ally\'s active area for the round'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1238,7 +1514,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-              '[Revitalizing Medicine:] Whenever an ally performs the Heal ability of ~Medical ~Pack or ~Large ~Medical ~Pack, that character may first remove one negative condition'),
+              '**Revitalizing Medicine:** Whenever an ally performs the Heal ability of *Medical Pack* or *Large Medical Pack*, that character may first remove one negative condition'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1290,7 +1566,7 @@ class PerksRepository {
           Perk('$_add $_four +0 $_earth $_cards'),
           Perk(_ignoreScenarioEffects),
           Perk(
-            '[Elemental Proficiency:] $_atTheStartOfEachScenario and whenever you long rest, $_anyElement',
+            '**Elemental Proficiency:** $_atTheStartOfEachScenario and whenever you long rest, $_anyElement',
             quantity: 2,
             grouped: true,
           ),
@@ -1351,7 +1627,7 @@ class PerksRepository {
           Perk(
               '$_ignoreScenarioEffectsAndAdd $_two +0 $_earth $_rolling $_cards'),
           Perk(
-            '[Bear Treat:] During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "$_move 3; $_loot 1; If the loot ability was performed: $_heal 3, self"',
+            '**Bear Treat:** During each round in which you long rest, at initiative 99, you may skip the bear\'s normal turn to Command: "$_move 3; $_loot 1; If the loot ability was performed: $_heal 3, self"',
             quantity: 2,
             grouped: true,
           ),
@@ -1414,7 +1690,7 @@ class PerksRepository {
               '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
           Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
           Perk(
-              '[Spinning Up:] At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
+              '**Spinning Up:** At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1471,7 +1747,7 @@ class PerksRepository {
           Perk('$_add $_two +0 $_curse $_rolling $_cards'),
           Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
           Perk(
-              '[Tip the Scales:] Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck'),
+              '**Tip the Scales:** Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck'),
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1528,7 +1804,7 @@ class PerksRepository {
               '$_add $_two +0 "All adjacent enemies suffer $_damage 1" $_cards'),
           Perk('$_ignoreScenarioEffectsAndRemove $_one -1 $_card'),
           Perk(
-            '[Remodeling:] Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within $_range 2 (of you)',
+            '**Remodeling:** Whenever you rest while adjacent to a wall or obstacle, you may place an obstacle in an empty hex within $_range 2 (of you)',
             quantity: 2,
             grouped: true,
           )
@@ -1582,7 +1858,7 @@ class PerksRepository {
             quantity: 3,
           ),
           Perk(
-              '[Hasty Pick-up:] $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
+              '**Hasty Pick-up:** $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -1641,10 +1917,9 @@ class PerksRepository {
             '$_add $_one +1 $_fire/$_light $_card',
             quantity: 2,
           ),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_two +1 $_cards'),
           Perk(
-              '$_ignoreItemMinusOneEffects and $_addLowercase $_two +1 $_cards'),
-          Perk(
-            '[Brilliant Aegis:] Whenever you are attacked, you may consume_$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
+            '**Brilliant Aegis:** Whenever you are attacked, you may consume_$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
             quantity: 2,
             grouped: true,
           )
@@ -1677,8 +1952,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreScenarioEffectsAndRemove $_one +0 $_card'),
           // here
-          Perk(
-              '$_ignoreItemMinusOneEffects and $_removeLowercase $_one +0 $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one +0 $_card'),
           Perk(
               '$_wheneverYouShortRest, $_one adjacent enemy suffers $_damage 1, and you perform "$_heal 1, self"'),
           Perk(
@@ -1720,9 +1994,8 @@ class PerksRepository {
             '$_add $_one "$_ward, $_regenerate, self" $_rolling $_card',
             quantity: 2,
           ),
-          Perk('$_add $_one -2 BRITTLE and one +3 "BRITTLE, self" $_card'),
-          Perk(
-              '$_ignoreItemMinusOneEffects and $_removeLowercase $_one +0 $_card'),
+          Perk('$_add $_one -2 $_brittle and one +3 "$_brittle, self" $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one +0 $_card'),
           Perk(
               '$_atTheStartOfEachScenario, you may perform "$_strengthen, $_wound, self" or "$_ward, $_immobilize, self"'),
           Perk('Once each $_scenario, avoid an Overdrive exhaustion check'),
@@ -1784,7 +2057,7 @@ class PerksRepository {
           Perk('$_add $_one +3 $_card'),
           Perk(_ignoreScenarioEffects),
           Perk(
-              '[Grave Defense:] Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has $_poison')
+              '**Grave Defense:** Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has $_poison')
         ],
         variant: Variant.frosthavenCrossover,
       ),
@@ -2363,8 +2636,7 @@ class PerksRepository {
           ),
           Perk('$_add $_two "$_heal 1, self" $_rolling $_cards'),
           Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
-          Perk(
-              '$_ignoreItemMinusOneEffects and $_addLowercase $_one +1 $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 $_card'),
           Perk(
             '$_wheneverYouLongRest, you may move $_one of your character tokens backward $_one slot',
             quantity: 2,
@@ -2373,7 +2645,7 @@ class PerksRepository {
           Perk(
               'You may bring $_one additional $_oneHand item into each $_scenario'),
           Perk(
-              'At the end of each $_scenario, you may discard up to $_two loot $_cards, except ~Random ~Item, to draw that many new loot $_cards'),
+              'At the end of each $_scenario, you may discard up to $_two loot $_cards, except *Random Item*, to draw that many new loot $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -2443,8 +2715,7 @@ class PerksRepository {
             '$_add $_two "$_heal 1, self" $_rolling $_cards',
             quantity: 2,
           ),
-          Perk(
-              '$_ignoreItemMinusOneEffects and $_removeLowercase $_one -1 $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one -1 $_card'),
           Perk(
               'At the end of each of your long rests, grant $_one ally within $_range 3: $_move 2'),
           Perk(
@@ -2551,7 +2822,7 @@ class PerksRepository {
           Perk(
               '$_replace $_two +0 $_cards with $_two $_pierce 3 $_rolling $_cards'),
           Perk('$_add $_two +1 $_push 3 $_cards'),
-          Perk('$_add $_one 2x "BRITTLE, self" $_card'),
+          Perk('$_add $_one 2x "$_brittle, self" $_card'),
           Perk(
             '$_add $_one +1 "$_regenerate, self" $_rolling card',
             quantity: 2,
@@ -2660,7 +2931,7 @@ class PerksRepository {
           ),
           Perk('Replace one -2 card with one -1 $_stun card'),
           Perk(
-            'Replace one +0 card with one +0 BRITTLE card',
+            'Replace one +0 card with one +0 $_brittle card',
             quantity: 2,
           ),
           Perk(
@@ -2682,7 +2953,7 @@ class PerksRepository {
             grouped: true,
           ),
           Perk(
-              '$_atTheStartOfEachScenario, you may gain BRITTLE to gain 2 RESONANCE'),
+              '$_atTheStartOfEachScenario, you may gain $_brittle to gain 2 RESONANCE'),
           Perk(
               'Whenever a new room is revealed, you may reveal the top card of both the monster attack modifier deck and all allies\' attack modifier decks'),
         ],
@@ -2900,7 +3171,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_one +3 $_card'),
-          Perk('$_ignoreItemMinusOneEffects and add two +1 $_cards'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd two +1 $_cards'),
           Perk('$_wheneverYouLongRest, you may PRESSURE_GAIN or PRESSURE_LOSE'),
           Perk(
               'Whenever you would gain $_poison, you may suffer $_damage 1 to prevent the condition'),
@@ -3087,7 +3358,7 @@ class PerksRepository {
             '$_add $_one +2 $_fire/$_ice $_card',
             quantity: 2,
           ),
-          Perk('$_add $_one +0 BRITTLE $_card'),
+          Perk('$_add $_one +0 $_brittle $_card'),
           Perk(
               'At the start of each $_scenario, you may either gain $_wound to generate $_fire or gain CHILL to generate $_ice'),
           Perk(
@@ -3118,7 +3389,7 @@ class PerksRepository {
           ),
           Perk(
               'Add two +1 "+2 instead if you CRYSTALLIZE PERSIST one space" cards'),
-          Perk('Add one +0 BRITTLE card'),
+          Perk('Add one +0 $_brittle card'),
           Perk(
             '$_ignoreNegativeItemEffects and at the start of each scenario, you may play a level 1 card from your hand to perform a CRYSTALLIZE action of the card',
             quantity: 2,
