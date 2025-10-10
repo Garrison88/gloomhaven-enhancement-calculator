@@ -224,6 +224,9 @@ class PlayerClasses {
     PlayerClass(
       race: CharacterRaces.vermling,
       name: 'Beast Tyrant',
+      variantNames: {
+        Variant.gloomhaven2E: 'Wildfury',
+      },
       classCode: ClassCodes.beastTyrant,
       icon: 'beast_tyrant.svg',
       category: ClassCategory.gloomhaven,

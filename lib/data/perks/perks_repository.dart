@@ -57,6 +57,7 @@ class PerksRepository {
   static const _rupture = 'RUPTURE';
   static const _enfeeble = 'ENFEEBLE';
   static const _empower = 'EMPOWER';
+  static const _safeguard = 'SAFEGUARD';
 
   static const _attack = 'ATTACK';
   static const _range = 'RANGE';
@@ -72,6 +73,9 @@ class PerksRepository {
   static const _supplies = 'SUPPLIES'; // TODO: add this asset
   static const _song = 'SONG'; // TODO: add this asset
   static const _prescription = 'PRESCRIPTION'; // TODO: add this asset
+  static const _doom = 'DOOM'; // TODO: add this asset
+  static const _bear = 'BEAR'; // TODO: add this asset
+  static const _command = 'COMMAND'; // TODO: add this asset
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
   static const _reaver = 'REAVER';
@@ -1492,7 +1496,7 @@ class PerksRepository {
           Perk(
               '$_atTheStartOfEachScenario, reveal the top $_card of each monster ability $_card deck in the $_scenario'),
           Perk(
-            '$_wheneverYouLongRest, after you $_recover your $_cards from your discard pile, you may play one $_card from your hand to perform a Doom action of the card',
+            '$_wheneverYouLongRest, after you $_recover your $_cards from your discard pile, you may play one $_card from your hand to perform a $_doom action of the card',
             quantity: 2,
             grouped: true,
           ),
@@ -1609,7 +1613,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
-
+    // ELEMENTALIST
     ClassCodes.elementalist: [
       Perks(
         [
@@ -1663,8 +1667,42 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Perks(
+        [
+          Perk('$_replace $_one -1 $_card with $_one +0 $_fire/$_air $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 $_fire/$_earth $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 $_ice/$_air $_card'),
+          Perk('$_replace $_one -1 $_card with $_one +0 $_ice/$_earth $_card'),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_fire/$_ice $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_air/$_earth $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_light/$_dark $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two $_anyElement $_rolling $_cards',
+            quantity: 2,
+          ),
+          Perk(
+              '$_ignoreScenarioEffectsAndAdd $_one $_anyElement $_rolling $_card'),
+          Perk('$_atTheStartOfEachScenario, you may $_anyElement'),
+          Perk('$_wheneverYouLongRest, consume_$_anyElement : $_anyElement'),
+          Perk(
+            '$_fire, $_ice, $_air, and $_earth do not wane at the end of each round',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
-
+    // BEAST TYRANT / WILDFURY
     ClassCodes.beastTyrant: [
       Perks(
         [
@@ -1723,6 +1761,43 @@ class PerksRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_one "$_heal 2, Target $_bear" $_rolling $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_wound $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +2 "Add $_plusOne $_attack if the Wildfury and $_bear are within $_range 4 of each other" $_card',
+            quantity: 2,
+          ),
+          Perk('$_replace $_one +2 $_card with $_one +4 $_card'),
+          Perk(
+            '$_add $_two +1 $_air/$_earth $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +2 $_push $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_ignoreScenarioEffectsAndAdd $_one +1 "$_safeguard, Target 1 ally" $_card'),
+          Perk(
+              'Whenever $_bear is attacked, treat any 2x attack modifier $_card the enemy draws as +0 instead'),
+          Perk(
+              '$_onceEachScenario, during your turn, $_command: $_move 4.\nIf $_bear exits a hex adjacent to you during this movement, you may $_teleport to an empty hex adjacent to $_bear at the end of the movement'),
+          Perk(
+            'At the start or end of each of your long rests, you may $_air/$_earth and reduce your current hit point value by X (X must be at least 1) to $_command: $_heal X, self',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.bladeswarm: [
@@ -1783,6 +1858,7 @@ class PerksRepository {
         variant: Variant.frosthavenCrossover,
       ),
     ],
+    // DIVINER
     ClassCodes.diviner: [
       Perks(
         [

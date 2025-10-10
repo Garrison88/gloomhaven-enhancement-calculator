@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
@@ -900,42 +901,63 @@ class SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              const SettingsSection(title: 'TESTING'),
-              if (kDebugMode)
+              if (kDebugMode) ...[
+                const SettingsSection(title: 'TESTING'),
                 ListTile(
                   title: const Text('Create All'),
-                  onTap: () => widget.charactersModel.createCharactersTest(),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                    includeAllVariants: true,
+                  ),
                 ),
-              // ListTile(
-              //   title: const Text('Create Gloomhaven'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(
-              //     classCategory: ClassCategory.gloomhaven,
-              //   ),
-              // ),
-              // ListTile(
-              //   title: const Text('Create Jaws of the Lion'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(
-              //     classCategory: ClassCategory.jawsOfTheLion,
-              //   ),
-              // ),
-              // ListTile(
-              //   title: const Text('Create Frosthaven'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(
-              //     classCategory: ClassCategory.frosthaven,
-              //   ),
-              // ),
-              // ListTile(
-              //   title: const Text('Create Crimson Scales'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(
-              //     classCategory: ClassCategory.crimsonScales,
-              //   ),
-              // ),
-              // ListTile(
-              //   title: const Text('Create Custom'),
-              //   onTap: () => widget.charactersModel.createCharactersTest(
-              //     classCategory: ClassCategory.custom,
-              //   ),
-              // ),
+                ListTile(
+                  title: const Text('Gloomhaven'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                      classCategory: ClassCategory.gloomhaven),
+                ),
+                ListTile(
+                  title: const Text('Gloomhaven & variants'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                    classCategory: ClassCategory.gloomhaven,
+                    includeAllVariants: true,
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Frosthaven'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                      classCategory: ClassCategory.frosthaven),
+                ),
+                ListTile(
+                  title: const Text('Frosthaven & variants'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                    classCategory: ClassCategory.frosthaven,
+                    includeAllVariants: true,
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Crimson Scales'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                      classCategory: ClassCategory.crimsonScales),
+                ),
+                ListTile(
+                  title: const Text('Crimson Scales & variants'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                    classCategory: ClassCategory.crimsonScales,
+                    includeAllVariants: true,
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Custom'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                      classCategory: ClassCategory.custom),
+                ),
+                ListTile(
+                  title: const Text('Custom & variants'),
+                  onTap: () => widget.charactersModel.createCharactersTest(
+                    classCategory: ClassCategory.custom,
+                    includeAllVariants: true,
+                  ),
+                ),
+              ],
               const SizedBox(
                 height: smallPadding,
               ),

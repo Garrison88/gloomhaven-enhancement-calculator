@@ -420,6 +420,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // ELEMENTALIST
     ClassCodes.elementalist: [
       Masteries(
         [
@@ -434,7 +435,21 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, consume 4 or more elements in a single turn 5 times',
+          ),
+          Mastery(
+            masteryDetails:
+                'Once in 3 different scenarios, have all 6 elements strong or waning at the same time',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // BEAST TYRANT / WILDFURY
     ClassCodes.beastTyrant: [
       Masteries(
         [
@@ -448,6 +463,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, infuse or consume AIR or EARTH during each of your turns',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, kill 4 or more enemies with COMMAND attacks of 7 or greater (after all bonuses, before attack modifiers)',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.bladeswarm: [

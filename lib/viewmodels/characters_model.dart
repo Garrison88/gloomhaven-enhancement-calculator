@@ -167,7 +167,7 @@ class CharactersModel with ChangeNotifier {
 // Usable for testing purposes to create all characters with all variants and random attributes.
   Future<void> createCharactersTest({
     ClassCategory? classCategory,
-    bool includeAllVariants = true,
+    bool includeAllVariants = false,
   }) async {
     var random = Random();
 
