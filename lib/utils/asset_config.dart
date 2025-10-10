@@ -124,6 +124,7 @@ const standardAssets = {
   'Chieftain': AssetConfig('class_icons/chieftain.svg', invertColor: true),
   'Boneshaper': AssetConfig('class_icons/boneshaper.svg', invertColor: true),
   'Berserker': AssetConfig('berserker.svg', invertColor: true),
+  'Doomstalker': AssetConfig('doomstalker.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),

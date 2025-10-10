@@ -648,11 +648,11 @@ class PlayerClasses {
       category: ClassCategory.crimsonScales,
       primaryColor: 0xffc63072,
       secondaryColor: 0xff70d686,
-      // traits: [
-      //   CharacterTraits.strong,
-      //   CharacterTraits.arcane,
-      //   CharacterTraits.persuasive,
-      // ],
+      traits: [
+        CharacterTraits.arcane,
+        CharacterTraits.persuasive,
+        CharacterTraits.strong,
+      ],
     ),
     PlayerClass(
       race: CharacterRaces.lurker,

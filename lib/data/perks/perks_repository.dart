@@ -54,23 +54,28 @@ class PerksRepository {
   static const _invisible = 'INVISIBLE';
   static const _impair = 'IMPAIR';
   static const _brittle = 'BRITTLE';
+  static const _rupture = 'RUPTURE';
+  static const _enfeeble = 'ENFEEBLE';
+  static const _empower = 'EMPOWER';
 
   static const _attack = 'ATTACK';
   static const _range = 'RANGE';
   static const _move = 'MOVE';
   static const _teleport = 'TELEPORT';
-  // TODO: add this asset
-  static const _flying = 'FLYING';
+  static const _flying = 'FLYING'; // TODO: add this asset
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
 
   // Class specific
-  // TODO: add these three assets
-  static const _tear = 'TEAR';
-  static const _supplies = 'SUPPLIES';
-  static const _song = 'SONG';
+  static const _tear = 'TEAR'; // TODO: add this asset
+  static const _supplies = 'SUPPLIES'; // TODO: add this asset
+  static const _song = 'SONG'; // TODO: add this asset
   static const _berserker = 'Berserker';
+  static const _doomstalker = 'Doomstalker';
+  static const _reaver = 'REAVER';
+  static const _ritualist = 'RITUALIST';
+  static const _conqueror = 'CONQUEROR';
 
   // Elements
   static const _fire = 'FIRE';
@@ -91,28 +96,32 @@ class PerksRepository {
   // Scenario and Item related
   static const _negative = 'negative';
   static const _scenario = 'scenario';
-  static const _atTheStartOfEachScenario = 'At the start of each scenario';
-  static const _atTheEndOfEachScenario = 'At the end of each scenario';
+  static const _atTheStartOfEachScenario = 'At the start of each $_scenario';
+  static const _atTheEndOfEachScenario = 'At the end of each $_scenario';
   static const _ignoreItemMinusOneEffects =
       'Ignore item item_minus_one effects';
   static const _ignoreItemMinusOneEffectsAndAdd =
       'Ignore item item_minus_one effects and $_addLowercase';
   static const _ignoreItemMinusOneEffectsAndRemove =
       'Ignore item item_minus_one effects and $_removeLowercase';
-  static const _ignoreNegativeItemEffects = 'Ignore negative item effects';
+  static const _ignoreNegativeItemEffects = 'Ignore $_negative item effects';
+  static const _ignoreNegativeItemEffectsAndAdd =
+      'Ignore $_negative item effects and add';
+  static const _ignoreNegativeItemEffectsAndRemove =
+      'Ignore $_negative item effects and remove';
   static const _ignoreNegativeScenarioEffects =
       'Ignore $_negative $_scenario effects';
   static const _ignoreNegativeScenarioEffectsAndAdd =
-      'Ignore negative scenario effects and add';
+      'Ignore $_negative $_scenario effects and add';
   static const _ignoreNegativeScenarioEffectsAndRemove =
-      'Ignore negative scenario effects and $_removeLowercase';
-  static const _ignoreScenarioEffects = 'Ignore scenario effects';
+      'Ignore $_negative $_scenario effects and $_removeLowercase';
+  static const _ignoreScenarioEffects = 'Ignore $_scenario effects';
   static const _ignoreScenarioEffectsAndAdd =
-      'Ignore scenario effects and $_addLowercase';
+      'Ignore $_scenario effects and $_addLowercase';
   static const _ignoreScenarioEffectsAndRemove =
-      'Ignore scenario effects and remove';
-  static const _onceEachScenario = 'Once each scenario';
-  static const _oncePerScenario = 'Once per scenario';
+      'Ignore $_scenario effects and remove';
+  static const _onceEachScenario = 'Once each $_scenario';
+  static const _oncePerScenario = 'Once per $_scenario';
 
   // Rest-related
   static const _wheneverYouLongRest = 'Whenever you long rest';
@@ -146,8 +155,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_one +1 "$_shield  Self" $_card'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_one +1 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -635,6 +643,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // MINDTHIEF
     ClassCodes.mindthief: [
       Perks(
         [
@@ -728,6 +737,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SUNKEEPER
     ClassCodes.sunkeeper: [
       Perks(
         [
@@ -752,8 +762,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_two $_rolling "$_shield 1, Self" $_cards'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_two +1 $_cards'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_two +1 $_cards'),
           Perk(_ignoreNegativeScenarioEffects),
         ],
         variant: Variant.base,
@@ -852,8 +861,7 @@ class PerksRepository {
             '$_add $_one +0 "$_recover an item" $_card',
             quantity: 3,
           ),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_two +1 $_cards'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_two +1 $_cards'),
         ],
         variant: Variant.base,
       ),
@@ -1116,6 +1124,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // PLAGUEHERALD
     ClassCodes.plagueherald: [
       Perks(
         [
@@ -1401,6 +1410,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // DOOMSTALKER
     ClassCodes.doomstalker: [
       Perks(
         [
@@ -1453,6 +1463,45 @@ class PerksRepository {
               '**Marked for the Hunt:** At the beginning of each round in which you long rest, you may choose one ally to gain the benefits of any of your active Dooms as if the Dooms were in that ally\'s active area for the round'),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one -1 "$_doomstalker performs: $_attack 2, $_range 5" $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_two +0 $_cards with $_two +1 $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +0 "Grant one of your summons adjacent to the target: $_attack $_plusZero" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one +3 $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one $_stun $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_rolling $_card'),
+          Perk(
+              '$_atTheStartOfEachScenario, reveal the top $_card of each monster ability $_card deck in the $_scenario'),
+          Perk(
+            '$_wheneverYouLongRest, after you $_recover your $_cards from your discard pile, you may play one $_card from your hand to perform a Doom action of the card',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'On each of your summons\' turns, you may have them skip their turn and instead perform $_move $_plusZero treating you as their focus',
+            quantity: 2,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.sawbones: [
@@ -1657,8 +1706,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_one +2 $_muddle $_card'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_one +1 $_card'),
           Perk('$_ignoreNegativeScenarioEffectsAndAdd $_one +1 $_card'),
         ],
         variant: Variant.base,
@@ -1686,8 +1734,7 @@ class PerksRepository {
             '$_add $_two $_heal 1 $_rolling $_cards',
             quantity: 2,
           ),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_one +1 $_card'),
           Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
           Perk(
               '**Spinning Up:** At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
@@ -1933,11 +1980,11 @@ class PerksRepository {
           Perk(
               '$_replace $_one -2 $_card with $_one -1 "If the target has an attribute, $_addLowercase $_wound, $_poison, $_muddle" $_card'),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 ENFEEBLE $_card',
+            '$_replace $_one -1 $_card with $_one +0 $_enfeeble $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 "EMPOWER, $_range 2" $_card',
+            '$_replace $_one -1 $_card with $_one +0 "$_empower, $_range 2" $_card',
             quantity: 2,
           ),
           Perk(
@@ -2085,8 +2132,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk('$_add $_one +2 $_fire/$_earth $_card'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one +1 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndAdd $_one +1 $_card'),
           Perk(
               '$_ignoreScenarioEffectsAndAdd $_one "+X, where X is the number of active Cultivate actions" card'),
         ],
@@ -2151,8 +2197,7 @@ class PerksRepository {
           Perk('$_add $_two $_rolling "$_shield 1, Self" $_cards'),
           Perk('$_add $_two $_rolling "$_heal 1, Self" $_cards'),
           Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one +0 $_card'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_removeLowercase $_one +0 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndRemove $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2277,7 +2322,7 @@ class PerksRepository {
           ),
           Perk('$_add $_two $_rolling $_wound $_cards'),
           Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling $_fire $_card'),
+              '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling $_fire $_card'),
           Perk(
               '$_ignoreNegativeScenarioEffectsAndAdd $_one $_rolling $_fire $_card'),
         ],
@@ -2447,8 +2492,7 @@ class PerksRepository {
             '$_add $_one +2 Shackle $_card',
             quantity: 2,
           ),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_removeLowercase $_one +0 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndRemove $_one +0 $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2512,7 +2556,7 @@ class PerksRepository {
           ),
           Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one +0 $_card'),
           Perk(
-              '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling "Consume_$_anyElement : $_anyElement" $_card'),
+              '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "Consume_$_anyElement : $_anyElement" $_card'),
         ],
         variant: Variant.base,
       ),
@@ -2584,21 +2628,21 @@ class PerksRepository {
       Perks(
         [
           Perk(
-              '$_replace $_one -2 $_card with $_one -1 RUPTURE and $_wound $_card'),
+              '$_replace $_one -2 $_card with $_one -1 $_rupture and $_wound $_card'),
           Perk(
             '$_replace $_one -1 $_card with $_one +0 $_wound $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one -1 $_card with $_one +0 RUPTURE $_card',
+            '$_replace $_one -1 $_card with $_one +0 $_rupture $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "$_add +3 instead if the target has RUPTURE or $_wound" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_add +3 instead if the target has $_rupture or $_wound" $_card',
             quantity: 3,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one $_rolling "$_heal 1, Self, EMPOWER" $_card',
+            '$_replace $_one +0 $_card with $_one $_rolling "$_heal 1, Self, $_empower" $_card',
             quantity: 3,
           ),
           Perk(
@@ -2606,7 +2650,7 @@ class PerksRepository {
           Perk(
               'Become SATED each time you lose a $_card to negate suffering damage'),
           Perk(
-              'Whenever $_one of your abilities causes at least $_one enemy to gain RUPTURE, immediately after that ability perform "$_move 1"'),
+              'Whenever $_one of your abilities causes at least $_one enemy to gain $_rupture, immediately after that ability perform "$_move 1"'),
           Perk(
               '$_ignoreNegativeScenarioEffects, and $_removeLowercase $_one -1 $_card'),
         ],
@@ -3286,7 +3330,7 @@ class PerksRepository {
             quantity: 2,
           ),
           Perk(
-            '$_ignoreNegativeItemEffects and $_addLowercase $_one $_rolling "+1 if $_light is Strong or Waning" $_card',
+            '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "+1 if $_light is Strong or Waning" $_card',
           ),
           Perk(
             'Gain $_shield 1 while you occupy hazardous terrain',
@@ -3309,29 +3353,63 @@ class PerksRepository {
           Perk(
               '$_replace $_one -1 $_card with $_one $_rolling $_push 1, $_air $_card'),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "RITUALIST : ENFEEBLE / CONQUEROR : EMPOWER, Self" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_ritualist : $_enfeeble / $_conqueror : $_empower, Self" $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / CONQUEROR : EMPOWER, Self" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_reaver : $_rupture / $_conqueror : $_empower, Self" $_card',
             quantity: 2,
           ),
           Perk(
-            '$_replace $_one +0 $_card with $_one +1 "REAVER : RUPTURE / RITUALIST : ENFEEBLE" $_card',
+            '$_replace $_one +0 $_card with $_one +1 "$_reaver : $_rupture / $_ritualist : $_enfeeble" $_card',
             quantity: 2,
           ),
           Perk(
               '$_add $_one $_rolling "$_recover $_one $_oneHand or $_twoHand item" $_card'),
           Perk('Each time you long rest, perform: ALL_STANCES'),
           Perk(
-              'You may bring one additional $_oneHand item into each scenario'),
+              'You may bring one additional $_oneHand item into each $_scenario'),
           Perk('Each time you short rest, $_recover one spent $_oneHand item'),
-          Perk(
-              '$_ignoreNegativeItemEffects and $_removeLowercase one -1 $_card'),
+          Perk('$_ignoreNegativeItemEffectsAndRemove one -1 $_card'),
         ],
         variant: Variant.base,
       ),
+      Perks(
+        [
+          Perk(
+              '$_replace $_one -2 $_card with $_one +0 $_reaver $_ritualist $_conqueror $_rolling $_card'),
+          Perk(
+              '$_replace $_one -1 $_card with $_one +0 $_pierce 2 $_fire $_rolling $_card'),
+          Perk(
+              '$_replace $_one -1 $_card with $_one +0 $_push 1 $_air $_rolling $_card'),
+          Perk(
+              '$_replace $_one -1 $_card with $_one +0 "$_shield 1" $_earth $_rolling $_card'),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_reaver : $_rupture or $_ritualist : $_enfeeble" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_reaver : $_rupture or $_conqueror : $_empower, self" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 "$_ritualist : $_enfeeble or $_conqueror : $_empower, self" $_card',
+            quantity: 2,
+          ),
+          Perk(
+              '$_add $_one +0 "$_recover one $_oneHand or $_twoHand item" $_rolling $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndRemove $_one -1 $_card'),
+          Perk(
+              '**Eyes of the Ritualist:** $_wheneverYouLongRest, perform $_reaver $_ritualist $_conqueror'),
+          Perk(
+              '**Hands of the Reaver:** $_wheneverYouShortRest, $_recover one spent $_oneHand item'),
+          Perk(
+              '**Shoulders of the Conqueror:** You may bring one additional $_oneHand item into each $_scenario'),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
     ],
+
     ClassCodes.rimehearth: [
       Perks(
         [
@@ -3362,7 +3440,7 @@ class PerksRepository {
           Perk(
               'At the start of each $_scenario, you may either gain $_wound to generate $_fire or gain CHILL to generate $_ice'),
           Perk(
-              '$_ignoreNegativeItemEffects and $_add $_one $_rolling $_fire/$_ice $_card'),
+              '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling $_fire/$_ice $_card'),
         ],
         variant: Variant.base,
       ),
@@ -3459,7 +3537,7 @@ class PerksRepository {
           Perk('Add one +0 "$_bless, Self" card'),
           Perk('Add two +1 "+2 instead if you suffer 1 damage" cards'),
           Perk('Add one +2 "+3 instead if you suffer 1 damage" card'),
-          Perk('$_ignoreNegativeItemEffects and remove one -1 card'),
+          Perk('$_ignoreNegativeItemEffectsAndRemove one -1 card'),
         ],
         variant: Variant.base,
       ),

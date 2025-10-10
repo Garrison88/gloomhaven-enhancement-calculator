@@ -378,6 +378,18 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails: 'Kill 20 Doomed enemies',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single round, you and one of your summons must perform a combined total of 6 or more attack abilities',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
     ClassCodes.sawbones: [
       Masteries(
@@ -752,20 +764,21 @@ class MasteriesRepository {
         ],
       )
     ],
-    // ClassCodes.incarnate: [
-    //   Masteries(
-    //     [
-    //       Mastery(
-    //         masteryDetails:
-    //             'Never end your turn in the same spirit you started in that turn',
-    //       ),
-    //       Mastery(
-    //         masteryDetails:
-    //             'Perform fifteen attacks using One_Hand or Two_Hand items',
-    //       ),
-    //     ],
-    //   ),
-    // ],
+    ClassCodes.incarnate: [
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Never end your turn in the same spirit you started in that turn',
+          ),
+          Mastery(
+            masteryDetails:
+                'Perform fifteen attacks using One_Hand or Two_Hand items',
+          ),
+        ],
+        variant: Variant.frosthavenCrossover,
+      ),
+    ],
     ClassCodes.core: [
       Masteries(
         [

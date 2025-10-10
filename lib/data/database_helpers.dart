@@ -1,7 +1,7 @@
 import 'dart:convert' as convert;
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gloomhaven_enhancement_calc/data/masteries/masteries_repository.dart';
 import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
 import 'package:path/path.dart';
@@ -241,6 +241,9 @@ class DatabaseHelper {
         if (oldVersion <= 12) {
           // Added Bruiser, Tinkerer, Spellweaver, Silent Knife, Cragheart,
           // and Mindthief Gloomhaven Second Edition classes
+          await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+        }
+        if (kDebugMode) {
           await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
         }
         // Always update metadata table
