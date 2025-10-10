@@ -391,6 +391,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SAWBONES
     ClassCodes.sawbones: [
       Masteries(
         [
@@ -404,6 +405,19 @@ class MasteriesRepository {
           ),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'In a single scenario, give an ally a medical pack or PRESCRIPTION each round except when performing a long rest',
+          ),
+          Mastery(
+            masteryDetails:
+                'In a single scenario, never attack an undamaged enemy while there are any damaged monsters alive, and perform at least 10 attacks',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     ClassCodes.elementalist: [

@@ -71,6 +71,7 @@ class PerksRepository {
   static const _tear = 'TEAR'; // TODO: add this asset
   static const _supplies = 'SUPPLIES'; // TODO: add this asset
   static const _song = 'SONG'; // TODO: add this asset
+  static const _prescription = 'PRESCRIPTION'; // TODO: add this asset
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
   static const _reaver = 'REAVER';
@@ -1504,6 +1505,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SAWBONES
     ClassCodes.sawbones: [
       Perks(
         [
@@ -1566,6 +1568,45 @@ class PerksRepository {
               '**Revitalizing Medicine:** Whenever an ally performs the Heal ability of *Medical Pack* or *Large Medical Pack*, that character may first remove one negative condition'),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk('$_remove $_two -1 $_cards'),
+          Perk(
+              '$_replace $_one -2 $_card with $_one -2 "Give one adjacent ally or self one medical pack" $_card'),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +1 $_card',
+            quantity: 3,
+          ),
+          Perk(
+            '$_replace $_two +0 $_cards with $_one +1 "You may gain $_disarm to add $_stun" $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_two +1 "Add $_plusOne $_attack if an ally has an active $_prescription" $_cards',
+            quantity: 2,
+          ),
+          Perk(
+            '$_add $_one "$_heal 3, $_range 1" $_rolling $_card',
+            quantity: 2,
+          ),
+          Perk(
+            'Add $_plusOne $_heal to all heal abilities on "Medical Pack" ability cards',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'Each City Phase after completing a scenario, your or one ally\'s donation to the Sanctuary of the Great Oak is free',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'At the end of each of your rests, if an ally has an active $_prescription, gain one "Medical Pack" ability card and move the token on one ally\'s active $_prescription backward one slot',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
 
