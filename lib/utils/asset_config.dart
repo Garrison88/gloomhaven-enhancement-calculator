@@ -32,6 +32,9 @@ final themeSpecificAssets = {
   'LOSS': (bool darkTheme) => AssetConfig(
         darkTheme ? 'loss.svg' : 'loss_light.svg',
       ),
+  'PERSISTENT': (bool darkTheme) => AssetConfig(
+        darkTheme ? 'persistent.svg' : 'persistent_light.svg',
+      ),
   'DAMAGE': (bool darkTheme) => AssetConfig(
         darkTheme ? 'damage.svg' : 'damage_light.svg',
       ),
@@ -124,8 +127,9 @@ const standardAssets = {
   'Cultivate': AssetConfig('cultivate.svg', invertColor: true),
   'Chieftain': AssetConfig('class_icons/chieftain.svg', invertColor: true),
   'Boneshaper': AssetConfig('class_icons/boneshaper.svg', invertColor: true),
-  'Berserker': AssetConfig('berserker.svg', invertColor: true),
-  'Doomstalker': AssetConfig('doomstalker.svg', invertColor: true),
+  'Berserker': AssetConfig('class_icons/berserker.svg', invertColor: true),
+  'Doomstalker': AssetConfig('class_icons/doomstalker.svg', invertColor: true),
+  'Bladeswarm': AssetConfig('class_icons/bladeswarm.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),

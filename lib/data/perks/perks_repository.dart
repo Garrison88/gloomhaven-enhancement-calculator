@@ -78,6 +78,7 @@ class PerksRepository {
   static const _command = 'COMMAND'; // TODO: add this asset
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
+  static const _bladeswarm = 'Bladeswarm';
   static const _reaver = 'REAVER';
   static const _ritualist = 'RITUALIST';
   static const _conqueror = 'CONQUEROR';
@@ -1702,7 +1703,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
-    // BEAST TYRANT / WILDFURY
+    // BEAST TYRANT/WILDFURY
     ClassCodes.beastTyrant: [
       Perks(
         [
@@ -1856,6 +1857,45 @@ class PerksRepository {
               '**Spinning Up:** At the start of your first turn each scenario, you may play one card from your hand to perform a persistent loss action of that card'),
         ],
         variant: Variant.frosthavenCrossover,
+      ),
+      Perks(
+        [
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 $_wound $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one -1 $_card with $_one +0 $_poison $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_air/$_dark $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +1 $_earth/$_light $_card',
+            quantity: 2,
+          ),
+          Perk(
+            '$_replace $_one +0 $_card with $_one +0 "$_add $_plusOne for each card with $_loss in $_bladeswarm\'s active area" $_card',
+            quantity: 2,
+          ),
+          Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
+          Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 $_card'),
+          Perk(
+              '$_wheneverYouLongRest, you may $_teleport to the hex occupied by one of your summons and simultaneously $_teleport that summon to the hex you occupied'),
+          Perk(
+            '$_onceEachScenario, when you perform an action with $_loss, you may immediately play one card from your hand to perform an action with $_loss of the card',
+            quantity: 2,
+            grouped: true,
+          ),
+          Perk(
+            'You may additionally bring four $_oneHand items, two $_twoHand items, or two $_oneHand items and one $_twoHand item into each $_scenario',
+            quantity: 3,
+            grouped: true,
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
       ),
     ],
     // DIVINER

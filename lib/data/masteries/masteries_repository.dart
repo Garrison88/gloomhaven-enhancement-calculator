@@ -5,6 +5,7 @@ import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 
 class MasteriesRepository {
   static final Map<String, List<Masteries>> masteriesMap = {
+    // BRUTE/BRUISER
     ClassCodes.brute: [
       Masteries(
         [
@@ -33,6 +34,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // TINKERER
     ClassCodes.tinkerer: [
       Masteries(
         [
@@ -60,6 +62,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SPELLWEAVER
     ClassCodes.spellweaver: [
       Masteries(
         [
@@ -86,6 +89,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SCOUNDREL/SILENT KNIFE
     ClassCodes.scoundrel: [
       Masteries(
         [
@@ -113,6 +117,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // CRAGHEART
     ClassCodes.cragheart: [
       Masteries(
         [
@@ -140,6 +145,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // MINDTHIEF
     ClassCodes.mindthief: [
       Masteries(
         [
@@ -167,6 +173,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SUNKEEPER
     ClassCodes.sunkeeper: [
       Masteries(
         [
@@ -222,6 +229,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // SUMMONER/SOULTETHER
     ClassCodes.summoner: [
       Masteries(
         [
@@ -364,6 +372,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // DOOMSTALKER
     ClassCodes.doomstalker: [
       Masteries(
         [
@@ -478,6 +487,7 @@ class MasteriesRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
+    // BLADESWARM
     ClassCodes.bladeswarm: [
       Masteries(
         [
@@ -492,7 +502,20 @@ class MasteriesRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      Masteries(
+        [
+          Mastery(
+            masteryDetails:
+                'Perform 6 different PERSISTENT LOSS abilities with no more than 3 of the 6 being summon abilities',
+          ),
+          Mastery(
+            masteryDetails: 'Gain this mastery when you feel you deserve it',
+          ),
+        ],
+        variant: Variant.gloomhaven2E,
+      ),
     ],
+    // DIVINER
     ClassCodes.diviner: [
       Masteries(
         [
