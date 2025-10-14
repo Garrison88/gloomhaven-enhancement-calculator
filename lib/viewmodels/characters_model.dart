@@ -28,11 +28,6 @@ class CharactersModel with ChangeNotifier {
   bool isScrolledToTop = true;
   ScrollController charScreenScrollController = ScrollController();
   ScrollController enhancementCalcScrollController = ScrollController();
-  final previousRetirementsController = TextEditingController();
-  final nameController = TextEditingController();
-  final xpController = TextEditingController();
-  final goldController = TextEditingController();
-  final notesController = TextEditingController();
 
   bool showRetired;
   bool isEditMode = false;
@@ -42,11 +37,6 @@ class CharactersModel with ChangeNotifier {
     pageController.dispose();
     charScreenScrollController.dispose();
     enhancementCalcScrollController.dispose();
-    previousRetirementsController.dispose();
-    nameController.dispose();
-    xpController.dispose();
-    goldController.dispose();
-    notesController.dispose();
     super.dispose();
   }
 
@@ -321,22 +311,12 @@ class CharactersModel with ChangeNotifier {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;
     } else {
-      if (index > characters.length - 1 || index == -1) {
+      if (index < 0 || index >= characters.length) {
         currentCharacter = characters.last;
-        SharedPrefs().initialPage = characters.indexOf(characters.last);
+        SharedPrefs().initialPage = characters.length - 1;
       } else {
         currentCharacter = characters[index];
         SharedPrefs().initialPage = index;
-      }
-      if (currentCharacter != null) {
-        previousRetirementsController.text =
-            currentCharacter!.previousRetirements.toString();
-        nameController.text = currentCharacter!.name;
-        xpController.text =
-            currentCharacter!.xp != 0 ? '${currentCharacter!.xp}' : '';
-        goldController.text =
-            currentCharacter!.gold != 0 ? '${currentCharacter!.gold}' : '';
-        notesController.text = currentCharacter!.notes;
       }
     }
     updateTheme();
@@ -346,7 +326,7 @@ class CharactersModel with ChangeNotifier {
     if (characters.isEmpty) {
       SharedPrefs().primaryClassColor = 0xff4e7ec1;
     } else if (currentCharacter != null) {
-      if (currentCharacter != null && currentCharacter!.isRetired) {
+      if (currentCharacter!.isRetired) {
         SharedPrefs().primaryClassColor =
             SharedPrefs().darkTheme ? 0xffffffff : 0xff000000;
       } else {

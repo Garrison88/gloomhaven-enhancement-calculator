@@ -19,9 +19,12 @@ class PerksSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Perks (',
+              'Perks:',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            SizedBox(
+              width: smallPadding * 2,
             ),
             Text(
               '${character.numOfSelectedPerks()}',
@@ -34,7 +37,7 @@ class PerksSection extends StatelessWidget {
                   ),
             ),
             Text(
-              ' / ${Character.maximumPerks(character)})',
+              ' / ${Character.maximumPerks(character)}',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium,
             )

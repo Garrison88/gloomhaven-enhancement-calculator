@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/check_row_divider.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/conditional_checkbox.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/constants.dart';
@@ -86,8 +88,7 @@ class PerkRowState extends State<PerkRow> {
               : Row(
                   children: List.generate(
                     widget.perks.length,
-                    (index) => Checkbox(
-                      visualDensity: VisualDensity.comfortable,
+                    (index) => ConditionalCheckbox(
                       value: widget.character.characterPerks
                           .firstWhere(
                             (element) =>
@@ -95,22 +96,16 @@ class PerkRowState extends State<PerkRow> {
                                 widget.perks[index].perkId,
                           )
                           .characterPerkIsSelected,
-                      onChanged: charactersModel.isEditMode &&
-                              !widget.character.isRetired
-                          ? (bool? value) {
-                              if (value != null) {
-                                charactersModel.togglePerk(
-                                  characterPerks:
-                                      widget.character.characterPerks,
-                                  perk: widget.character.characterPerks
-                                      .firstWhere((element) =>
-                                          element.associatedPerkId ==
-                                          widget.perks[index].perkId),
-                                  value: value,
-                                );
-                              }
-                            }
-                          : null,
+                      isEditMode: charactersModel.isEditMode,
+                      isRetired: widget.character.isRetired,
+                      onChanged: (bool value) => charactersModel.togglePerk(
+                        characterPerks: widget.character.characterPerks,
+                        perk: widget.character.characterPerks.firstWhere(
+                            (element) =>
+                                element.associatedPerkId ==
+                                widget.perks[index].perkId),
+                        value: value,
+                      ),
                     ),
                   ),
                 ),
@@ -118,11 +113,9 @@ class PerkRowState extends State<PerkRow> {
               ? const SizedBox(
                   width: smallPadding,
                 )
-              : Container(
+              : CheckRowDivider(
                   height: height,
-                  width: 1,
                   color: Theme.of(context).dividerTheme.color,
-                  margin: const EdgeInsets.only(right: 12),
                 ),
           SizeProviderWidget(
             onChildSize: (Size? size) {

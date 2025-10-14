@@ -456,7 +456,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
-    // SCOUNDREL/SILENT KNIFE
+    // SCOUNDREL
     ClassCodes.scoundrel: [
       Perks(
         [
@@ -517,6 +517,7 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      // SILENT KNIFE
       Perks(
         [
           Perk('$_remove $_one -2 $_card'),
@@ -1703,7 +1704,7 @@ class PerksRepository {
         variant: Variant.gloomhaven2E,
       ),
     ],
-    // BEAST TYRANT/WILDFURY
+    // BEAST TYRANT
     ClassCodes.beastTyrant: [
       Perks(
         [
@@ -1763,6 +1764,7 @@ class PerksRepository {
         ],
         variant: Variant.frosthavenCrossover,
       ),
+      // WILDFURY
       Perks(
         [
           Perk(

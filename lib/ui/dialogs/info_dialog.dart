@@ -233,22 +233,22 @@ class _InfoDialogState extends State<InfoDialog> {
             )
           ];
           _eligibleForIcons = EnhancementData.enhancements
-            ..where(
-              (element) =>
-                  element.category == EnhancementCategory.negEffect ||
-                  element.category == EnhancementCategory.posEffect ||
-                  [
-                        'Move',
-                        'Attack',
-                        'Shield',
-                        'Heal',
-                        'Retaliate',
-                        'Push',
-                        'Pull',
-                      ].contains(element.name) &&
-                      element.category != EnhancementCategory.summonPlusOne,
-            )
-            ..toList()
+              .where(
+                (element) =>
+                    element.category == EnhancementCategory.negEffect ||
+                    element.category == EnhancementCategory.posEffect ||
+                    [
+                          'Move',
+                          'Attack',
+                          'Shield',
+                          'Heal',
+                          'Retaliate',
+                          'Push',
+                          'Pull',
+                        ].contains(element.name) &&
+                        element.category != EnhancementCategory.summonPlusOne,
+              )
+              .toList()
             ..add(
               Enhancement(
                 EnhancementCategory.posEffect,
