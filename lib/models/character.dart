@@ -129,23 +129,11 @@ class Character {
         columnVariant: variant.name,
       };
 
-  Color primaryClassColor(
-    Brightness brightness,
-  ) =>
-      isRetired
-          ? brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black
-          : Color(
-              playerClass.primaryColor,
-            );
-
-  Color secondaryClassColor(
-    Brightness brightness,
-  ) =>
-      Color(
-        playerClass.secondaryColor ?? playerClass.primaryColor,
-      );
+  Color getEffectiveColor(Brightness brightness) {
+    return isRetired
+        ? (brightness == Brightness.dark ? Colors.white : Colors.black)
+        : Color(playerClass.primaryColor);
+  }
 
   static int level(int xp) => PlayerClasses.levelByXp(xp);
 

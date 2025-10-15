@@ -10,7 +10,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
+import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:intl/intl.dart';
@@ -23,17 +23,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final AppModel appModel;
-  final CharactersModel charactersModel;
-
   final EnhancementCalculatorModel enhancementCalculatorModel;
 
-  const SettingsScreen({
-    super.key,
-    required this.appModel,
-    required this.charactersModel,
-    required this.enhancementCalculatorModel,
-  });
+  const SettingsScreen({super.key, required this.enhancementCalculatorModel});
 
   @override
   SettingsScreenState createState() => SettingsScreenState();
@@ -100,9 +92,10 @@ class SettingsScreenState extends State<SettingsScreen> {
               const SettingsSection(title: 'DISPLAY'),
               Theme(
                 data: Theme.of(context).copyWith(
-                    colorScheme: Theme.of(context)
-                        .colorScheme
-                        .copyWith(outline: Colors.transparent)),
+                  colorScheme: Theme.of(
+                    context,
+                  ).colorScheme.copyWith(outline: Colors.transparent),
+                ),
                 child: SwitchListTile(
                   secondary: Icon(
                     Theme.of(context).brightness == Brightness.dark
@@ -117,53 +110,46 @@ class SettingsScreenState extends State<SettingsScreen> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   activeThumbImage: const AssetImage('images/elem_dark.png'),
-                  activeColor: const Color(0xff1f272e),
+                  activeThumbColor: const Color(0xff1f272e),
                   inactiveThumbColor: const Color(0xffeda50b),
-                  inactiveTrackColor:
-                      const Color(0xffeda50b).withValues(alpha: 0.75),
+                  inactiveTrackColor: const Color(
+                    0xffeda50b,
+                  ).withValues(alpha: 0.75),
                   activeTrackColor: const Color(0xff1f272e),
                   inactiveThumbImage: const AssetImage('images/elem_light.png'),
-                  value: widget.appModel.themeMode == ThemeMode.dark,
+                  value: context.watch<ThemeProvider>().useDarkMode,
                   onChanged: (val) {
-                    SharedPrefs().darkTheme = val;
-                    widget.appModel.updateTheme(
-                      themeMode: val ? ThemeMode.dark : ThemeMode.light,
-                    );
-                    widget.charactersModel.updateTheme();
+                    context.read<ThemeProvider>().updateDarkMode(val);
                   },
                 ),
               ),
               SwitchListTile(
-                secondary: Icon(
-                  MdiIcons.formatFont,
-                ),
+                secondary: Icon(MdiIcons.formatFont),
                 title: const Text('Use Inter Font'),
                 subtitle: Text(
                   'Replace stylized fonts with Inter to improve readability',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                value: widget.appModel.useDefaultFonts,
+                value: context.watch<ThemeProvider>().useDefaultFonts,
                 onChanged: (val) {
-                  SharedPrefs().useDefaultFonts = val;
-                  widget.appModel.useDefaultFonts = val;
-                  widget.appModel.updateTheme();
+                  context.read<ThemeProvider>().updateDefaultFonts(val);
                 },
               ),
               SwitchListTile(
                 secondary: Icon(
-                  widget.charactersModel.showRetired
+                  context.read<CharactersModel>().showRetired
                       ? Icons.visibility_rounded
                       : Icons.visibility_off_rounded,
                 ),
                 title: const Text('Show Retired Characters'),
                 subtitle: Text(
-                    'Toggle visibility of retired characters in the Characters tab to reduce clutter',
-                    style: Theme.of(context).textTheme.titleLarge),
-                value: widget.charactersModel.showRetired,
+                  'Toggle visibility of retired characters in the Characters tab to reduce clutter',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                value: context.read<CharactersModel>().showRetired,
                 onChanged: (val) {
-                  context.read<AppModel>().updateTheme();
                   setState(() {
-                    widget.charactersModel.toggleShowRetired();
+                    context.read<CharactersModel>().toggleShowRetired();
                   });
                 },
               ),
@@ -178,9 +164,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                   "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                title: const Text(
-                  'Custom Classes',
-                ),
+                title: const Text('Custom Classes'),
                 value: SharedPrefs().customClasses,
                 onChanged: (val) {
                   setState(() {
@@ -203,115 +187,105 @@ class SettingsScreenState extends State<SettingsScreen> {
                     });
                   } else {
                     showDialog<bool>(
-                        context: context,
-                        builder: (_) {
-                          bool envelopeXSolved = false;
-                          return StatefulBuilder(
-                            builder: (
-                              BuildContext context,
-                              StateSetter setState,
-                            ) {
-                              return AlertDialog(
-                                content: Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
+                      context: context,
+                      builder: (_) {
+                        bool envelopeXSolved = false;
+                        return StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) {
+                                return AlertDialog(
+                                  content: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: maxDialogWidth,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Text(
+                                          'Enter the solution to the puzzle',
+                                        ),
+                                        const SizedBox(height: 8),
+                                        TextField(
+                                          autofocus: true,
+                                          onChanged: (String val) {
+                                            setState(() {
+                                              envelopeXSolved =
+                                                  val.toLowerCase().trim() ==
+                                                  'bladeswarm';
+                                            });
+                                          },
+                                          decoration: const InputDecoration(
+                                            labelText: 'Solution',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                          'Enter the solution to the puzzle'),
-                                      const SizedBox(height: 8),
-                                      TextField(
-                                        autofocus: true,
-                                        onChanged: (String val) {
-                                          setState(() {
-                                            envelopeXSolved =
-                                                val.toLowerCase().trim() ==
-                                                    'bladeswarm';
-                                          });
-                                        },
-                                        decoration: const InputDecoration(
-                                          labelText: 'Solution',
-                                          border: OutlineInputBorder(),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                    ),
+                                    TextButton(
+                                      onPressed: envelopeXSolved
+                                          ? () {
+                                              Navigator.of(context).pop(true);
+                                            }
+                                          : null,
+                                      child: Text(
+                                        'Solve',
+                                        style: TextStyle(
+                                          color: envelopeXSolved
+                                              ? Theme.of(
+                                                  context,
+                                                ).colorScheme.primary
+                                              : Theme.of(context).disabledColor,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text(
-                                      'Cancel',
                                     ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                  ),
-                                  TextButton(
-                                    onPressed: envelopeXSolved
-                                        ? () {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        : null,
-                                    child: Text(
-                                      'Solve',
-                                      style: TextStyle(
-                                        color: envelopeXSolved
-                                            ? Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                            : Theme.of(context).disabledColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }).then(
-                      (bool? value) {
-                        if (value != null && value) {
-                          setState(
-                            () {
-                              SharedPrefs().envelopeX = val;
-                            },
-                          );
-                          ScaffoldMessenger.of(context)
-                            ..clearSnackBars()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      'images/class_icons/bladeswarm.svg',
-                                      width: iconSize,
-                                      height: iconSize,
-                                      colorFilter: ColorFilter.mode(
-                                        Theme.of(context).colorScheme.onSurface,
-                                        BlendMode.srcIn,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: smallPadding,
-                                    ),
-                                    const Text('Bladeswarm unlocked'),
                                   ],
-                                ),
-                              ),
-                            );
-                        }
+                                );
+                              },
+                        );
                       },
-                    );
+                    ).then((bool? value) {
+                      if (value != null && value) {
+                        setState(() {
+                          SharedPrefs().envelopeX = val;
+                        });
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'images/class_icons/bladeswarm.svg',
+                                    width: iconSize,
+                                    height: iconSize,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.onSurface,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  const SizedBox(width: smallPadding),
+                                  const Text('Bladeswarm unlocked'),
+                                ],
+                              ),
+                            ),
+                          );
+                      }
+                    });
                   }
                 },
               ),
               SwitchListTile(
                 secondary: const Icon(Icons.warning_rounded),
-                title: const Text(
-                  "Unlock 'Envelope V'",
-                ),
+                title: const Text("Unlock 'Envelope V'"),
                 subtitle: Text(
                   'Crimson Scales spoilers',
                   style: Theme.of(context).textTheme.titleLarge,
@@ -324,109 +298,98 @@ class SettingsScreenState extends State<SettingsScreen> {
                     });
                   } else {
                     showDialog<bool>(
-                        context: context,
-                        builder: (_) {
-                          bool envelopeVSolved = false;
-                          return StatefulBuilder(
-                            builder: (
-                              BuildContext context,
-                              StateSetter setState,
-                            ) {
-                              return AlertDialog(
-                                content: Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Text(
-                                          'What is the password for unlocking this envelope?'),
-                                      const SizedBox(height: 8),
-                                      TextField(
-                                        autofocus: true,
-                                        onChanged: (String val) {
-                                          setState(
-                                            () {
-                                              envelopeVSolved =
-                                                  val.toLowerCase().trim() ==
-                                                      'ashes';
-                                            },
-                                          );
-                                        },
-                                        decoration: const InputDecoration(
-                                          labelText: 'Password',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                      context: context,
+                      builder: (_) {
+                        bool envelopeVSolved = false;
+                        return StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
+                            return AlertDialog(
+                              content: Container(
+                                constraints: const BoxConstraints(
+                                  maxWidth: maxDialogWidth,
                                 ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text(
-                                      'Cancel',
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                  ),
-                                  TextButton(
-                                    onPressed: envelopeVSolved
-                                        ? () {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        : null,
-                                    child: Text(
-                                      'Unlock',
-                                      style: TextStyle(
-                                        color: envelopeVSolved
-                                            ? Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                            : Theme.of(context).disabledColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }).then(
-                      (bool? value) {
-                        if (value != null && value) {
-                          setState(
-                            () {
-                              SharedPrefs().envelopeV = val;
-                            },
-                          );
-                          ScaffoldMessenger.of(context)
-                            ..clearSnackBars()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    SvgPicture.asset(
-                                      'images/class_icons/vanquisher.svg',
-                                      width: iconSize,
-                                      height: iconSize,
-                                      colorFilter: ColorFilter.mode(
-                                        Theme.of(context).colorScheme.onSurface,
-                                        BlendMode.srcIn,
+                                    const Text(
+                                      'What is the password for unlocking this envelope?',
+                                    ),
+                                    const SizedBox(height: 8),
+                                    TextField(
+                                      autofocus: true,
+                                      onChanged: (String val) {
+                                        setState(() {
+                                          envelopeVSolved =
+                                              val.toLowerCase().trim() ==
+                                              'ashes';
+                                        });
+                                      },
+                                      decoration: const InputDecoration(
+                                        labelText: 'Password',
+                                        border: OutlineInputBorder(),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: smallPadding,
-                                    ),
-                                    const Text('Vanquisher unlocked'),
                                   ],
                                 ),
                               ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                ),
+                                TextButton(
+                                  onPressed: envelopeVSolved
+                                      ? () {
+                                          Navigator.of(context).pop(true);
+                                        }
+                                      : null,
+                                  child: Text(
+                                    'Unlock',
+                                    style: TextStyle(
+                                      color: envelopeVSolved
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
+                                          : Theme.of(context).disabledColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             );
-                        }
+                          },
+                        );
                       },
-                    );
+                    ).then((bool? value) {
+                      if (value != null && value) {
+                        setState(() {
+                          SharedPrefs().envelopeV = val;
+                        });
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    'images/class_icons/vanquisher.svg',
+                                    width: iconSize,
+                                    height: iconSize,
+                                    colorFilter: ColorFilter.mode(
+                                      Theme.of(context).colorScheme.onSurface,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  const SizedBox(width: smallPadding),
+                                  const Text('Vanquisher unlocked'),
+                                ],
+                              ),
+                            ),
+                          );
+                      }
+                    });
                   }
                 },
               ),
@@ -440,12 +403,10 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 value: SharedPrefs().partyBoon,
                 onChanged: (val) {
-                  setState(
-                    () {
-                      SharedPrefs().partyBoon = val;
-                      widget.enhancementCalculatorModel.calculateCost();
-                    },
-                  );
+                  setState(() {
+                    SharedPrefs().partyBoon = val;
+                    widget.enhancementCalculatorModel.calculateCost();
+                  });
                 },
               ),
               Stack(
@@ -468,15 +429,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                             title: Center(
                               child: Text(
                                 'Enhancer',
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineLarge,
                               ),
                             ),
                             content: StatefulBuilder(
-                              builder: (
-                                _,
-                                innerSetState,
-                              ) {
+                              builder: (_, innerSetState) {
                                 return Container(
                                   constraints: const BoxConstraints(
                                     maxWidth: maxDialogWidth,
@@ -495,7 +454,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 .bodyMedium
                                                 ?.copyWith(
                                                   color: null,
-                                                  fontSize: SharedPrefs()
+                                                  fontSize:
+                                                      SharedPrefs()
                                                           .useDefaultFonts
                                                       ? 25
                                                       : null,
@@ -509,8 +469,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 ?.copyWith(
                                                   color:
                                                       SharedPrefs().enhancerLvl1
-                                                          ? null
-                                                          : Colors.grey,
+                                                      ? null
+                                                      : Colors.grey,
                                                   fontSize: 20,
                                                 ),
                                           ),
@@ -527,23 +487,21 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 ?.copyWith(
                                                   color:
                                                       SharedPrefs().enhancerLvl2
-                                                          ? null
-                                                          : Colors.grey,
+                                                      ? null
+                                                      : Colors.grey,
                                                   fontSize: 20,
                                                 ),
                                           ),
                                           value: SharedPrefs().enhancerLvl2,
                                           onChanged: (bool? val) {
                                             if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl2 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
+                                              innerSetState(() {
+                                                SharedPrefs().enhancerLvl2 =
+                                                    val;
+                                                widget
+                                                    .enhancementCalculatorModel
+                                                    .calculateCost();
+                                              });
                                             }
                                           },
                                         ),
@@ -557,23 +515,21 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 ?.copyWith(
                                                   color:
                                                       SharedPrefs().enhancerLvl3
-                                                          ? null
-                                                          : Colors.grey,
+                                                      ? null
+                                                      : Colors.grey,
                                                   fontSize: 20,
                                                 ),
                                           ),
                                           value: SharedPrefs().enhancerLvl3,
                                           onChanged: (bool? val) {
                                             if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl3 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
+                                              innerSetState(() {
+                                                SharedPrefs().enhancerLvl3 =
+                                                    val;
+                                                widget
+                                                    .enhancementCalculatorModel
+                                                    .calculateCost();
+                                              });
                                             }
                                           },
                                         ),
@@ -587,23 +543,21 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 ?.copyWith(
                                                   color:
                                                       SharedPrefs().enhancerLvl4
-                                                          ? null
-                                                          : Colors.grey,
+                                                      ? null
+                                                      : Colors.grey,
                                                   fontSize: 20,
                                                 ),
                                           ),
                                           value: SharedPrefs().enhancerLvl4,
                                           onChanged: (bool? val) {
                                             if (val != null) {
-                                              innerSetState(
-                                                () {
-                                                  SharedPrefs().enhancerLvl4 =
-                                                      val;
-                                                  widget
-                                                      .enhancementCalculatorModel
-                                                      .calculateCost();
-                                                },
-                                              );
+                                              innerSetState(() {
+                                                SharedPrefs().enhancerLvl4 =
+                                                    val;
+                                                widget
+                                                    .enhancementCalculatorModel
+                                                    .calculateCost();
+                                              });
                                             }
                                           },
                                         ),
@@ -615,9 +569,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: const Text(
-                                  'Close',
-                                ),
+                                child: const Text('Close'),
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                 },
@@ -635,16 +587,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                       child: Icon(
                         Icons.open_in_new,
                         size: 30,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: .75),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: .75),
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 32.5,
-                  ),
+                  const SizedBox(width: 32.5),
                 ],
               ),
               const SettingsSection(title: 'BACKUP & RESTORE'),
@@ -659,11 +608,11 @@ class SettingsScreenState extends State<SettingsScreen> {
                   await showDialog<String?>(
                     context: context,
                     builder: (context) {
-                      final TextEditingController fileNameController =
-                          TextEditingController()
-                            ..text =
-                                'ghc_backup_${DateFormat('yyyy-MM-dd_HH:mm').format(DateTime.now())}'
-                                    .replaceAll(RegExp(':'), '-');
+                      final TextEditingController
+                      fileNameController = TextEditingController()
+                        ..text =
+                            'ghc_backup_${DateFormat('yyyy-MM-dd_HH:mm').format(DateTime.now())}'
+                                .replaceAll(RegExp(':'), '-');
                       return AlertDialog(
                         title: Platform.isAndroid
                             ? const Icon(Icons.warning_rounded)
@@ -677,7 +626,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                             children: [
                               if (Platform.isAndroid) ...[
                                 const Text(
-                                    'If another backup file already exists in the Downloads folder with the same name, it will be overwritten'),
+                                  'If another backup file already exists in the Downloads folder with the same name, it will be overwritten',
+                                ),
                                 const SizedBox(height: 8),
                               ],
                               TextField(
@@ -689,8 +639,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.deny(
                                     RegExp(
-                                        '[\\#|\\<|\\>|\\+|\\\$|\\%|\\!|\\`|\\&|\\*|\\\'|\\||\\}|\\{|\\?|\\"|\\=|\\/|\\:|\\\\|\\ |\\@]'),
-                                  )
+                                      '[\\#|\\<|\\>|\\+|\\\$|\\%|\\!|\\`|\\&|\\*|\\\'|\\||\\}|\\{|\\?|\\"|\\=|\\/|\\:|\\\\|\\ |\\@]',
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -698,9 +649,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: const Text(
-                              'Cancel',
-                            ),
+                            child: const Text('Cancel'),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                           if (Platform.isAndroid)
@@ -709,9 +658,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 Icons.save,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
-                              label: const Text(
-                                'Save',
-                              ),
+                              label: const Text('Save'),
                               onPressed: () async {
                                 if (!await _getStoragePermission()) {
                                   return;
@@ -720,21 +667,24 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     .generateBackup();
                                 downloadPath = '/storage/emulated/0/Download';
                                 File backupFile = File(
-                                    '$downloadPath/${fileNameController.text}.txt');
+                                  '$downloadPath/${fileNameController.text}.txt',
+                                );
                                 await backupFile.writeAsString(value);
                                 Navigator.of(context).pop('save');
                               },
                             ),
                           TextButton.icon(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pop(fileNameController.text);
+                              Navigator.of(
+                                context,
+                              ).pop(fileNameController.text);
                             },
                             icon: Platform.isAndroid
                                 ? Icon(
                                     Icons.share,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   )
                                 : Container(),
                             label: Text(
@@ -744,44 +694,33 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ],
                       );
                     },
-                  ).then(
-                    (String? backupName) async {
-                      if (backupName != null) {
-                        if (backupName == 'save') {
-                          ScaffoldMessenger.of(context)
-                            ..clearSnackBars()
-                            ..showSnackBar(
-                              SnackBar(
-                                content: Text('Saved to $downloadPath'),
-                              ),
-                            );
-                        } else {
-                          Directory directory = await getTemporaryDirectory();
-                          downloadPath = directory.path;
-                          String backupValue =
-                              await DatabaseHelper.instance.generateBackup();
-                          File backupFile =
-                              File('$downloadPath/$backupName.txt');
-                          await backupFile.writeAsString(backupValue);
-                          await Share.shareXFiles(
-                            [
-                              XFile(
-                                '$downloadPath/$backupName.txt',
-                              ),
-                            ],
-                            sharePositionOrigin: Offset(
-                                  MediaQuery.of(context).size.height / 2,
-                                  MediaQuery.of(context).size.width / 2,
-                                ) &
-                                const Size(
-                                  3.0,
-                                  4.0,
-                                ),
+                  ).then((String? backupName) async {
+                    if (backupName != null) {
+                      if (backupName == 'save') {
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(content: Text('Saved to $downloadPath')),
                           );
-                        }
+                      } else {
+                        Directory directory = await getTemporaryDirectory();
+                        downloadPath = directory.path;
+                        String backupValue = await DatabaseHelper.instance
+                            .generateBackup();
+                        File backupFile = File('$downloadPath/$backupName.txt');
+                        await backupFile.writeAsString(backupValue);
+                        await Share.shareXFiles(
+                          [XFile('$downloadPath/$backupName.txt')],
+                          sharePositionOrigin:
+                              Offset(
+                                MediaQuery.of(context).size.height / 2,
+                                MediaQuery.of(context).size.width / 2,
+                              ) &
+                              const Size(3.0, 4.0),
+                        );
                       }
-                    },
-                  );
+                    }
+                  });
                 },
               ),
               ListTile(
@@ -801,21 +740,18 @@ class SettingsScreenState extends State<SettingsScreen> {
                             maxWidth: maxDialogWidth,
                           ),
                           child: const Text(
-                              'Restoring a backup file will overwrite any current characters. Do you wish to continue?'),
+                            'Restoring a backup file will overwrite any current characters. Do you wish to continue?',
+                          ),
                         ),
                         actions: <Widget>[
                           TextButton(
-                            child: const Text(
-                              'Cancel',
-                            ),
+                            child: const Text('Cancel'),
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },
                           ),
                           TextButton(
-                            child: const Text(
-                              'Continue',
-                            ),
+                            child: const Text('Continue'),
                             onPressed: () async {
                               if (!await _getStoragePermission()) {
                                 return;
@@ -830,137 +766,148 @@ class SettingsScreenState extends State<SettingsScreen> {
                   if (choice == null || !choice) {
                     return;
                   }
-                  await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowMultiple: false,
-                    allowedExtensions: ['txt'],
-                  ).then(
-                    (FilePickerResult? result) async {
-                      if (result != null) {
-                        String contents;
-                        String? path = result.files.single.path;
-                        if (path == null) {
-                          return;
-                        }
-                        File file = File(path);
-                        contents = file.readAsStringSync();
+                  await FilePicker.platform
+                      .pickFiles(
+                        type: FileType.custom,
+                        allowMultiple: false,
+                        allowedExtensions: ['txt'],
+                      )
+                      .then((FilePickerResult? result) async {
+                        if (result != null) {
+                          String contents;
+                          String? path = result.files.single.path;
+                          if (path == null) {
+                            return;
+                          }
+                          File file = File(path);
+                          contents = file.readAsStringSync();
 
-                        _showLoaderDialog(context);
-                        try {
-                          await DatabaseHelper.instance.restoreBackup(
-                            contents,
-                          );
-                          SharedPrefs().initialPage = 0;
-                          await widget.charactersModel.loadCharacters();
-                          widget.charactersModel.jumpToPage(0);
-                        } catch (e) {
-                          await showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text(
-                                  'Error During Restore Operation',
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
-                                ),
-                                actions: [
-                                  TextButton.icon(
-                                    onPressed: () => Clipboard.setData(
-                                      ClipboardData(
-                                        text: e.toString(),
+                          _showLoaderDialog(context);
+                          try {
+                            await DatabaseHelper.instance.restoreBackup(
+                              contents,
+                            );
+                            SharedPrefs().initialPage = 0;
+                            await context
+                                .read<CharactersModel>()
+                                .loadCharacters();
+                            context.read<CharactersModel>().jumpToPage(0);
+                          } catch (e) {
+                            await showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Error During Restore Operation',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.headlineLarge,
+                                  ),
+                                  actions: [
+                                    TextButton.icon(
+                                      onPressed: () => Clipboard.setData(
+                                        ClipboardData(text: e.toString()),
+                                      ),
+                                      icon: const Icon(Icons.copy),
+                                      label: const Text('Copy'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                  content: Container(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: maxDialogWidth,
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Text(
+                                        'There was an error during the restoration process. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer (through the Settings menu) with your existing backup file and this information:\n\n${e.toString()}',
                                       ),
                                     ),
-                                    icon: const Icon(Icons.copy),
-                                    label: const Text('Copy'),
                                   ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('Close'),
-                                  ),
-                                ],
-                                content: Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Text(
-                                      'There was an error during the restoration process. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer (through the Settings menu) with your existing backup file and this information:\n\n${e.toString()}',
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                                );
+                              },
+                            );
+                          }
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         }
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  );
+                      });
                 },
               ),
               if (kDebugMode) ...[
                 const SettingsSection(title: 'TESTING'),
                 ListTile(
                   title: const Text('Create All'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                    includeAllVariants: true,
-                  ),
+                  onTap: () => context
+                      .read<CharactersModel>()
+                      .createCharactersTest(includeAllVariants: true),
                 ),
                 ListTile(
                   title: const Text('Gloomhaven'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                      classCategory: ClassCategory.gloomhaven),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.gloomhaven,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Gloomhaven & variants'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                    classCategory: ClassCategory.gloomhaven,
-                    includeAllVariants: true,
-                  ),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.gloomhaven,
+                        includeAllVariants: true,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Frosthaven'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                      classCategory: ClassCategory.frosthaven),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.frosthaven,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Frosthaven & variants'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                    classCategory: ClassCategory.frosthaven,
-                    includeAllVariants: true,
-                  ),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.frosthaven,
+                        includeAllVariants: true,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Crimson Scales'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                      classCategory: ClassCategory.crimsonScales),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.crimsonScales,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Crimson Scales & variants'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                    classCategory: ClassCategory.crimsonScales,
-                    includeAllVariants: true,
-                  ),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.crimsonScales,
+                        includeAllVariants: true,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Custom'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                      classCategory: ClassCategory.custom),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.custom,
+                      ),
                 ),
                 ListTile(
                   title: const Text('Custom & variants'),
-                  onTap: () => widget.charactersModel.createCharactersTest(
-                    classCategory: ClassCategory.custom,
-                    includeAllVariants: true,
-                  ),
+                  onTap: () =>
+                      context.read<CharactersModel>().createCharactersTest(
+                        classCategory: ClassCategory.custom,
+                        includeAllVariants: true,
+                      ),
                 ),
               ],
-              const SizedBox(
-                height: smallPadding,
-              ),
+              const SizedBox(height: smallPadding),
             ],
           ),
         ),
@@ -968,25 +915,17 @@ class SettingsScreenState extends State<SettingsScreen> {
       persistentFooterButtons: [
         FutureBuilder(
           future: _packageInfoFuture,
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<PackageInfo> snapshot,
-          ) {
+          builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData) {
               return Column(
                 children: [
-                  const Text(
-                    'Support & Feedback',
-                    textAlign: TextAlign.center,
-                  ),
+                  const Text('Support & Feedback', textAlign: TextAlign.center),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        icon: const FaIcon(
-                          FontAwesomeIcons.discord,
-                        ),
+                        icon: const FaIcon(FontAwesomeIcons.discord),
                         onPressed: () {
                           _launchURL(
                             Uri(
@@ -998,9 +937,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const FaIcon(
-                          FontAwesomeIcons.instagram,
-                        ),
+                        icon: const FaIcon(FontAwesomeIcons.instagram),
                         onPressed: () async {
                           await _launchURL(
                             Uri(
@@ -1012,9 +949,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(
-                          Icons.email,
-                        ),
+                        icon: const Icon(Icons.email),
                         onPressed: () async {
                           await _launchURL(
                             Uri(
@@ -1023,7 +958,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                               queryParameters: snapshot.data != null
                                   ? {
                                       'subject':
-                                          'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
+                                          'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
                                     }
                                   : null,
                             ),
@@ -1049,7 +984,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                             )
                           : const SizedBox(),
                     ),
-                  )
+                  ),
                 ],
               );
             } else {
@@ -1087,9 +1022,7 @@ void _showLoaderDialog(BuildContext context) {
           children: [
             const CircularProgressIndicator(),
             Container(
-              constraints: const BoxConstraints(
-                maxWidth: maxDialogWidth,
-              ),
+              constraints: const BoxConstraints(maxWidth: maxDialogWidth),
               margin: const EdgeInsets.only(left: 7),
               child: const Text('Restoring...'),
             ),
@@ -1101,20 +1034,12 @@ void _showLoaderDialog(BuildContext context) {
 }
 
 Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
-    ? await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      )
-    : await launchUrl(
-        uri,
-      );
+    ? await launchUrl(uri, mode: LaunchMode.externalApplication)
+    : await launchUrl(uri);
 
 class SettingsSection extends StatelessWidget {
   final String title;
-  const SettingsSection({
-    super.key,
-    required this.title,
-  });
+  const SettingsSection({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -1122,8 +1047,8 @@ class SettingsSection extends StatelessWidget {
       leading: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

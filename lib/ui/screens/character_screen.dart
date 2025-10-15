@@ -7,6 +7,7 @@ import 'package:gloomhaven_enhancement_calc/data/player_classes/resources_reposi
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/resource_field.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/theme/theme_extensions.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/add_subtract_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/masteries_section.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/perks_section.dart';
@@ -588,9 +589,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
           dividerColor: Colors.transparent,
         ),
         child: ExpansionTile(
-          iconColor: widget.character.primaryClassColor(
-            Theme.of(context).brightness,
-          ),
+          iconColor: Theme.of(context).colorScheme.primary,
           onExpansionChanged: (value) =>
               SharedPrefs().resourcesExpanded = value,
           initiallyExpanded: SharedPrefs().resourcesExpanded,
@@ -628,8 +627,9 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
       final ResourceFieldData fieldData = entry.value;
       return ResourceCard(
         resource: ResourcesRepository.resources[fieldData.resourceIndex],
-        color: character
-            .primaryClassColor(Theme.of(context).brightness)
+        color: Theme.of(context)
+            .extension<AppThemeExtension>()!
+            .characterPrimary
             .withValues(alpha: 0.1),
         count: fieldData.getter(character),
         onIncrease: () {

@@ -11,9 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class GHCAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const GHCAppBar({
-    super.key,
-  });
+  const GHCAppBar({super.key});
 
   @override
   State<GHCAppBar> createState() => _GHCAppBarState();
@@ -31,29 +29,30 @@ class _GHCAppBarState extends State<GHCAppBar> {
     super.initState();
     final charactersModel = context.read<CharactersModel>();
 
-    _charScrollListener =
-        () => _scrollListener(charactersModel.charScreenScrollController);
-    _enhancementScrollListener =
-        () => _scrollListener(charactersModel.enhancementCalcScrollController);
+    _charScrollListener = () =>
+        _scrollListener(charactersModel.charScreenScrollController);
+    _enhancementScrollListener = () =>
+        _scrollListener(charactersModel.enhancementCalcScrollController);
 
     charactersModel.charScreenScrollController.addListener(_charScrollListener);
-    charactersModel.enhancementCalcScrollController
-        .addListener(_enhancementScrollListener);
+    charactersModel.enhancementCalcScrollController.addListener(
+      _enhancementScrollListener,
+    );
   }
 
   @override
   void dispose() {
     final charactersModel = context.read<CharactersModel>();
-    charactersModel.charScreenScrollController
-        .removeListener(_charScrollListener);
-    charactersModel.enhancementCalcScrollController
-        .removeListener(_enhancementScrollListener);
+    charactersModel.charScreenScrollController.removeListener(
+      _charScrollListener,
+    );
+    charactersModel.enhancementCalcScrollController.removeListener(
+      _enhancementScrollListener,
+    );
     super.dispose();
   }
 
-  void _scrollListener(
-    ScrollController scrollController,
-  ) {
+  void _scrollListener(ScrollController scrollController) {
     if (scrollController.hasClients &&
         scrollController.positions.length == 1 &&
         scrollController.offset <= scrollController.position.minScrollExtent) {
@@ -77,8 +76,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final enhancementCalculatorModel =
-        context.read<EnhancementCalculatorModel>();
+    final enhancementCalculatorModel = context
+        .read<EnhancementCalculatorModel>();
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
     return AppBar(
@@ -86,7 +85,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
       // leading: Icon(Icons.settings),
       elevation: charactersModel.isScrolledToTop ? 0 : 4,
       centerTitle: true,
-      title: context.watch<AppModel>().page == 0 &&
+      title:
+          context.watch<AppModel>().page == 0 &&
               charactersModel.characters.length > 1
           ? SmoothPageIndicator(
               controller: charactersModel.pageController,
@@ -100,73 +100,71 @@ class _GHCAppBarState extends State<GHCAppBar> {
               ),
             )
           : context.watch<AppModel>().page == 1
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // hack to center Switch
-                    const Visibility(
-                      maintainAnimation: true,
-                      maintainState: true,
-                      maintainSize: true,
-                      visible: false,
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.settings,
-                        ),
-                      ),
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // hack to center Switch
+                const Visibility(
+                  maintainAnimation: true,
+                  maintainState: true,
+                  maintainSize: true,
+                  visible: false,
+                  child: IconButton(
+                    onPressed: null,
+                    icon: Icon(Icons.settings),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Image.asset(
+                      'images/titles/gloomhaven.png',
+                      scale: 6.25,
                     ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Image.asset(
-                          'images/titles/gloomhaven.png',
-                          scale: 6.25,
-                        ),
-                      ),
+                  ),
+                ),
+                Center(
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: Theme.of(
+                        context,
+                      ).colorScheme.copyWith(outline: Colors.transparent),
                     ),
-                    Center(
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: Theme.of(context).colorScheme.copyWith(
-                                outline: Colors.transparent,
-                              ),
-                        ),
-                        child: Switch(
-                          inactiveThumbImage: const AssetImage(
-                            'images/switch_gh.png',
-                          ),
-                          activeColor: const Color(0xff005cb2),
-                          trackColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.selected)
-                                ? const Color(0xff6ab7ff)
-                                : const Color(0xffa98274),
-                          ),
-                          value: !SharedPrefs().gloomhavenMode,
-                          onChanged: (value) {
-                            SharedPrefs().gloomhavenMode = !value;
-                            Provider.of<EnhancementCalculatorModel>(
-                              context,
-                              listen: false,
-                            ).gameVersionToggled();
-                            setState(() {});
-                          },
-                        ),
+                    child: Switch(
+                      inactiveThumbImage: const AssetImage(
+                        'images/switch_gh.png',
                       ),
-                    ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset(
-                          'images/titles/frosthaven.png',
-                          scale: 7,
-                        ),
+                      activeThumbColor: const Color(0xff005cb2),
+                      trackColor: WidgetStateProperty.resolveWith(
+                        (states) => states.contains(WidgetState.selected)
+                            ? const Color(0xff6ab7ff)
+                            : const Color(0xffa98274),
                       ),
+                      value: !SharedPrefs().gloomhavenMode,
+                      onChanged: (value) {
+                        SharedPrefs().gloomhavenMode = !value;
+                        Provider.of<EnhancementCalculatorModel>(
+                          context,
+                          listen: false,
+                        ).gameVersionToggled();
+                        setState(() {});
+                      },
                     ),
-                  ],
-                )
-              : Container(),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      'images/titles/frosthaven.png',
+                      scale: 7,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Container(),
       actions: <Widget>[
         if (charactersModel.isEditMode)
           Tooltip(
@@ -194,7 +192,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
                           ? null
                           : SnackBarAction(
                               label: 'Show',
-                              textColor: Theme.of(context).brightness ==
+                              textColor:
+                                  Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? Colors.white
                                   : Colors.black,
@@ -235,8 +234,8 @@ class _GHCAppBarState extends State<GHCAppBar> {
                 color: charactersModel.isEditMode
                     ? Colors.red[400]
                     : Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
+                    ? Colors.white
+                    : Colors.black,
               ),
               onPressed: charactersModel.isEditMode
                   ? () {
@@ -255,60 +254,47 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             ),
                             actions: <Widget>[
                               TextButton(
-                                child: const Text(
-                                  'Cancel',
-                                ),
+                                child: const Text('Cancel'),
                                 onPressed: () => Navigator.pop(context, false),
                               ),
                               ElevatedButton.icon(
-                                style: Theme.of(context)
-                                    .textButtonTheme
-                                    .style
+                                style: Theme.of(context).textButtonTheme.style
                                     ?.copyWith(
-                                      backgroundColor: WidgetStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<WidgetState> states) =>
-                                            Colors.red.withValues(alpha: 0.75),
-                                      ),
+                                      backgroundColor:
+                                          WidgetStateProperty.resolveWith<
+                                            Color
+                                          >(
+                                            (Set<WidgetState> states) => Colors
+                                                .red
+                                                .withValues(alpha: 0.75),
+                                          ),
                                     ),
-                                onPressed: () => Navigator.pop(
-                                  context,
-                                  true,
-                                ),
+                                onPressed: () => Navigator.pop(context, true),
                                 icon: const Icon(
                                   Icons.delete_rounded,
                                   color: Colors.white,
                                 ),
                                 label: Text(
                                   'Delete',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                      ),
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(color: Colors.white),
                                 ),
-                              )
+                              ),
                             ],
                           );
                         },
-                      ).then(
-                        (bool? result) async {
-                          if (result != null && result) {
-                            final String characterName =
-                                charactersModel.currentCharacter!.name;
-                            await charactersModel.deleteCurrentCharacter();
-                            context.read<AppModel>().updateTheme();
-                            ScaffoldMessenger.of(context)
-                              ..clearSnackBars()
-                              ..showSnackBar(
-                                SnackBar(
-                                  content: Text('$characterName deleted'),
-                                ),
-                              );
-                          }
-                        },
-                      );
+                      ).then((bool? result) async {
+                        if (result != null && result) {
+                          final String characterName =
+                              charactersModel.currentCharacter!.name;
+                          await charactersModel.deleteCurrentCharacter();
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              SnackBar(content: Text('$characterName deleted')),
+                            );
+                        }
+                      });
                     }
                   : () async {
                       await showDialog<bool>(
@@ -319,11 +305,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             charactersModel: charactersModel,
                           );
                         },
-                      ).then((value) {
-                        if (value != null && value) {
-                          appModel.updateTheme();
-                        }
-                      });
+                      );
                     },
             ),
           ),
@@ -337,16 +319,12 @@ class _GHCAppBarState extends State<GHCAppBar> {
                   : Colors.black,
             ),
             onPressed: () async {
-              if (charactersModel.isEditMode) {
-                charactersModel.toggleEditMode();
-              }
+              charactersModel.isEditMode = false;
+
               await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => SettingsScreen(
-                    // must watch
-                    appModel: context.watch<AppModel>(),
-                    charactersModel: context.watch<CharactersModel>(),
                     enhancementCalculatorModel: enhancementCalculatorModel,
                   ),
                 ),
