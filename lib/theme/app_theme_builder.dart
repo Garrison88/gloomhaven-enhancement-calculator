@@ -182,21 +182,24 @@ class AppThemeBuilder {
     assert(1 <= percent && percent <= 100);
     final f = 1 - percent / 100;
     return Color.fromARGB(
-      (color.a).round(),
-      (color.r * f).round(),
-      (color.g * f).round(),
-      (color.b * f).round(),
+      (color.a * 255).round(),
+      (color.r * f * 255).round(),
+      (color.g * f * 255).round(),
+      (color.b * f * 255).round(),
     );
   }
 
   static Color _lighten(Color color, [int percent = 10]) {
     assert(1 <= percent && percent <= 100);
     final p = percent / 100;
+    final r = color.r * 255;
+    final g = color.g * 255;
+    final b = color.b * 255;
     return Color.fromARGB(
-      color.alpha,
-      color.r.round() + ((255 - color.r) * p).round(),
-      color.g.round() + ((255 - color.g) * p).round(),
-      color.b.round() + ((255 - color.b) * p).round(),
+      (color.a * 255).round(),
+      (r + (255 - r) * p).round(),
+      (g + (255 - g) * p).round(),
+      (b + (255 - b) * p).round(),
     );
   }
 }
