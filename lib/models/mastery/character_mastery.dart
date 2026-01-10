@@ -18,8 +18,9 @@ class CharacterMastery {
   CharacterMastery.fromMap(Map<String, dynamic> map) {
     associatedCharacterUuid = map[columnAssociatedCharacterUuid];
     associatedMasteryId = map[columnAssociatedMasteryId];
-    characterMasteryAchieved =
-        map[columnCharacterMasteryAchieved] == 1 ? true : false;
+    characterMasteryAchieved = map[columnCharacterMasteryAchieved] == 1
+        ? true
+        : false;
   }
 
   Map<String, dynamic> toMap() {

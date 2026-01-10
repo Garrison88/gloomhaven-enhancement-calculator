@@ -66,31 +66,20 @@ class ResourceDetails extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(4),
-          child: AutoSizeText(
-            resource.name,
-            maxLines: 1,
-            maxFontSize: 18,
-          ),
+          child: AutoSizeText(resource.name, maxLines: 1, maxFontSize: 18),
         ),
         Padding(
           padding: const EdgeInsets.all(6.0),
           child: Center(
             child: SvgPicture.asset(
               resource.icon,
-              colorFilter: ColorFilter.mode(
-                color,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
           ),
         ),
         Positioned(
           bottom: canEdit ? null : 8,
-          child: Center(
-            child: Text(
-              '$count',
-            ),
-          ),
+          child: Center(child: Text('$count')),
         ),
         if (canEdit) ...[
           Positioned(
@@ -98,9 +87,7 @@ class ResourceDetails extends StatelessWidget {
             left: -2,
             child: IconButton(
               onPressed: () => decreaseCount(),
-              icon: const Icon(
-                Icons.remove_circle,
-              ),
+              icon: const Icon(Icons.remove_circle),
             ),
           ),
           Positioned(
@@ -108,12 +95,10 @@ class ResourceDetails extends StatelessWidget {
             right: -2,
             child: IconButton(
               onPressed: () => increaseCount(),
-              icon: const Icon(
-                Icons.add_circle,
-              ),
+              icon: const Icon(Icons.add_circle),
             ),
           ),
-        ]
+        ],
       ],
     );
   }

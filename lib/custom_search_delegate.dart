@@ -8,9 +8,8 @@ import 'models/player_class.dart';
 import 'shared_prefs.dart';
 
 class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
-  CustomSearchDelegate(
-    List<PlayerClass> playerClass,
-  ) : _playerClasses = playerClass;
+  CustomSearchDelegate(List<PlayerClass> playerClass)
+    : _playerClasses = playerClass;
   final List<PlayerClass> _playerClasses;
 
   final Set<ClassCategory> _selectedCategories = {};
@@ -20,9 +19,7 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(
-          Icons.clear_rounded,
-        ),
+        icon: const Icon(Icons.clear_rounded),
         onPressed: () {
           query = '';
         },
@@ -33,9 +30,7 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(
-        Icons.arrow_back_rounded,
-      ),
+      icon: const Icon(Icons.arrow_back_rounded),
       onPressed: () => Navigator.of(context).pop(),
     );
   }
@@ -44,14 +39,15 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   TextStyle? _getFilterChipLabelStyle(BuildContext context, bool isSelected) {
     if (!isSelected) return null;
 
-    final isDark = ThemeData.estimateBrightnessForColor(
+    final isDark =
+        ThemeData.estimateBrightnessForColor(
           Theme.of(context).colorScheme.primary,
         ) ==
         Brightness.dark;
 
     return Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: isDark ? Colors.white : Colors.black,
-        );
+      color: isDark ? Colors.white : Colors.black,
+    );
   }
 
   /// Helper method to build a FilterChip with consistent styling
@@ -95,7 +91,6 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
   }
 
   @override
-  @override
   Widget buildSuggestions(BuildContext context) {
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter stateSetter) {
@@ -129,20 +124,26 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
                     label: 'Frosthaven',
                     stateSetter: stateSetter,
                   ),
-                  if (SharedPrefs().customClasses)
+                  _buildCategoryFilterChip(
+                    context: context,
+                    category: ClassCategory.mercenaryPacks,
+                    label: 'Mercenary Packs',
+                    stateSetter: stateSetter,
+                  ),
+                  if (SharedPrefs().customClasses) ...[
                     _buildCategoryFilterChip(
                       context: context,
                       category: ClassCategory.crimsonScales,
                       label: 'Crimson Scales',
                       stateSetter: stateSetter,
                     ),
-                  if (SharedPrefs().customClasses)
                     _buildCategoryFilterChip(
                       context: context,
                       category: ClassCategory.custom,
                       label: 'Custom Classes',
                       stateSetter: stateSetter,
                     ),
+                  ],
                 ],
               ),
             ),
@@ -195,27 +196,27 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
 
   List<PlayerClass> _filteredList(List<PlayerClass> playerClasses) {
     return playerClasses.where((playerClass) {
-      // Filter out classes that shouldn't be rendered
-      if (_doNotRenderPlayerClass(
-        playerClass,
-        hideLockedClass: hideLockedClasses,
-      )) {
-        return false;
-      }
+        // Filter out classes that shouldn't be rendered
+        if (_doNotRenderPlayerClass(
+          playerClass,
+          hideLockedClass: hideLockedClasses,
+        )) {
+          return false;
+        }
 
-      // Name/variant must match query
-      if (!_matchesClassOrVariantName(playerClass, query)) {
-        return false;
-      }
+        // Name/variant must match query
+        if (!_matchesClassOrVariantName(playerClass, query)) {
+          return false;
+        }
 
-      // If no category filters are active, include all
-      if (_selectedCategories.isEmpty) {
-        return true;
-      }
+        // If no category filters are active, include all
+        if (_selectedCategories.isEmpty) {
+          return true;
+        }
 
-      // Include if this class's category is selected
-      return _selectedCategories.contains(playerClass.category);
-    }).toList()
+        // Include if this class's category is selected
+        return _selectedCategories.contains(playerClass.category);
+      }).toList()
       // TODO: remove this when reintroducing the Rootwhisperer
       ..removeWhere((element) => element.classCode == 'rw');
   }
@@ -231,9 +232,7 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
               playerClass.category == ClassCategory.crimsonScales)) ||
       (hideLockedClass &&
           playerClass.locked &&
-          !SharedPrefs().getPlayerClassIsUnlocked(
-            playerClass.classCode,
-          ));
+          !SharedPrefs().getPlayerClassIsUnlocked(playerClass.classCode));
 
   @override
   Widget buildResults(BuildContext context) {
@@ -282,11 +281,17 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                 ? selectedPlayerClass.getCombinedDisplayNames()
                 : '???',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isUnlocked || !selectedPlayerClass.locked
-                      ? null
-                      : Theme.of(context).disabledColor,
-                ),
+              color: isUnlocked || !selectedPlayerClass.locked
+                  ? null
+                  : Theme.of(context).disabledColor,
+            ),
           ),
+          subtitleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).disabledColor,
+          ),
+          subtitle: selectedPlayerClass.title != null
+              ? Text(selectedPlayerClass.title!)
+              : null,
           trailing: selectedPlayerClass.locked
               ? IconButton(
                   onPressed: () {
@@ -360,10 +365,7 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
             ),
           ),
           content: StatefulBuilder(
-            builder: (
-              thisLowerContext,
-              innerSetState,
-            ) {
+            builder: (thisLowerContext, innerSetState) {
               return Container(
                 constraints: const BoxConstraints(
                   maxWidth: maxDialogWidth,
@@ -381,9 +383,7 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                                   "Please note that these classes are created by members of the 'Gloomhaven Custom Content Unity Guild' and are subject to change. Use at your own risk and report any incongruencies to the developer. More information can be found on the ",
                             ),
                             TextSpan(
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     color: Colors.blue,
                                     decoration: TextDecoration.underline,
@@ -397,13 +397,9 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                                     path:
                                         'gloomhaven-custom-content-unity-guild-728375347732807825',
                                   );
-                                  var urllaunchable = await canLaunchUrl(
-                                    uri,
-                                  );
+                                  var urllaunchable = await canLaunchUrl(uri);
                                   if (urllaunchable) {
-                                    await launchUrl(
-                                      uri,
-                                    );
+                                    await launchUrl(uri);
                                   } else {
                                     // print(
                                     //     "URL can't be launched.");
@@ -425,14 +421,12 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                             value: hideMessage,
                             onChanged: (bool? value) {
                               if (value != null) {
-                                innerSetState(
-                                  () {
-                                    SharedPrefs()
-                                            .hideCustomClassesWarningMessage =
-                                        value;
-                                    hideMessage = !hideMessage;
-                                  },
-                                );
+                                innerSetState(() {
+                                  SharedPrefs()
+                                          .hideCustomClassesWarningMessage =
+                                      value;
+                                  hideMessage = !hideMessage;
+                                });
                               }
                             },
                           ),
@@ -446,22 +440,12 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text(
-                'Cancel',
-              ),
-              onPressed: () => Navigator.pop(
-                context,
-                false,
-              ),
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context, false),
             ),
             TextButton(
-              child: const Text(
-                'Continue',
-              ),
-              onPressed: () => Navigator.pop(
-                context,
-                true,
-              ),
+              child: const Text('Continue'),
+              onPressed: () => Navigator.pop(context, true),
             ),
           ],
         );
@@ -482,9 +466,7 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                 width: iconSize + 5,
                 height: iconSize + 5,
                 colorFilter: ColorFilter.mode(
-                  Color(
-                    selectedPlayerClass.primaryColor,
-                  ),
+                  Color(selectedPlayerClass.primaryColor),
                   BlendMode.srcIn,
                 ),
               ),
@@ -495,26 +477,27 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
               ),
             ],
           ),
-          content: const Text(
-            'Version',
-            textAlign: TextAlign.center,
-          ),
+          content: const Text('Version', textAlign: TextAlign.center),
           actions:
-              PlayerClass.perkListByClassCode(selectedPlayerClass.classCode)!
-                  .map((perkList) {
-            return TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(perkList.variant);
-              },
-              child: Text(
-                ClassVariants.classVariants[perkList.variant]!,
-                textAlign: TextAlign.end,
-              ),
-            );
-          }).toList()
-                ..add(TextButton(
+              PlayerClass.perkListByClassCode(
+                  selectedPlayerClass.classCode,
+                )!.map((perkList) {
+                  return TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(perkList.variant);
+                    },
+                    child: Text(
+                      ClassVariants.classVariants[perkList.variant]!,
+                      textAlign: TextAlign.end,
+                    ),
+                  );
+                }).toList()
+                ..add(
+                  TextButton(
                     onPressed: (() => Navigator.of(context).pop()),
-                    child: const Text('Cancel'))),
+                    child: const Text('Cancel'),
+                  ),
+                ),
         );
       },
     );
@@ -522,10 +505,7 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
 }
 
 class SelectedPlayerClass {
-  SelectedPlayerClass({
-    required this.playerClass,
-    this.variant = Variant.base,
-  });
+  SelectedPlayerClass({required this.playerClass, this.variant = Variant.base});
   final PlayerClass playerClass;
   final Variant? variant;
 }

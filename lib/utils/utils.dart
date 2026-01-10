@@ -40,10 +40,10 @@ extension StringCasingExtension on String {
       length > 0 ? '${this[0].toUpperCase()}${substring(1)}' : '';
 
   /// Convert string to title case (capitalize each word)
-  String get toTitleCase => replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.toCapitalized())
-      .join(" ");
+  String get toTitleCase => replaceAll(
+    RegExp(' +'),
+    ' ',
+  ).split(" ").map((str) => str.toCapitalized()).join(" ");
 }
 
 /// Widget that provides its size to a callback
@@ -106,10 +106,7 @@ class HighlightedWidgetState extends State<HighlightedWidget>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _colorAnimation = ColorTween(
       begin: widget.animateBorder ? Colors.transparent : null,
@@ -136,14 +133,9 @@ class HighlightedWidgetState extends State<HighlightedWidget>
           decoration: widget.animateBorder && _colorAnimation.value != null
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: _colorAnimation.value!,
-                    width: 2,
-                  ),
+                  border: Border.all(color: _colorAnimation.value!, width: 2),
                 )
-              : BoxDecoration(
-                  color: _colorAnimation.value,
-                ),
+              : BoxDecoration(color: _colorAnimation.value),
           child: widget.child,
         );
       },

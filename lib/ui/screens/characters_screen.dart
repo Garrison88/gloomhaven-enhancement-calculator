@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 import 'character_screen.dart';
 
 class CharactersScreen extends StatefulWidget {
-  const CharactersScreen({
-    super.key,
-  });
+  const CharactersScreen({super.key});
 
   @override
   State<CharactersScreen> createState() => _CharactersScreenState();
@@ -40,9 +38,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                   textAlign: TextAlign.center,
                 ),
                 if (charactersModel.retiredCharactersAreHidden) ...[
-                  const SizedBox(
-                    height: smallPadding,
-                  ),
+                  const SizedBox(height: smallPadding),
                   const Padding(
                     padding: EdgeInsets.only(top: smallPadding),
                     child: Divider(),
@@ -98,9 +94,7 @@ class _CharactersScreenState extends State<CharactersScreen>
               ),
               Container(
                 constraints: const BoxConstraints(maxWidth: 700),
-                child: CharacterScreen(
-                  character: character,
-                ),
+                child: CharacterScreen(character: character),
               ),
             ],
           );

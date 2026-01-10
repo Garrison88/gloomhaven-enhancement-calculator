@@ -13,11 +13,7 @@ class MasteryRow extends StatefulWidget {
   final Character character;
   final Mastery mastery;
 
-  const MasteryRow({
-    super.key,
-    required this.character,
-    required this.mastery,
-  });
+  const MasteryRow({super.key, required this.character, required this.mastery});
 
   @override
   MasteryRowState createState() => MasteryRowState();
@@ -33,9 +29,12 @@ class MasteryRowState extends State<MasteryRow> {
       margin: const EdgeInsets.only(right: 6, left: 1),
       decoration: BoxDecoration(
         border: Border.all(
-          color: widget.character.characterMasteries
-                  .firstWhere((mastery) =>
-                      mastery.associatedMasteryId == widget.mastery.id)
+          color:
+              widget.character.characterMasteries
+                  .firstWhere(
+                    (mastery) =>
+                        mastery.associatedMasteryId == widget.mastery.id,
+                  )
                   .characterMasteryAchieved
               ? Theme.of(context).colorScheme.secondary
               : Theme.of(context).dividerColor.withValues(alpha: 0),
@@ -47,8 +46,9 @@ class MasteryRowState extends State<MasteryRow> {
         children: <Widget>[
           ConditionalCheckbox(
             value: widget.character.characterMasteries
-                .firstWhere((mastery) =>
-                    mastery.associatedMasteryId == widget.mastery.id)
+                .firstWhere(
+                  (mastery) => mastery.associatedMasteryId == widget.mastery.id,
+                )
                 .characterMasteryAchieved,
             isEditMode: charactersModel.isEditMode,
             isRetired: widget.character.isRetired,
@@ -62,9 +62,12 @@ class MasteryRowState extends State<MasteryRow> {
           ),
           CheckRowDivider(
             height: height,
-            color: widget.character.characterMasteries
-                    .firstWhere((mastery) =>
-                        mastery.associatedMasteryId == widget.mastery.id)
+            color:
+                widget.character.characterMasteries
+                    .firstWhere(
+                      (mastery) =>
+                          mastery.associatedMasteryId == widget.mastery.id,
+                    )
                     .characterMasteryAchieved
                 ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).dividerTheme.color,
@@ -82,9 +85,9 @@ class MasteryRowState extends State<MasteryRow> {
                 padding: const EdgeInsets.only(right: smallPadding),
                 child: RichText(
                   text: TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          letterSpacing: 0.7,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(letterSpacing: 0.7),
                     children: Utils.generateCheckRowDetails(
                       context,
                       widget.mastery.masteryDetails,

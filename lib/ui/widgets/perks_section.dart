@@ -7,10 +7,7 @@ import 'package:gloomhaven_enhancement_calc/ui/widgets/perk_row.dart';
 class PerksSection extends StatelessWidget {
   final Character character;
 
-  const PerksSection({
-    super.key,
-    required this.character,
-  });
+  const PerksSection({super.key, required this.character});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,29 +20,26 @@ class PerksSection extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            SizedBox(
-              width: smallPadding * 2,
-            ),
+            SizedBox(width: smallPadding * 2),
             Text(
               '${character.numOfSelectedPerks()}',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Character.maximumPerks(character) >=
-                            character.numOfSelectedPerks()
-                        ? null
-                        : Colors.red,
-                  ),
+                color:
+                    Character.maximumPerks(character) >=
+                        character.numOfSelectedPerks()
+                    ? null
+                    : Colors.red,
+              ),
             ),
             Text(
               ' / ${Character.maximumPerks(character)}',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium,
-            )
+            ),
           ],
         ),
-        const SizedBox(
-          height: smallPadding,
-        ),
+        const SizedBox(height: smallPadding),
         ListView(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
@@ -87,10 +81,7 @@ class PerksSection extends StatelessWidget {
     // Add the final row
     if (currentRowPerks.isNotEmpty) {
       perkRows.add(
-        PerkRow(
-          character: character,
-          perks: List.from(currentRowPerks),
-        ),
+        PerkRow(character: character, perks: List.from(currentRowPerks)),
       );
     }
     return perkRows;

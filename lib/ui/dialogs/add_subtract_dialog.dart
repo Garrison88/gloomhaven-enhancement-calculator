@@ -3,11 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 
 class AddSubtractDialog extends StatefulWidget {
-  const AddSubtractDialog(
-    this.currentValue,
-    this.hintText, {
-    super.key,
-  });
+  const AddSubtractDialog(this.currentValue, this.hintText, {super.key});
 
   final int currentValue;
   final String hintText;
@@ -41,9 +37,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
     return AlertDialog(
       title: Center(child: Text('Adjust ${widget.hintText}')),
       content: Container(
-        constraints: const BoxConstraints(
-          maxWidth: maxDialogWidth,
-        ),
+        constraints: const BoxConstraints(maxWidth: maxDialogWidth),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -79,9 +73,7 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                       });
                     },
                     enableInteractiveSelection: false,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     keyboardType: TextInputType.number,
                     autofocus: true,
                     textAlign: TextAlign.center,
@@ -89,9 +81,9 @@ class _AddSubtractDialogState extends State<AddSubtractDialog> {
                       hintText: widget.hintText,
                       border: const OutlineInputBorder(),
                     ),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: titleFontSize,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontSize: titleFontSize),
                   ),
                 ),
                 // Add button

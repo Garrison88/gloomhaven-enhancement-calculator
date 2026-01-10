@@ -17,15 +17,16 @@ class CharacterPerk {
   CharacterPerk.fromMap(Map<String, dynamic> map) {
     associatedCharacterUuid = map[columnAssociatedCharacterUuid];
     associatedPerkId = map[columnAssociatedPerkId];
-    characterPerkIsSelected =
-        map[columnCharacterPerkIsSelected] == 1 ? true : false;
+    characterPerkIsSelected = map[columnCharacterPerkIsSelected] == 1
+        ? true
+        : false;
   }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnAssociatedCharacterUuid: associatedCharacterUuid,
       columnAssociatedPerkId: associatedPerkId,
-      columnCharacterPerkIsSelected: characterPerkIsSelected ? 1 : 0
+      columnCharacterPerkIsSelected: characterPerkIsSelected ? 1 : 0,
     };
     return map;
   }

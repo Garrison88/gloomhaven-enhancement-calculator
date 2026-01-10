@@ -24,10 +24,12 @@ Future<void> main() async {
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      systemNavigationBarIconBrightness:
-          SharedPrefs().darkTheme ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor:
-          SharedPrefs().darkTheme ? const Color(0xff1c1b1f) : Colors.white,
+      systemNavigationBarIconBrightness: SharedPrefs().darkTheme
+          ? Brightness.light
+          : Brightness.dark,
+      systemNavigationBarColor: SharedPrefs().darkTheme
+          ? const Color(0xff1c1b1f)
+          : Colors.white,
     ),
   );
 
@@ -42,12 +44,8 @@ Future<void> main() async {
             initialDefaultFonts: SharedPrefs().useDefaultFonts,
           ),
         ),
-        ChangeNotifierProvider(
-          create: (_) => AppModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => EnhancementCalculatorModel(),
-        ),
+        ChangeNotifierProvider(create: (_) => AppModel()),
+        ChangeNotifierProvider(create: (_) => EnhancementCalculatorModel()),
         ChangeNotifierProxyProvider<ThemeProvider, CharactersModel>(
           create: (context) => CharactersModel(
             showRetired: SharedPrefs().showRetiredCharacters,

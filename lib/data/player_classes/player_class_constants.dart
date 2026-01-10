@@ -5,28 +5,25 @@ class PlayerClasses {
   static final List<PlayerClass> playerClasses = [
     // GLOOMHAVEN
     PlayerClass(
-        race: CharacterRaces.inox,
-        name: 'Brute',
-        variantNames: {
-          Variant.gloomhaven2E: 'Bruiser',
-        },
-        classCode: ClassCodes.brute,
-        icon: 'brute.svg',
-        category: ClassCategory.gloomhaven,
-        locked: false,
-        primaryColor: 0xff4e7ec1,
-        traits: [
-          CharacterTraits.armored,
-          CharacterTraits.intimidating,
-          CharacterTraits.strong,
-        ]),
+      race: CharacterRaces.inox,
+      name: 'Brute',
+      variantNames: {Variant.gloomhaven2E: 'Bruiser'},
+      classCode: ClassCodes.brute,
+      icon: 'brute.svg',
+      category: ClassCategory.gloomhaven,
+      primaryColor: 0xff4e7ec1,
+      traits: [
+        CharacterTraits.armored,
+        CharacterTraits.intimidating,
+        CharacterTraits.strong,
+      ],
+    ),
     PlayerClass(
       race: CharacterRaces.quatryl,
       name: 'Tinkerer',
       classCode: ClassCodes.tinkerer,
       icon: 'tinkerer.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xffc5b58d,
       traits: [
         CharacterTraits.educated,
@@ -40,7 +37,6 @@ class PlayerClasses {
       classCode: ClassCodes.spellweaver,
       icon: 'spellweaver.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xffb578b3,
       traits: [
         CharacterTraits.arcane,
@@ -51,13 +47,10 @@ class PlayerClasses {
     PlayerClass(
       race: CharacterRaces.human,
       name: 'Scoundrel',
-      variantNames: {
-        Variant.gloomhaven2E: 'Silent Knife',
-      },
+      variantNames: {Variant.gloomhaven2E: 'Silent Knife'},
       classCode: ClassCodes.scoundrel,
       icon: 'scoundrel.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xffa5d166,
       traits: [
         CharacterTraits.chaotic,
@@ -71,7 +64,6 @@ class PlayerClasses {
       classCode: ClassCodes.cragheart,
       icon: 'cragheart.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xff899538,
       traits: [
         CharacterTraits.armored,
@@ -85,7 +77,6 @@ class PlayerClasses {
       classCode: ClassCodes.mindthief,
       icon: 'mindthief.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xff647c9d,
       traits: [
         CharacterTraits.arcane,
@@ -94,62 +85,69 @@ class PlayerClasses {
       ],
     ),
     PlayerClass(
-        race: CharacterRaces.valrath,
-        name: 'Sunkeeper',
-        classCode: ClassCodes.sunkeeper,
-        icon: 'sunkeeper.svg',
-        category: ClassCategory.gloomhaven,
-        primaryColor: 0xfff3c338,
-        traits: [
-          CharacterTraits.armored,
-          CharacterTraits.nimble,
-          CharacterTraits.persuasive,
-        ]),
+      race: CharacterRaces.valrath,
+      name: 'Sunkeeper',
+      classCode: ClassCodes.sunkeeper,
+      icon: 'sunkeeper.svg',
+      category: ClassCategory.gloomhaven,
+      locked: true,
+      primaryColor: 0xfff3c338,
+      traits: [
+        CharacterTraits.armored,
+        CharacterTraits.nimble,
+        CharacterTraits.persuasive,
+      ],
+    ),
     PlayerClass(
-        race: CharacterRaces.valrath,
-        name: 'Quartermaster',
-        classCode: ClassCodes.quartermaster,
-        icon: 'quartermaster.svg',
-        category: ClassCategory.gloomhaven,
-        primaryColor: 0xffd98926,
-        traits: [
-          CharacterTraits.armored,
-          CharacterTraits.resourceful,
-          CharacterTraits.strong,
-        ]),
+      race: CharacterRaces.valrath,
+      name: 'Quartermaster',
+      classCode: ClassCodes.quartermaster,
+      icon: 'quartermaster.svg',
+      category: ClassCategory.gloomhaven,
+      locked: true,
+      primaryColor: 0xffd98926,
+      traits: [
+        CharacterTraits.armored,
+        CharacterTraits.resourceful,
+        CharacterTraits.strong,
+      ],
+    ),
     PlayerClass(
-        race: CharacterRaces.aesther,
-        name: 'Summoner',
-        variantNames: {
-          Variant.gloomhaven2E: 'Soultether',
-        },
-        classCode: ClassCodes.summoner,
-        icon: 'summoner.svg',
-        category: ClassCategory.gloomhaven,
-        primaryColor: 0xffeb6ea3,
-        traits: [
-          CharacterTraits.arcane,
-          CharacterTraits.chaotic,
-          CharacterTraits.resourceful,
-        ]),
+      race: CharacterRaces.aesther,
+      name: 'Summoner',
+      variantNames: {Variant.gloomhaven2E: 'Soultether'},
+      classCode: ClassCodes.summoner,
+      icon: 'summoner.svg',
+      category: ClassCategory.gloomhaven,
+      locked: true,
+      primaryColor: 0xffeb6ea3,
+      traits: [
+        CharacterTraits.arcane,
+        CharacterTraits.chaotic,
+        CharacterTraits.resourceful,
+      ],
+    ),
     PlayerClass(
-        race: CharacterRaces.aesther,
-        name: 'Nightshroud',
-        classCode: ClassCodes.nightshroud,
-        icon: 'nightshroud.svg',
-        category: ClassCategory.gloomhaven,
-        primaryColor: 0xff9f9fcf,
-        traits: [
-          CharacterTraits.chaotic,
-          CharacterTraits.intimidating,
-          CharacterTraits.nimble,
-        ]),
+      race: CharacterRaces.aesther,
+      name: 'Nightshroud',
+      classCode: ClassCodes.nightshroud,
+      icon: 'nightshroud.svg',
+      category: ClassCategory.gloomhaven,
+      locked: true,
+      primaryColor: 0xff9f9fcf,
+      traits: [
+        CharacterTraits.chaotic,
+        CharacterTraits.intimidating,
+        CharacterTraits.nimble,
+      ],
+    ),
     PlayerClass(
       race: CharacterRaces.harrower,
       name: 'Plagueherald',
       classCode: ClassCodes.plagueherald,
       icon: 'plagueherald.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xff74c7bb,
       traits: [
         CharacterTraits.arcane,
@@ -163,6 +161,7 @@ class PlayerClasses {
       classCode: ClassCodes.berserker,
       icon: 'berserker.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xffd14e4e,
       traits: [
         CharacterTraits.chaotic,
@@ -176,6 +175,7 @@ class PlayerClasses {
       classCode: ClassCodes.soothsinger,
       icon: 'soothsinger.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xffdf7e7a,
       traits: [
         CharacterTraits.educated,
@@ -189,6 +189,7 @@ class PlayerClasses {
       classCode: ClassCodes.doomstalker,
       icon: 'doomstalker.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xff38c3f1,
       traits: [
         CharacterTraits.chaotic,
@@ -197,23 +198,26 @@ class PlayerClasses {
       ],
     ),
     PlayerClass(
-        race: CharacterRaces.human,
-        name: 'Sawbones',
-        classCode: ClassCodes.sawbones,
-        icon: 'sawbones.svg',
-        category: ClassCategory.gloomhaven,
-        primaryColor: 0xffdfddcb,
-        traits: [
-          CharacterTraits.educated,
-          CharacterTraits.persuasive,
-          CharacterTraits.resourceful,
-        ]),
+      race: CharacterRaces.human,
+      name: 'Sawbones',
+      classCode: ClassCodes.sawbones,
+      icon: 'sawbones.svg',
+      category: ClassCategory.gloomhaven,
+      locked: true,
+      primaryColor: 0xffdfddcb,
+      traits: [
+        CharacterTraits.educated,
+        CharacterTraits.persuasive,
+        CharacterTraits.resourceful,
+      ],
+    ),
     PlayerClass(
       race: CharacterRaces.savvas,
       name: 'Elementalist',
       classCode: ClassCodes.elementalist,
       icon: 'elementalist.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xff9e9d9d,
       traits: [
         CharacterTraits.arcane,
@@ -224,12 +228,11 @@ class PlayerClasses {
     PlayerClass(
       race: CharacterRaces.vermling,
       name: 'Beast Tyrant',
-      variantNames: {
-        Variant.gloomhaven2E: 'Wildfury',
-      },
+      variantNames: {Variant.gloomhaven2E: 'Wildfury'},
       classCode: ClassCodes.beastTyrant,
       icon: 'beast_tyrant.svg',
       category: ClassCategory.gloomhaven,
+      locked: true,
       primaryColor: 0xffad745c,
       traits: [
         CharacterTraits.armored,
@@ -244,7 +247,6 @@ class PlayerClasses {
       classCode: ClassCodes.bladeswarm,
       icon: 'bladeswarm.svg',
       category: ClassCategory.gloomhaven,
-      locked: false,
       primaryColor: 0xffae5a4d,
       traits: [
         CharacterTraits.armored,
@@ -254,18 +256,18 @@ class PlayerClasses {
     ),
     // FORGOTTEN CIRCLES
     PlayerClass(
-        race: CharacterRaces.aesther,
-        name: 'Diviner',
-        classCode: ClassCodes.diviner,
-        icon: 'diviner.svg',
-        category: ClassCategory.gloomhaven,
-        locked: false,
-        primaryColor: 0xff8bc5d3,
-        traits: [
-          CharacterTraits.arcane,
-          CharacterTraits.outcast,
-          CharacterTraits.resourceful,
-        ]),
+      race: CharacterRaces.aesther,
+      name: 'Diviner',
+      classCode: ClassCodes.diviner,
+      icon: 'diviner.svg',
+      category: ClassCategory.gloomhaven,
+      primaryColor: 0xff8bc5d3,
+      traits: [
+        CharacterTraits.arcane,
+        CharacterTraits.outcast,
+        CharacterTraits.resourceful,
+      ],
+    ),
     // JAWS OF THE LION
     PlayerClass(
       race: CharacterRaces.quatryl,
@@ -273,7 +275,6 @@ class PlayerClasses {
       classCode: ClassCodes.demolitionist,
       icon: 'demolitionist.svg',
       category: ClassCategory.jawsOfTheLion,
-      locked: false,
       primaryColor: 0xffe65c18,
       traits: [
         CharacterTraits.chaotic,
@@ -287,7 +288,6 @@ class PlayerClasses {
       classCode: ClassCodes.hatchet,
       icon: 'hatchet.svg',
       category: ClassCategory.jawsOfTheLion,
-      locked: false,
       primaryColor: 0xff78a1ad,
       traits: [
         CharacterTraits.intimidating,
@@ -301,7 +301,6 @@ class PlayerClasses {
       classCode: ClassCodes.redGuard,
       icon: 'red_guard.svg',
       category: ClassCategory.jawsOfTheLion,
-      locked: false,
       primaryColor: 0xffe3393b,
       traits: [
         CharacterTraits.armored,
@@ -310,18 +309,18 @@ class PlayerClasses {
       ],
     ),
     PlayerClass(
-        race: CharacterRaces.human,
-        name: 'Voidwarden',
-        classCode: ClassCodes.voidwarden,
-        icon: 'voidwarden.svg',
-        category: ClassCategory.jawsOfTheLion,
-        locked: false,
-        primaryColor: 0xffd9d9d9,
-        traits: [
-          CharacterTraits.arcane,
-          CharacterTraits.educated,
-          CharacterTraits.outcast,
-        ]),
+      race: CharacterRaces.human,
+      name: 'Voidwarden',
+      classCode: ClassCodes.voidwarden,
+      icon: 'voidwarden.svg',
+      category: ClassCategory.jawsOfTheLion,
+      primaryColor: 0xffd9d9d9,
+      traits: [
+        CharacterTraits.arcane,
+        CharacterTraits.educated,
+        CharacterTraits.outcast,
+      ],
+    ),
     // FROSTHAVEN
     PlayerClass(
       race: CharacterRaces.inox,
@@ -329,7 +328,6 @@ class PlayerClasses {
       classCode: ClassCodes.drifter,
       icon: 'drifter.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xff92887f,
       traits: [
         CharacterTraits.outcast,
@@ -343,7 +341,6 @@ class PlayerClasses {
       classCode: ClassCodes.blinkBlade,
       icon: 'blink_blade.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xff00a8cf,
       traits: [
         CharacterTraits.educated,
@@ -357,7 +354,6 @@ class PlayerClasses {
       classCode: ClassCodes.bannerSpear,
       icon: 'banner_spear.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xfffdd072,
       traits: [
         CharacterTraits.armored,
@@ -371,7 +367,6 @@ class PlayerClasses {
       classCode: ClassCodes.deathwalker,
       icon: 'deathwalker.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xffacc8ed,
       traits: [
         CharacterTraits.arcane,
@@ -385,7 +380,6 @@ class PlayerClasses {
       classCode: ClassCodes.boneshaper,
       icon: 'boneshaper.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xff6cbe4c,
       traits: [
         CharacterTraits.arcane,
@@ -399,7 +393,6 @@ class PlayerClasses {
       classCode: ClassCodes.geminate,
       icon: 'geminate.svg',
       category: ClassCategory.frosthaven,
-      locked: false,
       primaryColor: 0xffab1c54,
       traits: [
         CharacterTraits.arcane,
@@ -560,6 +553,43 @@ class PlayerClasses {
         CharacterTraits.chaotic,
         CharacterTraits.strong,
       ],
+    ),
+    // MERCENARY PACKS (2025)
+    PlayerClass(
+      race: CharacterRaces.vermling,
+      name: 'Anaphi',
+      title: 'Fallen Lion',
+      classCode: ClassCodes.anaphi,
+      icon: 'anaphi.svg',
+      category: ClassCategory.mercenaryPacks,
+      primaryColor: 0xffe7768d, // TODO: Confirm colour once available
+    ),
+    PlayerClass(
+      race: CharacterRaces.aesther,
+      name: 'Cassandra',
+      title: 'Forgotten Diviner',
+      classCode: ClassCodes.cassandra,
+      icon: 'cassandra.svg',
+      category: ClassCategory.mercenaryPacks,
+      primaryColor: 0xff8bc5d3, // TODO: Confirm colour once available
+    ),
+    PlayerClass(
+      race: CharacterRaces.aesther,
+      name: 'Hail',
+      title: 'Irritable Enchanter',
+      classCode: ClassCodes.hail,
+      icon: 'hail.svg',
+      category: ClassCategory.mercenaryPacks,
+      primaryColor: 0xffca7e64, // TODO: Confirm colour once available
+    ),
+    PlayerClass(
+      race: CharacterRaces.human,
+      name: 'Satha',
+      title: 'Mayor of Frosthaven',
+      classCode: ClassCodes.satha,
+      icon: 'satha.svg',
+      category: ClassCategory.mercenaryPacks,
+      primaryColor: 0xff21546e, // TODO: Confirm colour once available
     ),
     // CRIMSON SCALES
     PlayerClass(
@@ -827,8 +857,6 @@ class PlayerClasses {
       .value;
 
   static int levelByXp(int xp) => LevelConstants.levelXp.entries
-      .lastWhere(
-        (entry) => entry.value <= xp,
-      )
+      .lastWhere((entry) => entry.value <= xp)
       .key;
 }
