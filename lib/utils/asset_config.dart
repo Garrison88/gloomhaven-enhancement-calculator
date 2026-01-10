@@ -12,9 +12,9 @@ final themeSpecificAssets = {
       AssetConfig(darkTheme ? 'heal.svg' : 'heal_light.svg'),
   'HEAL+1': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'heal.svg' : 'heal_light.svg'),
-  'Target': (bool darkTheme) =>
+  'TARGET_CIRCLE': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'target_alt.svg' : 'target_alt_light.svg'),
-  'Target+1': (bool darkTheme) =>
+  'TARGET_CIRCLE+1': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'target_alt.svg' : 'target_alt_light.svg'),
   'RECOVER': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'recover_card.svg' : 'recover_card_light.svg'),
@@ -99,7 +99,7 @@ const standardAssets = {
   'BANE': AssetConfig('bane.svg'),
 
   // Combat related
-  'TARGET': AssetConfig('target.svg'),
+  'TARGET_DIAMOND': AssetConfig('target.svg'),
   'RANGE': AssetConfig('range.svg', invertColor: true),
   'RANGE+1': AssetConfig('range.svg', invertColor: true),
   'LOOT': AssetConfig('loot.svg', invertColor: true),

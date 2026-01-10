@@ -422,7 +422,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       context: context,
                       builder: (dialogContext) {
                         return InfoDialog(
-                          title: "Hail's Discount",
+                          title: 'Hail\'s Discount',
                           message: RichText(
                             text: TextSpan(
                               style: Theme.of(
@@ -436,7 +436,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       },
                     ),
                   ),
-                  title: const AutoSizeText("Hail's Discount ‡", maxLines: 1),
+                  title: const AutoSizeText('Hail\'s Discount ‡', maxLines: 1),
                 ),
               ],
             ),
@@ -461,15 +461,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     if (enhancementCalculatorModel.temporaryEnhancementMode)
-                      Text(
-                        ' †',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
+                      Text(' †', style: Theme.of(context).textTheme.bodyMedium),
                     if (enhancementCalculatorModel.hailsDiscount)
-                      Text(
-                        ' ‡',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
+                      Text(' ‡', style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ],

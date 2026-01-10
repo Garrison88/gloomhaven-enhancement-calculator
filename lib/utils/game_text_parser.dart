@@ -162,7 +162,7 @@ class IconToken extends GameTextToken {
     }
 
     // Handle +1 overlay icons
-    const plusOneElements = ['ATTACK+1', 'MOVE+1', 'HEAL+1', 'Target+1,'];
+    const plusOneElements = ['ATTACK+1', 'MOVE+1', 'HEAL+1', 'TARGET_CIRCLE+1'];
     if (plusOneElements.contains(element)) {
       return Stack(
         alignment: const Alignment(1.75, -1.75),

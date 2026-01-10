@@ -39,8 +39,8 @@ class PerksRepository {
   static const _ward = 'WARD';
   static const _push = 'PUSH';
   static const _pull = 'PULL';
-  static const _target = 'Target';
-  static const _targetDiamond = 'TARGET';
+  static const _targetCircle = 'TARGET_CIRCLE';
+  static const _targetDiamond = 'TARGET_DIAMOND';
   static const _pierce = 'PIERCE';
   static const _stun = 'STUN';
   static const _disarm = 'DISARM';
@@ -167,7 +167,7 @@ class PerksRepository {
         Perk('$_replace two +0 cards with two +0 $_pierce 3 $_rolling cards'),
         Perk('$_replace one +0 card with two +1 cards', quantity: 2),
         Perk(
-          '$_replace one +0 card with one +0 "$_plusOne $_target" $_rolling card',
+          '$_replace one +0 card with one +0 "$_plusOne $_targetCircle" $_rolling card',
           quantity: 2,
         ),
         Perk('Add one +0 $_stun $_rolling card', quantity: 2),
@@ -233,7 +233,7 @@ class PerksRepository {
         Perk('Remove two -1 cards'),
         Perk('Replace one -1 card with one +1 card', quantity: 2),
         Perk('Replace one -2 card with one +0 card'),
-        Perk('Replace one +0 card with one +0 "$_plusOne $_target" card'),
+        Perk('Replace one +0 card with one +0 "$_plusOne $_targetCircle" card'),
         Perk('Replace one +0 card with one +1 $_wound card', quantity: 2),
         Perk('Replace one +0 card with one +1 $_immobilize card', quantity: 2),
         Perk('Replace two +0 cards with three +0 $_muddle $_rolling cards'),
@@ -249,7 +249,7 @@ class PerksRepository {
       Perks([
         Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_target 1 ally" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_targetCircle 1 ally" $_card',
           quantity: 3,
         ),
         Perk(
@@ -265,11 +265,11 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_add $_one +2 "$_strengthen, $_target 1 ally" $_card',
+          '$_add $_one +2 "$_strengthen, $_targetCircle 1 ally" $_card',
           quantity: 3,
         ),
         Perk(
-          '$_ignoreScenarioEffectsAndAdd $_one +0 "$_heal 1, $_target 1 ally" $_card',
+          '$_ignoreScenarioEffectsAndAdd $_one +0 "$_heal 1, $_targetCircle 1 ally" $_card',
         ),
         Perk(
           '$_onceEachScenario, one adjacent ally may use one of your *potion* $_pocket items during their turn without it becoming $_loss',
@@ -402,7 +402,7 @@ class PerksRepository {
         ),
         Perk('$_add $_one +1 $_disarm $_card', quantity: 2),
         Perk(
-          'At the end of each of your rests, you may place one of your money tokens in the hex occupied by an enemy within $_range 3 to perform: $_attack 1, $_target that enemy, $_range 3',
+          'At the end of each of your rests, you may place one of your money tokens in the hex occupied by an enemy within $_range 3 to perform: $_attack 1, $_targetCircle that enemy, $_range 3',
         ),
         Perk(
           'Whenever you complete a city event, draw an attack modifier card as though you were performing an $_attack 4. Gain an amount of gold equal to the $_damage the attack would have dealt',
@@ -623,7 +623,7 @@ class PerksRepository {
       Perks([
         Perk('Remove two -1 cards', quantity: 2),
         Perk('Replace two +0 cards with two +0 $_pierce 3 $_rolling cards'),
-        Perk('Replace one +0 card with one +0 "$_plusOne $_target" card'),
+        Perk('Replace one +0 card with one +0 "$_plusOne $_targetCircle" card'),
         Perk('Replace one +0 card with one +2 card', quantity: 2),
         Perk('Add one +0 "$_recover one item" card', quantity: 3),
         Perk('Add two +1 $_rolling cards', quantity: 2),
@@ -711,7 +711,7 @@ class PerksRepository {
           quantity: 3,
         ),
         Perk(
-          '$_replace $_one +0 $_card with $_one +1 "$_invisible, $_target 1 of your summons" $_card',
+          '$_replace $_one +0 $_card with $_one +1 "$_invisible, $_targetCircle 1 of your summons" $_card',
           quantity: 3,
         ),
         Perk('$_replace $_one +0 $_card with $_two $_wound $_rolling $_cards'),
@@ -755,7 +755,7 @@ class PerksRepository {
         Perk('Remove two -1 cards', quantity: 2),
         Perk('Replace one -2 card with one -1 $_dark card'),
         Perk(
-          'Replace one +0 card with one +0 "$_plusOne $_target" $_rolling card',
+          'Replace one +0 card with one +0 "$_plusOne $_targetCircle" $_rolling card',
         ),
         Perk(
           'Replace two +0 cards with three +0 $_muddle $_rolling cards',
@@ -854,7 +854,7 @@ class PerksRepository {
         Perk(
           '$_add $_three +0 "Give the target or one enemy within $_range 2 of the target $_poison" $_rolling $_cards',
         ),
-        Perk('$_add $_two "$_heal 1, $_target 1 ally" $_rolling $_cards'),
+        Perk('$_add $_two "$_heal 1, $_targetCircle 1 ally" $_rolling $_cards'),
         Perk('$_ignoreScenarioEffectsAndAdd $_one +1 $_card'),
         Perk('You have $_flying'),
         Perk(
@@ -920,12 +920,12 @@ class PerksRepository {
         Perk('$_ignoreItemMinusOneEffectsAndAdd $_one +1 $_card'),
         Perk('Whenever you heal from a long rest, $_addLowercase +1 $_heal'),
         Perk(
-          '$_onceEachScenario, when $_damage from an attack would reduce your current hit point value to less than 1, instead set your current hit point value to 1 and perform: $_attack 2, $_target the attacker',
+          '$_onceEachScenario, when $_damage from an attack would reduce your current hit point value to less than 1, instead set your current hit point value to 1 and perform: $_attack 2, $_targetCircle the attacker',
           quantity: 2,
           grouped: true,
         ),
         Perk(
-          'At the end of each of your turns, you may control all adjacent enemies: $_attack $_plusZero, $_target $_berserker',
+          'At the end of each of your turns, you may control all adjacent enemies: $_attack $_plusZero, $_targetCircle $_berserker',
           quantity: 3,
           grouped: true,
         ),
@@ -966,7 +966,7 @@ class PerksRepository {
       ], variant: Variant.frosthavenCrossover),
       Perks([
         Perk(
-          '$_replace $_one -2 $_card with $_one -2 "$_bless, $_target 2" $_card',
+          '$_replace $_one -2 $_card with $_one -2 "$_bless, $_targetCircle 2" $_card',
         ),
         Perk(
           '$_replace $_one -1 $_card with $_one +0 "Skip moving your character tokens on active $_song at the end of this round" $_card',
@@ -977,7 +977,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_two +0 $_cards with $_one +1 "$_strengthen, $_target 1 ally" $_card',
+          '$_replace $_two +0 $_cards with $_one +1 "$_strengthen, $_targetCircle 1 ally" $_card',
           quantity: 2,
         ),
         Perk(
@@ -1020,7 +1020,7 @@ class PerksRepository {
         Perk('$_remove $_one -2 $_card'),
         Perk('$_replace $_one -1 $_card with $_one +1 $_card', quantity: 4),
         Perk(
-          '$_replace $_one +0 $_card with $_one +0 "$_plusOne $_target" $_rolling $_card',
+          '$_replace $_one +0 $_card with $_one +0 "$_plusOne $_targetCircle" $_rolling $_card',
           quantity: 2,
         ),
         Perk('$_replace $_one +0 $_card with $_one +0 $_stun $_card'),
@@ -1152,7 +1152,7 @@ class PerksRepository {
         Perk('$_remove $_one -2 $_card'),
         Perk('$_remove $_four +0 $_cards'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_plusOne $_target" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_plusOne $_targetCircle" $_card',
         ),
         Perk('$_replace $_one +0 $_card with $_one +0 $_stun $_card'),
         Perk('$_replace $_one +0 $_card with $_one +1 $_wound $_card'),
@@ -1232,7 +1232,7 @@ class PerksRepository {
       // WILDFURY
       Perks([
         Perk(
-          '$_replace $_one -1 $_card with $_one "$_heal 2, $_target $_bear" $_rolling $_card',
+          '$_replace $_one -1 $_card with $_one "$_heal 2, $_targetCircle $_bear" $_rolling $_card',
           quantity: 3,
         ),
         Perk(
@@ -1247,7 +1247,7 @@ class PerksRepository {
         Perk('$_add $_two +1 $_air/$_earth $_cards', quantity: 2),
         Perk('$_add $_one +2 $_push $_card', quantity: 2),
         Perk(
-          '$_ignoreScenarioEffectsAndAdd $_one +1 "$_safeguard, $_target 1 ally" $_card',
+          '$_ignoreScenarioEffectsAndAdd $_one +1 "$_safeguard, $_targetCircle 1 ally" $_card',
         ),
         Perk(
           'Whenever $_bear is attacked, treat any 2x attack modifier $_card the enemy draws as +0 instead',
@@ -1381,7 +1381,7 @@ class PerksRepository {
           '$_replace $_one +0 $_card with $_one +2 "$_regenerate, self" $_card',
         ),
         Perk(
-          '$_replace $_one -1 $_card with $_one +1 "$_heal 2, $_target 1 ally" $_card',
+          '$_replace $_one -1 $_card with $_one +1 "$_heal 2, $_targetCircle 1 ally" $_card',
         ),
         Perk('$_add $_two +0 $_curse $_rolling $_cards'),
         Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
@@ -1614,11 +1614,11 @@ class PerksRepository {
         Perk('$_remove $_two -1 $_cards'),
         Perk('$_remove $_one -2 $_card'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_target 1 ally" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_targetCircle 1 ally" $_card',
           quantity: 2,
         ),
         Perk(
-          '$_replace $_one +0 $_card with $_one +1 "$_heal 1, $_target 1 ally" $_card',
+          '$_replace $_one +0 $_card with $_one +1 "$_heal 1, $_targetCircle 1 ally" $_card',
           quantity: 3,
         ),
         Perk('$_replace $_one +0 $_card with $_one +1 $_poison $_card'),
@@ -2209,7 +2209,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_add $_two "$_heal 1, $_target 1 ally" $_rolling $_cards',
+          '$_add $_two "$_heal 1, $_targetCircle 1 ally" $_rolling $_cards',
           quantity: 2,
         ),
         Perk(_ignoreScenarioEffects),
@@ -2238,7 +2238,7 @@ class PerksRepository {
           quantity: 3,
         ),
         Perk(
-          '$_add $_three "$_heal 1, $_target Boneshaper" $_rolling $_cards',
+          '$_add $_three "$_heal 1, $_targetCircle Boneshaper" $_rolling $_cards',
           quantity: 2,
         ),
         Perk('$_add $_one +2 $_earth/$_dark $_card', quantity: 3),
@@ -2352,7 +2352,7 @@ class PerksRepository {
           '$_wheneverYouLongRest, you may destroy one adjacent obstacle to gain $_ward',
         ),
         Perk(
-          '$_wheneverYouShortRest, you may consume_$_fire to perform $_wound, $_target 1 enemy occupying or adjacent to hazardous terrain',
+          '$_wheneverYouShortRest, you may consume_$_fire to perform $_wound, $_targetCircle 1 enemy occupying or adjacent to hazardous terrain',
         ),
         Perk(
           'You and all allies are unaffected by hazardous terrain you create',
@@ -2375,7 +2375,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          'Add one "$_heal 2, $_bless, $_target 1 ally" $_rolling card',
+          'Add one "$_heal 2, $_bless, $_targetCircle 1 ally" $_rolling card',
           quantity: 2,
         ),
         Perk('Add one +1 "Gain 1 RESONANCE" card', quantity: 3),
@@ -2449,7 +2449,7 @@ class PerksRepository {
           'Each round in which you long rest, you may ignore all negative conditions you have. If you do, they cannot be removed that round',
         ),
         Perk(
-          'Whenever you become exhausted, first perform $_curse, $_target all, $_range 3',
+          'Whenever you become exhausted, first perform $_curse, $_targetCircle all, $_range 3',
         ),
         Perk(
           'Increase your maximum hit point value by 5',
@@ -2461,7 +2461,7 @@ class PerksRepository {
     ClassCodes.snowdancer: [
       Perks([
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_target 1 ally" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_heal 1, $_targetCircle 1 ally" $_card',
           quantity: 3,
         ),
         Perk(
@@ -2474,11 +2474,11 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_one +0 $_card with $_one +1 "$_strengthen, $_target 1 ally" $_card',
+          '$_replace $_one +0 $_card with $_one +1 "$_strengthen, $_targetCircle 1 ally" $_card',
           quantity: 2,
         ),
         Perk(
-          '$_add $_one "$_heal 1, $_ward, $_target 1 ally" $_rolling $_card',
+          '$_add $_one "$_heal 1, $_ward, $_targetCircle 1 ally" $_rolling $_card',
           quantity: 2,
         ),
         Perk('$_wheneverYouLongRest, you may $_ice/$_air'),
@@ -2617,7 +2617,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          'Replace one -1 card with one +0 "$_plusOne $_target" card',
+          'Replace one -1 card with one +0 "$_plusOne $_targetCircle" card',
           quantity: 2,
         ),
         Perk(
@@ -2662,7 +2662,7 @@ class PerksRepository {
         ),
         Perk('$_add $_one +2 $_air/$_dark $_card', quantity: 3),
         Perk(
-          '$_add $_one +2 "$_strengthen, $_target 1 of your summons" $_card',
+          '$_add $_one +2 "$_strengthen, $_targetCircle 1 of your summons" $_card',
           quantity: 2,
         ),
         Perk('$_ignoreScenarioEffectsAndRemove $_one +0 $_card'),
@@ -2680,7 +2680,7 @@ class PerksRepository {
         Perk('$_remove $_one -2 $_card'),
         Perk('$_remove $_two -1 $_cards'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_bless, $_target self or 1 ally" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_bless, $_targetCircle self or 1 ally" $_card',
           quantity: 3,
         ),
         Perk(
@@ -2700,7 +2700,7 @@ class PerksRepository {
           '$_wheneverYouLongRest, you may read one unread $_scenarioIcon from the current $_scenario\'s "Section Links"',
         ),
         Perk(
-          'Whenever you place a $_rift, you may perform "$_pull 1, $_target 1 ally or enemy, $_range 1" as if you occupied a hex containing a $_rift',
+          'Whenever you place a $_rift, you may perform "$_pull 1, $_targetCircle 1 ally or enemy, $_range 1" as if you occupied a hex containing a $_rift',
           quantity: 2,
           grouped: true,
         ),
@@ -2727,13 +2727,13 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_one +0 $_card with $_one +1 "$_heal 1, $_target 1 ally" $_rolling $_card',
+          '$_replace $_one +0 $_card with $_one +1 "$_heal 1, $_targetCircle 1 ally" $_rolling $_card',
           quantity: 2,
         ),
         Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
         Perk('$_add $_one +1 $_stun $_card', quantity: 2),
         Perk(
-          '$_add $_one +3 "$_safeguard, $_target 1 ally" $_card',
+          '$_add $_one +3 "$_safeguard, $_targetCircle 1 ally" $_card',
           quantity: 2,
         ),
         Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
@@ -2758,7 +2758,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_two +0 $_cards with $_one +1 "$_heal 1, $_target 1 ally and self" $_card',
+          '$_replace $_two +0 $_cards with $_one +1 "$_heal 1, $_targetCircle 1 ally and self" $_card',
           quantity: 2,
         ),
         Perk('$_replace $_two +1 $_cards with $_two +2 $_cards'),
@@ -2775,11 +2775,11 @@ class PerksRepository {
           '$_ignoreItemMinusOneEffects and whenever you would gain $_stun, prevent the condition',
         ),
         Perk(
-          '$_wheneverYouLongRest, perform: $_strengthen, $_target 1 ally, $_range 3',
+          '$_wheneverYouLongRest, perform: $_strengthen, $_targetCircle 1 ally, $_range 3',
         ),
         Perk('All initiative values may be discussed freely and precisely'),
         Perk(
-          'The first time each $_scenario that you or an ally exhaust, perform: $_heal 3, $_target all, $_ward, $_strengthen',
+          'The first time each $_scenario that you or an ally exhaust, perform: $_heal 3, $_targetCircle all, $_ward, $_strengthen',
         ),
       ], variant: Variant.base),
     ],
@@ -3012,7 +3012,7 @@ class PerksRepository {
     ClassCodes.dome: [
       Perks([
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 $_strengthen $_target 1 ally $_rolling $_card',
+          '$_replace $_one -1 $_card with $_one +0 $_strengthen $_targetCircle 1 ally $_rolling $_card',
           quantity: 2,
         ),
         Perk(
@@ -3041,7 +3041,7 @@ class PerksRepository {
           'At the end of each of your rests, perform: $_barrierPlus 1 and $_project $_range 4',
         ),
         Perk(
-          '$_onceEachScenario, at the end of an ally\'s turn, perform: $_barrierPlus 5 and $_project, $_target that ally',
+          '$_onceEachScenario, at the end of an ally\'s turn, perform: $_barrierPlus 5 and $_project, $_targetCircle that ally',
           quantity: 2,
           grouped: true,
         ),
@@ -3063,7 +3063,9 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk('$_replace $_one +0 $_card with $_one +1 $_poison $_card'),
-        Perk('$_add $_two "$_heal 1, $_target 1 ally." $_rolling $_cards'),
+        Perk(
+          '$_add $_two "$_heal 1, $_targetCircle 1 ally." $_rolling $_cards',
+        ),
         Perk(
           '$_add $_one +1 "All Latched enemies suffer $_damage 1" $_card',
           quantity: 2,
