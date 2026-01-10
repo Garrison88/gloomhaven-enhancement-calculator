@@ -18,10 +18,7 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 class CreateCharacterDialog extends StatefulWidget {
   final CharactersModel charactersModel;
 
-  const CreateCharacterDialog({
-    super.key,
-    required this.charactersModel,
-  });
+  const CreateCharacterDialog({super.key, required this.charactersModel});
 
   @override
   CreateCharacterDialogState createState() => CreateCharacterDialogState();
@@ -143,15 +140,22 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   onTap: () async {
                     SelectedPlayerClass? selectedPlayerClass =
                         await showSearch<SelectedPlayerClass>(
-                      context: context,
-                      delegate: CustomSearchDelegate(
-                        PlayerClasses.playerClasses,
-                      ),
-                    );
+                          context: context,
+                          delegate: CustomSearchDelegate(
+                            PlayerClasses.playerClasses,
+                          ),
+                        );
                     if (selectedPlayerClass != null) {
                       FocusScope.of(context).requestFocus(nameFocusNode);
 
                       setState(() {
+                        // Mercenary Pack classes pre-populate the name field
+                        // with the name of the Mercenary
+                        if (selectedPlayerClass.playerClass.category ==
+                            ClassCategory.mercenaryPacks) {
+                          _nameTextFieldController.text =
+                              selectedPlayerClass.playerClass.name;
+                        }
                         _variant = selectedPlayerClass.variant!;
                         _classTextFieldController.text = selectedPlayerClass
                             .playerClass
@@ -172,9 +176,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         : SvgPicture.asset(
                             'images/class_icons/${_selectedClass!.icon}',
                             colorFilter: ColorFilter.mode(
-                              Color(
-                                _selectedClass!.primaryColor,
-                              ),
+                              Color(_selectedClass!.primaryColor),
                               BlendMode.srcIn,
                             ),
                           ),
@@ -296,17 +298,13 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 ),
               ],
 
-              const SizedBox(
-                height: smallPadding,
-              ),
+              const SizedBox(height: smallPadding),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,
                 visualDensity: VisualDensity.compact,
                 leading: IconButton(
-                  icon: const Icon(
-                    Icons.info_outline_rounded,
-                  ),
+                  icon: const Icon(Icons.info_outline_rounded),
                   onPressed: () => showDialog<void>(
                     context: context,
                     builder: (_) {
@@ -330,8 +328,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _gloomhavenMode ? null : Colors.grey,
-                            ),
+                          color: _gloomhavenMode ? null : Colors.grey,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -362,8 +360,8 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: _gloomhavenMode ? Colors.grey : null,
-                            ),
+                          color: _gloomhavenMode ? Colors.grey : null,
+                        ),
                       ),
                     ),
                   ],
@@ -376,17 +374,14 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text(
-            'Cancel',
-          ),
+          child: const Text('Cancel'),
         ),
         ElevatedButton.icon(
           style: Theme.of(context).textButtonTheme.style?.copyWith(
-                backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                  (Set<WidgetState> states) =>
-                      Colors.green.withValues(alpha: 0.75),
-                ),
-              ),
+            backgroundColor: WidgetStateProperty.resolveWith<Color>(
+              (Set<WidgetState> states) => Colors.green.withValues(alpha: 0.75),
+            ),
+          ),
           onPressed: () async {
             if (_formKey.currentState != null &&
                 _formKey.currentState!.validate()) {
@@ -395,15 +390,11 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     ? placeholderName
                     : _nameTextFieldController.text,
                 _selectedClass!,
-                initialLevel: int.parse(
-                  _levelTextFieldController.text,
-                ),
+                initialLevel: int.parse(_levelTextFieldController.text),
                 previousRetirements:
                     _previousRetirementsTextFieldController.text.isEmpty
-                        ? 0
-                        : int.parse(
-                            _previousRetirementsTextFieldController.text,
-                          ),
+                    ? 0
+                    : int.parse(_previousRetirementsTextFieldController.text),
                 gloomhavenMode: _gloomhavenMode,
                 prosperityLevel: _prosperityLevelTextFieldController.text != ''
                     ? int.parse(_prosperityLevelTextFieldController.text)
@@ -415,14 +406,11 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
           },
           label: Text(
             'Create',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white),
           ),
-          icon: const Icon(
-            Icons.check_rounded,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.check_rounded, color: Colors.white),
         ),
       ],
     );
@@ -456,11 +444,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   onTap: () {
                     Navigator.of(context).pop(number);
                   },
-                  child: Center(
-                    child: Text(
-                      number.toString(),
-                    ),
-                  ),
+                  child: Center(child: Text(number.toString())),
                 );
               },
             ),

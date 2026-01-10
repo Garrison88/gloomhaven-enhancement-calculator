@@ -23,6 +23,8 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   bool _temporaryEnhancementMode = SharedPrefs().temporaryEnhancementMode;
 
+  bool _hailsDiscount = SharedPrefs().hailsDiscount;
+
   bool showCost = false;
 
   int totalCost = 0;
@@ -35,9 +37,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     calculateCost();
   }
 
-  int cardLevelPenalty(
-    int level,
-  ) {
+  int cardLevelPenalty(int level) {
     if (level == 0) {
       return 0;
     }
@@ -60,9 +60,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     calculateCost();
   }
 
-  int previousEnhancementsPenalty(
-    int previousEnhancements,
-  ) {
+  int previousEnhancementsPenalty(int previousEnhancements) {
     if (previousEnhancements == 0) {
       return 0;
     }
@@ -76,9 +74,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     return penalty;
   }
 
-  int _temporaryEnhancementMutator(
-    int cost,
-  ) {
+  int _temporaryEnhancementMutator(int cost) {
     return (cost * 0.8).ceil();
   }
 
@@ -86,8 +82,9 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   set enhancement(Enhancement? enhancement) {
     if (enhancement != null) {
-      SharedPrefs().enhancementTypeIndex =
-          EnhancementData.enhancements.indexOf(enhancement);
+      SharedPrefs().enhancementTypeIndex = EnhancementData.enhancements.indexOf(
+        enhancement,
+      );
     }
     _enhancement = enhancement;
   }
@@ -96,9 +93,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
   /// Halve the cost if [_lostNonPersistent]
   /// Triple the cost if [_persistent]
   /// Subtract 10 gold if [_enhancerLvl2]
-  int enhancementCost(
-    Enhancement? enhancement,
-  ) {
+  int enhancementCost(Enhancement? enhancement) {
     if (enhancement == null) {
       return 0;
     }
@@ -113,8 +108,9 @@ class EnhancementCalculatorModel with ChangeNotifier {
       enhancementCost *= 2;
     }
     if (!SharedPrefs().gloomhavenMode) {
-      enhancementCost =
-          lostNonPersistent ? (enhancementCost / 2).round() : enhancementCost;
+      enhancementCost = lostNonPersistent
+          ? (enhancementCost / 2).round()
+          : enhancementCost;
       enhancementCost = persistent ? enhancementCost * 3 : enhancementCost;
     }
     if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl2) {
@@ -143,6 +139,14 @@ class EnhancementCalculatorModel with ChangeNotifier {
   set temporaryEnhancementMode(bool value) {
     SharedPrefs().temporaryEnhancementMode = value;
     _temporaryEnhancementMode = value;
+    calculateCost();
+  }
+
+  bool get hailsDiscount => _hailsDiscount;
+
+  set hailsDiscount(bool value) {
+    SharedPrefs().hailsDiscount = value;
+    _hailsDiscount = value;
     calculateCost();
   }
 
@@ -190,9 +194,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void calculateCost({
-    bool notify = true,
-  }) {
+  void calculateCost({bool notify = true}) {
     /// get the base cost of the selected enhancement
     totalCost = enhancementCost(enhancement);
 
@@ -206,9 +208,12 @@ class EnhancementCalculatorModel with ChangeNotifier {
     /// reduce the cost by 20 gold. Then reduce the entire cost by 20%, rouded
     /// up
     if (temporaryEnhancementMode) {
-      totalCost = _temporaryEnhancementMutator(
-        totalCost,
-      );
+      totalCost = _temporaryEnhancementMutator(totalCost);
+    }
+
+    /// Hail's Discount: reduce cost by 5 gold
+    if (hailsDiscount) {
+      totalCost = (totalCost - 5).clamp(0, totalCost);
     }
 
     /// only show cost if there's a price to display

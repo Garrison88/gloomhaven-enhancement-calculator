@@ -16,96 +16,64 @@ import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
 class CharacterScreen extends StatelessWidget {
-  const CharacterScreen({
-    required this.character,
-    super.key,
-  });
+  const CharacterScreen({required this.character, super.key});
   final Character character;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: context.read<CharactersModel>().charScreenScrollController,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: smallPadding,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: smallPadding),
         child: Column(
           children: <Widget>[
             // RETIREMENTS and POCKET ITEMS
             Padding(
-              padding: const EdgeInsets.all(
-                smallPadding,
-              ),
-              child: _RetirementsAndPocketItemsSection(
-                character: character,
-              ),
+              padding: const EdgeInsets.all(smallPadding),
+              child: _RetirementsAndPocketItemsSection(character: character),
             ),
             // NAME and CLASS
             Container(
               constraints: const BoxConstraints(maxWidth: maxWidth),
               child: Padding(
-                padding: const EdgeInsets.all(
-                  smallPadding,
-                ),
-                child: _NameAndClassSection(
-                  character: character,
-                ),
+                padding: const EdgeInsets.all(smallPadding),
+                child: _NameAndClassSection(character: character),
               ),
             ),
             // STATS
             Container(
               constraints: const BoxConstraints(maxWidth: 400),
               child: Padding(
-                padding: const EdgeInsets.all(
-                  smallPadding,
-                ),
-                child: _StatsSection(
-                  character: character,
-                ),
+                padding: const EdgeInsets.all(smallPadding),
+                child: _StatsSection(character: character),
               ),
             ),
             // RESOURCES
             Padding(
-              padding: const EdgeInsets.all(
-                smallPadding,
-              ),
-              child: _ResourcesSection(
-                character: character,
-              ),
+              padding: const EdgeInsets.all(smallPadding),
+              child: _ResourcesSection(character: character),
             ),
             // NOTES
             Container(
               constraints: const BoxConstraints(maxWidth: maxWidth),
               child: Padding(
-                padding: const EdgeInsets.all(
-                  smallPadding,
-                ),
-                child: character.notes.isNotEmpty ||
+                padding: const EdgeInsets.all(smallPadding),
+                child:
+                    character.notes.isNotEmpty ||
                         context.read<CharactersModel>().isEditMode
-                    ? _NotesSection(
-                        character: character,
-                      )
+                    ? _NotesSection(character: character)
                     : const SizedBox(),
               ),
             ),
             // BATTLE GOAL CHECKMARKS
             if (context.read<CharactersModel>().isEditMode &&
                 !character.isRetired)
-              _BattleGoalCheckmarksSection(
-                character: character,
-              ),
+              _BattleGoalCheckmarksSection(character: character),
             // PERKS
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: smallPadding,
-              ),
-              child: PerksSection(
-                character: character,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+              child: PerksSection(character: character),
             ),
-            const SizedBox(
-              height: smallPadding,
-            ),
+            const SizedBox(height: smallPadding),
             // MASTERIES
             if (character.characterMasteries.isNotEmpty)
               Padding(
@@ -118,9 +86,7 @@ class CharacterScreen extends StatelessWidget {
                 ),
               ),
             // PADDING FOR FAB
-            const SizedBox(
-              height: 82,
-            ),
+            const SizedBox(height: 82),
           ],
         ),
       ),
@@ -129,9 +95,7 @@ class CharacterScreen extends StatelessWidget {
 }
 
 class _RetirementsAndPocketItemsSection extends StatelessWidget {
-  const _RetirementsAndPocketItemsSection({
-    required this.character,
-  });
+  const _RetirementsAndPocketItemsSection({required this.character});
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -159,14 +123,12 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                   : InputBorder.none,
             ),
             inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]'))
+              FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]')),
             ],
             keyboardType: TextInputType.number,
           ),
         ),
-        const SizedBox(
-          width: 75,
-        ),
+        const SizedBox(width: 75),
         Tooltip(
           message:
               '${(Character.level(character.xp) / 2).round()} pocket item${(Character.level(character.xp) / 2).round() > 1 ? 's' : ''} allowed',
@@ -191,15 +153,13 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                   child: Text(
                     '${(Character.level(character.xp) / 2).round()}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Theme.of(context).colorScheme.surface,
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  width: smallPadding,
-                )
+                const SizedBox(width: smallPadding),
               ],
             ),
           ),
@@ -210,9 +170,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
 }
 
 class _NameAndClassSection extends StatelessWidget {
-  const _NameAndClassSection({
-    required this.character,
-  });
+  const _NameAndClassSection({required this.character});
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -225,9 +183,7 @@ class _NameAndClassSection extends StatelessWidget {
                 initialValue: character.name,
                 autocorrect: false,
                 onChanged: (String value) {
-                  charactersModel.updateCharacter(
-                    character..name = value,
-                  );
+                  charactersModel.updateCharacter(character..name = value);
                 },
                 decoration: const InputDecoration(
                   label: Text('Name'),
@@ -262,18 +218,16 @@ class _NameAndClassSection extends StatelessWidget {
                 Text(
                   '${Character.level(character.xp)}',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontSize: titleFontSize - 7,
-                        color: Theme.of(context).colorScheme.surface,
-                      ),
+                    fontSize: titleFontSize - 7,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              width: smallPadding,
-            ),
+            const SizedBox(width: smallPadding),
             Flexible(
               child: AutoSizeText(
-                character.getRaceAndClassName(),
+                character.getClassSubtitle(),
                 maxLines: 1,
                 style: const TextStyle(fontSize: titleFontSize),
               ),
@@ -281,9 +235,7 @@ class _NameAndClassSection extends StatelessWidget {
           ],
         ),
         if (character.showTraits()) ...[
-          const SizedBox(
-            height: smallPadding,
-          ),
+          const SizedBox(height: smallPadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -295,9 +247,7 @@ class _NameAndClassSection extends StatelessWidget {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(
-                width: smallPadding,
-              ),
+              const SizedBox(width: smallPadding),
               Flexible(
                 child: AutoSizeText(
                   '${character.playerClass.traits[0]} · ${character.playerClass.traits[1]} · ${character.playerClass.traits[2]}',
@@ -309,19 +259,14 @@ class _NameAndClassSection extends StatelessWidget {
           ),
         ],
         if (character.isRetired)
-          const Text(
-            '(retired)',
-            style: TextStyle(fontSize: 20),
-          ),
+          const Text('(retired)', style: TextStyle(fontSize: 20)),
       ],
     );
   }
 }
 
 class _StatsSection extends StatefulWidget {
-  const _StatsSection({
-    required this.character,
-  });
+  const _StatsSection({required this.character});
   final Character character;
 
   @override
@@ -336,8 +281,9 @@ class _StatsSectionState extends State<_StatsSection> {
   void initState() {
     super.initState();
     _xpController = TextEditingController(text: widget.character.xp.toString());
-    _goldController =
-        TextEditingController(text: widget.character.gold.toString());
+    _goldController = TextEditingController(
+      text: widget.character.gold.toString(),
+    );
   }
 
   @override
@@ -365,15 +311,11 @@ class _StatsSectionState extends State<_StatsSection> {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(
-                width: smallPadding,
-              ),
+              const SizedBox(width: smallPadding),
               context.watch<CharactersModel>().isEditMode &&
                       !widget.character.isRetired
                   ? Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 75,
-                      ),
+                      constraints: const BoxConstraints(maxWidth: 75),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -390,7 +332,8 @@ class _StatsSectionState extends State<_StatsSection> {
                             textAlign: TextAlign.center,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(
-                                  RegExp('[\\.|\\,|\\ |\\-]'))
+                                RegExp('[\\.|\\,|\\ |\\-]'),
+                              ),
                             ],
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -411,8 +354,9 @@ class _StatsSectionState extends State<_StatsSection> {
                               if (value != null) {
                                 charactersModel.updateCharacter(
                                   widget.character
-                                    ..xp =
-                                        value.clamp(0, double.infinity).toInt(),
+                                    ..xp = value
+                                        .clamp(0, double.infinity)
+                                        .toInt(),
                                 );
                                 _xpController.text = value.toString();
                               }
@@ -426,26 +370,14 @@ class _StatsSectionState extends State<_StatsSection> {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
               Consumer<CharactersModel>(
-                builder: (
-                  _,
-                  charactersModel,
-                  __,
-                ) =>
-                    Text(
+                builder: (_, charactersModel, __) => Text(
                   ' / ${Character.xpForNextLevel(Character.level(widget.character.xp))}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.fontSize !=
-                                null
-                            ? Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .fontSize! /
-                                2
-                            : Theme.of(context).textTheme.bodyMedium?.fontSize,
-                      ),
+                    fontSize:
+                        Theme.of(context).textTheme.bodyMedium?.fontSize != null
+                        ? Theme.of(context).textTheme.bodyMedium!.fontSize! / 2
+                        : Theme.of(context).textTheme.bodyMedium?.fontSize,
+                  ),
                 ),
               ),
             ],
@@ -463,15 +395,11 @@ class _StatsSectionState extends State<_StatsSection> {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
+              const SizedBox(width: 5),
               context.watch<CharactersModel>().isEditMode &&
                       !widget.character.isRetired
                   ? Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 75,
-                      ),
+                      constraints: const BoxConstraints(maxWidth: 75),
                       child: Column(
                         children: <Widget>[
                           TextField(
@@ -479,14 +407,15 @@ class _StatsSectionState extends State<_StatsSection> {
                             enableInteractiveSelection: false,
                             onChanged: (String value) =>
                                 charactersModel.updateCharacter(
-                              widget.character
-                                ..gold = value == '' ? 0 : int.parse(value),
-                            ),
+                                  widget.character
+                                    ..gold = value == '' ? 0 : int.parse(value),
+                                ),
                             textAlignVertical: TextAlignVertical.center,
                             textAlign: TextAlign.center,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(
-                                  RegExp('[\\.|\\,|\\ |\\-]'))
+                                RegExp('[\\.|\\,|\\ |\\-]'),
+                              ),
                             ],
                             keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
@@ -518,7 +447,7 @@ class _StatsSectionState extends State<_StatsSection> {
                   : Text(
                       ' ${widget.character.gold}',
                       style: Theme.of(context).textTheme.bodyMedium,
-                    )
+                    ),
             ],
           ),
         ),
@@ -539,17 +468,14 @@ class _StatsSectionState extends State<_StatsSection> {
                 ),
                 SizedBox(
                   width: 5,
-                  child: Text(
-                    widget.character.checkMarkProgress().toString(),
-                  ),
+                  child: Text(widget.character.checkMarkProgress().toString()),
                 ),
                 Text(
                   '/3',
                   softWrap: false,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(letterSpacing: 4),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(letterSpacing: 4),
                 ),
               ],
             ),
@@ -561,9 +487,7 @@ class _StatsSectionState extends State<_StatsSection> {
 }
 
 class _ResourcesSection extends StatefulWidget {
-  const _ResourcesSection({
-    required this.character,
-  });
+  const _ResourcesSection({required this.character});
   final Character character;
   @override
   State<_ResourcesSection> createState() => _ResourcesSectionState();
@@ -581,26 +505,18 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
         ),
         borderRadius: BorderRadius.circular(4),
       ),
-      constraints: const BoxConstraints(
-        maxWidth: 400,
-      ),
+      constraints: const BoxConstraints(maxWidth: 400),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
-        ),
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           iconColor: Theme.of(context).colorScheme.primary,
           onExpansionChanged: (value) =>
               SharedPrefs().resourcesExpanded = value,
           initiallyExpanded: SharedPrefs().resourcesExpanded,
-          title: const Text(
-            'Resources',
-          ),
+          title: const Text('Resources'),
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(
-                bottom: smallPadding,
-              ),
+              padding: const EdgeInsets.only(bottom: smallPadding),
               child: Wrap(
                 runSpacing: smallPadding,
                 spacing: smallPadding,
@@ -635,19 +551,13 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
         onIncrease: () {
           // Create a copy of the character and update it
           final updatedCharacter = character;
-          fieldData.setter(
-            updatedCharacter,
-            fieldData.getter(character) + 1,
-          );
+          fieldData.setter(updatedCharacter, fieldData.getter(character) + 1);
           charactersModel.updateCharacter(updatedCharacter);
         },
         onDecrease: () {
           // Create a copy of the character and update it
           final updatedCharacter = character;
-          fieldData.setter(
-            updatedCharacter,
-            fieldData.getter(character) - 1,
-          );
+          fieldData.setter(updatedCharacter, fieldData.getter(character) - 1);
           charactersModel.updateCharacter(updatedCharacter);
         },
         canEdit: charactersModel.isEditMode && !character.isRetired,
@@ -657,9 +567,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
 }
 
 class _NotesSection extends StatelessWidget {
-  const _NotesSection({
-    required this.character,
-  });
+  const _NotesSection({required this.character});
   final Character character;
   @override
   Widget build(BuildContext context) {
@@ -671,9 +579,7 @@ class _NotesSection extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
-        const SizedBox(
-          height: smallPadding,
-        ),
+        const SizedBox(height: smallPadding),
         context.watch<CharactersModel>().isEditMode && !character.isRetired
             ? TextFormField(
                 key: ValueKey('notes_${character.uuid}'),
@@ -681,9 +587,7 @@ class _NotesSection extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 onChanged: (String value) {
-                  charactersModel.updateCharacter(
-                    character..notes = value,
-                  );
+                  charactersModel.updateCharacter(character..notes = value);
                 },
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
@@ -691,18 +595,14 @@ class _NotesSection extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
               )
-            : Text(
-                character.notes,
-              ),
+            : Text(character.notes),
       ],
     );
   }
 }
 
 class _BattleGoalCheckmarksSection extends StatelessWidget {
-  const _BattleGoalCheckmarksSection({
-    required this.character,
-  });
+  const _BattleGoalCheckmarksSection({required this.character});
   final Character character;
 
   @override
@@ -728,9 +628,7 @@ class _BattleGoalCheckmarksSection extends StatelessWidget {
                       maintainState: true,
                       child: IconButton(
                         color: Theme.of(context).colorScheme.primary,
-                        icon: const Icon(
-                          Icons.remove_circle,
-                        ),
+                        icon: const Icon(Icons.remove_circle),
                         onPressed: () =>
                             charactersModel.decreaseCheckmark(character),
                       ),
@@ -747,9 +645,7 @@ class _BattleGoalCheckmarksSection extends StatelessWidget {
                       maintainState: true,
                       child: IconButton(
                         color: Theme.of(context).colorScheme.primary,
-                        icon: const Icon(
-                          Icons.add_circle,
-                        ),
+                        icon: const Icon(Icons.add_circle),
                         onPressed: () =>
                             charactersModel.increaseCheckmark(character),
                       ),

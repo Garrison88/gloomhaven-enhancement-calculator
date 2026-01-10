@@ -263,4 +263,11 @@ class SharedPrefs {
         'useDefaultFonts',
         value,
       );
+
+  bool get hailsDiscount => _sharedPrefs.getBool('hailsDiscount') ?? false;
+
+  set hailsDiscount(bool value) => _sharedPrefs.setBool(
+        'hailsDiscount',
+        value,
+      );
 }
