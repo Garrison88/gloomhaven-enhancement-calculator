@@ -4,11 +4,7 @@ class CheckRowDivider extends StatelessWidget {
   final double height;
   final Color? color;
 
-  const CheckRowDivider({
-    super.key,
-    required this.height,
-    this.color,
-  });
+  const CheckRowDivider({super.key, required this.height, this.color});
 
   @override
   Widget build(BuildContext context) {

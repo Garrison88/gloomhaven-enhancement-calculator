@@ -14,12 +14,7 @@ class PersonalGoal {
   String title;
   String rewardClassCode;
 
-  PersonalGoal(
-    this.id,
-    this.subGoals,
-    this.title,
-    this.rewardClassCode,
-  );
+  PersonalGoal(this.id, this.subGoals, this.title, this.rewardClassCode);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{

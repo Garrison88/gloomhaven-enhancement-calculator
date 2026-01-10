@@ -8,10 +8,7 @@ class Mastery {
   late String masteryClassCode;
   late String masteryDetails;
 
-  Mastery({
-    required this.masteryClassCode,
-    required this.masteryDetails,
-  });
+  Mastery({required this.masteryClassCode, required this.masteryDetails});
 
   Mastery.fromMap(Map<String, dynamic> map) {
     masteryId = map[columnMasteryId];

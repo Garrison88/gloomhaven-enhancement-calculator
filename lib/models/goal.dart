@@ -3,10 +3,7 @@ import 'dart:convert';
 class SubGoal {
   String description;
   int numberRequired;
-  SubGoal(
-    this.description,
-    this.numberRequired,
-  );
+  SubGoal(this.description, this.numberRequired);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -22,10 +19,7 @@ class SubGoal {
   }
 
   factory SubGoal.fromMap(Map<String, dynamic> map) {
-    return SubGoal(
-      map['description'],
-      map['numberRequired'],
-    );
+    return SubGoal(map['description'], map['numberRequired']);
   }
 
   String toJson() => json.encode(toMap());
