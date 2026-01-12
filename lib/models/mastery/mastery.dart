@@ -12,16 +12,15 @@ class Mastery {
   late String masteryDetails;
   Variant variant = Variant.base;
 
-  Mastery({
-    required this.masteryDetails,
-  });
+  Mastery({required this.masteryDetails});
 
   Mastery.fromMap(Map<String, dynamic> map) {
     id = map[columnMasteryId];
     classCode = map[columnMasteryClass];
     masteryDetails = map[columnMasteryDetails];
-    variant = Variant.values
-        .firstWhere((element) => element.name == map[columnMasteryVariant]);
+    variant = Variant.values.firstWhere(
+      (element) => element.name == map[columnMasteryVariant],
+    );
   }
 
   Map<String, dynamic> toMap(String index) {
@@ -36,10 +35,7 @@ class Mastery {
 }
 
 class Masteries {
-  Masteries(
-    this.masteries, {
-    this.variant = Variant.base,
-  });
+  Masteries(this.masteries, {this.variant = Variant.base});
 
   List<Mastery> masteries;
   Variant variant;

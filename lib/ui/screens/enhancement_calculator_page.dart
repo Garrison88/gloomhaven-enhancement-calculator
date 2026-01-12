@@ -12,9 +12,7 @@ import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
-  const EnhancementCalculatorPage({
-    super.key,
-  });
+  const EnhancementCalculatorPage({super.key});
 
   @override
   State<EnhancementCalculatorPage> createState() =>
@@ -44,8 +42,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    EnhancementCalculatorModel enhancementCalculatorModel =
-        context.watch<EnhancementCalculatorModel>();
+    EnhancementCalculatorModel enhancementCalculatorModel = context
+        .watch<EnhancementCalculatorModel>();
     enhancementCalculatorModel.calculateCost(notify: false);
 
     return Column(
@@ -67,8 +65,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
           style: OutlinedButton.styleFrom(
             side: BorderSide(
               width: 2.0,
-              color:
-                  Color(SharedPrefs().gloomhavenMode ? 0xffa98274 : 0xff6ab7ff),
+              color: Color(
+                SharedPrefs().gloomhavenMode ? 0xffa98274 : 0xff6ab7ff,
+              ),
             ),
           ),
           child: Text(
@@ -81,7 +80,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             constraints: const BoxConstraints(maxWidth: maxWidth),
             padding: const EdgeInsets.symmetric(horizontal: smallPadding),
             child: ListView(
-              // controller: scrollController,
+              padding: EdgeInsets.only(
+                bottom: enhancementCalculatorModel.showCost ? 0 : 88,
+              ),
               children: <Widget>[
                 // TEMPORARY ENHANCEMENT
                 SwitchListTile(
@@ -94,16 +95,16 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     maxLines: 2,
                   ),
                   secondary: IconButton(
-                    icon: const Icon(
-                      Icons.info_outline_rounded,
-                    ),
+                    icon: const Icon(Icons.info_outline_rounded),
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (_) {
                         return InfoDialog(
                           title: Strings.temporaryEnhancement,
                           message: Strings.temporaryEnhancementInfoBody(
-                              context, SharedPrefs().darkTheme),
+                            context,
+                            SharedPrefs().darkTheme,
+                          ),
                         );
                       },
                     ),
@@ -113,16 +114,16 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 // CARD LEVEL
                 ListTile(
                   leading: IconButton(
-                    icon: const Icon(
-                      Icons.info_outline_rounded,
-                    ),
+                    icon: const Icon(Icons.info_outline_rounded),
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (_) {
                         return InfoDialog(
                           title: Strings.cardLevelInfoTitle,
                           message: Strings.cardLevelInfoBody(
-                              context, SharedPrefs().darkTheme),
+                            context,
+                            SharedPrefs().darkTheme,
+                          ),
                         );
                       },
                     ),
@@ -139,9 +140,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             value: enhancementCalculatorModel.cardLevel,
                             items: EnhancementData.cardLevels(
                               context,
-                              partyBoon: SharedPrefs().gloomhavenMode &&
+                              partyBoon:
+                                  SharedPrefs().gloomhavenMode &&
                                   SharedPrefs().partyBoon,
-                              enhancerLvl3: !SharedPrefs().gloomhavenMode &&
+                              enhancerLvl3:
+                                  !SharedPrefs().gloomhavenMode &&
                                   SharedPrefs().enhancerLvl3,
                             ),
                             onChanged: (int? value) {
@@ -160,9 +163,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 // PREVIOUS ENHANCEMENTS
                 ListTile(
                   leading: IconButton(
-                    icon: const Icon(
-                      Icons.info_outline_rounded,
-                    ),
+                    icon: const Icon(Icons.info_outline_rounded),
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (_) {
@@ -179,9 +180,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Previous Enhancements',
-                      ),
+                      const Text('Previous Enhancements'),
                       Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButtonHideUnderline(
@@ -191,7 +190,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 enhancementCalculatorModel.previousEnhancements,
                             items: EnhancementData.previousEnhancements(
                               context,
-                              enhancerLvl4: !SharedPrefs().gloomhavenMode &&
+                              enhancerLvl4:
+                                  !SharedPrefs().gloomhavenMode &&
                                   SharedPrefs().enhancerLvl4,
                               tempEnhancements: enhancementCalculatorModel
                                   .temporaryEnhancementMode,
@@ -199,7 +199,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             onChanged: (int? value) {
                               if (value != null) {
                                 enhancementCalculatorModel
-                                    .previousEnhancements = value;
+                                        .previousEnhancements =
+                                    value;
                               }
                             },
                             isExpanded: true,
@@ -213,27 +214,24 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 // ENHANCEMENT
                 ListTile(
                   leading: IconButton(
-                    icon: const Icon(
-                      Icons.info_outline_rounded,
-                    ),
+                    icon: const Icon(Icons.info_outline_rounded),
                     onPressed: enhancementCalculatorModel.enhancement != null
                         ? () => showDialog<void>(
-                              context: context,
-                              builder: (_) {
-                                return InfoDialog(
-                                  category: enhancementCalculatorModel
-                                      .enhancement!.category,
-                                );
-                              },
-                            )
+                            context: context,
+                            builder: (_) {
+                              return InfoDialog(
+                                category: enhancementCalculatorModel
+                                    .enhancement!
+                                    .category,
+                              );
+                            },
+                          )
                         : null,
                   ),
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Enhancement Type',
-                      ),
+                      const Text('Enhancement Type'),
                       DropdownButtonHideUnderline(
                         child: DropdownButton<Enhancement>(
                           alignment: Alignment.center,
@@ -242,11 +240,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             child: Text(
                               'Type',
                               style: DropdownMenuThemeData(
-                                      textStyle: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium)
-                                  .textStyle
-                                  ?.copyWith(color: Colors.grey),
+                                textStyle: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium,
+                              ).textStyle?.copyWith(color: Colors.grey),
                             ),
                           ),
                           isExpanded: true,
@@ -258,8 +255,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           ),
                           onChanged: (Enhancement? selectedEnhancement) {
                             if (selectedEnhancement != null) {
-                              enhancementCalculatorModel
-                                  .enhancementSelected(selectedEnhancement);
+                              enhancementCalculatorModel.enhancementSelected(
+                                selectedEnhancement,
+                              );
                             }
                           },
                         ),
@@ -271,8 +269,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 // MULTIPLE TARGETS
                 SwitchListTile(
                   value: enhancementCalculatorModel.multipleTargets,
-                  onChanged: !enhancementCalculatorModel
-                          .disableMultiTargetsSwitch
+                  onChanged:
+                      !enhancementCalculatorModel.disableMultiTargetsSwitch
                       ? (bool value) {
                           enhancementCalculatorModel.multipleTargets = value;
                         }
@@ -280,8 +278,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   secondary: IconButton(
                     icon: Icon(
                       Icons.info_outline_rounded,
-                      color:
-                          SharedPrefs().darkTheme ? Colors.white : Colors.black,
+                      color: SharedPrefs().darkTheme
+                          ? Colors.white
+                          : Colors.black,
                     ),
                     onPressed: () => showDialog<void>(
                       context: context,
@@ -291,7 +290,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           message: Strings.multipleTargetsInfoBody(
                             context,
                             gloomhavenMode: SharedPrefs().gloomhavenMode,
-                            enhancerLvl2: !SharedPrefs().gloomhavenMode &&
+                            enhancerLvl2:
+                                !SharedPrefs().gloomhavenMode &&
                                 SharedPrefs().enhancerLvl2,
                             darkMode: SharedPrefs().darkTheme,
                           ),
@@ -299,9 +299,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       },
                     ),
                   ),
-                  title: const AutoSizeText('Multiple Targets'), // \u2020
+                  title: const AutoSizeText('Multiple Targets'),
                 ),
-
                 if (!SharedPrefs().gloomhavenMode) ...[
                   // LOSS NON-PERSISTENT
                   SwitchListTile(
@@ -325,7 +324,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           return InfoDialog(
                             title: Strings.lostNonPersistentInfoTitle,
                             message: Strings.lostNonPersistentInfoBody(
-                                context, SharedPrefs().darkTheme),
+                              context,
+                              SharedPrefs().darkTheme,
+                            ),
                           );
                         },
                       ),
@@ -373,12 +374,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     value: enhancementCalculatorModel.persistent,
                     onChanged:
                         enhancementCalculatorModel.enhancement?.category ==
-                                    EnhancementCategory.summonPlusOne ||
-                                enhancementCalculatorModel.lostNonPersistent
-                            ? null
-                            : (bool value) {
-                                enhancementCalculatorModel.persistent = value;
-                              },
+                                EnhancementCategory.summonPlusOne ||
+                            enhancementCalculatorModel.lostNonPersistent
+                        ? null
+                        : (bool value) {
+                            enhancementCalculatorModel.persistent = value;
+                          },
                     secondary: IconButton(
                       icon: Icon(
                         Icons.info_outline_rounded,
@@ -408,6 +409,35 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   ),
                   const SizedBox(height: 4),
                 ],
+                const EnhancementDivider(),
+                // HAIL'S DISCOUNT
+                SwitchListTile(
+                  value: enhancementCalculatorModel.hailsDiscount,
+                  onChanged: (bool value) {
+                    enhancementCalculatorModel.hailsDiscount = value;
+                  },
+                  secondary: IconButton(
+                    icon: const Icon(Icons.info_outline_rounded),
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (dialogContext) {
+                        return InfoDialog(
+                          title: 'Hail\'s Discount',
+                          message: RichText(
+                            text: TextSpan(
+                              style: Theme.of(
+                                dialogContext,
+                              ).textTheme.bodyMedium,
+                              text:
+                                  "Hail from the Mercenary Pack has a Perk that reduces the cost of the party's Enhancements by 5 gold.",
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  title: const AutoSizeText('Hail\'s Discount ‡', maxLines: 1),
+                ),
               ],
             ),
           ),
@@ -419,66 +449,38 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // isBottom
-                //     ? SizedBox()
-                //     :
-                const Divider(
-                  height: 0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 8,
-                  ),
-                  child: AutoSizeText(
-                    'Total Cost',
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
+                const Divider(height: 0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (enhancementCalculatorModel.temporaryEnhancementMode)
-                      const Text(
-                        ' ',
-                      ),
+                    if (enhancementCalculatorModel.temporaryEnhancementMode ||
+                        enhancementCalculatorModel.hailsDiscount)
+                      const Text(' '),
                     Text(
                       '${enhancementCalculatorModel.totalCost}g',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     if (enhancementCalculatorModel.temporaryEnhancementMode)
-                      Text(
-                        ' †',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
+                      Text(' †', style: Theme.of(context).textTheme.bodyMedium),
+                    if (enhancementCalculatorModel.hailsDiscount)
+                      Text(' ‡', style: Theme.of(context).textTheme.bodyMedium),
                   ],
                 ),
               ],
             ),
           ),
         ),
-        SizedBox(
-          height: enhancementCalculatorModel.showCost ? 24 : 82,
-        )
+        SizedBox(height: enhancementCalculatorModel.showCost ? 24 : 0),
       ],
     );
   }
 }
 
 class EnhancementDivider extends StatelessWidget {
-  const EnhancementDivider({
-    super.key,
-  });
+  const EnhancementDivider({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
-      endIndent: 24,
-      indent: 24,
-      height: 1,
-    );
+    return const Divider(endIndent: 24, indent: 24, height: 1);
   }
 }

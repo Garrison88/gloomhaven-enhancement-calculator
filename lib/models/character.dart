@@ -107,45 +107,33 @@ class Character {
   }
 
   Map<String, dynamic> toMap() => {
-        columnCharacterId: id,
-        columnCharacterUuid: uuid,
-        columnCharacterName: name,
-        columnCharacterClassCode: playerClass.classCode.toLowerCase(),
-        columnPreviousRetirements: previousRetirements,
-        columnCharacterXp: xp,
-        columnCharacterGold: gold,
-        columnCharacterNotes: notes,
-        columnCharacterCheckMarks: checkMarks,
-        columnResourceHide: resourceHide,
-        columnResourceMetal: resourceMetal,
-        columnResourceLumber: resourceLumber,
-        columnResourceArrowvine: resourceArrowvine,
-        columnResourceAxenut: resourceAxenut,
-        columnResourceRockroot: resourceRockroot,
-        columnResourceFlamefruit: resourceFlamefruit,
-        columnResourceCorpsecap: resourceCorpsecap,
-        columnResourceSnowthistle: resourceSnowthistle,
-        columnIsRetired: isRetired ? 1 : 0,
-        columnVariant: variant.name,
-      };
+    columnCharacterId: id,
+    columnCharacterUuid: uuid,
+    columnCharacterName: name,
+    columnCharacterClassCode: playerClass.classCode.toLowerCase(),
+    columnPreviousRetirements: previousRetirements,
+    columnCharacterXp: xp,
+    columnCharacterGold: gold,
+    columnCharacterNotes: notes,
+    columnCharacterCheckMarks: checkMarks,
+    columnResourceHide: resourceHide,
+    columnResourceMetal: resourceMetal,
+    columnResourceLumber: resourceLumber,
+    columnResourceArrowvine: resourceArrowvine,
+    columnResourceAxenut: resourceAxenut,
+    columnResourceRockroot: resourceRockroot,
+    columnResourceFlamefruit: resourceFlamefruit,
+    columnResourceCorpsecap: resourceCorpsecap,
+    columnResourceSnowthistle: resourceSnowthistle,
+    columnIsRetired: isRetired ? 1 : 0,
+    columnVariant: variant.name,
+  };
 
-  Color primaryClassColor(
-    Brightness brightness,
-  ) =>
-      isRetired
-          ? brightness == Brightness.dark
-              ? Colors.white
-              : Colors.black
-          : Color(
-              playerClass.primaryColor,
-            );
-
-  Color secondaryClassColor(
-    Brightness brightness,
-  ) =>
-      Color(
-        playerClass.secondaryColor ?? playerClass.primaryColor,
-      );
+  Color getEffectiveColor(Brightness brightness) {
+    return isRetired
+        ? (brightness == Brightness.dark ? Colors.white : Colors.black)
+        : Color(playerClass.primaryColor);
+  }
 
   static int level(int xp) => PlayerClasses.levelByXp(xp);
 
@@ -166,32 +154,34 @@ class Character {
 
   int checkMarkProgress() => checkMarks != 0
       ? checkMarks % 3 == 0
-          ? 3
-          : checkMarks % 3
+            ? 3
+            : checkMarks % 3
       : 0;
 
   int numOfSelectedPerks() => characterPerks.fold(
-        0,
-        (previousValue, perk) =>
-            previousValue + (perk.characterPerkIsSelected ? 1 : 0),
-      );
+    0,
+    (previousValue, perk) =>
+        previousValue + (perk.characterPerkIsSelected ? 1 : 0),
+  );
 
-  bool showTraits() => !(playerClass.traits.isEmpty ||
-      (playerClass.category != ClassCategory.frosthaven &&
-              variant == Variant.base ||
-          variant == Variant.gloomhaven2E));
+  bool showTraits() =>
+      !(playerClass.traits.isEmpty ||
+          (playerClass.category != ClassCategory.frosthaven &&
+                  variant == Variant.base ||
+              variant == Variant.gloomhaven2E));
 
-  String getRaceAndClassName() => playerClass.getFullDisplayName(variant);
+  String getClassSubtitle() => playerClass.getFullDisplayName(variant);
 
   // TODO: modify this to include Custom and Crimson Scales once they have masteries
   // for now, have to manually add the Custom Classes that have masteries but aren't
   // yet Frosthaven Crossover versions
-  bool includeMasteries() =>
+  bool showMasteries() =>
       playerClass.classCode == 'vimthreader' ||
       playerClass.classCode == 'core' ||
       playerClass.classCode == 'dome' ||
       playerClass.classCode == 'skitterclaw' ||
       playerClass.category == ClassCategory.frosthaven ||
       variant == Variant.frosthavenCrossover ||
-      variant == Variant.gloomhaven2E;
+      variant == Variant.gloomhaven2E ||
+      playerClass.category == ClassCategory.mercenaryPacks;
 }

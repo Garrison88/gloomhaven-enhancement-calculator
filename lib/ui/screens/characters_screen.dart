@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
-import '../../data/constants.dart';
-import 'character_screen.dart';
-import '../../viewmodels/characters_model.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
+import 'character_screen.dart';
+
 class CharactersScreen extends StatefulWidget {
-  const CharactersScreen({
-    super.key,
-  });
+  const CharactersScreen({super.key});
 
   @override
   State<CharactersScreen> createState() => _CharactersScreenState();
@@ -21,6 +19,7 @@ class _CharactersScreenState extends State<CharactersScreen>
   Widget build(BuildContext context) {
     super.build(context);
     CharactersModel charactersModel = context.read<CharactersModel>();
+
     // must watch
     if (context.watch<CharactersModel>().characters.isEmpty) {
       return Padding(
@@ -39,9 +38,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                   textAlign: TextAlign.center,
                 ),
                 if (charactersModel.retiredCharactersAreHidden) ...[
-                  const SizedBox(
-                    height: smallPadding,
-                  ),
+                  const SizedBox(height: smallPadding),
                   const Padding(
                     padding: EdgeInsets.only(top: smallPadding),
                     child: Divider(),
@@ -49,7 +46,6 @@ class _CharactersScreenState extends State<CharactersScreen>
                   TextButton(
                     onPressed: () {
                       charactersModel.toggleShowRetired();
-                      context.read<AppModel>().updateTheme();
                     },
                     child: Text(
                       'Show Retired Characters',
@@ -68,13 +64,12 @@ class _CharactersScreenState extends State<CharactersScreen>
       return PageView.builder(
         controller: charactersModel.pageController,
         onPageChanged: (index) {
-          charactersModel.onPageChanged(
-            index,
-          );
-          context.read<AppModel>().updateTheme();
+          charactersModel.onPageChanged(index);
         },
         itemCount: charactersModel.characters.length,
         itemBuilder: (context, int index) {
+          final character = charactersModel.characters[index];
+
           return Stack(
             alignment: Alignment.center,
             children: <Widget>[
@@ -86,12 +81,10 @@ class _CharactersScreenState extends State<CharactersScreen>
                     height: 500,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: SvgPicture.asset(
-                      'images/class_icons/${charactersModel.characters[index].playerClass.icon}',
+                      'images/class_icons/${character.playerClass.icon}',
                       colorFilter: ColorFilter.mode(
-                        context
-                            .watch<CharactersModel>()
-                            .characters[index]
-                            .primaryClassColor(Theme.of(context).brightness)
+                        character
+                            .getEffectiveColor(Theme.of(context).brightness)
                             .withValues(alpha: 0.1),
                         BlendMode.srcIn,
                       ),
@@ -101,9 +94,7 @@ class _CharactersScreenState extends State<CharactersScreen>
               ),
               Container(
                 constraints: const BoxConstraints(maxWidth: 700),
-                child: CharacterScreen(
-                  character: charactersModel.characters[index],
-                ),
+                child: CharacterScreen(character: character),
               ),
             ],
           );

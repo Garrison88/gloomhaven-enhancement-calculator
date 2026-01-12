@@ -17,8 +17,6 @@ class Enhancement {
     this.invertIconColor = false,
   });
 
-  int cost({
-    required bool gloomhavenMode,
-  }) =>
+  int cost({required bool gloomhavenMode}) =>
       gloomhavenMode ? ghCost : fhCost ?? ghCost;
 }

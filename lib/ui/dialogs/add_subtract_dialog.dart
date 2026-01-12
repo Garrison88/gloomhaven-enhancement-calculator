@@ -1,102 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 
 class AddSubtractDialog extends StatefulWidget {
-  const AddSubtractDialog(
-    this.currentValue,
-    this.hintText, {
-    super.key,
-  });
+  const AddSubtractDialog(this.currentValue, this.hintText, {super.key});
 
   final int currentValue;
   final String hintText;
 
   @override
-  AddSubtractDialogState createState() => AddSubtractDialogState();
+  State<AddSubtractDialog> createState() => _AddSubtractDialogState();
 }
 
-class AddSubtractDialogState extends State<AddSubtractDialog> {
-  final TextEditingController _addSubtractTextEditingController =
-      TextEditingController();
+class _AddSubtractDialogState extends State<AddSubtractDialog> {
+  final TextEditingController _controller = TextEditingController();
+  bool _hasInput = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleOperation(bool isAddition) {
+    final inputValue = int.parse(_controller.text);
+    final newValue = isAddition
+        ? widget.currentValue + inputValue
+        : widget.currentValue - inputValue;
+
+    // Ensure value doesn't go below 0
+    Navigator.pop(context, newValue.clamp(0, double.infinity).toInt());
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Center(child: Text('Adjust ${widget.hintText}')),
       content: Container(
-        constraints: const BoxConstraints(
-          maxWidth: maxDialogWidth,
-          minWidth: maxDialogWidth,
-        ),
-        // padding: const EdgeInsets.all(
-        //   smallPadding,
-        //   // top: smallPadding,
-        //   // bottom: smallPadding,
-        // ),
+        constraints: const BoxConstraints(maxWidth: maxDialogWidth),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                'Enter a value, then tap the minus button to subtract it from your current ${widget.hintText}, or the plus button to add it to your current ${widget.hintText}'),
+              'Enter a value to add or subtract from your current ${widget.hintText.toLowerCase()}',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: smallPadding * 2),
             Row(
-              children: <Widget>[
+              children: [
+                // Subtract button
                 Expanded(
                   child: IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.remove_circle,
+                      color: _hasInput
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
                     ),
-                    onPressed: _addSubtractTextEditingController.text.isNotEmpty
-                        ? () => Navigator.pop(
-                              context,
-                              widget.currentValue -
-                                  int.parse(
-                                    _addSubtractTextEditingController.text,
-                                  ),
-                            )
-                        : null,
+                    iconSize: 32,
+                    onPressed: _hasInput ? () => _handleOperation(false) : null,
+                    tooltip: 'Subtract',
                   ),
                 ),
+                // Input field
                 Expanded(
+                  flex: 2,
                   child: TextField(
+                    controller: _controller,
                     onChanged: (value) {
-                      setState(() {});
+                      setState(() {
+                        _hasInput = value.isNotEmpty;
+                      });
                     },
                     enableInteractiveSelection: false,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.deny(
-                          RegExp('[\\.|\\,|\\ |\\-]'))
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     keyboardType: TextInputType.number,
                     autofocus: true,
+                    textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       hintText: widget.hintText,
                       border: const OutlineInputBorder(),
                     ),
-                    controller: _addSubtractTextEditingController,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: titleFontSize,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontSize: titleFontSize),
                   ),
                 ),
+                // Add button
                 Expanded(
                   child: IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.add_circle,
+                      color: _hasInput
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
                     ),
-                    onPressed: _addSubtractTextEditingController.text.isNotEmpty
-                        ? () => Navigator.pop(
-                              context,
-                              widget.currentValue +
-                                  int.parse(
-                                    _addSubtractTextEditingController.text,
-                                  ),
-                            )
-                        : null,
+                    iconSize: 32,
+                    onPressed: _hasInput ? () => _handleOperation(true) : null,
+                    tooltip: 'Add',
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(height: smallPadding),
+            Text(
+              'Current: ${widget.currentValue}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ],
         ),
       ),

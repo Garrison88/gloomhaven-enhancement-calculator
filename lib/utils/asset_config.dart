@@ -8,36 +8,29 @@ class AssetConfig {
 
 // Create a map for theme-dependent assets
 final themeSpecificAssets = {
-  'HEAL': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'heal.svg' : 'heal_light.svg',
-      ),
-  'HEAL+1': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'heal.svg' : 'heal_light.svg',
-      ),
-  'Target': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'target_alt.svg' : 'target_alt_light.svg',
-      ),
-  'Target+1': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'target_alt.svg' : 'target_alt_light.svg',
-      ),
-  'RECOVER': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'recover_card.svg' : 'recover_card_light.svg',
-      ),
-  'REFRESH': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg',
-      ),
-  'SPENT': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'spent.svg' : 'spent_light.svg',
-      ),
-  'LOSS': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'loss.svg' : 'loss_light.svg',
-      ),
-  'DAMAGE': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'damage.svg' : 'damage_light.svg',
-      ),
+  'HEAL': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'heal.svg' : 'heal_light.svg'),
+  'HEAL+1': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'heal.svg' : 'heal_light.svg'),
+  'TARGET_CIRCLE': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'target_alt.svg' : 'target_alt_light.svg'),
+  'TARGET_CIRCLE+1': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'target_alt.svg' : 'target_alt_light.svg'),
+  'RECOVER': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'recover_card.svg' : 'recover_card_light.svg'),
+  'REFRESH': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'refresh_item.svg' : 'refresh_item_light.svg'),
+  'SPENT': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'spent.svg' : 'spent_light.svg'),
+  'LOSS': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'loss.svg' : 'loss_light.svg'),
+  'PERSISTENT': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'persistent.svg' : 'persistent_light.svg'),
+  'DAMAGE': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'damage.svg' : 'damage_light.svg'),
   'item_minus_one': (bool darkTheme) => AssetConfig(
-        darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg',
-      ),
+    darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg',
+  ),
 };
 
 // Create a map for standard assets
@@ -73,6 +66,7 @@ const standardAssets = {
   // Movement and actions
   'MOVE': AssetConfig('move.svg', invertColor: true),
   'MOVE+1': AssetConfig('move.svg', invertColor: true),
+  'FLYING': AssetConfig('flying.svg', invertColor: true),
   'JUMP': AssetConfig('jump.svg', invertColor: true),
   'SHIELD': AssetConfig('shield.svg', invertColor: true),
   'TELEPORT': AssetConfig('teleport.svg', invertColor: true),
@@ -87,6 +81,7 @@ const standardAssets = {
   'REGENERATE': AssetConfig('regenerate.svg'),
   'DISARM': AssetConfig('disarm.svg'),
   'BLESS': AssetConfig('bless.svg'),
+  'SAFEGUARD': AssetConfig('safeguard.svg'),
   'IMMOBILIZE': AssetConfig('immobilize.svg'),
   'POISON': AssetConfig('poison.svg'),
   'MUDDLE': AssetConfig('muddle.svg'),
@@ -105,7 +100,7 @@ const standardAssets = {
   'BANE': AssetConfig('bane.svg'),
 
   // Combat related
-  'TARGET': AssetConfig('target.svg'),
+  'TARGET_DIAMOND': AssetConfig('target.svg'),
   'RANGE': AssetConfig('range.svg', invertColor: true),
   'RANGE+1': AssetConfig('range.svg', invertColor: true),
   'LOOT': AssetConfig('loot.svg', invertColor: true),
@@ -116,6 +111,7 @@ const standardAssets = {
 
   // Other
   'xp': AssetConfig('xp.svg', invertColor: true),
+  'SECTION': AssetConfig('section.svg', invertColor: true),
 
   // Class-specific abilities and icons
   'Shackle': AssetConfig('class_icons/chainguard.svg', invertColor: true),
@@ -123,8 +119,10 @@ const standardAssets = {
   'Cultivate': AssetConfig('cultivate.svg', invertColor: true),
   'Chieftain': AssetConfig('class_icons/chieftain.svg', invertColor: true),
   'Boneshaper': AssetConfig('class_icons/boneshaper.svg', invertColor: true),
-  'Berserker': AssetConfig('berserker.svg', invertColor: true),
-  'Doomstalker': AssetConfig('doomstalker.svg', invertColor: true),
+  'Berserker': AssetConfig('class_icons/berserker.svg', invertColor: true),
+  'Doomstalker': AssetConfig('class_icons/doomstalker.svg', invertColor: true),
+  'Bladeswarm': AssetConfig('class_icons/bladeswarm.svg', invertColor: true),
+  'Hail': AssetConfig('class_icons/hail.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),
@@ -173,7 +171,7 @@ const standardAssets = {
   'FIRE': AssetConfig('elem_fire.svg'),
   'consume_FIRE': AssetConfig('elem_fire.svg'),
   'Any_Element': AssetConfig('elem_any.svg'),
-  'Consume_Any_Element': AssetConfig('elem_any.svg'),
+  'consume_Any_Element': AssetConfig('elem_any.svg'),
   'AIR/DARK': AssetConfig('elem_air_or_dark.svg'),
   'consume_AIR/DARK': AssetConfig('elem_air_or_dark.svg'),
   'AIR/EARTH': AssetConfig('elem_air_or_earth.svg'),
@@ -215,12 +213,17 @@ const standardAssets = {
 /// - XP values (xp8 -> xp.svg)
 /// - Theme-dependent assets (different icons for light/dark themes)
 /// - Standard game assets
-AssetConfig getAssetConfig(
-  String element,
-  bool darkTheme,
-) {
+AssetConfig getAssetConfig(String element, bool darkTheme) {
   // Clean the input string - remove punctuation
-  String cleanElement = element.replaceAll(RegExp(r"[,.:()" "'" '"' "]"), '');
+  String cleanElement = element.replaceAll(
+    RegExp(
+      r"[,.:()"
+      "'"
+      '"'
+      "]",
+    ),
+    '',
+  );
 
   // Handle XP pattern (xp8, xp10, etc.)
   if (RegExp(r'^xp\d+$').hasMatch(cleanElement)) {

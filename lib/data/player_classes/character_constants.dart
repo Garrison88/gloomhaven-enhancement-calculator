@@ -86,6 +86,12 @@ class ClassCodes {
   static const deepwraith = 'deepwraith';
   static const crashingTide = 'crashingtide';
 
+  // Mercenary Packs (2025)
+  static const anaphi = 'anaphi';
+  static const cassandra = 'cassandra';
+  static const hail = 'hail';
+  static const satha = 'satha';
+
   // Crimson Scales
   static const amberAegis = 'aa';
   static const artificer = 'af';

@@ -11,12 +11,7 @@ class InfoDialog extends StatefulWidget {
   final RichText? message;
   final EnhancementCategory? category;
 
-  const InfoDialog({
-    super.key,
-    this.title,
-    this.message,
-    this.category,
-  });
+  const InfoDialog({super.key, this.title, this.message, this.category});
 
   @override
   State<InfoDialog> createState() => _InfoDialogState();
@@ -53,11 +48,8 @@ class _InfoDialogState extends State<InfoDialog> {
               width: iconSize,
               colorFilter:
                   SharedPrefs().darkTheme && enhancement.invertIconColor
-                      ? const ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        )
-                      : null,
+                  ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                  : null,
             ),
           ),
         );
@@ -121,23 +113,24 @@ class _InfoDialogState extends State<InfoDialog> {
                 : element.name == 'Disarm',
           );
 
-          _eligibleForIcons = EnhancementData.enhancements
-              .where(
-                (enhancement) =>
-                    enhancement.category == EnhancementCategory.negEffect ||
-                    ['Attack', 'Push', 'Pull'].contains(enhancement.name) &&
-                        enhancement.category !=
-                            EnhancementCategory.summonPlusOne,
-              )
-              .toList()
-            ..add(
-              Enhancement(
-                EnhancementCategory.negEffect,
-                'Stun',
-                ghCost: 0,
-                iconPath: 'stun.svg',
-              ),
-            );
+          _eligibleForIcons =
+              EnhancementData.enhancements
+                  .where(
+                    (enhancement) =>
+                        enhancement.category == EnhancementCategory.negEffect ||
+                        ['Attack', 'Push', 'Pull'].contains(enhancement.name) &&
+                            enhancement.category !=
+                                EnhancementCategory.summonPlusOne,
+                  )
+                  .toList()
+                ..add(
+                  Enhancement(
+                    EnhancementCategory.negEffect,
+                    'Stun',
+                    ghCost: 0,
+                    iconPath: 'stun.svg',
+                  ),
+                );
           break;
 
         case EnhancementCategory.posEffect:
@@ -147,37 +140,36 @@ class _InfoDialogState extends State<InfoDialog> {
                 (element) => element.category == EnhancementCategory.posEffect,
               )
               .toList();
-          _eligibleForIcons = EnhancementData.enhancements
-              .where(
-                (element) =>
-                    element.category == EnhancementCategory.posEffect ||
-                    [
-                      'Heal',
-                      'Retaliate',
-                      'Shield',
-                      'Ward',
-                    ].contains(element.name),
-              )
-              .toList()
-            ..removeWhere(
-              (element) => element.name == 'Ward' && gloomhavenMode,
-            )
-            ..add(
-              Enhancement(
-                EnhancementCategory.posEffect,
-                'Invisible',
-                ghCost: 0,
-                iconPath: 'invisible.svg',
-              ),
-            );
+          _eligibleForIcons =
+              EnhancementData.enhancements
+                  .where(
+                    (element) =>
+                        element.category == EnhancementCategory.posEffect ||
+                        [
+                          'Heal',
+                          'Retaliate',
+                          'Shield',
+                          'Ward',
+                        ].contains(element.name),
+                  )
+                  .toList()
+                ..removeWhere(
+                  (element) => element.name == 'Ward' && gloomhavenMode,
+                )
+                ..add(
+                  Enhancement(
+                    EnhancementCategory.posEffect,
+                    'Invisible',
+                    ghCost: 0,
+                    iconPath: 'invisible.svg',
+                  ),
+                );
           break;
 
         case EnhancementCategory.jump:
           _bodyText = Strings.jumpInfoBody(context, darkTheme);
           _titleIcons = EnhancementData.enhancements
-              .where(
-                (element) => element.category == EnhancementCategory.jump,
-              )
+              .where((element) => element.category == EnhancementCategory.jump)
               .toList();
           _eligibleForIcons = EnhancementData.enhancements
               .where(
@@ -230,33 +222,35 @@ class _InfoDialogState extends State<InfoDialog> {
               'Specific Element',
               ghCost: 100,
               iconPath: 'elem_light.svg',
-            )
+            ),
           ];
-          _eligibleForIcons = EnhancementData.enhancements
-            ..where(
-              (element) =>
-                  element.category == EnhancementCategory.negEffect ||
-                  element.category == EnhancementCategory.posEffect ||
-                  [
-                        'Move',
-                        'Attack',
-                        'Shield',
-                        'Heal',
-                        'Retaliate',
-                        'Push',
-                        'Pull',
-                      ].contains(element.name) &&
-                      element.category != EnhancementCategory.summonPlusOne,
-            )
-            ..toList()
-            ..add(
-              Enhancement(
-                EnhancementCategory.posEffect,
-                'Invisible',
-                ghCost: 0,
-                iconPath: 'invisible.svg',
-              ),
-            );
+          _eligibleForIcons =
+              EnhancementData.enhancements
+                  .where(
+                    (element) =>
+                        element.category == EnhancementCategory.negEffect ||
+                        element.category == EnhancementCategory.posEffect ||
+                        [
+                              'Move',
+                              'Attack',
+                              'Shield',
+                              'Heal',
+                              'Retaliate',
+                              'Push',
+                              'Pull',
+                            ].contains(element.name) &&
+                            element.category !=
+                                EnhancementCategory.summonPlusOne,
+                  )
+                  .toList()
+                ..add(
+                  Enhancement(
+                    EnhancementCategory.posEffect,
+                    'Invisible',
+                    ghCost: 0,
+                    iconPath: 'invisible.svg',
+                  ),
+                );
           break;
 
         case EnhancementCategory.anyElem:
@@ -270,42 +264,46 @@ class _InfoDialogState extends State<InfoDialog> {
                 (element) => element.category == EnhancementCategory.anyElem,
               )
               .toList();
-          _eligibleForIcons = EnhancementData.enhancements
-              .where(
-                (element) =>
-                    element.category == EnhancementCategory.negEffect ||
-                    element.category == EnhancementCategory.posEffect ||
-                    [
-                          'Move',
-                          'Attack',
-                          'Shield',
-                          'Heal',
-                          'Retaliate',
-                          'Push',
-                          'Pull',
-                        ].contains(element.name) &&
-                        element.category != EnhancementCategory.summonPlusOne,
-              )
-              .toList()
-            ..add(
-              Enhancement(
-                EnhancementCategory.posEffect,
-                'Invisible',
-                ghCost: 0,
-                iconPath: 'invisible.svg',
-              ),
-            );
+          _eligibleForIcons =
+              EnhancementData.enhancements
+                  .where(
+                    (element) =>
+                        element.category == EnhancementCategory.negEffect ||
+                        element.category == EnhancementCategory.posEffect ||
+                        [
+                              'Move',
+                              'Attack',
+                              'Shield',
+                              'Heal',
+                              'Retaliate',
+                              'Push',
+                              'Pull',
+                            ].contains(element.name) &&
+                            element.category !=
+                                EnhancementCategory.summonPlusOne,
+                  )
+                  .toList()
+                ..add(
+                  Enhancement(
+                    EnhancementCategory.posEffect,
+                    'Invisible',
+                    ghCost: 0,
+                    iconPath: 'invisible.svg',
+                  ),
+                );
           break;
 
         case EnhancementCategory.hex:
           _bodyText = Strings.hexInfoBody(context, darkTheme);
           _titleIcons = [
             EnhancementData.enhancements.firstWhere(
-                (element) => element.category == EnhancementCategory.hex)
+              (element) => element.category == EnhancementCategory.hex,
+            ),
           ];
           _eligibleForIcons = [
             EnhancementData.enhancements.firstWhere(
-                (element) => element.category == EnhancementCategory.hex)
+              (element) => element.category == EnhancementCategory.hex,
+            ),
           ];
           break;
 
@@ -332,9 +330,7 @@ class _InfoDialogState extends State<InfoDialog> {
               ),
             ),
       content: Container(
-        constraints: const BoxConstraints(
-          maxWidth: maxDialogWidth,
-        ),
+        constraints: const BoxConstraints(maxWidth: maxDialogWidth),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -376,9 +372,7 @@ class _InfoDialogState extends State<InfoDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Got it!',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),
       ],

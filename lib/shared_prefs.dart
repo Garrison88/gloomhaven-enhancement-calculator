@@ -16,17 +16,18 @@ class SharedPrefs {
 
   bool get clearSharedPrefs => _sharedPrefs.getBool('clearOldPrefs') ?? true;
 
-  set clearSharedPrefs(bool value) => _sharedPrefs.setBool(
-        'clearOldPrefs',
-        value,
-      );
+  set clearSharedPrefs(bool value) =>
+      _sharedPrefs.setBool('clearOldPrefs', value);
 
   bool get partyBoon => _sharedPrefs.getBool('partyBoon') ?? false;
 
-  set partyBoon(bool value) => _sharedPrefs.setBool(
-        'partyBoon',
-        value,
-      );
+  set partyBoon(bool value) => _sharedPrefs.setBool('partyBoon', value);
+
+  bool get showRetiredCharacters =>
+      _sharedPrefs.getBool('showRetiredCharacters') ?? true;
+
+  set showRetiredCharacters(bool value) =>
+      _sharedPrefs.setBool('showRetiredCharacters', value);
 
   bool get enhancerLvl1 => _sharedPrefs.getBool('enhancerLvl1') ?? enhancerLvl2;
 
@@ -36,10 +37,7 @@ class SharedPrefs {
       enhancerLvl3 = false;
       enhancerLvl4 = false;
     }
-    _sharedPrefs.setBool(
-      'enhancerLvl1',
-      value,
-    );
+    _sharedPrefs.setBool('enhancerLvl1', value);
   }
 
   bool get enhancerLvl2 => _sharedPrefs.getBool('enhancerLvl2') ?? enhancerLvl3;
@@ -51,10 +49,7 @@ class SharedPrefs {
       enhancerLvl3 = false;
       enhancerLvl4 = false;
     }
-    _sharedPrefs.setBool(
-      'enhancerLvl2',
-      value,
-    );
+    _sharedPrefs.setBool('enhancerLvl2', value);
   }
 
   bool get enhancerLvl3 => _sharedPrefs.getBool('enhancerLvl3') ?? enhancerLvl4;
@@ -66,10 +61,7 @@ class SharedPrefs {
     } else {
       enhancerLvl4 = false;
     }
-    _sharedPrefs.setBool(
-      'enhancerLvl3',
-      value,
-    );
+    _sharedPrefs.setBool('enhancerLvl3', value);
   }
 
   bool get enhancerLvl4 => _sharedPrefs.getBool('enhancerLvl4') ?? false;
@@ -80,187 +72,134 @@ class SharedPrefs {
       enhancerLvl2 = true;
       enhancerLvl1 = true;
     }
-    _sharedPrefs.setBool(
-      'enhancerLvl4',
-      value,
-    );
+    _sharedPrefs.setBool('enhancerLvl4', value);
   }
 
   bool get customClasses => _sharedPrefs.getBool('customClasses') ?? false;
 
-  set customClasses(bool value) => _sharedPrefs.setBool(
-        'customClasses',
-        value,
-      );
+  set customClasses(bool value) => _sharedPrefs.setBool('customClasses', value);
 
   bool get darkTheme => _sharedPrefs.getBool('darkTheme') ?? false;
 
-  set darkTheme(bool value) => _sharedPrefs.setBool(
-        'darkTheme',
-        value,
-      );
+  set darkTheme(bool value) => _sharedPrefs.setBool('darkTheme', value);
 
   int get primaryClassColor =>
       _sharedPrefs.getInt('primaryClassColor') ?? 0xff4e7ec1;
 
-  set primaryClassColor(int value) => _sharedPrefs.setInt(
-        'primaryClassColor',
-        value,
-      );
+  set primaryClassColor(int value) =>
+      _sharedPrefs.setInt('primaryClassColor', value);
 
   bool get envelopeX => _sharedPrefs.getBool('envelopeX') ?? false;
 
-  set envelopeX(bool value) => _sharedPrefs.setBool(
-        'envelopeX',
-        value,
-      );
+  set envelopeX(bool value) => _sharedPrefs.setBool('envelopeX', value);
 
   bool get envelopeV => _sharedPrefs.getBool('envelopeV') ?? false;
 
-  set envelopeV(bool value) => _sharedPrefs.setBool(
-        'envelopeV',
-        value,
-      );
+  set envelopeV(bool value) => _sharedPrefs.setBool('envelopeV', value);
 
   int get initialPage => _sharedPrefs.getInt('initialPage') ?? 0;
 
-  set initialPage(int value) => _sharedPrefs.setInt(
-        'initialPage',
-        value,
-      );
+  set initialPage(int value) => _sharedPrefs.setInt('initialPage', value);
 
   bool get resourcesExpanded =>
       _sharedPrefs.getBool('resourcesExpanded') ?? false;
 
-  set resourcesExpanded(bool value) => _sharedPrefs.setBool(
-        'resourcesExpanded',
-        value,
-      );
+  set resourcesExpanded(bool value) =>
+      _sharedPrefs.setBool('resourcesExpanded', value);
 
   int get targetCardLvl => _sharedPrefs.getInt('targetCardLvl') ?? 0;
 
-  set targetCardLvl(int value) => _sharedPrefs.setInt(
-        'targetCardLvl',
-        value,
-      );
+  set targetCardLvl(int value) => _sharedPrefs.setInt('targetCardLvl', value);
 
   int get previousEnhancements =>
       _sharedPrefs.getInt('enhancementsOnTargetAction') ?? 0;
 
-  set previousEnhancements(int value) => _sharedPrefs.setInt(
-        'enhancementsOnTargetAction',
-        value,
-      );
+  set previousEnhancements(int value) =>
+      _sharedPrefs.setInt('enhancementsOnTargetAction', value);
 
   int get enhancementTypeIndex => _sharedPrefs.getInt('enhancementType') ?? 0;
 
-  set enhancementTypeIndex(int value) => _sharedPrefs.setInt(
-        'enhancementType',
-        value,
-      );
+  set enhancementTypeIndex(int value) =>
+      _sharedPrefs.setInt('enhancementType', value);
 
   bool get disableMultiTargetSwitch =>
       _sharedPrefs.getBool('disableMultiTargetsSwitch') ?? false;
 
-  set disableMultiTargetSwitch(bool value) => _sharedPrefs.setBool(
-        'disableMultiTargetsSwitch',
-        value,
-      );
+  set disableMultiTargetSwitch(bool value) =>
+      _sharedPrefs.setBool('disableMultiTargetsSwitch', value);
 
   bool get temporaryEnhancementMode =>
       _sharedPrefs.getBool('temporaryEnhancementMode') ?? false;
 
-  set temporaryEnhancementMode(bool value) => _sharedPrefs.setBool(
-        'temporaryEnhancementMode',
-        value,
-      );
-
-  bool get showRetiredCharacters =>
-      _sharedPrefs.getBool('showRetiredCharacters') ?? true;
-
-  set showRetiredCharacters(bool value) => _sharedPrefs.setBool(
-        'showRetiredCharacters',
-        value,
-      );
+  set temporaryEnhancementMode(bool value) =>
+      _sharedPrefs.setBool('temporaryEnhancementMode', value);
 
   bool get multipleTargetsSwitch =>
       _sharedPrefs.getBool('multipleTargetsSelected') ?? false;
 
-  set multipleTargetsSwitch(bool value) => _sharedPrefs.setBool(
-        'multipleTargetsSelected',
-        value,
-      );
+  set multipleTargetsSwitch(bool value) =>
+      _sharedPrefs.setBool('multipleTargetsSelected', value);
 
   String get backup => _sharedPrefs.getString('backup') ?? '';
 
-  set backup(String value) => _sharedPrefs.setString(
-        'backup',
-        value,
-      );
+  set backup(String value) => _sharedPrefs.setString('backup', value);
 
   bool get gloomhavenMode => _sharedPrefs.getBool('gloomhavenMode') ?? true;
 
-  set gloomhavenMode(bool value) => _sharedPrefs.setBool(
-        'gloomhavenMode',
-        value,
-      );
+  set gloomhavenMode(bool value) =>
+      _sharedPrefs.setBool('gloomhavenMode', value);
 
   bool get lostNonPersistent =>
       _sharedPrefs.getBool('lostNonPersistent') ?? false;
 
-  set lostNonPersistent(bool value) => _sharedPrefs.setBool(
-        'lostNonPersistent',
-        value,
-      );
+  set lostNonPersistent(bool value) =>
+      _sharedPrefs.setBool('lostNonPersistent', value);
 
   bool get persistent => _sharedPrefs.getBool('persistent') ?? false;
 
-  set persistent(bool value) => _sharedPrefs.setBool(
-        'persistent',
-        value,
-      );
+  set persistent(bool value) => _sharedPrefs.setBool('persistent', value);
 
   bool get hideCustomClassesWarningMessage =>
       _sharedPrefs.getBool('hideCustomClassesWarningMessage') ?? false;
 
-  set hideCustomClassesWarningMessage(bool value) => _sharedPrefs.setBool(
-        'hideCustomClassesWarningMessage',
-        value,
-      );
+  set hideCustomClassesWarningMessage(bool value) =>
+      _sharedPrefs.setBool('hideCustomClassesWarningMessage', value);
 
   bool get showUpdate4Dialog =>
       _sharedPrefs.getBool('showUpdate4Dialog') ?? true;
 
-  set showUpdate4Dialog(bool value) => _sharedPrefs.setBool(
-        'showUpdate4Dialog',
-        value,
-      );
+  set showUpdate4Dialog(bool value) =>
+      _sharedPrefs.setBool('showUpdate4Dialog', value);
 
   bool get showUpdate420Dialog =>
       _sharedPrefs.getBool('showUpdate420Dialog') ?? true;
 
-  set showUpdate420Dialog(bool value) => _sharedPrefs.setBool(
-        'showUpdate420Dialog',
-        value,
-      );
+  set showUpdate420Dialog(bool value) =>
+      _sharedPrefs.setBool('showUpdate420Dialog', value);
+
+  bool get showUpdate430Dialog =>
+      _sharedPrefs.getBool('showUpdate430Dialog') ?? true;
+
+  set showUpdate430Dialog(bool value) =>
+      _sharedPrefs.setBool('showUpdate430Dialog', value);
 
   bool getPlayerClassIsUnlocked(String classCode) =>
       _sharedPrefs.getBool(classCode) ?? false;
 
-  setPlayerClassIsUnlocked(
-    String classCode,
-    bool value,
-  ) {
-    _sharedPrefs.setBool(
-      classCode,
-      value,
-    );
+  void setPlayerClassIsUnlocked(String classCode, bool value) {
+    _sharedPrefs.setBool(classCode, value);
   }
 
   bool get useDefaultFonts => _sharedPrefs.getBool('useDefaultFonts') ?? false;
 
-  set useDefaultFonts(bool value) => _sharedPrefs.setBool(
-        'useDefaultFonts',
-        value,
-      );
+  set useDefaultFonts(bool value) =>
+      _sharedPrefs.setBool('useDefaultFonts', value);
+
+  bool get hailsDiscount => _sharedPrefs.getBool('hailsDiscount') ?? false;
+
+  set hailsDiscount(bool value) => _sharedPrefs.setBool('hailsDiscount', value);
+
+  bool get isUSRegion => _sharedPrefs.getBool('isUSRegion') ?? false;
+
+  set isUSRegion(bool value) => _sharedPrefs.setBool('isUSRegion', value);
 }

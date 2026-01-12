@@ -52,9 +52,9 @@ class BoldToken extends GameTextToken {
     return TextSpan(
       text: text,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            letterSpacing: 0.7,
-            fontWeight: FontWeight.bold,
-          ),
+        letterSpacing: 0.7,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }
@@ -92,8 +92,11 @@ class IconToken extends GameTextToken {
         .replaceAll(RegExp(r'["|,]'), '')
         .replaceAll('_', ' ')
         .split(' ')
-        .map((word) =>
-            word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
+        .map(
+          (word) => word.isEmpty
+              ? ''
+              : '${word[0].toUpperCase()}${word.substring(1)}',
+        )
         .join(' ');
   }
 
@@ -112,7 +115,11 @@ class IconToken extends GameTextToken {
   }
 
   Widget _buildIconContent(
-      String assetPath, String element, bool invertColor, bool darkTheme) {
+    String assetPath,
+    String element,
+    bool invertColor,
+    bool darkTheme,
+  ) {
     // Handle XP icons
     if (assetPath == 'xp.svg') {
       final xpNumber = RegExp(r'\d+').firstMatch(element)?.group(0) ?? '';
@@ -155,7 +162,7 @@ class IconToken extends GameTextToken {
     }
 
     // Handle +1 overlay icons
-    const plusOneElements = ['ATTACK+1', 'MOVE+1', 'HEAL+1', 'Target+1,'];
+    const plusOneElements = ['ATTACK+1', 'MOVE+1', 'HEAL+1', 'TARGET_CIRCLE+1'];
     if (plusOneElements.contains(element)) {
       return Stack(
         alignment: const Alignment(1.75, -1.75),
@@ -174,7 +181,10 @@ class IconToken extends GameTextToken {
   }
 
   SvgPicture _buildSvgPicture(
-      String assetPath, bool invertColor, bool darkTheme) {
+    String assetPath,
+    bool invertColor,
+    bool darkTheme,
+  ) {
     if (invertColor && darkTheme) {
       return SvgPicture.asset(
         'images/$assetPath',
@@ -236,9 +246,9 @@ class ItalicToken extends GameTextToken {
   InlineSpan toSpan(BuildContext context, bool darkTheme) {
     return TextSpan(
       text: text,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontStyle: FontStyle.italic,
-          ),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
     );
   }
 }
@@ -413,11 +423,13 @@ class GameTextTokenizer {
     }
 
     // Add the icon
-    tokens.add(IconToken(
-      element: word,
-      assetPath: config.path!,
-      invertColor: config.invertColor,
-    ));
+    tokens.add(
+      IconToken(
+        element: word,
+        assetPath: config.path!,
+        invertColor: config.invertColor,
+      ),
+    );
 
     // Add trailing punctuation if present
     if (trailingPunct != null) {
@@ -448,8 +460,9 @@ class GameTextTokenizer {
     // Preserve punctuation
     if (cleanWord != word) {
       final leadingPunct = word.substring(0, word.indexOf(cleanWord));
-      final trailingPunct =
-          word.substring(word.indexOf(cleanWord) + cleanWord.length);
+      final trailingPunct = word.substring(
+        word.indexOf(cleanWord) + cleanWord.length,
+      );
       return '$leadingPunct$replacement$trailingPunct';
     }
 
@@ -458,11 +471,7 @@ class GameTextTokenizer {
 }
 
 /// Helper enum for text formatting types
-enum _TextFormat {
-  plain,
-  bold,
-  italic,
-}
+enum _TextFormat { plain, bold, italic }
 
 /// Helper class for text segments with formatting
 class _TextSegment {

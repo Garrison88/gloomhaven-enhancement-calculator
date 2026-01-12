@@ -15,19 +15,16 @@ class Perk {
   bool grouped = false;
   Variant variant = Variant.base;
 
-  Perk(
-    this.perkDetails, {
-    this.quantity = 1,
-    this.grouped = false,
-  });
+  Perk(this.perkDetails, {this.quantity = 1, this.grouped = false});
 
   Perk.fromMap(Map<String, dynamic> map) {
     perkId = map[columnPerkId];
     classCode = map[columnPerkClass];
     perkDetails = map[columnPerkDetails];
     grouped = map[columnPerkIsGrouped] == 1 ? true : false;
-    variant = Variant.values
-        .firstWhere((element) => element.name == map[columnPerkVariant]);
+    variant = Variant.values.firstWhere(
+      (element) => element.name == map[columnPerkVariant],
+    );
   }
 
   Map<String, dynamic> toMap(String index) {
@@ -43,10 +40,7 @@ class Perk {
 }
 
 class Perks {
-  Perks(
-    this.perks, {
-    required this.variant,
-  });
+  Perks(this.perks, {required this.variant});
 
   List<Perk> perks;
   Variant variant;

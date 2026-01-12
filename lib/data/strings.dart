@@ -82,7 +82,9 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "trailing † symbol on the total Enhancement cost).";
 
   static RichText temporaryEnhancementInfoBody(
-      BuildContext context, bool darkMode) {
+    BuildContext context,
+    bool darkMode,
+  ) {
     return _buildRichText(context, _temporaryEnhancementContent, darkMode);
   }
 
@@ -113,7 +115,9 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "enhancement already exists, or vice versa.";
 
   static RichText previousEnhancementsInfoBody(
-      BuildContext context, bool darkMode) {
+    BuildContext context,
+    bool darkMode,
+  ) {
     return _buildRichText(context, _previousEnhancementsContent, darkMode);
   }
 
@@ -284,9 +288,9 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required bool enhancerLvl2,
   }) {
     final gloomhavenRules = gloomhavenMode
-        ? "This will **always** apply to adding Target+1, and it will **never** apply to adding a Hex."
-        : "This will **never** apply to adding Target+1, enhancing an ability with an Element, or adding a Hex."
-            "${enhancerLvl2 ? '\nThis multiplier is applied before the discount applied by upgrading the Enhancer (Building 44) to lvl 2.\nFor example, with the Enhancer lvl 2 upgrade, adding WOUND to an action that has multiple targets will cost 140 gold, calculated as (75x2)-10.' : ''}";
+        ? "This will **always** apply to adding TARGET_CIRCLE+1, and it will **never** apply to adding a Hex."
+        : "This will **never** apply to adding TARGET_CIRCLE+1, enhancing an ability with an Element, or adding a Hex."
+              "${enhancerLvl2 ? '\nThis multiplier is applied before the discount applied by upgrading the Enhancer (Building 44) to lvl 2.\nFor example, with the Enhancer lvl 2 upgrade, adding WOUND to an action that has multiple targets will cost 140g, calculated as (75x2)-10.' : ''}";
 
     return "If an ability targets multiple enemies or allies, the enhancement base cost is "
         "**doubled**. This includes abilities that target 'All adjacent enemies' or "
@@ -319,7 +323,9 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "If the action has a Lost icon, but no Persistent icon, halve the base cost.";
 
   static RichText lostNonPersistentInfoBody(
-      BuildContext context, bool darkMode) {
+    BuildContext context,
+    bool darkMode,
+  ) {
     return _buildRichText(context, _lostNonPersistentContent, darkMode);
   }
 

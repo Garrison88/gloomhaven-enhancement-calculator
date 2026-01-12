@@ -53,8 +53,9 @@ class EnhancementData {
       EnhancementCategory.target,
       'Target',
       ghCost: 50,
-      iconPath:
-          SharedPrefs().darkTheme ? 'target_alt.svg' : 'target_alt_light.svg',
+      iconPath: SharedPrefs().darkTheme
+          ? 'target_alt.svg'
+          : 'target_alt_light.svg',
       fhCost: 75,
     ),
     Enhancement(
@@ -106,11 +107,7 @@ class EnhancementData {
       fhCost: 50,
       invertIconColor: true,
     ),
-    Enhancement(
-      EnhancementCategory.title,
-      'Summon',
-      iconPath: 'plus_one.svg',
-    ),
+    Enhancement(EnhancementCategory.title, 'Summon', iconPath: 'plus_one.svg'),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'HP',
@@ -141,10 +138,7 @@ class EnhancementData {
       iconPath: 'range.svg',
       invertIconColor: true,
     ),
-    Enhancement(
-      EnhancementCategory.title,
-      'Effect',
-    ),
+    Enhancement(EnhancementCategory.title, 'Effect'),
     // positive effects
     Enhancement(
       EnhancementCategory.posEffect,
@@ -322,8 +316,10 @@ class EnhancementData {
     required bool partyBoon,
     required bool enhancerLvl3,
   }) {
-    EnhancementCalculatorModel enhancementCalculatorModel =
-        Provider.of(context, listen: false);
+    EnhancementCalculatorModel enhancementCalculatorModel = Provider.of(
+      context,
+      listen: false,
+    );
     List<DropdownMenuItem<int>> list = [];
     for (int x = 0; x <= 8; x++) {
       list.add(
@@ -341,13 +337,11 @@ class EnhancementData {
                     TextSpan(
                       text: '${25 * x}g',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey,
-                          ),
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
+                      ),
                     ),
-                    const TextSpan(
-                      text: ' ',
-                    ),
+                    const TextSpan(text: ' '),
                     TextSpan(
                       text:
                           '${enhancementCalculatorModel.cardLevelPenalty(x)}g',
@@ -357,9 +351,7 @@ class EnhancementData {
                     ),
                     const TextSpan(text: ')'),
                   ] else ...[
-                    TextSpan(
-                      text: '${25 * x}g)',
-                    ),
+                    TextSpan(text: '${25 * x}g)'),
                   ],
                 ],
               ],
@@ -376,8 +368,10 @@ class EnhancementData {
     bool enhancerLvl4 = false,
     bool tempEnhancements = false,
   }) {
-    EnhancementCalculatorModel enhancementCalculatorModel =
-        Provider.of(context, listen: false);
+    EnhancementCalculatorModel enhancementCalculatorModel = Provider.of(
+      context,
+      listen: false,
+    );
     List<DropdownMenuItem<int>> list = [];
     for (int x = 0; x <= 3; x++) {
       list.add(
@@ -395,22 +389,18 @@ class EnhancementData {
                     TextSpan(
                       text: '${75 * x}g',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey,
-                          ),
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
+                      ),
                     ),
-                    const TextSpan(
-                      text: ' ',
-                    ),
+                    const TextSpan(text: ' '),
                     TextSpan(
                       text:
                           '${enhancementCalculatorModel.previousEnhancementsPenalty(x)}g${tempEnhancements ? ' †' : ''}',
                     ),
                     const TextSpan(text: ')'),
                   ] else ...[
-                    TextSpan(
-                      text: '${75 * x}g)',
-                    ),
+                    TextSpan(text: '${75 * x}g)'),
                   ],
                 ],
               ],
@@ -427,8 +417,10 @@ class EnhancementData {
     required bool gloomhavenMode,
     required bool enhancerLvl2,
   }) {
-    EnhancementCalculatorModel enhancementCalculatorModel =
-        Provider.of(context, listen: false);
+    EnhancementCalculatorModel enhancementCalculatorModel = Provider.of(
+      context,
+      listen: false,
+    );
     List<DropdownMenuItem<Enhancement>> list = [];
     for (final Enhancement enhancement in enhancements) {
       if ((!gloomhavenMode && enhancement.name == 'Disarm') ||
@@ -451,14 +443,10 @@ class EnhancementData {
                               width: iconSize,
                               height: iconSize,
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ),
+                            const SizedBox(width: 8),
                             Text(
                               enhancement.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     // decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold,
@@ -466,16 +454,12 @@ class EnhancementData {
                             ),
                             // add an empty spacer to the right to center the
                             // title
-                            const SizedBox(
-                              width: iconSize,
-                            ),
+                            const SizedBox(width: iconSize),
                           ]
                         : <Widget>[
                             Text(
                               enhancement.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     // decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold,
@@ -496,10 +480,7 @@ class EnhancementData {
                             enhancement.category ==
                                 EnhancementCategory.summonPlusOne
                         ? Stack(
-                            alignment: const Alignment(
-                              1.75,
-                              -1.75,
-                            ),
+                            alignment: const Alignment(1.75, -1.75),
                             children: <Widget>[
                               enhancement.invertIconColor &&
                                       SharedPrefs().darkTheme
@@ -524,87 +505,84 @@ class EnhancementData {
                           )
                         // otherwise, no +1 icon
                         : enhancement.invertIconColor && SharedPrefs().darkTheme
-                            ? SvgPicture.asset(
-                                'images/${enhancement.iconPath}',
-                                width: iconSize,
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.white,
-                                  BlendMode.srcIn,
-                                ),
-                              )
-                            : enhancement.name == 'Element'
-                                ? SizedBox(
-                                    width: iconSize,
-                                    height: iconSize,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          bottom: 5,
-                                          top: 5,
-                                          left: 5,
-                                          child: SvgPicture.asset(
-                                            'images/elem_dark.svg',
-                                            width: 10,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 4,
-                                          left: 7,
-                                          child: SvgPicture.asset(
-                                            'images/elem_air.svg',
-                                            width: 11,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 3,
-                                          right: 6,
-                                          child: SvgPicture.asset(
-                                            'images/elem_ice.svg',
-                                            width: 12,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          right: 2,
-                                          bottom: 2,
-                                          child: SvgPicture.asset(
-                                            'images/elem_fire.svg',
-                                            width: 13,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 1,
-                                          right: 4,
-                                          child: SvgPicture.asset(
-                                            'images/elem_earth.svg',
-                                            width: 14,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 0,
-                                          left: 3,
-                                          child: SvgPicture.asset(
-                                            'images/elem_light.svg',
-                                            width: 15,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SvgPicture.asset(
-                                    'images/${enhancement.iconPath}',
-                                    width: iconSize,
+                        ? SvgPicture.asset(
+                            'images/${enhancement.iconPath}',
+                            width: iconSize,
+                            colorFilter: const ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
+                          )
+                        : enhancement.name == 'Element'
+                        ? SizedBox(
+                            width: iconSize,
+                            height: iconSize,
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  bottom: 5,
+                                  top: 5,
+                                  left: 5,
+                                  child: SvgPicture.asset(
+                                    'images/elem_dark.svg',
+                                    width: 10,
                                   ),
+                                ),
+                                Positioned(
+                                  top: 4,
+                                  left: 7,
+                                  child: SvgPicture.asset(
+                                    'images/elem_air.svg',
+                                    width: 11,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 3,
+                                  right: 6,
+                                  child: SvgPicture.asset(
+                                    'images/elem_ice.svg',
+                                    width: 12,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  right: 2,
+                                  bottom: 2,
+                                  child: SvgPicture.asset(
+                                    'images/elem_fire.svg',
+                                    width: 13,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 1,
+                                  right: 4,
+                                  child: SvgPicture.asset(
+                                    'images/elem_earth.svg',
+                                    width: 14,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 3,
+                                  child: SvgPicture.asset(
+                                    'images/elem_light.svg',
+                                    width: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SvgPicture.asset(
+                            'images/${enhancement.iconPath}',
+                            width: iconSize,
+                          ),
                     RichText(
                       text: TextSpan(
                         style: Theme.of(context).textTheme.bodyMedium,
                         children: <TextSpan>[
-                          TextSpan(
-                            text: ' ${enhancement.name} ',
-                          ),
+                          TextSpan(text: ' ${enhancement.name} '),
                           const TextSpan(text: '('),
-                          if ((EnhancementCalculatorModel
-                                      .eligibleForMultipleTargets(
+                          if ((EnhancementCalculatorModel.eligibleForMultipleTargets(
                                     enhancement,
                                     gloomhavenMode: gloomhavenMode,
                                   ) &&
@@ -618,9 +596,7 @@ class EnhancementData {
                             TextSpan(
                               text:
                                   '${enhancement.cost(gloomhavenMode: gloomhavenMode)}g',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     decoration: TextDecoration.lineThrough,
                                     decorationColor: Colors.grey,
@@ -628,9 +604,7 @@ class EnhancementData {
                                     decorationThickness: .75,
                                   ),
                             ),
-                            const TextSpan(
-                              text: ' ',
-                            ),
+                            const TextSpan(text: ' '),
                             TextSpan(
                               text:
                                   '${enhancementCalculatorModel.enhancementCost(enhancement)}g',

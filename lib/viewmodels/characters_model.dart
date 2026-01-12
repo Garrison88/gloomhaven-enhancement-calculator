@@ -11,42 +11,42 @@ import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk/perk.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class CharactersModel with ChangeNotifier {
   CharactersModel({
     required this.databaseHelper,
+    required this.themeProvider,
     required this.showRetired,
   });
 
   List<Character> _characters = [];
   Character? currentCharacter;
   DatabaseHelper databaseHelper;
+  ThemeProvider themeProvider;
   PageController pageController = PageController(
     initialPage: SharedPrefs().initialPage,
   );
   bool isScrolledToTop = true;
   ScrollController charScreenScrollController = ScrollController();
   ScrollController enhancementCalcScrollController = ScrollController();
-  final previousRetirementsController = TextEditingController();
-  final nameController = TextEditingController();
-  final xpController = TextEditingController();
-  final goldController = TextEditingController();
-  final notesController = TextEditingController();
 
   bool showRetired;
-  bool isEditMode = false;
+  bool _isEditMode = false;
+
+  bool get isEditMode => _isEditMode;
+
+  set isEditMode(bool value) {
+    _isEditMode = value;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
     pageController.dispose();
     charScreenScrollController.dispose();
     enhancementCalcScrollController.dispose();
-    previousRetirementsController.dispose();
-    nameController.dispose();
-    xpController.dispose();
-    goldController.dispose();
-    notesController.dispose();
     super.dispose();
   }
 
@@ -145,29 +145,23 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<List<Character>> loadCharacters() async {
-    List<Character> loadedCharacters =
-        await databaseHelper.queryAllCharacters();
+    List<Character> loadedCharacters = await databaseHelper
+        .queryAllCharacters();
     for (Character character in loadedCharacters) {
-      character.characterPerks = await _loadPerks(
-        character,
-      );
-      character.characterMasteries = await _loadMasteries(
-        character,
-      );
+      character.characterPerks = await _loadPerks(character);
+      character.characterMasteries = await _loadMasteries(character);
       characters = loadedCharacters;
     }
 
-    _setCurrentCharacter(
-      index: SharedPrefs().initialPage,
-    );
+    _setCurrentCharacter(index: SharedPrefs().initialPage);
     notifyListeners();
     return characters;
   }
 
-// Usable for testing purposes to create all characters with all variants and random attributes.
+  // Usable for testing purposes to create all characters with all variants and random attributes.
   Future<void> createCharactersTest({
     ClassCategory? classCategory,
-    bool includeAllVariants = true,
+    bool includeAllVariants = false,
   }) async {
     var random = Random();
 
@@ -238,23 +232,21 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  void toggleEditMode() {
-    // isEditMode
-    //     ? hideRetireCharacterAnimationController.reverse()
-    //     : hideRetireCharacterAnimationController.forward();
-    isEditMode = !isEditMode;
-    notifyListeners();
-  }
+  // void toggleEditMode({bool? value}) {
+  //   if (value != null) {
+  //     isEditMode = value;
+  //   } else {
+  //     isEditMode = !isEditMode;
+  //   }
+  //   notifyListeners();
+  // }
 
-  void onPageChanged(
-    int index,
-  ) {
+  void onPageChanged(int index) {
     SharedPrefs().initialPage = index;
     isScrolledToTop = true;
-    _setCurrentCharacter(
-      index: index,
-    );
-    isEditMode = false;
+    _setCurrentCharacter(index: index);
+    _isEditMode = false;
+    notifyListeners();
   }
 
   Future<void> createCharacter(
@@ -272,93 +264,72 @@ class CharactersModel with ChangeNotifier {
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
       xp: PlayerClasses.xpByLevel(initialLevel),
-      gold:
-          gloomhavenMode ? 15 * (initialLevel + 1) : 10 * prosperityLevel + 20,
+      gold: gloomhavenMode
+          ? 15 * (initialLevel + 1)
+          : 10 * prosperityLevel + 20,
       variant: variant,
     );
     try {
-      character.id = await databaseHelper.insertCharacter(
-        character,
-      );
+      character.id = await databaseHelper.insertCharacter(character);
     } catch (e) {
       debugPrint(e.toString());
     }
-    character.characterPerks = await _loadPerks(
-      character,
-    );
+    character.characterPerks = await _loadPerks(character);
 
-    character.characterMasteries = await _loadMasteries(
-      character,
-    );
+    character.characterMasteries = await _loadMasteries(character);
 
     _characters.add(character);
     if (characters.length > 1) {
-      _animateToPage(
-        characters.indexOf(character),
-      );
+      _animateToPage(characters.indexOf(character));
     }
-    _setCurrentCharacter(
-      index: characters.indexOf(character),
-    );
+    _setCurrentCharacter(index: characters.indexOf(character));
     notifyListeners();
   }
 
   Future<void> deleteCurrentCharacter() async {
-    isEditMode = false;
+    _isEditMode = false;
     int index = characters.indexOf(currentCharacter!);
     await databaseHelper.deleteCharacter(currentCharacter!);
     _characters.remove(currentCharacter);
-    _setCurrentCharacter(
-      index: index,
-    );
+    _setCurrentCharacter(index: index);
     notifyListeners();
   }
 
-  void _setCurrentCharacter({
-    required int index,
-  }) {
+  void _setCurrentCharacter({required int index}) {
     if (characters.isEmpty) {
       currentCharacter = null;
       SharedPrefs().initialPage = 0;
     } else {
-      if (index > characters.length - 1 || index == -1) {
+      if (index < 0 || index >= characters.length) {
         currentCharacter = characters.last;
-        SharedPrefs().initialPage = characters.indexOf(characters.last);
+        SharedPrefs().initialPage = characters.length - 1;
       } else {
         currentCharacter = characters[index];
         SharedPrefs().initialPage = index;
       }
-      if (currentCharacter != null) {
-        previousRetirementsController.text =
-            currentCharacter!.previousRetirements.toString();
-        nameController.text = currentCharacter!.name;
-        xpController.text =
-            currentCharacter!.xp != 0 ? '${currentCharacter!.xp}' : '';
-        goldController.text =
-            currentCharacter!.gold != 0 ? '${currentCharacter!.gold}' : '';
-        notesController.text = currentCharacter!.notes;
-      }
     }
-    updateTheme();
+    updateThemeForCharacter(themeProvider);
   }
 
-  void updateTheme() {
+  void updateThemeForCharacter(ThemeProvider themeProvider) {
     if (characters.isEmpty) {
-      SharedPrefs().primaryClassColor = 0xff4e7ec1;
+      themeProvider.updateSeedColor(const Color(0xff4e7ec1));
     } else if (currentCharacter != null) {
-      if (currentCharacter != null && currentCharacter!.isRetired) {
-        SharedPrefs().primaryClassColor =
-            SharedPrefs().darkTheme ? 0xffffffff : 0xff000000;
+      if (currentCharacter!.isRetired) {
+        final retiredColor = SharedPrefs().darkTheme
+            ? Colors.white
+            : Colors.black;
+        themeProvider.updateSeedColor(retiredColor);
       } else {
-        SharedPrefs().primaryClassColor =
-            currentCharacter!.playerClass.primaryColor;
+        final characterColor = Color(
+          currentCharacter!.playerClass.primaryColor,
+        );
+        themeProvider.updateSeedColor(characterColor);
       }
     }
   }
 
-  void _animateToPage(
-    int index,
-  ) {
+  void _animateToPage(int index) {
     if (pageController.hasClients) {
       pageController.animateToPage(
         index,
@@ -368,28 +339,20 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  void jumpToPage(
-    int index,
-  ) {
+  void jumpToPage(int index) {
     if (pageController.hasClients) {
-      pageController.jumpToPage(
-        index,
-      );
-      _setCurrentCharacter(
-        index: index,
-      );
+      pageController.jumpToPage(index);
+      _setCurrentCharacter(index: index);
     }
   }
 
   Future<void> retireCurrentCharacter() async {
     if (currentCharacter != null) {
-      isEditMode = false;
+      _isEditMode = false;
       int index = characters.indexOf(currentCharacter!);
       currentCharacter!.isRetired = !currentCharacter!.isRetired;
       await databaseHelper.updateCharacter(currentCharacter!);
-      _setCurrentCharacter(
-        index: index,
-      );
+      _setCurrentCharacter(index: index);
       notifyListeners();
     }
   }
@@ -401,17 +364,13 @@ class CharactersModel with ChangeNotifier {
 
   void increaseCheckmark(Character character) {
     if (character.checkMarks < 18) {
-      updateCharacter(
-        character..checkMarks += 1,
-      );
+      updateCharacter(character..checkMarks += 1);
     }
   }
 
   void decreaseCheckmark(Character character) {
     if (character.checkMarks > 0) {
-      updateCharacter(
-        character..checkMarks -= 1,
-      );
+      updateCharacter(character..checkMarks -= 1);
     }
   }
 
@@ -424,31 +383,26 @@ class CharactersModel with ChangeNotifier {
   }
 
   Future<void> _loadCharacterPerks(Character character) async {
-    final List<Map<String, Object?>> perks =
-        await databaseHelper.queryPerks(character);
+    final List<Map<String, Object?>> perks = await databaseHelper.queryPerks(
+      character,
+    );
 
     for (var perkMap in perks) {
       character.perks.add(Perk.fromMap(perkMap));
     }
   }
 
-  Future<List<CharacterMastery>> _loadMasteries(
-    Character character,
-  ) async {
-    if (!character.includeMasteries()) {
+  Future<List<CharacterMastery>> _loadMasteries(Character character) async {
+    if (!character.showMasteries()) {
       return [];
     }
     List<Map<String, Object?>> masteries = await databaseHelper.queryMasteries(
       character,
     );
     for (var masteryMap in masteries) {
-      character.masteries.add(
-        Mastery.fromMap(masteryMap),
-      );
+      character.masteries.add(Mastery.fromMap(masteryMap));
     }
-    return await databaseHelper.queryCharacterMasteries(
-      character.uuid,
-    );
+    return await databaseHelper.queryCharacterMasteries(character.uuid);
   }
 
   Future<void> togglePerk({
@@ -461,10 +415,7 @@ class CharactersModel with ChangeNotifier {
         characterPerk.characterPerkIsSelected = value;
       }
     }
-    await databaseHelper.updateCharacterPerk(
-      perk,
-      value,
-    );
+    await databaseHelper.updateCharacterPerk(perk, value);
     notifyListeners();
   }
 
@@ -478,10 +429,7 @@ class CharactersModel with ChangeNotifier {
         characterMastery.characterMasteryAchieved = value;
       }
     }
-    await databaseHelper.updateCharacterMastery(
-      mastery,
-      value,
-    );
+    await databaseHelper.updateCharacterMastery(mastery, value);
     notifyListeners();
   }
 }

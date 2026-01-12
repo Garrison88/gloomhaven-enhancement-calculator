@@ -20,9 +20,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseMigrations {
-  static Future<void> regeneratePerksAndMasteriesTables(
-    Transaction txn,
-  ) async {
+  static Future<void> regeneratePerksAndMasteriesTables(Transaction txn) async {
     await regeneratePerksTable(txn);
     await _regenerateMasteriesTable(txn);
   }
@@ -37,29 +35,28 @@ class DatabaseMigrations {
           $columnPerkIsGrouped ${DatabaseHelper.boolType} DEFAULT 0,
           $columnPerkVariant ${DatabaseHelper.textType}
         )''');
-    await Future.forEach(
-      PerksRepository.perksMap.entries,
-      (MapEntry<String, List<Perks>> entry) async {
-        final classCode = entry.key;
-        final perkLists = entry.value;
-        for (Perks list in perkLists) {
-          for (Perk perk in list.perks) {
-            perk.variant = list.variant;
-            perk.classCode = classCode;
-            for (int i = 0; i < perk.quantity; i++) {
-              String index =
-                  (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
-              await txn.insert(
-                tablePerks,
-                perk.toMap(
-                  '$index${indexToLetter(i)}',
-                ),
-              );
-            }
+    await Future.forEach(PerksRepository.perksMap.entries, (
+      MapEntry<String, List<Perks>> entry,
+    ) async {
+      final classCode = entry.key;
+      final perkLists = entry.value;
+      for (Perks list in perkLists) {
+        for (Perk perk in list.perks) {
+          perk.variant = list.variant;
+          perk.classCode = classCode;
+          for (int i = 0; i < perk.quantity; i++) {
+            String index = (list.perks.indexOf(perk) + 1).toString().padLeft(
+              2,
+              '0',
+            );
+            await txn.insert(
+              tablePerks,
+              perk.toMap('$index${indexToLetter(i)}'),
+            );
           }
         }
-      },
-    );
+      }
+    });
   }
 
   static Future<void> _regenerateMasteriesTable(Transaction txn) async {
@@ -71,48 +68,42 @@ class DatabaseMigrations {
           $columnMasteryDetails ${DatabaseHelper.textType},
           $columnMasteryVariant ${DatabaseHelper.textType}
         )''');
-    await Future.forEach(
-      MasteriesRepository.masteriesMap.entries,
-      (entry) async {
-        final classCode = entry.key;
-        final masteriesList = entry.value;
-        for (Masteries list in masteriesList) {
-          for (Mastery mastery in list.masteries) {
-            mastery.variant = list.variant;
-            mastery.classCode = classCode;
-            await txn.insert(
-              tableMasteries,
-              mastery.toMap(
-                '${list.masteries.indexOf(mastery)}',
-              ),
-            );
-          }
+    await Future.forEach(MasteriesRepository.masteriesMap.entries, (
+      entry,
+    ) async {
+      final classCode = entry.key;
+      final masteriesList = entry.value;
+      for (Masteries list in masteriesList) {
+        for (Mastery mastery in list.masteries) {
+          mastery.variant = list.variant;
+          mastery.classCode = classCode;
+          await txn.insert(
+            tableMasteries,
+            mastery.toMap('${list.masteries.indexOf(mastery)}'),
+          );
         }
-      },
-    );
+      }
+    });
   }
 
   @Deprecated('Use `regeneratePerksTable` as of database schema version >= 8')
   static Future<void> regenerateLegacyPerksTable(Transaction txn) async {
     await txn.execute('DROP TABLE IF EXISTS ${legacy.tablePerks}');
-    await txn.execute('''
+    await txn
+        .execute('''
         ${DatabaseHelper.createTable} ${legacy.tablePerks}(
           ${legacy.columnPerkId} ${DatabaseHelper.idType},
           ${legacy.columnPerkClass} ${DatabaseHelper.textType},
           ${legacy.columnPerkDetails} ${DatabaseHelper.textType},
           ${legacy.columnPerkIsGrouped} ${DatabaseHelper.boolType}
-        )''').then(
-      (_) async {
-        for (legacy.Perk perk in PerksRepositoryLegacy.legacyPerks) {
-          for (int i = 0; i < perk.numOfPerks; i++) {
-            await txn.insert(
-              tablePerks,
-              perk.toMap(),
-            );
+        )''')
+        .then((_) async {
+          for (legacy.Perk perk in PerksRepositoryLegacy.legacyPerks) {
+            for (int i = 0; i < perk.numOfPerks; i++) {
+              await txn.insert(tablePerks, perk.toMap());
+            }
           }
-        }
-      },
-    );
+        });
   }
 
   static migrateToUuids(Transaction txn) async {
@@ -186,21 +177,18 @@ class DatabaseMigrations {
   }
 
   static includeClassMasteries(Transaction txn) async {
-    await txn.execute('''
+    await txn
+        .execute('''
         ${DatabaseHelper.createTable} $tableMasteries (
           $columnMasteryId ${DatabaseHelper.idType},
           $columnMasteryClass ${DatabaseHelper.textType},
           $columnMasteryDetails ${DatabaseHelper.textType}
-        )''').then(
-      (_) async {
-        for (legacy.Mastery mastery in MasteriesRepositoryLegacy.masteries) {
-          await txn.insert(
-            tableMasteries,
-            mastery.toMap(),
-          );
-        }
-      },
-    );
+        )''')
+        .then((_) async {
+          for (legacy.Mastery mastery in MasteriesRepositoryLegacy.masteries) {
+            await txn.insert(tableMasteries, mastery.toMap());
+          }
+        });
     await txn.execute('''
         ${DatabaseHelper.createTable} $tableCharacterMasteries (
           $columnAssociatedCharacterUuid ${DatabaseHelper.textType},
@@ -239,10 +227,7 @@ class DatabaseMigrations {
     );
   }
 
-  static createMetaDataTable(
-    Transaction txn,
-    int version,
-  ) async {
+  static createMetaDataTable(Transaction txn, int version) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     await txn.execute('''
         ${DatabaseHelper.createTable} ${DatabaseHelper.tableMetaData} (
@@ -252,32 +237,23 @@ class DatabaseMigrations {
           ${DatabaseHelper.columnLastUpdated} ${DatabaseHelper.dateTimeType}
         )''');
 
-    await txn.insert(
-      DatabaseHelper.tableMetaData,
-      {
-        DatabaseHelper.columnDatabaseVersion: version,
-        DatabaseHelper.columnAppVersion: packageInfo.version,
-        DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
-      },
-    );
+    await txn.insert(DatabaseHelper.tableMetaData, {
+      DatabaseHelper.columnDatabaseVersion: version,
+      DatabaseHelper.columnAppVersion: packageInfo.version,
+      DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+    });
   }
 
-  static updateMetaDataTable(
-    Transaction txn,
-    int databaseVersion,
-  ) async {
+  static updateMetaDataTable(Transaction txn, int databaseVersion) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     DateTime now = DateTime.now().toUtc();
     String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    await txn.update(
-      DatabaseHelper.tableMetaData,
-      {
-        DatabaseHelper.columnDatabaseVersion: databaseVersion,
-        DatabaseHelper.columnAppVersion: packageInfo.version,
-        DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
-        DatabaseHelper.columnLastUpdated: formattedDate,
-      },
-    );
+    await txn.update(DatabaseHelper.tableMetaData, {
+      DatabaseHelper.columnDatabaseVersion: databaseVersion,
+      DatabaseHelper.columnAppVersion: packageInfo.version,
+      DatabaseHelper.columnAppBuildNumber: packageInfo.buildNumber,
+      DatabaseHelper.columnLastUpdated: formattedDate,
+    });
   }
 
   static addVariantColumnToCharacterTable(Transaction txn) async {
@@ -349,22 +325,13 @@ class DatabaseMigrations {
            $columnPerkVariant ${DatabaseHelper.textType}
          )''');
     // Handle existing Perks for Variant.base
-    await _handleBaseVariantPerks(
-      txn,
-      tempTablePerks,
-    );
+    await _handleBaseVariantPerks(txn, tempTablePerks);
 
     // Handle all other Perks
-    await _handleRemainingVariantPerks(
-      txn,
-      tempTablePerks,
-    );
+    await _handleRemainingVariantPerks(txn, tempTablePerks);
 
     // Replace the old table with the temp table
-    await _dropCharacterPerksTableAndRenameTemp(
-      txn,
-      tempTablePerks,
-    );
+    await _dropCharacterPerksTableAndRenameTemp(txn, tempTablePerks);
   }
 
   static Future<void> _handleBaseVariantPerks(
@@ -374,169 +341,149 @@ class DatabaseMigrations {
     final List<Map<String, dynamic>> characterPerksMaps = await txn.query(
       tableCharacterPerks,
     );
-    final List<CharacterPerk> characterPerks =
-        characterPerksMaps.map((e) => CharacterPerk.fromMap(e)).toList();
+    final List<CharacterPerk> characterPerks = characterPerksMaps
+        .map((e) => CharacterPerk.fromMap(e))
+        .toList();
     final List<Map<String, dynamic>> charactersMaps = await txn.query(
       tableCharacters,
     );
-    final List<Character?> characters =
-        charactersMaps.map((e) => Character.fromMap(e)).toList();
-    await Future.forEach(
-      PerksRepository.perksMap.entries,
-      (entry) async {
-        final classKey = entry.key;
-        final perkLists =
-            entry.value.where((element) => element.variant == Variant.base);
+    final List<Character?> characters = charactersMaps
+        .map((e) => Character.fromMap(e))
+        .toList();
+    await Future.forEach(PerksRepository.perksMap.entries, (entry) async {
+      final classKey = entry.key;
+      final perkLists = entry.value.where(
+        (element) => element.variant == Variant.base,
+      );
 
-        for (Perks list in perkLists) {
-          for (Perk perk in list.perks) {
-            perk.classCode = classKey;
-            String index =
-                (list.perks.indexOf(perk) + 1).toString().padLeft(2, '0');
-            for (int i = 0; i < perk.quantity; i++) {
-              String suffix = '$index${indexToLetter(i)}';
+      for (Perks list in perkLists) {
+        for (Perk perk in list.perks) {
+          perk.classCode = classKey;
+          String index = (list.perks.indexOf(perk) + 1).toString().padLeft(
+            2,
+            '0',
+          );
+          for (int i = 0; i < perk.quantity; i++) {
+            String suffix = '$index${indexToLetter(i)}';
 
-              int id = await txn.insert(
-                tempTablePerks,
-                perk.toMap(suffix),
-              );
-              // This handles for a mistake when first defining the Infuser perks
-              // One perk that has two checks was only given one
-              // All perks after 726 (the last Infuser perk) should reference an
-              // index one lower than the perk id
-              if (id >= 726) {
-                id--;
-              }
-              // MatchingCharacterPerk should be a list. There can be more than 1
-              List<CharacterPerk> matchingCharacterPerks = [];
+            int id = await txn.insert(tempTablePerks, perk.toMap(suffix));
+            // This handles for a mistake when first defining the Infuser perks
+            // One perk that has two checks was only given one
+            // All perks after 726 (the last Infuser perk) should reference an
+            // index one lower than the perk id
+            if (id >= 726) {
+              id--;
+            }
+            // MatchingCharacterPerk should be a list. There can be more than 1
+            List<CharacterPerk> matchingCharacterPerks = [];
 
-              matchingCharacterPerks = characterPerks
-                  .where(
-                    (element) => element.associatedPerkId == id.toString(),
-                  )
-                  .toList();
+            matchingCharacterPerks = characterPerks
+                .where((element) => element.associatedPerkId == id.toString())
+                .toList();
 
-              if (matchingCharacterPerks.isNotEmpty) {
-                for (final CharacterPerk matchingCharacterPerk
-                    in matchingCharacterPerks) {
-                  debugPrint(
-                      '**\nMATCH CHAR PERK:\n${matchingCharacterPerk.associatedPerkId}\n${matchingCharacterPerk.associatedPerkId}\n**');
-                  Character? character = characters.firstWhere(
-                    (element) =>
-                        element?.uuid ==
-                        matchingCharacterPerk.associatedCharacterUuid,
-                  );
+            if (matchingCharacterPerks.isNotEmpty) {
+              for (final CharacterPerk matchingCharacterPerk
+                  in matchingCharacterPerks) {
+                debugPrint(
+                  '**\nMATCH CHAR PERK:\n${matchingCharacterPerk.associatedPerkId}\n${matchingCharacterPerk.associatedPerkId}\n**',
+                );
+                Character? character = characters.firstWhere(
+                  (element) =>
+                      element?.uuid ==
+                      matchingCharacterPerk.associatedCharacterUuid,
+                );
 
-                  if (character != null) {
-                    // if character is Infuser and
-                    // 724 is selected, make 725 selected and
-                    // 725 is selected, make 726 selected
-                    // if id is 724, we are at the second of the grouped perks.
-                    // ID always increases by 1, regardless of the loop
+                if (character != null) {
+                  // if character is Infuser and
+                  // 724 is selected, make 725 selected and
+                  // 725 is selected, make 726 selected
+                  // if id is 724, we are at the second of the grouped perks.
+                  // ID always increases by 1, regardless of the loop
 
-                    if (matchingCharacterPerk.associatedPerkId == '724') {
-                      List<Map<String, dynamic>> perk725List = await txn.query(
-                        tableCharacterPerks,
-                        where:
-                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                        whereArgs: [
-                          '725',
-                          character.uuid,
-                        ],
-                      );
-                      CharacterPerk perk725 =
-                          CharacterPerk.fromMap(perk725List[0]);
-                      await txn.insert(
-                        tableCharacterPerks,
-                        CharacterPerk(
-                          character.uuid,
-                          'infuser_base_11a',
-                          perk725.characterPerkIsSelected,
-                        ).toMap(),
-                      );
-                      await txn.update(
-                        tableCharacterPerks,
-                        {
-                          columnCharacterPerkIsSelected:
-                              matchingCharacterPerk.characterPerkIsSelected
-                                  ? '1'
-                                  : '0',
-                        },
-                        where:
-                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                        whereArgs: [
-                          '725',
-                          character.uuid,
-                        ],
-                      );
-                      await txn.update(
-                        tableCharacterPerks,
-                        {
-                          columnCharacterPerkIsSelected: '0',
-                        },
-                        where:
-                            '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                        whereArgs: [
-                          '724',
-                          character.uuid,
-                        ],
-                      );
-                    }
+                  if (matchingCharacterPerk.associatedPerkId == '724') {
+                    List<Map<String, dynamic>> perk725List = await txn.query(
+                      tableCharacterPerks,
+                      where:
+                          '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
+                      whereArgs: ['725', character.uuid],
+                    );
+                    CharacterPerk perk725 = CharacterPerk.fromMap(
+                      perk725List[0],
+                    );
+                    await txn.insert(
+                      tableCharacterPerks,
+                      CharacterPerk(
+                        character.uuid,
+                        'infuser_base_11a',
+                        perk725.characterPerkIsSelected,
+                      ).toMap(),
+                    );
                     await txn.update(
                       tableCharacterPerks,
                       {
-                        columnAssociatedPerkId:
-                            '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
+                        columnCharacterPerkIsSelected:
+                            matchingCharacterPerk.characterPerkIsSelected
+                            ? '1'
+                            : '0',
                       },
                       where:
                           '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
-                      whereArgs: [
-                        id,
-                        character.uuid,
-                      ],
+                      whereArgs: ['725', character.uuid],
+                    );
+                    await txn.update(
+                      tableCharacterPerks,
+                      {columnCharacterPerkIsSelected: '0'},
+                      where:
+                          '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
+                      whereArgs: ['724', character.uuid],
                     );
                   }
+                  await txn.update(
+                    tableCharacterPerks,
+                    {
+                      columnAssociatedPerkId:
+                          '${character.playerClass.classCode}_${Variant.base.name}_$suffix',
+                    },
+                    where:
+                        '$columnAssociatedPerkId = ? AND $columnAssociatedCharacterUuid = ?',
+                    whereArgs: [id, character.uuid],
+                  );
                 }
               }
             }
           }
         }
-      },
-    );
+      }
+    });
   }
 
   static Future<void> _handleRemainingVariantPerks(
     Transaction txn,
     String tempTablePerks,
   ) async {
-    await Future.forEach(
-      PerksRepository.perksMap.entries,
-      (entry) async {
-        final classCode = entry.key;
-        final perkLists = entry.value.where(
-          (element) => element.variant != Variant.base,
-        );
+    await Future.forEach(PerksRepository.perksMap.entries, (entry) async {
+      final classCode = entry.key;
+      final perkLists = entry.value.where(
+        (element) => element.variant != Variant.base,
+      );
 
-        for (Perks list in perkLists) {
-          for (Perk perk in list.perks) {
-            perk.variant = list.variant;
-            perk.classCode = classCode;
-            for (int i = 0; i < perk.quantity; i++) {
-              try {
-                await txn.insert(
-                  tempTablePerks,
-                  perk.toMap(
-                    '${list.perks.indexOf(perk)}${indexToLetter(i)}',
-                  ),
-                );
-              } catch (e) {
-                debugPrint('ERROR WITH PERKS2 TABLE: $e');
-              }
+      for (Perks list in perkLists) {
+        for (Perk perk in list.perks) {
+          perk.variant = list.variant;
+          perk.classCode = classCode;
+          for (int i = 0; i < perk.quantity; i++) {
+            try {
+              await txn.insert(
+                tempTablePerks,
+                perk.toMap('${list.perks.indexOf(perk)}${indexToLetter(i)}'),
+              );
+            } catch (e) {
+              debugPrint('ERROR WITH PERKS2 TABLE: $e');
             }
           }
         }
-      },
-    );
+      }
+    });
   }
 
   static Future<void> _dropCharacterPerksTableAndRenameTemp(
@@ -546,13 +493,12 @@ class DatabaseMigrations {
     await txn.execute('''
        ${DatabaseHelper.dropTable} $tablePerks
         ''');
-    await txn.rawUpdate(
-      'ALTER TABLE $tempTablePerks RENAME TO $tablePerks',
-    );
+    await txn.rawUpdate('ALTER TABLE $tempTablePerks RENAME TO $tablePerks');
   }
 
   static Future<void> includeClassVariantsAndMasteriesAsMap(
-      Transaction txn) async {
+    Transaction txn,
+  ) async {
     const String tempTableMasteries = 'temp_$tableMasteries';
     await txn.execute('''
         ${DatabaseHelper.createTable} $tempTableMasteries (
@@ -562,10 +508,7 @@ class DatabaseMigrations {
           $columnMasteryVariant ${DatabaseHelper.textType}
         )''');
     // Handle existing Masteries for Variant.base
-    await _handleVariantMasteries(
-      txn,
-      tempTableMasteries,
-    );
+    await _handleVariantMasteries(txn, tempTableMasteries);
 
     // Handle all other Perks
     // await _handleRemainingVariantMasteries(
@@ -574,10 +517,7 @@ class DatabaseMigrations {
     // );
 
     // Replace the old table with the temp table
-    await _dropCharacterMasteriesTableAndRenameTemp(
-      txn,
-      tempTableMasteries,
-    );
+    await _dropCharacterMasteriesTableAndRenameTemp(txn, tempTableMasteries);
   }
 
   // TODO: Masteries can be handled the same regardless of Variant because no
@@ -587,12 +527,15 @@ class DatabaseMigrations {
     Transaction txn,
     String tempTableMasteries,
   ) async {
-    final List<Map<String, dynamic>> characterMasteriesMaps =
-        await txn.query(tableCharacterMasteries);
-    final List<CharacterMastery?> characterMasteries =
-        characterMasteriesMaps.map((e) => CharacterMastery.fromMap(e)).toList();
-    await Future.forEach(MasteriesRepository.masteriesMap.entries,
-        (entry) async {
+    final List<Map<String, dynamic>> characterMasteriesMaps = await txn.query(
+      tableCharacterMasteries,
+    );
+    final List<CharacterMastery?> characterMasteries = characterMasteriesMaps
+        .map((e) => CharacterMastery.fromMap(e))
+        .toList();
+    await Future.forEach(MasteriesRepository.masteriesMap.entries, (
+      entry,
+    ) async {
       final classKey = entry.key;
       final masteryLists = entry.value;
 
