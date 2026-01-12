@@ -986,62 +986,53 @@ class SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: smallPadding,
-                        right: smallPadding,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'v${snapshot.data!.version} ',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: smallPadding,
+                      right: smallPadding,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'v${snapshot.data!.version} ',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ChangelogScreen(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Changelog',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 16,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ChangelogScreen(),
                               ),
-                            ),
+                            );
+                          },
+                          child: const Text(
+                            'Changelog',
+                            style: TextStyle(color: Colors.blue, fontSize: 16),
                           ),
-                          const Text(
-                            ' • ',
-                            style: TextStyle(color: Colors.grey, fontSize: 16),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _launchURL(
-                                Uri.parse(
-                                  'https://creativecommons.org/licenses/by-nc-sa/4.0/',
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'License',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 16,
+                        ),
+                        const Text(
+                          ' • ',
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _launchURL(
+                              Uri.parse(
+                                'https://creativecommons.org/licenses/by-nc-sa/4.0/',
                               ),
-                            ),
+                            );
+                          },
+                          child: const Text(
+                            'License',
+                            style: TextStyle(color: Colors.blue, fontSize: 16),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

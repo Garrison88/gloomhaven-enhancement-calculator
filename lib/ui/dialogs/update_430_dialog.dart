@@ -21,7 +21,14 @@ class Update430Dialog extends StatelessWidget {
             Text(
               '• ⚠️ A necessary database migration means you cannot restore backups created before version 4.2.0. Please create a new backup now to replace any existing ones.',
             ),
-          Text('• Changelog added to the bottom of the Settings screen.'),
+          Text(
+            '• Added all remaining Gloomhaven Second Edition and Mercenary Pack classes.',
+          ),
+          if (SharedPrefs().isUSRegion)
+            Text('Added a "Buy me a Coffee" link in the Settings screen.'),
+          Text(
+            '• Changelog and license link added to the bottom of the Settings screen.',
+          ),
         ],
       ),
       actions: [
