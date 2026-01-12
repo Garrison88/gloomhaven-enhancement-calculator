@@ -25,7 +25,7 @@ class Update430Dialog extends StatelessWidget {
             '• Added all remaining Gloomhaven Second Edition and Mercenary Pack classes.',
           ),
           if (SharedPrefs().isUSRegion)
-            Text('Added a "Buy me a Coffee" link in the Settings screen.'),
+            Text('• Added a "Buy me a Coffee" link in the Settings screen.'),
           Text(
             '• Changelog and license link added to the bottom of the Settings screen.',
           ),

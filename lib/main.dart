@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:device_region/device_region.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,20 @@ Future<void> main() async {
 
   if (Platform.isAndroid) {
     try {
-      final region = await DeviceRegion.getSIMCountryCode().timeout(
+      // device_region: tries SIM first, falls back to network on Android
+      final simOrNetwork = await DeviceRegion.getSIMCountryCode().timeout(
         const Duration(seconds: 3),
       );
-      SharedPrefs().isUSRegion = region?.toUpperCase() == 'US';
+
+      // Flutter's locale from device settings
+      final deviceLocale = PlatformDispatcher.instance.locale.countryCode;
+
+      SharedPrefs().isUSRegion = simOrNetwork?.toUpperCase() == 'US' ||
+          deviceLocale?.toUpperCase() == 'US';
     } catch (e) {
-      // If region detection fails, default to false
-      SharedPrefs().isUSRegion = false;
+      // Fallback: still check locale even if device_region fails
+      final deviceLocale = PlatformDispatcher.instance.locale.countryCode;
+      SharedPrefs().isUSRegion = deviceLocale?.toUpperCase() == 'US';
     }
   }
 
