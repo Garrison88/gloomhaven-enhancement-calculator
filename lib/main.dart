@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_region/device_region.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -21,6 +22,18 @@ Future<void> main() async {
     SharedPrefs().clearSharedPrefs = false;
   }
   SharedPrefs().showUpdate4Dialog = false;
+
+  if (Platform.isAndroid) {
+    try {
+      final region = await DeviceRegion.getSIMCountryCode().timeout(
+        const Duration(seconds: 3),
+      );
+      SharedPrefs().isUSRegion = region?.toUpperCase() == 'US';
+    } catch (e) {
+      // If region detection fails, default to false
+      SharedPrefs().isUSRegion = false;
+    }
+  }
 
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(

@@ -66,11 +66,11 @@ class PerksRepository {
   static const _range = 'RANGE';
   static const _move = 'MOVE';
   static const _teleport = 'TELEPORT';
-  static const _flying = 'FLYING'; // TODO: add this asset
+  static const _flying = 'FLYING';
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
-  static const _scenarioIcon = 'SCENARIO'; // TODO: add this asset
+  static const _section = 'SECTION';
 
   // Class specific
   static const _tear = 'TEAR'; // TODO: add this asset
@@ -2697,7 +2697,7 @@ class PerksRepository {
         ),
         Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
         Perk(
-          '$_wheneverYouLongRest, you may read one unread $_scenarioIcon from the current $_scenario\'s "Section Links"',
+          '$_wheneverYouLongRest, you may read one unread $_section from the current $_scenario\'s "Section Links"',
         ),
         Perk(
           'Whenever you place a $_rift, you may perform "$_pull 1, $_targetCircle 1 ally or enemy, $_range 1" as if you occupied a hex containing a $_rift',

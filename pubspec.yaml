@@ -1,7 +1,7 @@
 name: gloomhaven_enhancement_calc
 description: Character sheet and enhancement calculator
 
-version: 4.2.2+299
+version: 4.3.0+303
 
 environment:
   sdk: ">=3.9.0 <4.0.0"
@@ -30,6 +30,7 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   material_design_icons_flutter: ^7.0.7296
   collection: ^1.19.0
+  device_region: ^1.4.0
 
   cupertino_icons: ^1.0.8
 
@@ -82,6 +83,3 @@ flutter:
     - family: Inter
       fonts:
         - asset: fonts/inter/Inter-Regular.ttf
-    - family: FiraSans
-      fonts:
-        - asset: fonts/fira_sans/FiraSans-Regular.ttf

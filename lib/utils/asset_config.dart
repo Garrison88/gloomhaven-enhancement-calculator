@@ -66,6 +66,7 @@ const standardAssets = {
   // Movement and actions
   'MOVE': AssetConfig('move.svg', invertColor: true),
   'MOVE+1': AssetConfig('move.svg', invertColor: true),
+  'FLYING': AssetConfig('flying.svg', invertColor: true),
   'JUMP': AssetConfig('jump.svg', invertColor: true),
   'SHIELD': AssetConfig('shield.svg', invertColor: true),
   'TELEPORT': AssetConfig('teleport.svg', invertColor: true),
@@ -110,6 +111,7 @@ const standardAssets = {
 
   // Other
   'xp': AssetConfig('xp.svg', invertColor: true),
+  'SECTION': AssetConfig('section.svg', invertColor: true),
 
   // Class-specific abilities and icons
   'Shackle': AssetConfig('class_icons/chainguard.svg', invertColor: true),

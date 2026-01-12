@@ -194,6 +194,7 @@ class _GHCAppBarState extends State<GHCAppBar> {
                       ..showSnackBar(
                         SnackBar(
                           content: Text(message),
+                          persist: false,
                           action: charactersModel.showRetired
                               ? null
                               : SnackBarAction(
