@@ -23,6 +23,12 @@ class SharedPrefs {
 
   set partyBoon(bool value) => _sharedPrefs.setBool('partyBoon', value);
 
+  bool get showRetiredCharacters =>
+      _sharedPrefs.getBool('showRetiredCharacters') ?? true;
+
+  set showRetiredCharacters(bool value) =>
+      _sharedPrefs.setBool('showRetiredCharacters', value);
+
   bool get enhancerLvl1 => _sharedPrefs.getBool('enhancerLvl1') ?? enhancerLvl2;
 
   set enhancerLvl1(bool value) {
@@ -128,12 +134,6 @@ class SharedPrefs {
   set temporaryEnhancementMode(bool value) =>
       _sharedPrefs.setBool('temporaryEnhancementMode', value);
 
-  bool get showRetiredCharacters =>
-      _sharedPrefs.getBool('showRetiredCharacters') ?? true;
-
-  set showRetiredCharacters(bool value) =>
-      _sharedPrefs.setBool('showRetiredCharacters', value);
-
   bool get multipleTargetsSwitch =>
       _sharedPrefs.getBool('multipleTargetsSelected') ?? false;
 
@@ -177,10 +177,16 @@ class SharedPrefs {
   set showUpdate420Dialog(bool value) =>
       _sharedPrefs.setBool('showUpdate420Dialog', value);
 
+  bool get showUpdate430Dialog =>
+      _sharedPrefs.getBool('showUpdate430Dialog') ?? true;
+
+  set showUpdate430Dialog(bool value) =>
+      _sharedPrefs.setBool('showUpdate430Dialog', value);
+
   bool getPlayerClassIsUnlocked(String classCode) =>
       _sharedPrefs.getBool(classCode) ?? false;
 
-  setPlayerClassIsUnlocked(String classCode, bool value) {
+  void setPlayerClassIsUnlocked(String classCode, bool value) {
     _sharedPrefs.setBool(classCode, value);
   }
 
@@ -192,4 +198,8 @@ class SharedPrefs {
   bool get hailsDiscount => _sharedPrefs.getBool('hailsDiscount') ?? false;
 
   set hailsDiscount(bool value) => _sharedPrefs.setBool('hailsDiscount', value);
+
+  bool get isUSRegion => _sharedPrefs.getBool('isUSRegion') ?? false;
+
+  set isUSRegion(bool value) => _sharedPrefs.setBool('isUSRegion', value);
 }

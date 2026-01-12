@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/ui/screens/changelog_screen.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
@@ -89,70 +90,6 @@ class SettingsScreenState extends State<SettingsScreen> {
           constraints: const BoxConstraints(maxWidth: maxWidth),
           child: ListView(
             children: <Widget>[
-              const SettingsSection(title: 'DISPLAY'),
-              Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: Theme.of(
-                    context,
-                  ).colorScheme.copyWith(outline: Colors.transparent),
-                ),
-                child: SwitchListTile(
-                  secondary: Icon(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Icons.dark_mode_rounded
-                        : Icons.light_mode_rounded,
-                  ),
-                  title: const Text('Brightness'),
-                  subtitle: Text(
-                    Theme.of(context).brightness == Brightness.dark
-                        ? 'Dark'
-                        : 'Light',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  activeThumbImage: const AssetImage('images/elem_dark.png'),
-                  activeThumbColor: const Color(0xff1f272e),
-                  inactiveThumbColor: const Color(0xffeda50b),
-                  inactiveTrackColor: const Color(
-                    0xffeda50b,
-                  ).withValues(alpha: 0.75),
-                  activeTrackColor: const Color(0xff1f272e),
-                  inactiveThumbImage: const AssetImage('images/elem_light.png'),
-                  value: context.watch<ThemeProvider>().useDarkMode,
-                  onChanged: (val) {
-                    context.read<ThemeProvider>().updateDarkMode(val);
-                  },
-                ),
-              ),
-              SwitchListTile(
-                secondary: Icon(MdiIcons.formatFont),
-                title: const Text('Use Inter Font'),
-                subtitle: Text(
-                  'Replace stylized fonts with Inter to improve readability',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                value: context.watch<ThemeProvider>().useDefaultFonts,
-                onChanged: (val) {
-                  context.read<ThemeProvider>().updateDefaultFonts(val);
-                },
-              ),
-              SwitchListTile(
-                secondary: Icon(
-                  context.read<CharactersModel>().showRetired
-                      ? Icons.visibility_rounded
-                      : Icons.visibility_off_rounded,
-                ),
-                title: const Text('Show Retired Characters'),
-                subtitle: Text(
-                  'Toggle visibility of retired characters in the Characters tab to reduce clutter',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                value: context.read<CharactersModel>().showRetired,
-                onChanged: (val) {
-                  setState(() {
-                    context.read<CharactersModel>().toggleShowRetired();
-                  });
-                },
-              ),
               const SettingsSection(title: 'GAMEPLAY'),
               SwitchListTile(
                 secondary: Icon(
@@ -161,7 +98,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                       : MdiIcons.testTubeOff,
                 ),
                 subtitle: Text(
-                  "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the community",
+                  "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the CCUG community",
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 title: const Text('Custom Classes'),
@@ -596,6 +533,70 @@ class SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(width: 32.5),
                 ],
               ),
+              const SettingsSection(title: 'DISPLAY'),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: Theme.of(
+                    context,
+                  ).colorScheme.copyWith(outline: Colors.transparent),
+                ),
+                child: SwitchListTile(
+                  secondary: Icon(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Icons.dark_mode_rounded
+                        : Icons.light_mode_rounded,
+                  ),
+                  title: const Text('Brightness'),
+                  subtitle: Text(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'Dark'
+                        : 'Light',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  activeThumbImage: const AssetImage('images/elem_dark.png'),
+                  activeThumbColor: const Color(0xff1f272e),
+                  inactiveThumbColor: const Color(0xffeda50b),
+                  inactiveTrackColor: const Color(
+                    0xffeda50b,
+                  ).withValues(alpha: 0.75),
+                  activeTrackColor: const Color(0xff1f272e),
+                  inactiveThumbImage: const AssetImage('images/elem_light.png'),
+                  value: context.watch<ThemeProvider>().useDarkMode,
+                  onChanged: (val) {
+                    context.read<ThemeProvider>().updateDarkMode(val);
+                  },
+                ),
+              ),
+              SwitchListTile(
+                secondary: Icon(MdiIcons.formatFont),
+                title: const Text('Use Inter Font'),
+                subtitle: Text(
+                  'Replace stylized fonts with Inter to improve readability',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                value: context.watch<ThemeProvider>().useDefaultFonts,
+                onChanged: (val) {
+                  context.read<ThemeProvider>().updateDefaultFonts(val);
+                },
+              ),
+              SwitchListTile(
+                secondary: Icon(
+                  context.read<CharactersModel>().showRetired
+                      ? Icons.visibility_rounded
+                      : Icons.visibility_off_rounded,
+                ),
+                title: const Text('Show Retired Characters'),
+                subtitle: Text(
+                  'Toggle visibility of retired characters in the Characters tab to reduce clutter',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                value: context.read<CharactersModel>().showRetired,
+                onChanged: (val) {
+                  setState(() {
+                    context.read<CharactersModel>().toggleShowRetired();
+                  });
+                },
+              ),
               const SettingsSection(title: 'BACKUP & RESTORE'),
               ListTile(
                 leading: const Icon(Icons.upload_rounded),
@@ -967,6 +968,24 @@ class SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ],
                   ),
+                  if (kDebugMode ||
+                      (Platform.isAndroid && SharedPrefs().isUSRegion))
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        'images/bmc-button.svg',
+                        height: 32,
+                      ),
+                      tooltip: 'Buy Me a Coffee',
+                      onPressed: () {
+                        _launchURL(
+                          Uri(
+                            scheme: 'https',
+                            host: 'buymeacoffee.com',
+                            path: '/tomkatcreative',
+                          ),
+                        );
+                      },
+                    ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
@@ -974,15 +993,55 @@ class SettingsScreenState extends State<SettingsScreen> {
                         bottom: smallPadding,
                         right: smallPadding,
                       ),
-                      child: snapshot.data != null
-                          ? Text(
-                              'v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
-                              style: const TextStyle(
-                                color: Colors.grey,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'v${snapshot.data!.version} ',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ChangelogScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Changelog',
+                              style: TextStyle(
+                                color: Colors.blue,
                                 fontSize: 16,
                               ),
-                            )
-                          : const SizedBox(),
+                            ),
+                          ),
+                          const Text(
+                            ' • ',
+                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _launchURL(
+                                Uri.parse(
+                                  'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'License',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
