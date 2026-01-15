@@ -73,15 +73,16 @@ class PerksRepository {
   static const _section = 'SECTION';
 
   // Class specific
-  static const _tear = 'TEAR'; // TODO: add this asset
-  static const _supplies = 'SUPPLIES'; // TODO: add this asset
-  static const _song = 'SONG'; // TODO: add this asset
-  static const _prescription = 'PRESCRIPTION'; // TODO: add this asset
-  static const _doom = 'DOOM'; // TODO: add this asset
-  static const _bear = 'BEAR'; // TODO: add this asset
-  static const _command = 'COMMAND'; // TODO: add this asset
-  static const _rift = 'RIFT'; // TODO: add this asset
-  static const _resolve = 'RESOLVE'; // TODO: add this asset
+  static const _tear = 'TEAR'; // TODO: add this asset for NIGHTSHROUD
+  static const _supplies = 'SUPPLIES'; // TODO: add this asset for QUARTERMASTER
+  static const _song = 'SONG'; // TODO: add this asset for SOOTHSINGER
+  static const _prescription =
+      'PRESCRIPTION'; // TODO: add this asset for SAWBONES
+  static const _doom = 'DOOM'; // TODO: add this asset for DOOMSTALKER
+  static const _bear = 'BEAR'; // TODO: add this asset for WILDFURY
+  static const _command = 'COMMAND'; // TODO: add this asset for WILDFURY
+  static const _rift = 'RIFT'; // TODO: add this asset for CASSANDRA
+  static const _resolve = 'RESOLVE'; // TODO: add this asset for HAIL
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
   static const _bladeswarm = 'Bladeswarm';
@@ -98,6 +99,7 @@ class PerksRepository {
   static const _air = 'AIR';
   static const _ice = 'ICE';
   static const _anyElement = 'Any_Element';
+  static const _consume = 'consume_';
 
   // Equipment slots
   static const _body = 'Body';
@@ -533,7 +535,7 @@ class PerksRepository {
           'You are considered to be last in initiative order when determining monster focus',
         ),
         Perk(
-          'At the end of each of your rests, you may consume_$_ice/$_dark to control one enemy within $_range 5: $_attack 1',
+          'At the end of each of your rests, you may $_consume$_ice/$_dark to control one enemy within $_range 5: $_attack 1',
           quantity: 2,
           grouped: true,
         ),
@@ -1190,7 +1192,7 @@ class PerksRepository {
           '$_ignoreScenarioEffectsAndAdd $_one $_anyElement $_rolling $_card',
         ),
         Perk('$_atTheStartOfEachScenario, you may $_anyElement'),
-        Perk('$_wheneverYouLongRest, consume_$_anyElement : $_anyElement'),
+        Perk('$_wheneverYouLongRest, $_consume$_anyElement : $_anyElement'),
         Perk(
           '$_fire, $_ice, $_air, and $_earth do not wane at the end of each round',
           quantity: 3,
@@ -1386,7 +1388,7 @@ class PerksRepository {
         Perk('$_add $_two +0 $_curse $_rolling $_cards'),
         Perk('$_ignoreScenarioEffectsAndAdd $_two +1 $_cards'),
         Perk(
-          '**Tip the Scales:** Whenever you rest, you may look at the top card of one attack modifier deck, then you may consume_$_light/$_dark to place one card on the bottom of the deck',
+          '**Tip the Scales:** Whenever you rest, you may look at the top card of one attack modifier deck, then you may $_consume$_light/$_dark to place one card on the bottom of the deck',
         ),
       ], variant: Variant.frosthavenCrossover),
     ],
@@ -1464,7 +1466,7 @@ class PerksRepository {
         Perk('$_replace $_one +1 $_card with $_one +3 $_card', quantity: 3),
         Perk('$_add $_one +2 $_air $_card', quantity: 3),
         Perk(
-          '**Hasty Pick-up:** $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may consume_$_air to return it to its ability card',
+          '**Hasty Pick-up:** $_onceEachScenario, during your turn, if the Favourite is in a hex on the map, you may $_consume$_air to return it to its ability card',
         ),
       ], variant: Variant.frosthavenCrossover),
     ],
@@ -1506,7 +1508,7 @@ class PerksRepository {
         Perk('$_add $_one +1 $_fire/$_light $_card', quantity: 2),
         Perk('$_ignoreItemMinusOneEffectsAndAdd $_two +1 $_cards'),
         Perk(
-          '**Brilliant Aegis:** Whenever you are attacked, you may consume_$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
+          '**Brilliant Aegis:** Whenever you are attacked, you may $_consume$_light to gain $_shield 1 for the attack and have the attacker gain disadvantage for the attack',
           quantity: 2,
           grouped: true,
         ),
@@ -1631,7 +1633,7 @@ class PerksRepository {
         Perk('$_add $_one +3 $_card'),
         Perk(_ignoreScenarioEffects),
         Perk(
-          '**Grave Defense:** Whenever you rest, you may consume_$_ice/$_dark to give $_ward to one ally who has $_poison',
+          '**Grave Defense:** Whenever you rest, you may $_consume$_ice/$_dark to give $_ward to one ally who has $_poison',
         ),
       ], variant: Variant.frosthavenCrossover),
     ],
@@ -1742,7 +1744,7 @@ class PerksRepository {
     ClassCodes.brightspark: [
       Perks([
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "Consume_$_anyElement to $_addLowercase +2 $_attack" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_consume$_anyElement to $_addLowercase +2 $_attack" $_card',
           quantity: 3,
         ),
         Perk(
@@ -1770,7 +1772,7 @@ class PerksRepository {
           '$_add $_one $_rolling "$_heal 1, $_range 3, $_light" $_card and $_one $_rolling "$_pierce 2, $_fire" $_card',
         ),
         Perk(
-          '$_add $_three $_rolling "Consume_$_anyElement : $_anyElement" $_cards',
+          '$_add $_three $_rolling "$_consume$_anyElement : $_anyElement" $_cards',
         ),
         Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one -1 $_card'),
       ], variant: Variant.base),
@@ -2007,7 +2009,7 @@ class PerksRepository {
         ),
         Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one +0 $_card'),
         Perk(
-          '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "Consume_$_anyElement : $_anyElement" $_card',
+          '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "$_consume$_anyElement : $_anyElement" $_card',
         ),
       ], variant: Variant.base),
     ],
@@ -2215,7 +2217,7 @@ class PerksRepository {
         Perk(_ignoreScenarioEffects),
         Perk('$_wheneverYouLongRest, you may move $_one SHADOW up to 3 hexes'),
         Perk(
-          '$_wheneverYouShortRest, you may consume_$_dark to perform $_muddle, $_curse, $_range 2 as if you were occupying a hex with a SHADOW',
+          '$_wheneverYouShortRest, you may $_consume$_dark to perform $_muddle, $_curse, $_range 2 as if you were occupying a hex with a SHADOW',
         ),
         Perk(
           'While you are occupying a hex with a SHADOW, all attacks targeting you gain disadvantage',
@@ -2260,7 +2262,7 @@ class PerksRepository {
       Perks([
         Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "Consume_$_anyElement : $_anyElement" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_consume$_anyElement : $_anyElement" $_card',
           quantity: 3,
         ),
         Perk(
@@ -2324,7 +2326,7 @@ class PerksRepository {
           grouped: true,
         ),
         Perk(
-          '$_wheneverYouShortRest, you may Consume_$_anyElement to $_recover $_one spent $_oneHand or $_twoHand item',
+          '$_wheneverYouShortRest, you may $_consume$_anyElement to $_recover $_one spent $_oneHand or $_twoHand item',
         ),
         Perk(
           'Once each $_scenario, during ordering of initiative, after all ability cards have been revealed, $_anyElement',
@@ -2352,7 +2354,7 @@ class PerksRepository {
           '$_wheneverYouLongRest, you may destroy one adjacent obstacle to gain $_ward',
         ),
         Perk(
-          '$_wheneverYouShortRest, you may consume_$_fire to perform $_wound, $_targetCircle 1 enemy occupying or adjacent to hazardous terrain',
+          '$_wheneverYouShortRest, you may $_consume$_fire to perform $_wound, $_targetCircle 1 enemy occupying or adjacent to hazardous terrain',
         ),
         Perk(
           'You and all allies are unaffected by hazardous terrain you create',
@@ -2381,7 +2383,7 @@ class PerksRepository {
         Perk('Add one +1 "Gain 1 RESONANCE" card', quantity: 3),
         Perk(_ignoreScenarioEffects),
         Perk(
-          '$_wheneverYouShortRest, you may consume_$_air to perform $_strengthen, $_range 3 and consume_$_light to perform $_bless, $_range 3',
+          '$_wheneverYouShortRest, you may $_consume$_air to perform $_strengthen, $_range 3 and $_consume$_light to perform $_bless, $_range 3',
           quantity: 2,
           grouped: true,
         ),
@@ -2483,7 +2485,7 @@ class PerksRepository {
         ),
         Perk('$_wheneverYouLongRest, you may $_ice/$_air'),
         Perk(
-          '$_wheneverYouShortRest, you may consume_$_ice to perform $_regenerate, $_range 3 and consume_$_air to perform $_ward, $_range 3',
+          '$_wheneverYouShortRest, you may $_consume$_ice to perform $_regenerate, $_range 3 and $_consume$_air to perform $_ward, $_range 3',
           quantity: 2,
           grouped: true,
         ),
@@ -2520,7 +2522,7 @@ class PerksRepository {
           '$_ignoreItemMinusOneEffects, and, whenever you enter icy terrain with a move ability, you may ignore the effect to add $_plusOne $_move',
         ),
         Perk(
-          'Whenever you heal from a long rest, you may consume_$_ice/$_earth to add $_plusTwo $_heal',
+          'Whenever you heal from a long rest, you may $_consume$_ice/$_earth to add $_plusTwo $_heal',
         ),
         Perk(
           '$_onceEachScenario, when you would suffer $_damage, you may negate the $_damage',
@@ -2981,7 +2983,7 @@ class PerksRepository {
           grouped: true,
         ),
         Perk(
-          '$_wheneverYouShortRest, you may consume_SPARK one Spark. If you do, one enemy within $_range 2 suffers one damage',
+          '$_wheneverYouShortRest, you may ${_consume}SPARK one Spark. If you do, one enemy within $_range 2 suffers one damage',
         ),
       ], variant: Variant.base),
     ],

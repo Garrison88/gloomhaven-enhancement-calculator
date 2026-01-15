@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = 'GloomhavenCompanion.db';
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 14;
+  static const _databaseVersion = 15;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -220,6 +220,10 @@ class DatabaseHelper {
       }
       if (oldVersion <= 13) {
         // Added Mercenary Pack 2025 classes
+        await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+      }
+      if (oldVersion <= 14) {
+        // Minor fix for 'consume_X' icons in Perks Repository
         await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       }
       // Always update metadata table
