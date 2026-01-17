@@ -34,6 +34,16 @@ class ChangelogScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           _VersionSection(
+            version: '4.3.1',
+            date: '2026-01-17',
+            changes: [
+              'Added Gloomhaven 2nd Edition mode to the Enhancement Calculator.',
+              'Move "Scenario 114 Reward" and "Building 44" toggles to Enhancement Calculator page.',
+              'Added device information to email feedback pre-populated body text.',
+            ],
+          ),
+          const SizedBox(height: 24),
+          _VersionSection(
             version: '4.3.0',
             date: '2026-01-11',
             changes: [

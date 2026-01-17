@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../data/constants.dart';
-import '../../data/enhancement_data.dart';
-import '../../data/strings.dart';
-import '../../models/enhancement.dart';
-import '../../shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class InfoDialog extends StatefulWidget {
   final String? title;
@@ -63,7 +63,7 @@ class _InfoDialogState extends State<InfoDialog> {
   Widget build(BuildContext context) {
     // Cache theme settings used throughout the dialog
     final darkTheme = SharedPrefs().darkTheme;
-    final gloomhavenMode = SharedPrefs().gloomhavenMode;
+    final edition = SharedPrefs().gameEdition;
 
     // Configure dialog content based on category
     if (widget.category != null) {
@@ -72,7 +72,7 @@ class _InfoDialogState extends State<InfoDialog> {
         case EnhancementCategory.target:
           _bodyText = Strings.plusOneCharacterInfoBody(
             context,
-            gloomhavenMode,
+            edition,
             darkTheme,
           );
           _eligibleForIcons = EnhancementData.enhancements
@@ -87,7 +87,7 @@ class _InfoDialogState extends State<InfoDialog> {
         case EnhancementCategory.summonPlusOne:
           _bodyText = Strings.plusOneSummonInfoBody(
             context,
-            gloomhavenMode,
+            edition,
             darkTheme,
           );
           _eligibleForIcons = EnhancementData.enhancements
@@ -106,11 +106,10 @@ class _InfoDialogState extends State<InfoDialog> {
               )
               .toList();
 
-          // Remove Disarm if we're using Frosthaven rules or Ward if we're using Gloomhaven rules
+          // Remove enhancements not available in the current edition
           _titleIcons.removeWhere(
-            (element) => gloomhavenMode
-                ? element.name == 'Ward'
-                : element.name == 'Disarm',
+            (element) =>
+                !EnhancementData.isAvailableInEdition(element, edition),
           );
 
           _eligibleForIcons =
@@ -154,7 +153,8 @@ class _InfoDialogState extends State<InfoDialog> {
                   )
                   .toList()
                 ..removeWhere(
-                  (element) => element.name == 'Ward' && gloomhavenMode,
+                  (element) =>
+                      !EnhancementData.isAvailableInEdition(element, edition),
                 )
                 ..add(
                   Enhancement(
@@ -183,7 +183,7 @@ class _InfoDialogState extends State<InfoDialog> {
         case EnhancementCategory.specElem:
           _bodyText = Strings.specificElementInfoBody(
             context,
-            gloomhavenMode,
+            edition,
             darkTheme,
           );
           _titleIcons = [
@@ -254,11 +254,7 @@ class _InfoDialogState extends State<InfoDialog> {
           break;
 
         case EnhancementCategory.anyElem:
-          _bodyText = Strings.anyElementInfoBody(
-            context,
-            gloomhavenMode,
-            darkTheme,
-          );
+          _bodyText = Strings.anyElementInfoBody(context, edition, darkTheme);
           _titleIcons = EnhancementData.enhancements
               .where(
                 (element) => element.category == EnhancementCategory.anyElem,

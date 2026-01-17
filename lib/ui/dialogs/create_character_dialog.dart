@@ -9,6 +9,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
@@ -312,7 +313,9 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                         title: Strings.newCharacterInfoTitle,
                         message: Strings.newCharacterInfoBody(
                           context,
-                          gloomhavenMode: _gloomhavenMode,
+                          edition: _gloomhavenMode
+                              ? GameEdition.gloomhaven
+                              : GameEdition.frosthaven,
                           darkMode:
                               Theme.of(context).brightness == Brightness.dark,
                         ),

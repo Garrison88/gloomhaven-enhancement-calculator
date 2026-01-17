@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -329,209 +330,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                     });
                   }
                 },
-              ),
-              SwitchListTile(
-                secondary: const Icon(Icons.warning_rounded),
-                title: const Text('Scenario 114 Reward'),
-                subtitle: Text(
-                  'Forgotten Circles spoilers',
-                  overflow: TextOverflow.fade,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                value: SharedPrefs().partyBoon,
-                onChanged: (val) {
-                  setState(() {
-                    SharedPrefs().partyBoon = val;
-                    widget.enhancementCalculatorModel.calculateCost();
-                  });
-                },
-              ),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.warning_rounded),
-                    title: const Text('Building 44'),
-                    subtitle: Text(
-                      'Frosthaven spoilers',
-                      overflow: TextOverflow.fade,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    onTap: () {
-                      showDialog<bool>(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Center(
-                              child: Text(
-                                'Enhancer',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineLarge,
-                              ),
-                            ),
-                            content: StatefulBuilder(
-                              builder: (_, innerSetState) {
-                                return Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CheckboxListTile(
-                                          title: Text(
-                                            'Lvl 1',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  color: null,
-                                                  fontSize:
-                                                      SharedPrefs()
-                                                          .useDefaultFonts
-                                                      ? 25
-                                                      : null,
-                                                ),
-                                          ),
-                                          subtitle: Text(
-                                            'Buy enhancements',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      SharedPrefs().enhancerLvl1
-                                                      ? null
-                                                      : Colors.grey,
-                                                  fontSize: 20,
-                                                ),
-                                          ),
-                                          value: true,
-                                          onChanged: null,
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 2'),
-                                          subtitle: Text(
-                                            'and reduce all enhancement costs by 10 gold',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      SharedPrefs().enhancerLvl2
-                                                      ? null
-                                                      : Colors.grey,
-                                                  fontSize: 20,
-                                                ),
-                                          ),
-                                          value: SharedPrefs().enhancerLvl2,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(() {
-                                                SharedPrefs().enhancerLvl2 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              });
-                                            }
-                                          },
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 3'),
-                                          subtitle: Text(
-                                            'and reduce level penalties by 10 gold per level',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      SharedPrefs().enhancerLvl3
-                                                      ? null
-                                                      : Colors.grey,
-                                                  fontSize: 20,
-                                                ),
-                                          ),
-                                          value: SharedPrefs().enhancerLvl3,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(() {
-                                                SharedPrefs().enhancerLvl3 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              });
-                                            }
-                                          },
-                                        ),
-                                        CheckboxListTile(
-                                          title: const Text('Lvl 4'),
-                                          subtitle: Text(
-                                            'and reduce repeat penalties by 25 gold per enhancement',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  color:
-                                                      SharedPrefs().enhancerLvl4
-                                                      ? null
-                                                      : Colors.grey,
-                                                  fontSize: 20,
-                                                ),
-                                          ),
-                                          value: SharedPrefs().enhancerLvl4,
-                                          onChanged: (bool? val) {
-                                            if (val != null) {
-                                              innerSetState(() {
-                                                SharedPrefs().enhancerLvl4 =
-                                                    val;
-                                                widget
-                                                    .enhancementCalculatorModel
-                                                    .calculateCost();
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Close'),
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  Positioned(
-                    right: 32.5,
-                    child: IgnorePointer(
-                      ignoring: true,
-                      child: Icon(
-                        Icons.open_in_new,
-                        size: 30,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: .75),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 32.5),
-                ],
               ),
               const SettingsSection(title: 'DISPLAY'),
               Theme(
@@ -952,16 +750,26 @@ class SettingsScreenState extends State<SettingsScreen> {
                       IconButton(
                         icon: const Icon(Icons.email),
                         onPressed: () async {
+                          final deviceInfo = await _getDeviceInfo();
+                          final appVersion = snapshot.data != null
+                              ? '${snapshot.data!.version}+${snapshot.data!.buildNumber}'
+                              : 'Unknown';
+
+                          final emailBody =
+                              '''
+App Version: $appVersion
+Platform: ${Platform.isIOS ? 'iOS' : 'Android'}
+$deviceInfo
+
+--- Please describe your issue or provide your feedback below ---
+
+''';
+
                           await _launchURL(
-                            Uri(
-                              scheme: 'mailto',
-                              path: 'tomkatcreative@gmail.com',
-                              queryParameters: snapshot.data != null
-                                  ? {
-                                      'subject':
-                                          'GHC support - v${snapshot.data!.version}+${snapshot.data!.buildNumber}',
-                                    }
-                                  : null,
+                            Uri.parse(
+                              'mailto:tomkatcreative@gmail.com'
+                              '?subject=${Uri.encodeComponent('GHC Support & Feedback')}'
+                              '&body=${Uri.encodeComponent(emailBody)}',
                             ),
                           );
                         },
@@ -1086,6 +894,22 @@ void _showLoaderDialog(BuildContext context) {
 Future<void> _launchURL(Uri uri) async => await canLaunchUrl(uri)
     ? await launchUrl(uri, mode: LaunchMode.externalApplication)
     : await launchUrl(uri);
+
+Future<String> _getDeviceInfo() async {
+  final deviceInfo = DeviceInfoPlugin();
+
+  if (Platform.isIOS) {
+    final iosInfo = await deviceInfo.iosInfo;
+    return 'Device: ${iosInfo.utsname.machine}\n'
+        'OS Version: iOS ${iosInfo.systemVersion}';
+  } else if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    return 'Device: ${androidInfo.manufacturer} ${androidInfo.model}\n'
+        'OS Version: Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt})';
+  }
+
+  return 'Device: Unknown';
+}
 
 class SettingsSection extends StatelessWidget {
   final String title;

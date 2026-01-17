@@ -86,20 +86,9 @@ class _HomeState extends State<Home> {
           const EnhancementCalculatorPage(),
         ],
       ),
-
-      // floatingActionButtonLocation:
-      //     MediaQuery.of(context).viewInsets.bottom != 0.0
-      //         ? FloatingActionButtonLocation.endFloat
-      //         : FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Builder(
         builder: (context) {
           return FloatingActionButton(
-            // shape: const CircleBorder(),
-            // backgroundColor: Color(
-            //   int.parse(
-            //     SharedPrefs().themeColor,
-            //   ),
-            // ),
             heroTag: null,
             onPressed: context.read<AppModel>().page == 1
                 ? () => context.read<EnhancementCalculatorModel>().resetCost()
