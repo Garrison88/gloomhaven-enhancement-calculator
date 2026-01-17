@@ -96,6 +96,41 @@ A **main** ability is an ability that is written in larger font, whereas a **non
   }
 
   // ============================================================================
+  // SCENARIO 114 REWARD (PARTY BOON)
+  // ============================================================================
+
+  static const String scenario114RewardTitle = "Scenario 114 Reward";
+
+  static const String _scenario114RewardContent =
+      "After completing Scenario 114 (from the Forgotten Circles expansion), your party "
+      "unlocks a **Party Boon** that reduces the card level fee for enhancements by 5 "
+      "gold per card level. This discount stacks with other discounts and applies to "
+      "all characters in the campaign.";
+
+  static RichText scenario114RewardInfoBody(BuildContext context, bool darkMode) {
+    return _buildRichText(context, _scenario114RewardContent, darkMode);
+  }
+
+  // ============================================================================
+  // BUILDING 44 (ENHANCER)
+  // ============================================================================
+
+  static const String building44Title = "Building 44";
+
+  static const String _building44Content =
+      "Building 44 is **The Enhancer** in Frosthaven. Once built, it allows your party "
+      "to purchase enhancements. The building can be upgraded to provide additional "
+      "discounts:\n\n"
+      "**Level 1:** Buy enhancements\n"
+      "**Level 2:** Reduce all enhancement costs by 10 gold\n"
+      "**Level 3:** Reduce card level penalties by 10 gold per level\n"
+      "**Level 4:** Reduce repeat enhancement penalties by 25 gold per enhancement";
+
+  static RichText building44InfoBody(BuildContext context, bool darkMode) {
+    return _buildRichText(context, _building44Content, darkMode);
+  }
+
+  // ============================================================================
   // HAIL'S DISCOUNT
   // ============================================================================
 

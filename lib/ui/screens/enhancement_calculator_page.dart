@@ -75,6 +75,44 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 bottom: enhancementCalculatorModel.showCost ? 0 : 88,
               ),
               children: <Widget>[
+                // SCENARIO 114 REWARD (PARTY BOON) - Gloomhaven/GH2E only
+                if (edition.supportsPartyBoon) ...[
+                  SwitchListTile(
+                    value: SharedPrefs().partyBoon,
+                    onChanged: (bool value) {
+                      setState(() {
+                        SharedPrefs().partyBoon = value;
+                        enhancementCalculatorModel.calculateCost();
+                      });
+                    },
+                    title: const AutoSizeText(
+                      'Scenario 114 Reward',
+                      maxLines: 1,
+                    ),
+                    subtitle: Text(
+                      'Forgotten Circles spoilers',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    secondary: IconButton(
+                      icon: const Icon(Icons.info_outline_rounded),
+                      onPressed: () => showDialog<void>(
+                        context: context,
+                        builder: (_) {
+                          return InfoDialog(
+                            title: Strings.scenario114RewardTitle,
+                            message: Strings.scenario114RewardInfoBody(
+                              context,
+                              darkTheme,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const EnhancementDivider(),
+                ],
                 // TEMPORARY ENHANCEMENT
                 SwitchListTile(
                   value: enhancementCalculatorModel.temporaryEnhancementMode,
@@ -102,6 +140,184 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   ),
                 ),
                 const EnhancementDivider(),
+                // BUILDING 44 (ENHANCER) - Frosthaven only
+                if (edition.hasEnhancerLevels) ...[
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ListTile(
+                        leading: IconButton(
+                          icon: const Icon(Icons.info_outline_rounded),
+                          onPressed: () => showDialog<void>(
+                            context: context,
+                            builder: (_) {
+                              return InfoDialog(
+                                title: Strings.building44Title,
+                                message: Strings.building44InfoBody(
+                                  context,
+                                  darkTheme,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        title: const Text('Building 44'),
+                        subtitle: Text(
+                          'Frosthaven spoilers',
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onTap: () {
+                          showDialog<bool>(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Center(
+                                  child: Text(
+                                    'Enhancer',
+                                    style: Theme.of(context).textTheme.headlineLarge,
+                                  ),
+                                ),
+                                content: StatefulBuilder(
+                                  builder: (_, innerSetState) {
+                                    return Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: maxDialogWidth,
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CheckboxListTile(
+                                              title: Text(
+                                                'Lvl 1',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                      color: null,
+                                                      fontSize: SharedPrefs().useDefaultFonts ? 25 : null,
+                                                    ),
+                                              ),
+                                              subtitle: Text(
+                                                'Buy enhancements',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      color: SharedPrefs().enhancerLvl1 ? null : Colors.grey,
+                                                      fontSize: 20,
+                                                    ),
+                                              ),
+                                              value: true,
+                                              onChanged: null,
+                                            ),
+                                            CheckboxListTile(
+                                              title: const Text('Lvl 2'),
+                                              subtitle: Text(
+                                                'and reduce all enhancement costs by 10 gold',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      color: SharedPrefs().enhancerLvl2 ? null : Colors.grey,
+                                                      fontSize: 20,
+                                                    ),
+                                              ),
+                                              value: SharedPrefs().enhancerLvl2,
+                                              onChanged: (bool? val) {
+                                                if (val != null) {
+                                                  innerSetState(() {
+                                                    SharedPrefs().enhancerLvl2 = val;
+                                                    enhancementCalculatorModel.calculateCost();
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            CheckboxListTile(
+                                              title: const Text('Lvl 3'),
+                                              subtitle: Text(
+                                                'and reduce level penalties by 10 gold per level',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      color: SharedPrefs().enhancerLvl3 ? null : Colors.grey,
+                                                      fontSize: 20,
+                                                    ),
+                                              ),
+                                              value: SharedPrefs().enhancerLvl3,
+                                              onChanged: (bool? val) {
+                                                if (val != null) {
+                                                  innerSetState(() {
+                                                    SharedPrefs().enhancerLvl3 = val;
+                                                    enhancementCalculatorModel.calculateCost();
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                            CheckboxListTile(
+                                              title: const Text('Lvl 4'),
+                                              subtitle: Text(
+                                                'and reduce repeat penalties by 25 gold per enhancement',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      color: SharedPrefs().enhancerLvl4 ? null : Colors.grey,
+                                                      fontSize: 20,
+                                                    ),
+                                              ),
+                                              value: SharedPrefs().enhancerLvl4,
+                                              onChanged: (bool? val) {
+                                                if (val != null) {
+                                                  innerSetState(() {
+                                                    SharedPrefs().enhancerLvl4 = val;
+                                                    enhancementCalculatorModel.calculateCost();
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ).then((_) {
+                            setState(() {});
+                          });
+                        },
+                      ),
+                      Positioned(
+                        right: 32.5,
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: Icon(
+                            Icons.open_in_new,
+                            size: 30,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .75),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 32.5),
+                    ],
+                  ),
+                  const EnhancementDivider(),
+                ],
                 // HAIL'S DISCOUNT
                 SwitchListTile(
                   value: enhancementCalculatorModel.hailsDiscount,
