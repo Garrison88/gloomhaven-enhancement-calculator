@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
@@ -106,69 +107,48 @@ class _GHCAppBarState extends State<GHCAppBar> {
                   ),
                 )
               : context.watch<AppModel>().page == 1
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // hack to center Switch
-                    const Visibility(
-                      maintainAnimation: true,
-                      maintainState: true,
-                      maintainSize: true,
-                      visible: false,
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.settings),
-                      ),
+              ? SegmentedButton<GameEdition>(
+                  style: ButtonStyle(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: WidgetStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Image.asset(
-                          'images/titles/gloomhaven.png',
-                          scale: 6.25,
-                        ),
-                      ),
+                    foregroundColor: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        final isDark =
+                            ThemeData.estimateBrightnessForColor(
+                              Theme.of(context).colorScheme.primary,
+                            ) ==
+                            Brightness.dark;
+                        return isDark ? Colors.white : Colors.black;
+                      }
+                      return null;
+                    }),
+                  ),
+                  showSelectedIcon: false,
+                  segments: const [
+                    ButtonSegment<GameEdition>(
+                      value: GameEdition.gloomhaven,
+                      label: Text('Gloomhaven'),
                     ),
-                    Center(
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: Theme.of(
-                            context,
-                          ).colorScheme.copyWith(outline: Colors.transparent),
-                        ),
-                        child: Switch(
-                          inactiveThumbImage: const AssetImage(
-                            'images/switch_gh.png',
-                          ),
-                          activeThumbColor: const Color(0xff005cb2),
-                          trackColor: WidgetStateProperty.resolveWith(
-                            (states) => states.contains(WidgetState.selected)
-                                ? const Color(0xff6ab7ff)
-                                : const Color(0xffa98274),
-                          ),
-                          value: !SharedPrefs().gloomhavenMode,
-                          onChanged: (value) {
-                            SharedPrefs().gloomhavenMode = !value;
-                            Provider.of<EnhancementCalculatorModel>(
-                              context,
-                              listen: false,
-                            ).gameVersionToggled();
-                            setState(() {});
-                          },
-                        ),
-                      ),
+                    ButtonSegment<GameEdition>(
+                      value: GameEdition.gloomhaven2e,
+                      label: Text('Gloomhaven 2E'),
                     ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Image.asset(
-                          'images/titles/frosthaven.png',
-                          scale: 7,
-                        ),
-                      ),
+                    ButtonSegment<GameEdition>(
+                      value: GameEdition.frosthaven,
+                      label: Text('Frosthaven'),
                     ),
                   ],
+                  selected: {SharedPrefs().gameEdition},
+                  onSelectionChanged: (Set<GameEdition> selection) {
+                    SharedPrefs().gameEdition = selection.first;
+                    Provider.of<EnhancementCalculatorModel>(
+                      context,
+                      listen: false,
+                    ).gameVersionToggled();
+                    setState(() {});
+                  },
                 )
               : Container(),
           actions: <Widget>[

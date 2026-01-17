@@ -1,3 +1,4 @@
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -144,10 +145,33 @@ class SharedPrefs {
 
   set backup(String value) => _sharedPrefs.setString('backup', value);
 
-  bool get gloomhavenMode => _sharedPrefs.getBool('gloomhavenMode') ?? true;
+  /// Game edition for enhancement calculator
+  /// Migrates from legacy gloomhavenMode boolean if present
+  GameEdition get gameEdition {
+    // Check for new gameEdition key first
+    final editionIndex = _sharedPrefs.getInt('gameEdition');
+    if (editionIndex != null && editionIndex < GameEdition.values.length) {
+      return GameEdition.values[editionIndex];
+    }
 
-  set gloomhavenMode(bool value) =>
-      _sharedPrefs.setBool('gloomhavenMode', value);
+    // Migrate from legacy gloomhavenMode boolean
+    final legacyMode = _sharedPrefs.getBool('gloomhavenMode');
+    if (legacyMode != null) {
+      final edition = legacyMode
+          ? GameEdition.gloomhaven
+          : GameEdition.frosthaven;
+      // Save migrated value and remove legacy key
+      _sharedPrefs.setInt('gameEdition', edition.index);
+      _sharedPrefs.remove('gloomhavenMode');
+      return edition;
+    }
+
+    // Default to Gloomhaven
+    return GameEdition.gloomhaven;
+  }
+
+  set gameEdition(GameEdition value) =>
+      _sharedPrefs.setInt('gameEdition', value.index);
 
   bool get lostNonPersistent =>
       _sharedPrefs.getBool('lostNonPersistent') ?? false;

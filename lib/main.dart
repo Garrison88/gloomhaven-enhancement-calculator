@@ -34,7 +34,8 @@ Future<void> main() async {
       // Flutter's locale from device settings
       final deviceLocale = PlatformDispatcher.instance.locale.countryCode;
 
-      SharedPrefs().isUSRegion = simOrNetwork?.toUpperCase() == 'US' ||
+      SharedPrefs().isUSRegion =
+          simOrNetwork?.toUpperCase() == 'US' ||
           deviceLocale?.toUpperCase() == 'US';
     } catch (e) {
       // Fallback: still check locale even if device_region fails

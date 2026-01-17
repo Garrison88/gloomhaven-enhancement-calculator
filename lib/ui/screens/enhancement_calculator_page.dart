@@ -7,6 +7,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+// import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
@@ -20,24 +21,14 @@ class EnhancementCalculatorPage extends StatefulWidget {
 }
 
 class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
-  // final ScrollController scrollController = ScrollController();
-  // bool isBottom = false;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   scrollController.addListener(() {
-  //     if ((scrollController.offset >=
-  //         scrollController.position.maxScrollExtent)) {
-  //       setState(() {
-  //         isBottom = true;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         isBottom = false;
-  //       });
-  //     }
-  //   });
+  // Color _editionColor(GameEdition edition) {
+  //   switch (edition) {
+  //     case GameEdition.gloomhaven:
+  //     case GameEdition.gloomhaven2e:
+  //       return const Color(0xffa98274);
+  //     case GameEdition.frosthaven:
+  //       return const Color(0xff6ab7ff);
+  //   }
   // }
 
   @override
@@ -45,6 +36,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     EnhancementCalculatorModel enhancementCalculatorModel = context
         .watch<EnhancementCalculatorModel>();
     enhancementCalculatorModel.calculateCost(notify: false);
+    final darkTheme = SharedPrefs().darkTheme;
+    final edition = SharedPrefs().gameEdition;
 
     return Column(
       children: [
@@ -56,7 +49,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 title: Strings.generalInfoTitle,
                 message: Strings.generalInfoBody(
                   context,
-                  gloomhavenMode: SharedPrefs().gloomhavenMode,
+                  edition: edition,
                   darkMode: Theme.of(context).brightness == Brightness.dark,
                 ),
               );
@@ -64,15 +57,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
           ),
           style: OutlinedButton.styleFrom(
             side: BorderSide(
-              width: 2.0,
-              color: Color(
-                SharedPrefs().gloomhavenMode ? 0xffa98274 : 0xff6ab7ff,
-              ),
+              width: 1.0,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           child: Text(
-            '${SharedPrefs().gloomhavenMode ? 'Gloomhaven' : 'Frosthaven'} Guidelines',
-            style: Theme.of(context).textTheme.titleLarge,
+            'General Guidelines',
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         Expanded(
@@ -103,12 +94,36 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           title: Strings.temporaryEnhancement,
                           message: Strings.temporaryEnhancementInfoBody(
                             context,
-                            SharedPrefs().darkTheme,
+                            darkTheme,
                           ),
                         );
                       },
                     ),
                   ),
+                ),
+                const EnhancementDivider(),
+                // HAIL'S DISCOUNT
+                SwitchListTile(
+                  value: enhancementCalculatorModel.hailsDiscount,
+                  onChanged: (bool value) {
+                    enhancementCalculatorModel.hailsDiscount = value;
+                  },
+                  secondary: IconButton(
+                    icon: const Icon(Icons.info_outline_rounded),
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      builder: (_) {
+                        return InfoDialog(
+                          title: Strings.hailsDiscountTitle,
+                          message: Strings.hailsDiscountInfoBody(
+                            context,
+                            darkTheme,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  title: const AutoSizeText('Hail\'s Discount ‡', maxLines: 1),
                 ),
                 const EnhancementDivider(),
                 // CARD LEVEL
@@ -122,7 +137,14 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           title: Strings.cardLevelInfoTitle,
                           message: Strings.cardLevelInfoBody(
                             context,
-                            SharedPrefs().darkTheme,
+                            darkTheme,
+                            edition: edition,
+                            partyBoon:
+                                edition.supportsPartyBoon &&
+                                SharedPrefs().partyBoon,
+                            enhancerLvl3:
+                                edition.hasEnhancerLevels &&
+                                SharedPrefs().enhancerLvl3,
                           ),
                         );
                       },
@@ -141,10 +163,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             items: EnhancementData.cardLevels(
                               context,
                               partyBoon:
-                                  SharedPrefs().gloomhavenMode &&
+                                  edition.supportsPartyBoon &&
                                   SharedPrefs().partyBoon,
                               enhancerLvl3:
-                                  !SharedPrefs().gloomhavenMode &&
+                                  edition.hasEnhancerLevels &&
                                   SharedPrefs().enhancerLvl3,
                             ),
                             onChanged: (int? value) {
@@ -171,7 +193,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           title: Strings.previousEnhancementsInfoTitle,
                           message: Strings.previousEnhancementsInfoBody(
                             context,
-                            SharedPrefs().darkTheme,
+                            darkTheme,
+                            edition: edition,
+                            enhancerLvl4: SharedPrefs().enhancerLvl4,
                           ),
                         );
                       },
@@ -191,7 +215,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             items: EnhancementData.previousEnhancements(
                               context,
                               enhancerLvl4:
-                                  !SharedPrefs().gloomhavenMode &&
+                                  edition.hasEnhancerLevels &&
                                   SharedPrefs().enhancerLvl4,
                               tempEnhancements: enhancementCalculatorModel
                                   .temporaryEnhancementMode,
@@ -250,8 +274,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           value: enhancementCalculatorModel.enhancement,
                           items: EnhancementData.enhancementTypes(
                             context,
-                            gloomhavenMode: SharedPrefs().gloomhavenMode,
-                            enhancerLvl2: SharedPrefs().enhancerLvl2,
+                            edition: edition,
                           ),
                           onChanged: (Enhancement? selectedEnhancement) {
                             if (selectedEnhancement != null) {
@@ -278,9 +301,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   secondary: IconButton(
                     icon: Icon(
                       Icons.info_outline_rounded,
-                      color: SharedPrefs().darkTheme
-                          ? Colors.white
-                          : Colors.black,
+                      color: darkTheme ? Colors.white : Colors.black,
                     ),
                     onPressed: () => showDialog<void>(
                       context: context,
@@ -289,11 +310,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           title: Strings.multipleTargetsInfoTitle,
                           message: Strings.multipleTargetsInfoBody(
                             context,
-                            gloomhavenMode: SharedPrefs().gloomhavenMode,
+                            edition: edition,
                             enhancerLvl2:
-                                !SharedPrefs().gloomhavenMode &&
+                                edition.hasEnhancerLevels &&
                                 SharedPrefs().enhancerLvl2,
-                            darkMode: SharedPrefs().darkTheme,
+                            darkMode: darkTheme,
                           ),
                         );
                       },
@@ -301,11 +322,19 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   ),
                   title: const AutoSizeText('Multiple Targets'),
                 ),
-                if (!SharedPrefs().gloomhavenMode) ...[
-                  // LOSS NON-PERSISTENT
+                // LOSS NON-PERSISTENT (GH2E and FH only)
+                if (edition.hasLostModifier) ...[
                   SwitchListTile(
                     value: enhancementCalculatorModel.lostNonPersistent,
-                    onChanged: enhancementCalculatorModel.persistent
+                    // Disable when: persistent is on (FH), OR
+                    // in GH2E mode with summon stat selected (summons excluded)
+                    onChanged:
+                        enhancementCalculatorModel.persistent ||
+                            (!edition.hasPersistentModifier &&
+                                enhancementCalculatorModel
+                                        .enhancement
+                                        ?.category ==
+                                    EnhancementCategory.summonPlusOne)
                         ? null
                         : (bool value) {
                             enhancementCalculatorModel.lostNonPersistent =
@@ -314,18 +343,19 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     secondary: IconButton(
                       icon: Icon(
                         Icons.info_outline_rounded,
-                        color: SharedPrefs().darkTheme
-                            ? Colors.white
-                            : Colors.black,
+                        color: darkTheme ? Colors.white : Colors.black,
                       ),
                       onPressed: () => showDialog<void>(
                         context: context,
                         builder: (_) {
                           return InfoDialog(
-                            title: Strings.lostNonPersistentInfoTitle,
+                            title: Strings.lostNonPersistentInfoTitle(
+                              edition: edition,
+                            ),
                             message: Strings.lostNonPersistentInfoBody(
                               context,
-                              SharedPrefs().darkTheme,
+                              edition,
+                              darkTheme,
                             ),
                           );
                         },
@@ -341,35 +371,40 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               : 'images/loss_light.svg',
                           width: iconSize,
                         ),
-                        SizedBox(
-                          width: iconSize + 16,
-                          height: iconSize + 11,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Positioned(
-                                child: SvgPicture.asset(
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? 'images/persistent.svg'
-                                      : 'images/persistent_light.svg',
-                                  width: iconSize,
+                        // Only show "not persistent" icon in FH mode
+                        // (GH2E doesn't have persistent modifier)
+                        if (edition.hasPersistentModifier)
+                          SizedBox(
+                            width: iconSize + 16,
+                            height: iconSize + 11,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned(
+                                  child: SvgPicture.asset(
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? 'images/persistent.svg'
+                                        : 'images/persistent_light.svg',
+                                    width: iconSize,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                right: 5,
-                                child: SvgPicture.asset(
-                                  'images/not.svg',
-                                  width: iconSize + 11,
+                                Positioned(
+                                  right: 5,
+                                  child: SvgPicture.asset(
+                                    'images/not.svg',
+                                    width: iconSize + 11,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
-                  // PERSISTENT
+                ],
+                // PERSISTENT (FH only)
+                if (edition.hasPersistentModifier) ...[
                   SwitchListTile(
                     value: enhancementCalculatorModel.persistent,
                     onChanged:
@@ -383,9 +418,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     secondary: IconButton(
                       icon: Icon(
                         Icons.info_outline_rounded,
-                        color: SharedPrefs().darkTheme
-                            ? Colors.white
-                            : Colors.black,
+                        color: darkTheme ? Colors.white : Colors.black,
                       ),
                       onPressed: () => showDialog<void>(
                         context: context,
@@ -394,7 +427,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             title: Strings.persistentInfoTitle,
                             message: Strings.persistentInfoBody(
                               context,
-                              SharedPrefs().darkTheme,
+                              darkTheme,
                             ),
                           );
                         },
@@ -409,35 +442,6 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   ),
                   const SizedBox(height: 4),
                 ],
-                const EnhancementDivider(),
-                // HAIL'S DISCOUNT
-                SwitchListTile(
-                  value: enhancementCalculatorModel.hailsDiscount,
-                  onChanged: (bool value) {
-                    enhancementCalculatorModel.hailsDiscount = value;
-                  },
-                  secondary: IconButton(
-                    icon: const Icon(Icons.info_outline_rounded),
-                    onPressed: () => showDialog<void>(
-                      context: context,
-                      builder: (dialogContext) {
-                        return InfoDialog(
-                          title: 'Hail\'s Discount',
-                          message: RichText(
-                            text: TextSpan(
-                              style: Theme.of(
-                                dialogContext,
-                              ).textTheme.bodyMedium,
-                              text:
-                                  "Hail from the Mercenary Pack has a Perk that reduces the cost of the party's Enhancements by 5 gold.",
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  title: const AutoSizeText('Hail\'s Discount ‡', maxLines: 1),
-                ),
               ],
             ),
           ),

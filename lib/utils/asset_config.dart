@@ -122,7 +122,7 @@ const standardAssets = {
   'Berserker': AssetConfig('class_icons/berserker.svg', invertColor: true),
   'Doomstalker': AssetConfig('class_icons/doomstalker.svg', invertColor: true),
   'Bladeswarm': AssetConfig('class_icons/bladeswarm.svg', invertColor: true),
-  'Hail': AssetConfig('class_icons/hail.svg', invertColor: true),
+  'HAIL': AssetConfig('class_icons/hail.svg', invertColor: true),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig('class_icons/spirit_caller.svg', invertColor: true),
   'SWING': AssetConfig('swing.svg'),

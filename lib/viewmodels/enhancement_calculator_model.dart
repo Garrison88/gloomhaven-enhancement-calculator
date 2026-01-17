@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class EnhancementCalculatorModel with ChangeNotifier {
@@ -42,11 +43,14 @@ class EnhancementCalculatorModel with ChangeNotifier {
       return 0;
     }
     int penalty = 25 * level;
-    if (SharedPrefs().gloomhavenMode) {
+    final edition = SharedPrefs().gameEdition;
+    if (edition.supportsPartyBoon) {
+      // Party boon: GH and GH2E
       if (SharedPrefs().partyBoon) {
         penalty -= 5 * level;
       }
-    } else if (SharedPrefs().enhancerLvl3) {
+    } else if (edition.hasEnhancerLevels && SharedPrefs().enhancerLvl3) {
+      // Enhancer level 3: FH only
       penalty -= 10 * level;
     }
     return penalty;
@@ -65,7 +69,9 @@ class EnhancementCalculatorModel with ChangeNotifier {
       return 0;
     }
     int penalty = 75 * previousEnhancements;
-    if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl4) {
+    final edition = SharedPrefs().gameEdition;
+    if (edition.hasEnhancerLevels && SharedPrefs().enhancerLvl4) {
+      // Enhancer level 4: FH only
       penalty -= 25 * previousEnhancements;
     }
     if (temporaryEnhancementMode) {
@@ -90,31 +96,35 @@ class EnhancementCalculatorModel with ChangeNotifier {
   }
 
   /// Multiply the cost by 2 if [_multipleTargets]
-  /// Halve the cost if [_lostNonPersistent]
-  /// Triple the cost if [_persistent]
-  /// Subtract 10 gold if [_enhancerLvl2]
+  /// Halve the cost if [_lostNonPersistent] (GH2E/FH only)
+  /// Triple the cost if [_persistent] (FH only)
+  /// Subtract 10 gold if [_enhancerLvl2] (FH only)
+  /// Subtract 5 gold if [_hailsDiscount]
   int enhancementCost(Enhancement? enhancement) {
     if (enhancement == null) {
       return 0;
     }
-    int enhancementCost = enhancement.cost(
-      gloomhavenMode: SharedPrefs().gloomhavenMode,
-    );
+    final edition = SharedPrefs().gameEdition;
+    int enhancementCost = enhancement.cost(edition: edition);
     if (multipleTargets &&
-        eligibleForMultipleTargets(
-          enhancement,
-          gloomhavenMode: SharedPrefs().gloomhavenMode,
-        )) {
+        eligibleForMultipleTargets(enhancement, edition: edition)) {
       enhancementCost *= 2;
     }
-    if (!SharedPrefs().gloomhavenMode) {
-      enhancementCost = lostNonPersistent
-          ? (enhancementCost / 2).round()
-          : enhancementCost;
-      enhancementCost = persistent ? enhancementCost * 3 : enhancementCost;
+    // Lost action modifier: GH2E and FH
+    if (edition.hasLostModifier && lostNonPersistent) {
+      enhancementCost = (enhancementCost / 2).round();
     }
-    if (!SharedPrefs().gloomhavenMode && SharedPrefs().enhancerLvl2) {
+    // Persistent action modifier: FH only
+    if (edition.hasPersistentModifier && persistent) {
+      enhancementCost *= 3;
+    }
+    // Enhancer level 2: FH only
+    if (edition.hasEnhancerLevels && SharedPrefs().enhancerLvl2) {
       enhancementCost -= 10;
+    }
+    // Hail's Discount
+    if (hailsDiscount) {
+      enhancementCost -= 5;
     }
     return enhancementCost.isNegative ? 0 : enhancementCost;
   }
@@ -211,11 +221,6 @@ class EnhancementCalculatorModel with ChangeNotifier {
       totalCost = _temporaryEnhancementMutator(totalCost);
     }
 
-    /// Hail's Discount: reduce cost by 5 gold
-    if (hailsDiscount) {
-      totalCost = (totalCost - 5).clamp(0, totalCost);
-    }
-
     /// only show cost if there's a price to display
     showCost =
         cardLevel != 0 || previousEnhancements != 0 || enhancement != null;
@@ -225,6 +230,18 @@ class EnhancementCalculatorModel with ChangeNotifier {
   }
 
   void gameVersionToggled() {
+    final edition = SharedPrefs().gameEdition;
+
+    // Clear persistent if switching to an edition that doesn't support it
+    if (!edition.hasPersistentModifier && persistent) {
+      persistent = false;
+    }
+
+    // Clear lostNonPersistent if switching to an edition that doesn't support it
+    if (!edition.hasLostModifier && lostNonPersistent) {
+      lostNonPersistent = false;
+    }
+
     if (enhancement != null) {
       enhancementSelected(enhancement!);
     }
@@ -232,21 +249,24 @@ class EnhancementCalculatorModel with ChangeNotifier {
   }
 
   void enhancementSelected(Enhancement selectedEnhancement) {
-    // This is to handle the case where the user has disarm or ward selected,
-    // and flips the game version switch
-    if ((!SharedPrefs().gloomhavenMode &&
-            selectedEnhancement.name == 'Disarm') ||
-        (SharedPrefs().gloomhavenMode && selectedEnhancement.name == 'Ward')) {
+    final edition = SharedPrefs().gameEdition;
+
+    // Handle the case where the user has an enhancement selected that's not
+    // available in the current edition (e.g., Disarm in GH2E/FH, Ward in GH,
+    // Regenerate in GH2E)
+    if (!EnhancementData.isAvailableInEdition(selectedEnhancement, edition)) {
       _enhancement = null;
       SharedPrefs().remove('enhancementType');
       notifyListeners();
       return;
     }
+
     switch (selectedEnhancement.category) {
       case EnhancementCategory.title:
         return;
       case EnhancementCategory.target:
-        multipleTargets = SharedPrefs().gloomhavenMode;
+        // Target: multi-target applies in GH only
+        multipleTargets = edition.multiTargetAppliesToAll;
         disableMultiTargetsSwitch = true;
         break;
       case EnhancementCategory.hex:
@@ -255,7 +275,8 @@ class EnhancementCalculatorModel with ChangeNotifier {
         break;
       case EnhancementCategory.anyElem:
       case EnhancementCategory.specElem:
-        if (!SharedPrefs().gloomhavenMode) {
+        // Elements: multi-target applies in GH only
+        if (!edition.multiTargetAppliesToAll) {
           multipleTargets = false;
           disableMultiTargetsSwitch = true;
         } else {
@@ -264,6 +285,11 @@ class EnhancementCalculatorModel with ChangeNotifier {
         break;
       case EnhancementCategory.summonPlusOne:
         persistent = false;
+        // GH2E: "not a summon action" - summon stats never get lost discount
+        // FH: Lost discount can apply if action is lost but not persistent
+        if (!edition.hasPersistentModifier) {
+          lostNonPersistent = false;
+        }
         disableMultiTargetsSwitch = false;
         break;
       default:
@@ -276,12 +302,18 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   static bool eligibleForMultipleTargets(
     Enhancement enhancement, {
-    required bool gloomhavenMode,
+    required GameEdition edition,
   }) {
-    return gloomhavenMode && !enhancement.name.toLowerCase().contains('hex') ||
-        (!gloomhavenMode &&
-            (!enhancement.name.toLowerCase().contains('hex') &&
-                (!enhancement.name.toLowerCase().contains('target') &&
-                    (!enhancement.name.toLowerCase().contains('element')))));
+    final name = enhancement.name.toLowerCase();
+    // Hex is never eligible for multi-target in any edition
+    if (name.contains('hex')) {
+      return false;
+    }
+    // In GH, all types except hex are eligible
+    if (edition.multiTargetAppliesToAll) {
+      return true;
+    }
+    // In GH2E and FH, target and elements are not eligible
+    return !name.contains('target') && !name.contains('element');
   }
 }

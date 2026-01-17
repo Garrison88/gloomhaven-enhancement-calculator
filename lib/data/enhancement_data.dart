@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 
@@ -263,6 +264,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '6 hexes',
       ghCost: 33,
+      fhCost: 34,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -282,6 +284,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '9 hexes',
       ghCost: 22,
+      fhCost: 23,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -294,6 +297,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '11 hexes',
       ghCost: 18,
+      fhCost: 19,
       iconPath: 'hex.svg',
     ),
     Enhancement(
@@ -307,6 +311,7 @@ class EnhancementData {
       EnhancementCategory.hex,
       '13 hexes',
       ghCost: 15,
+      fhCost: 16,
       iconPath: 'hex.svg',
     ),
   ];
@@ -412,10 +417,26 @@ class EnhancementData {
     return list;
   }
 
+  /// Returns true if the enhancement is available in the given edition
+  static bool isAvailableInEdition(
+    Enhancement enhancement,
+    GameEdition edition,
+  ) {
+    switch (enhancement.name) {
+      case 'Disarm':
+        // Disarm is only available in original Gloomhaven
+        return edition == GameEdition.gloomhaven;
+      case 'Ward':
+        // Ward is available in GH2E and Frosthaven, not original GH
+        return edition != GameEdition.gloomhaven;
+      default:
+        return true;
+    }
+  }
+
   static List<DropdownMenuItem<Enhancement>> enhancementTypes(
     BuildContext context, {
-    required bool gloomhavenMode,
-    required bool enhancerLvl2,
+    required GameEdition edition,
   }) {
     EnhancementCalculatorModel enhancementCalculatorModel = Provider.of(
       context,
@@ -423,8 +444,7 @@ class EnhancementData {
     );
     List<DropdownMenuItem<Enhancement>> list = [];
     for (final Enhancement enhancement in enhancements) {
-      if ((!gloomhavenMode && enhancement.name == 'Disarm') ||
-          (gloomhavenMode && enhancement.name == 'Ward')) {
+      if (!isAvailableInEdition(enhancement, edition)) {
         continue;
       }
       list.add(
@@ -582,20 +602,12 @@ class EnhancementData {
                         children: <TextSpan>[
                           TextSpan(text: ' ${enhancement.name} '),
                           const TextSpan(text: '('),
-                          if ((EnhancementCalculatorModel.eligibleForMultipleTargets(
-                                    enhancement,
-                                    gloomhavenMode: gloomhavenMode,
-                                  ) &&
-                                  enhancementCalculatorModel.multipleTargets) ||
-                              (!gloomhavenMode &&
-                                  (enhancerLvl2 ||
-                                      enhancementCalculatorModel
-                                          .lostNonPersistent ||
-                                      enhancementCalculatorModel
-                                          .persistent))) ...[
+                          if (enhancementCalculatorModel.enhancementCost(
+                                enhancement,
+                              ) !=
+                              enhancement.cost(edition: edition)) ...[
                             TextSpan(
-                              text:
-                                  '${enhancement.cost(gloomhavenMode: gloomhavenMode)}g',
+                              text: '${enhancement.cost(edition: edition)}g',
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     decoration: TextDecoration.lineThrough,
@@ -607,13 +619,12 @@ class EnhancementData {
                             const TextSpan(text: ' '),
                             TextSpan(
                               text:
-                                  '${enhancementCalculatorModel.enhancementCost(enhancement)}g',
+                                  '${enhancementCalculatorModel.enhancementCost(enhancement)}g${enhancementCalculatorModel.hailsDiscount ? ' ‡' : ''}',
                             ),
                             const TextSpan(text: ')'),
                           ] else ...[
                             TextSpan(
-                              text:
-                                  '${enhancement.cost(gloomhavenMode: gloomhavenMode)}g)',
+                              text: '${enhancement.cost(edition: edition)}g)',
                             ),
                           ],
                         ],

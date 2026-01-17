@@ -86,7 +86,7 @@ class PerksRepository {
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
   static const _bladeswarm = 'Bladeswarm';
-  static const _hail = 'Hail';
+  static const _hail = 'HAIL';
   static const _reaver = 'REAVER';
   static const _ritualist = 'RITUALIST';
   static const _conqueror = 'CONQUEROR';
