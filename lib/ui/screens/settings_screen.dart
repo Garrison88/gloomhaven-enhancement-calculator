@@ -766,13 +766,10 @@ $deviceInfo
 ''';
 
                           await _launchURL(
-                            Uri(
-                              scheme: 'mailto',
-                              path: 'tomkatcreative@gmail.com',
-                              queryParameters: {
-                                'subject': 'GHC Support & Feedback',
-                                'body': emailBody,
-                              },
+                            Uri.parse(
+                              'mailto:tomkatcreative@gmail.com'
+                              '?subject=${Uri.encodeComponent('GHC Support & Feedback')}'
+                              '&body=${Uri.encodeComponent(emailBody)}',
                             ),
                           );
                         },
