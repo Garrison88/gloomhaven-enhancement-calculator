@@ -204,6 +204,7 @@ const standardAssets = {
   'consume_ICE/LIGHT': AssetConfig('elem_ice_or_light.svg'),
   'LIGHT/DARK': AssetConfig('elem_light_or_dark.svg'),
   'consume_LIGHT/DARK': AssetConfig('elem_light_or_dark.svg'),
+  'FIRE/ICE/EARTH': AssetConfig('elem_fire_ice_earth.svg'),
   'Vial_Wild': AssetConfig('vial_wild.svg'),
 };
 

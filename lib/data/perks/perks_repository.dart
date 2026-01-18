@@ -3098,7 +3098,7 @@ class PerksRepository {
           quantity: 3,
         ),
         Perk(
-          '$_replace $_one +0 $_card with $_one +0 "Add a $_vialWild to an active $_experiment $_card" $_card',
+          '$_replace $_one +0 $_card with $_one +0 "Add a $_vialWild to an active $_experiment" $_card',
           quantity: 3,
         ),
         Perk(
@@ -3115,10 +3115,10 @@ class PerksRepository {
         ),
         Perk('$_ignoreScenarioEffectsAndRemove $_one +0 $_card'),
         Perk(
-          'Whenever you rest, you may $_consume$_wildElement to $_wildElement',
+          'Whenever you rest, you may $_consume$_wildElement : $_wildElement',
         ),
         Perk(
-          'Whenever you consume a potion $_pocket, you may place $_one $_vialWild on an active $_experiment $_card',
+          'Whenever you consume a potion $_pocket, you may place $_one $_vialWild on an active $_experiment',
         ),
         Perk(
           'At the end of each of your turns during which you performed no attacks and you are not performing a long rest, $_fire/$_ice/$_earth',
