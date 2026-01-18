@@ -122,6 +122,7 @@ class ClassCodes {
   static const core = 'core';
   static const dome = 'dome';
   static const skitterclaw = 'skitterclaw';
+  static const alchemancer = 'alchemancer';
 
   // Private constructor to prevent instantiation
   const ClassCodes._();

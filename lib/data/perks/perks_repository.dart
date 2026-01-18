@@ -82,7 +82,7 @@ class PerksRepository {
   static const _bear = 'BEAR'; // TODO: add this asset for WILDFURY
   static const _command = 'COMMAND'; // TODO: add this asset for WILDFURY
   static const _rift = 'RIFT'; // TODO: add this asset for CASSANDRA
-  static const _resolve = 'RESOLVE'; // TODO: add this asset for HAIL
+  static const _resolve = 'RESOLVE'; // TODO: replace when real asset comes out
   static const _berserker = 'Berserker';
   static const _doomstalker = 'Doomstalker';
   static const _bladeswarm = 'Bladeswarm';
@@ -90,6 +90,8 @@ class PerksRepository {
   static const _reaver = 'REAVER';
   static const _ritualist = 'RITUALIST';
   static const _conqueror = 'CONQUEROR';
+  static const _vialWild = 'Vial_Wild';
+  static const _experiment = 'EXPERIMENT';
 
   // Elements
   static const _fire = 'FIRE';
@@ -98,7 +100,7 @@ class PerksRepository {
   static const _earth = 'EARTH';
   static const _air = 'AIR';
   static const _ice = 'ICE';
-  static const _anyElement = 'Any_Element';
+  static const _wildElement = 'Wild_Element';
   static const _consume = 'consume_';
 
   // Equipment slots
@@ -277,7 +279,7 @@ class PerksRepository {
           '$_onceEachScenario, one adjacent ally may use one of your *potion* $_pocket items during their turn without it becoming $_loss',
         ),
         Perk(
-          'Whenever you perform an action with $_loss, you may $_anyElement',
+          'Whenever you perform an action with $_loss, you may $_wildElement',
         ),
         Perk(
           '$_wheneverYouLongRest, you may perform: $_heal 2, $_range 3',
@@ -324,7 +326,7 @@ class PerksRepository {
       Perks([
         Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 $_anyElement $_card',
+          '$_replace $_one -1 $_card with $_one +0 $_wildElement $_card',
           quantity: 3,
         ),
         Perk(
@@ -1165,7 +1167,7 @@ class PerksRepository {
         Perk('$_add $_four +0 $_earth $_cards'),
         Perk(_ignoreScenarioEffects),
         Perk(
-          '**Elemental Proficiency:** $_atTheStartOfEachScenario and whenever you long rest, $_anyElement',
+          '**Elemental Proficiency:** $_atTheStartOfEachScenario and whenever you long rest, $_wildElement',
           quantity: 2,
           grouped: true,
         ),
@@ -1187,12 +1189,12 @@ class PerksRepository {
           '$_replace $_one +0 $_card with $_one +1 $_light/$_dark $_card',
           quantity: 2,
         ),
-        Perk('$_add $_two $_anyElement $_rolling $_cards', quantity: 2),
+        Perk('$_add $_two $_wildElement $_rolling $_cards', quantity: 2),
         Perk(
-          '$_ignoreScenarioEffectsAndAdd $_one $_anyElement $_rolling $_card',
+          '$_ignoreScenarioEffectsAndAdd $_one $_wildElement $_rolling $_card',
         ),
-        Perk('$_atTheStartOfEachScenario, you may $_anyElement'),
-        Perk('$_wheneverYouLongRest, $_consume$_anyElement : $_anyElement'),
+        Perk('$_atTheStartOfEachScenario, you may $_wildElement'),
+        Perk('$_wheneverYouLongRest, $_consume$_wildElement : $_wildElement'),
         Perk(
           '$_fire, $_ice, $_air, and $_earth do not wane at the end of each round',
           quantity: 3,
@@ -1665,7 +1667,7 @@ class PerksRepository {
     ],
     ClassCodes.artificer: [
       Perks([
-        Perk('$_replace $_one -2 $_card with $_one -1 $_anyElement $_card'),
+        Perk('$_replace $_one -2 $_card with $_one -1 $_wildElement $_card'),
         Perk('$_replace $_one -1 $_card with $_one +1 $_disarm $_card'),
         Perk(
           '$_replace $_one -1 $_card with $_one +1 $_push 1 $_card',
@@ -1744,7 +1746,7 @@ class PerksRepository {
     ClassCodes.brightspark: [
       Perks([
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_consume$_anyElement to $_addLowercase +2 $_attack" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_consume$_wildElement to $_addLowercase +2 $_attack" $_card',
           quantity: 3,
         ),
         Perk(
@@ -1758,7 +1760,7 @@ class PerksRepository {
           '$_replace $_two +0 $_cards with $_one +1 "$_shield 1, Affect $_one Ally within $_range 2" $_card',
         ),
         Perk(
-          '$_replace $_one +1 $_card with $_one +2 $_anyElement $_card',
+          '$_replace $_one +1 $_card with $_one +2 $_wildElement $_card',
           quantity: 2,
         ),
         Perk(
@@ -1772,7 +1774,7 @@ class PerksRepository {
           '$_add $_one $_rolling "$_heal 1, $_range 3, $_light" $_card and $_one $_rolling "$_pierce 2, $_fire" $_card',
         ),
         Perk(
-          '$_add $_three $_rolling "$_consume$_anyElement : $_anyElement" $_cards',
+          '$_add $_three $_rolling "$_consume$_wildElement : $_wildElement" $_cards',
         ),
         Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one -1 $_card'),
       ], variant: Variant.base),
@@ -1874,7 +1876,7 @@ class PerksRepository {
           '$_replace $_one -1 $_card with $_one -2 $_stun $_card and $_one +0 VOIDSIGHT $_card',
         ),
         Perk(
-          '$_replace $_one -2 $_card with $_one +0 $_disarm $_card and $_one -1 $_anyElement $_card',
+          '$_replace $_one -2 $_card with $_one +0 $_disarm $_card and $_one -1 $_wildElement $_card',
         ),
         Perk(
           '$_replace $_one -1 $_card with $_one $_rolling +1 VOID $_card and $_one $_rolling -1 $_curse $_card',
@@ -2001,7 +2003,7 @@ class PerksRepository {
         Perk(
           '$_replace $_one -2 $_card with $_one -2 "Perform $_one Glow ability" $_card',
         ),
-        Perk('$_add $_one +0 $_anyElement $_card', quantity: 2),
+        Perk('$_add $_one +0 $_wildElement $_card', quantity: 2),
         Perk('$_add $_one $_rolling +1 "$_heal 1, Self" $_card', quantity: 2),
         Perk(
           '$_add $_one "$_poison, target all enemies in the depicted LUMINARY_HEXES area" $_card',
@@ -2009,7 +2011,7 @@ class PerksRepository {
         ),
         Perk('$_ignoreNegativeScenarioEffectsAndRemove $_one +0 $_card'),
         Perk(
-          '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "$_consume$_anyElement : $_anyElement" $_card',
+          '$_ignoreNegativeItemEffectsAndAdd $_one $_rolling "$_consume$_wildElement : $_wildElement" $_card',
         ),
       ], variant: Variant.base),
     ],
@@ -2262,7 +2264,7 @@ class PerksRepository {
       Perks([
         Perk('$_replace $_one -2 $_card with $_one +0 $_card'),
         Perk(
-          '$_replace $_one -1 $_card with $_one +0 "$_consume$_anyElement : $_anyElement" $_card',
+          '$_replace $_one -1 $_card with $_one +0 "$_consume$_wildElement : $_wildElement" $_card',
           quantity: 3,
         ),
         Perk(
@@ -2326,10 +2328,10 @@ class PerksRepository {
           grouped: true,
         ),
         Perk(
-          '$_wheneverYouShortRest, you may $_consume$_anyElement to $_recover $_one spent $_oneHand or $_twoHand item',
+          '$_wheneverYouShortRest, you may $_consume$_wildElement to $_recover $_one spent $_oneHand or $_twoHand item',
         ),
         Perk(
-          'Once each $_scenario, during ordering of initiative, after all ability cards have been revealed, $_anyElement',
+          'Once each $_scenario, during ordering of initiative, after all ability cards have been revealed, $_wildElement',
         ),
       ], variant: Variant.base),
     ],
@@ -2721,7 +2723,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_replace $_one -1 $_card with $_one +1 $_anyElement $_card',
+          '$_replace $_one -1 $_card with $_one +1 $_wildElement $_card',
           quantity: 2,
         ),
         Perk(
@@ -3081,6 +3083,45 @@ class PerksRepository {
         ),
         Perk(
           '$_atTheStartOfEachScenario, you may play a card from your hand to perform a summon action of the card',
+          quantity: 2,
+          grouped: true,
+        ),
+      ], variant: Variant.base),
+    ],
+    ClassCodes.alchemancer: [
+      Perks([
+        Perk(
+          '$_replace $_one -2 $_card with $_one -1 "$_consume$_wildElement: $_plusTwo $_attack" $_card',
+        ),
+        Perk(
+          '$_replace $_one -1 $_card with $_one +0 $_wildElement $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +0 "Add a $_vialWild to an active $_experiment" $_card',
+          quantity: 3,
+        ),
+        Perk(
+          '$_replace $_one +0 $_card with $_one +1 $_immobilize $_card',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_two +1 "If you drew this as part of a $_experiment ability, +2 instead" $_cards',
+          quantity: 2,
+        ),
+        Perk(
+          '$_add $_one $_fire/$_ice $_rolling $_card, $_one $_fire/$_earth $_rolling $_card, and $_one $_ice/$_earth $_rolling $_card',
+          quantity: 2,
+        ),
+        Perk('$_ignoreScenarioEffectsAndRemove $_one +0 $_card'),
+        Perk(
+          'Whenever you rest, you may $_consume$_wildElement : $_wildElement',
+        ),
+        Perk(
+          'Whenever you consume a potion $_pocket, you may place $_one $_vialWild on an active $_experiment',
+        ),
+        Perk(
+          'At the end of each of your turns during which you performed no attacks and you are not performing a long rest, $_fire/$_ice/$_earth',
           quantity: 2,
           grouped: true,
         ),

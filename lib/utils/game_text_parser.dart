@@ -108,7 +108,8 @@ class IconToken extends GameTextToken {
     if (assetPath.contains('_or_') || assetPath.contains('transfer')) {
       return (iconSize - 2.5) * 2.0;
     }
-    if (assetPath.contains('incarnate_all_stances')) {
+    if (assetPath.contains('incarnate_all_stances') ||
+        assetPath.contains('fire_ice_earth')) {
       return (iconSize - 2.5) * 3.0;
     }
     return iconSize - 2.5;
@@ -236,7 +237,7 @@ class StackedElementToken extends GameTextToken {
   }
 }
 
-/// Token for italic text prefixed with ~
+/// Token for italic text prefixed with *
 class ItalicToken extends GameTextToken {
   final String text;
 

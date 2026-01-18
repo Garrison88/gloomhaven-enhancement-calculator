@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
@@ -176,10 +177,11 @@ class Character {
   // for now, have to manually add the Custom Classes that have masteries but aren't
   // yet Frosthaven Crossover versions
   bool showMasteries() =>
-      playerClass.classCode == 'vimthreader' ||
-      playerClass.classCode == 'core' ||
-      playerClass.classCode == 'dome' ||
-      playerClass.classCode == 'skitterclaw' ||
+      playerClass.classCode == ClassCodes.vimthreader ||
+      playerClass.classCode == ClassCodes.core ||
+      playerClass.classCode == ClassCodes.dome ||
+      playerClass.classCode == ClassCodes.skitterclaw ||
+      playerClass.classCode == ClassCodes.alchemancer ||
       playerClass.category == ClassCategory.frosthaven ||
       variant == Variant.frosthavenCrossover ||
       variant == Variant.gloomhaven2E ||

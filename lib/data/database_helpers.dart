@@ -22,7 +22,7 @@ class DatabaseHelper {
   static const _databaseName = 'GloomhavenCompanion.db';
 
   // Increment this version when you need to change the schema.
-  static const _databaseVersion = 15;
+  static const _databaseVersion = 16;
 
   // Make this a singleton class.
   DatabaseHelper._privateConstructor();
@@ -176,6 +176,7 @@ class DatabaseHelper {
       }
       if (oldVersion <= 5) {
         // Cleanup perks and add Ruinmaw
+        // https://discord.com/channels/728375347732807825/755811690159013925
         await DatabaseMigrations.regenerateLegacyPerksTable(txn);
       }
       if (oldVersion <= 6) {
@@ -199,18 +200,22 @@ class DatabaseHelper {
       }
       if (oldVersion <= 8) {
         // Added Vimthreader class
+        // https://discord.com/channels/728375347732807825/732003202458714193
         await DatabaseMigrations.regeneratePerksTable(txn);
       }
       if (oldVersion <= 9) {
         // Added CORE class
+        // https://discord.com/channels/728375347732807825/880838569734852638
         await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       }
       if (oldVersion <= 10) {
         // Added DOME class
+        // https://discord.com/channels/728375347732807825/756851069471948800
         await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       }
       if (oldVersion <= 11) {
         // Added Skitterclaw class
+        // https://discord.com/channels/728375347732807825/1115885987415998574
         await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       }
       if (oldVersion <= 12) {
@@ -224,6 +229,11 @@ class DatabaseHelper {
       }
       if (oldVersion <= 14) {
         // Minor fix for 'consume_X' icons in Perks Repository
+        await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
+      }
+      if (oldVersion <= 15) {
+        // Add Alchemancer class
+        // https://discord.com/channels/728375347732807825/1268641237955514491
         await DatabaseMigrations.regeneratePerksAndMasteriesTables(txn);
       }
       // Always update metadata table

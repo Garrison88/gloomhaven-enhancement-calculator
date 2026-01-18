@@ -228,7 +228,7 @@ class EnhancementData {
       EnhancementCategory.anyElem,
       'Wild Element',
       ghCost: 150,
-      iconPath: 'elem_any.svg',
+      iconPath: 'elem_wild.svg',
     ),
     Enhancement(
       EnhancementCategory.title,

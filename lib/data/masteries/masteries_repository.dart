@@ -721,5 +721,17 @@ class MasteriesRepository {
         ),
       ]),
     ],
+    ClassCodes.alchemancer: [
+      Masteries([
+        Mastery(
+          masteryDetails:
+              'Activate 12 EXPERIMENT abilities with at least two Vial_Wild used for bonuses during a single scenario',
+        ),
+        Mastery(
+          masteryDetails:
+              'Consume six elements in one turn twice during a single scenario',
+        ),
+      ]),
+    ],
   };
 }

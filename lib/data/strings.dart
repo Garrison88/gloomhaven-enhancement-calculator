@@ -107,7 +107,10 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "gold per card level. This discount stacks with other discounts and applies to "
       "all characters in the campaign.";
 
-  static RichText scenario114RewardInfoBody(BuildContext context, bool darkMode) {
+  static RichText scenario114RewardInfoBody(
+    BuildContext context,
+    bool darkMode,
+  ) {
     return _buildRichText(context, _scenario114RewardContent, darkMode);
   }
 
@@ -388,7 +391,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     );
   }
 
-  static const List<String> anyElementIcon = ['elem_any.svg'];
+  static const List<String> anyElementIcon = ['elem_wild.svg'];
 
   // ============================================================================
   // HEX
