@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <clipPath id="a">
+      <path d="M48 12.8 Q50 9.3, 52 12.8 L95 87.2 Q97 90.7, 93 90.7 L7 90.7 Q3 90.7, 5 87.2 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- White border with rounded corners via stroke-linejoin -->
+  <path fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"
+        d="M50 9.3 L97 90.7 L3 90.7 Z"/>
+
+  <!-- 6 colored wedges from centroid (50,63.6) to corners and midpoints -->
+  <g clip-path="url(#a)">
+    <!-- Top-left gray: center → apex → mid-left-edge -->
+    <path fill="#a8b5bc" d="M50 63.6 L50 9.3 L26.5 50 Z"/>
+
+    <!-- Top-right cyan: center → apex → mid-right-edge -->
+    <path fill="#33b5e5" d="M50 63.6 L50 9.3 L73.5 50 Z"/>
+
+    <!-- Left dark navy: center → mid-left-edge → bottom-left corner -->
+    <path fill="#2b3a42" d="M50 63.6 L26.5 50 L3 90.7 Z"/>
+
+    <!-- Right orange: center → mid-right-edge → bottom-right corner -->
+    <path fill="#d85a2b" d="M50 63.6 L73.5 50 L97 90.7 Z"/>
+
+    <!-- Bottom-left yellow: center → bottom-left corner → mid-bottom-edge -->
+    <path fill="#e9a126" d="M50 63.6 L3 90.7 L50 90.7 Z"/>
+
+    <!-- Bottom-right green: center → mid-bottom-edge → bottom-right corner -->
+    <path fill="#8fb224" d="M50 63.6 L50 90.7 L97 90.7 Z"/>
+  </g>
+</svg>

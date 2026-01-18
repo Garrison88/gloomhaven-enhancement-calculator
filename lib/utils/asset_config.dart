@@ -156,6 +156,8 @@ const standardAssets = {
   'PRESSURE_GAIN': AssetConfig('pressure_gain.svg'),
   'PRESSURE_LOW': AssetConfig('pressure_low.svg'),
   'PRESSURE_HIGH': AssetConfig('pressure_high.svg'),
+  'EXPERIMENT': AssetConfig('experiment.svg'),
+  'RESOLVE': AssetConfig('resolve.svg', invertColor: true),
 
   // Elements and their combinations
   'EARTH': AssetConfig('elem_earth.svg'),
@@ -170,8 +172,8 @@ const standardAssets = {
   'consume_ICE': AssetConfig('elem_ice.svg'),
   'FIRE': AssetConfig('elem_fire.svg'),
   'consume_FIRE': AssetConfig('elem_fire.svg'),
-  'Any_Element': AssetConfig('elem_any.svg'),
-  'consume_Any_Element': AssetConfig('elem_any.svg'),
+  'Wild_Element': AssetConfig('elem_wild.svg'),
+  'consume_Wild_Element': AssetConfig('elem_wild.svg'),
   'AIR/DARK': AssetConfig('elem_air_or_dark.svg'),
   'consume_AIR/DARK': AssetConfig('elem_air_or_dark.svg'),
   'AIR/EARTH': AssetConfig('elem_air_or_earth.svg'),
@@ -202,6 +204,7 @@ const standardAssets = {
   'consume_ICE/LIGHT': AssetConfig('elem_ice_or_light.svg'),
   'LIGHT/DARK': AssetConfig('elem_light_or_dark.svg'),
   'consume_LIGHT/DARK': AssetConfig('elem_light_or_dark.svg'),
+  'Vial_Wild': AssetConfig('vial_wild.svg'),
 };
 
 /// Get asset configuration for a given element

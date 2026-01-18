@@ -778,7 +778,7 @@ class PlayerClasses {
       primaryColor: 0xffd3423e,
       secondaryColor: 0xffbdbdbd,
     ),
-    //CUSTOM
+    // CUSTOM
     PlayerClass(
       race: CharacterRaces.orchid,
       name: 'Brewmaster',
@@ -836,6 +836,15 @@ class PlayerClasses {
       icon: 'skitterclaw.svg',
       category: ClassCategory.custom,
       primaryColor: 0xffDDAC82,
+    ),
+    PlayerClass(
+      race: CharacterRaces.quatryl,
+      name: 'Alchemancer',
+      classCode: ClassCodes.alchemancer,
+      icon: 'alchemancer.svg',
+      category: ClassCategory.custom,
+      primaryColor: 0xff3fd49b,
+      secondaryColor: 0xfffbf679,
     ),
   ];
 
