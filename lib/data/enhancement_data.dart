@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
+import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 
 import '../models/enhancement.dart';
-import '../shared_prefs.dart';
 import 'constants.dart';
 
 enum EnhancementCategory {
@@ -24,120 +24,104 @@ enum EnhancementCategory {
 class EnhancementData {
   static final List<Enhancement> enhancements = [
     // plus one
-    Enhancement(
-      EnhancementCategory.title,
-      'Character',
-      iconPath: 'plus_one.svg',
-    ),
+    Enhancement(EnhancementCategory.title, 'Character', assetKey: 'plus_one'),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Move',
       ghCost: 30,
-      iconPath: 'move.svg',
-      invertIconColor: true,
+      assetKey: 'MOVE',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Attack',
       ghCost: 50,
-      iconPath: 'attack.svg',
-      invertIconColor: true,
+      assetKey: 'ATTACK',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Range',
       ghCost: 30,
-      iconPath: 'range.svg',
-      invertIconColor: true,
+      assetKey: 'RANGE',
     ),
     Enhancement(
       EnhancementCategory.target,
       'Target',
       ghCost: 50,
-      iconPath: SharedPrefs().darkTheme
-          ? 'target_alt.svg'
-          : 'target_alt_light.svg',
+      assetKey: 'TARGET_CIRCLE',
       fhCost: 75,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Shield',
       ghCost: 100,
-      iconPath: 'shield.svg',
+      assetKey: 'SHIELD',
       fhCost: 80,
-      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Retaliate',
       ghCost: 100,
-      iconPath: 'retaliate.svg',
+      assetKey: 'RETALIATE',
       fhCost: 60,
-      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Pierce',
       ghCost: 30,
-      iconPath: 'pierce.svg',
+      assetKey: 'PIERCE',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Heal',
       ghCost: 30,
-      iconPath: SharedPrefs().darkTheme ? 'heal.svg' : 'heal_light.svg',
+      assetKey: 'HEAL',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Push',
       ghCost: 30,
-      iconPath: 'push.svg',
+      assetKey: 'PUSH',
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Pull',
       ghCost: 30,
-      iconPath: 'pull.svg',
+      assetKey: 'PULL',
       fhCost: 20,
     ),
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Teleport',
       ghCost: 40,
-      iconPath: 'teleport.svg',
+      assetKey: 'TELEPORT',
       fhCost: 50,
-      invertIconColor: true,
     ),
-    Enhancement(EnhancementCategory.title, 'Summon', iconPath: 'plus_one.svg'),
+    Enhancement(EnhancementCategory.title, 'Summon', assetKey: 'plus_one'),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'HP',
       ghCost: 50,
-      iconPath: 'hp.svg',
+      assetKey: 'hp',
       fhCost: 40,
-      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'Move',
       ghCost: 100,
-      iconPath: 'move.svg',
+      assetKey: 'MOVE',
       fhCost: 60,
-      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'Attack',
       ghCost: 100,
-      iconPath: 'attack.svg',
-      invertIconColor: true,
+      assetKey: 'ATTACK',
     ),
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'Range',
       ghCost: 50,
-      iconPath: 'range.svg',
-      invertIconColor: true,
+      assetKey: 'RANGE',
     ),
     Enhancement(EnhancementCategory.title, 'Effect'),
     // positive effects
@@ -145,28 +129,28 @@ class EnhancementData {
       EnhancementCategory.posEffect,
       'Regenerate',
       ghCost: 50,
-      iconPath: 'regenerate.svg',
+      assetKey: 'REGENERATE',
       fhCost: 40,
     ),
     Enhancement(
       EnhancementCategory.posEffect,
       'Ward',
       ghCost: 75,
-      iconPath: 'ward.svg',
+      assetKey: 'WARD',
       fhCost: 75,
     ),
     Enhancement(
       EnhancementCategory.posEffect,
       'Strengthen',
       ghCost: 50,
-      iconPath: 'strengthen.svg',
+      assetKey: 'STRENGTHEN',
       fhCost: 100,
     ),
     Enhancement(
       EnhancementCategory.posEffect,
       'Bless',
       ghCost: 50,
-      iconPath: 'bless.svg',
+      assetKey: 'BLESS',
       fhCost: 75,
     ),
     // negative effects
@@ -174,145 +158,140 @@ class EnhancementData {
       EnhancementCategory.negEffect,
       'Wound',
       ghCost: 75,
-      iconPath: 'wound.svg',
+      assetKey: 'WOUND',
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       'Poison',
       ghCost: 75,
-      iconPath: 'poison.svg',
+      assetKey: 'POISON',
       fhCost: 50,
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       'Immobilize',
       ghCost: 100,
-      iconPath: 'immobilize.svg',
+      assetKey: 'IMMOBILIZE',
       fhCost: 150,
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       'Muddle',
       ghCost: 50,
-      iconPath: 'muddle.svg',
+      assetKey: 'MUDDLE',
       fhCost: 40,
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       'Curse',
       ghCost: 75,
-      iconPath: 'curse.svg',
+      assetKey: 'CURSE',
       fhCost: 150,
     ),
     Enhancement(
       EnhancementCategory.negEffect,
       'Disarm',
       ghCost: 150,
-      iconPath: 'disarm.svg',
+      assetKey: 'DISARM',
     ),
     Enhancement(
       EnhancementCategory.jump,
       'Jump',
       ghCost: 50,
-      iconPath: 'jump.svg',
+      assetKey: 'JUMP',
       fhCost: 60,
-      invertIconColor: true,
     ),
     Enhancement(
       EnhancementCategory.specElem,
       'Element',
       ghCost: 100,
-      iconPath: 'elem_fire.svg',
+      assetKey: 'FIRE',
     ),
     Enhancement(
       EnhancementCategory.anyElem,
       'Wild Element',
       ghCost: 150,
-      iconPath: 'elem_wild.svg',
+      assetKey: 'Wild_Element',
     ),
-    Enhancement(
-      EnhancementCategory.title,
-      'Current Hexes',
-      iconPath: 'hex.svg',
-    ),
+    Enhancement(EnhancementCategory.title, 'Current Hexes', assetKey: 'hex'),
     Enhancement(
       EnhancementCategory.hex,
       '2 hexes',
       ghCost: 100,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '3 hexes',
       ghCost: 66,
       fhCost: 67,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '4 hexes',
       ghCost: 50,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '5 hexes',
       ghCost: 40,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '6 hexes',
       ghCost: 33,
       fhCost: 34,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '7 hexes',
       ghCost: 28,
       fhCost: 29,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '8 hexes',
       ghCost: 25,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '9 hexes',
       ghCost: 22,
       fhCost: 23,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '10 hexes',
       ghCost: 20,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '11 hexes',
       ghCost: 18,
       fhCost: 19,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '12 hexes',
       ghCost: 16,
       fhCost: 17,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
     Enhancement(
       EnhancementCategory.hex,
       '13 hexes',
       ghCost: 15,
       fhCost: 16,
-      iconPath: 'hex.svg',
+      assetKey: 'hex',
     ),
   ];
 
@@ -456,10 +435,10 @@ class EnhancementData {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // if there is an icon beside the title, display it and add
                     // a spacer
-                    children: enhancement.iconPath != null
+                    children: enhancement.assetKey != null
                         ? <Widget>[
-                            SvgPicture.asset(
-                              'images/${enhancement.iconPath}',
+                            ThemedSvg(
+                              assetKey: enhancement.assetKey!,
                               width: iconSize,
                               height: iconSize,
                             ),
@@ -499,40 +478,11 @@ class EnhancementData {
                                 EnhancementCategory.target ||
                             enhancement.category ==
                                 EnhancementCategory.summonPlusOne
-                        ? Stack(
-                            alignment: const Alignment(1.75, -1.75),
-                            children: <Widget>[
-                              enhancement.invertIconColor &&
-                                      SharedPrefs().darkTheme
-                                  ? SvgPicture.asset(
-                                      'images/${enhancement.iconPath}',
-                                      width: iconSize,
-                                      colorFilter: const ColorFilter.mode(
-                                        Colors.white,
-                                        BlendMode.srcIn,
-                                      ),
-                                    )
-                                  : SvgPicture.asset(
-                                      'images/${enhancement.iconPath}',
-                                      width: iconSize,
-                                    ),
-                              SvgPicture.asset(
-                                'images/plus_one.svg',
-                                width: iconSize * .5,
-                                height: iconSize * .5,
-                              ),
-                            ],
+                        ? ThemedSvgWithPlusOne(
+                            assetKey: enhancement.assetKey!,
+                            width: iconSize,
                           )
                         // otherwise, no +1 icon
-                        : enhancement.invertIconColor && SharedPrefs().darkTheme
-                        ? SvgPicture.asset(
-                            'images/${enhancement.iconPath}',
-                            width: iconSize,
-                            colorFilter: const ColorFilter.mode(
-                              Colors.white,
-                              BlendMode.srcIn,
-                            ),
-                          )
                         : enhancement.name == 'Element'
                         ? SizedBox(
                             width: iconSize,
@@ -592,8 +542,8 @@ class EnhancementData {
                               ],
                             ),
                           )
-                        : SvgPicture.asset(
-                            'images/${enhancement.iconPath}',
+                        : ThemedSvg(
+                            assetKey: enhancement.assetKey!,
                             width: iconSize,
                           ),
                     RichText(

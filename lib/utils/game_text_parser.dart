@@ -60,27 +60,45 @@ class BoldToken extends GameTextToken {
 }
 
 /// Token for game icons (ATTACK, MOVE, HEAL, etc.)
+///
+/// Icon coloring is controlled by two flags from [AssetConfig]:
+/// - [usesForegroundColor]: Tints entire icon white in dark mode (for monochrome icons)
+/// - [usesCurrentColor]: Sets SVG's `currentColor` per theme (for multi-color icons with themed borders)
 class IconToken extends GameTextToken {
   final String element;
   final String assetPath;
-  final bool invertColor;
+  final bool usesForegroundColor;
+  final bool usesCurrentColor;
+  final double widthMultiplier;
+  final bool hasPlusOneOverlay;
 
   const IconToken({
     required this.element,
     required this.assetPath,
-    required this.invertColor,
+    required this.usesForegroundColor,
+    required this.usesCurrentColor,
+    this.widthMultiplier = 1.0,
+    this.hasPlusOneOverlay = false,
   });
 
   @override
   InlineSpan toSpan(BuildContext context, bool darkTheme) {
+    final baseSize = iconSize - 2.5;
     return WidgetSpan(
       alignment: PlaceholderAlignment.middle,
       child: Tooltip(
         message: _formatTooltipMessage(element),
         child: SizedBox(
-          height: iconSize - 2.5,
-          width: _calculateWidth(assetPath),
-          child: _buildIconContent(assetPath, element, invertColor, darkTheme),
+          height: baseSize,
+          width: baseSize * widthMultiplier,
+          child: _buildIconContent(
+            assetPath,
+            element,
+            usesForegroundColor,
+            darkTheme,
+            usesCurrentColor,
+            hasPlusOneOverlay,
+          ),
         ),
       ),
     );
@@ -100,26 +118,13 @@ class IconToken extends GameTextToken {
         .join(' ');
   }
 
-  double _calculateWidth(String assetPath) {
-    if (assetPath.contains('luminary_hexes') ||
-        assetPath.contains('item_minus_one')) {
-      return (iconSize - 2.5) * 1.5;
-    }
-    if (assetPath.contains('_or_') || assetPath.contains('transfer')) {
-      return (iconSize - 2.5) * 2.0;
-    }
-    if (assetPath.contains('incarnate_all_stances') ||
-        assetPath.contains('fire_ice_earth')) {
-      return (iconSize - 2.5) * 3.0;
-    }
-    return iconSize - 2.5;
-  }
-
   Widget _buildIconContent(
     String assetPath,
     String element,
-    bool invertColor,
+    bool usesForegroundColor,
     bool darkTheme,
+    bool usesCurrentColor,
+    bool hasPlusOneOverlay,
   ) {
     // Handle XP icons
     if (assetPath == 'xp.svg') {
@@ -127,7 +132,12 @@ class IconToken extends GameTextToken {
       return Stack(
         alignment: Alignment.center,
         children: [
-          _buildSvgPicture(assetPath, invertColor, darkTheme),
+          _buildSvgPicture(
+            assetPath,
+            usesForegroundColor,
+            darkTheme,
+            usesCurrentColor,
+          ),
           Positioned(
             bottom: -1,
             child: Text(
@@ -148,7 +158,12 @@ class IconToken extends GameTextToken {
       return Stack(
         fit: StackFit.expand,
         children: [
-          _buildSvgPicture(assetPath, invertColor, darkTheme),
+          _buildSvgPicture(
+            assetPath,
+            usesForegroundColor,
+            darkTheme,
+            usesCurrentColor,
+          ),
           Positioned(
             bottom: 0,
             right: 0,
@@ -162,13 +177,17 @@ class IconToken extends GameTextToken {
       );
     }
 
-    // Handle +1 overlay icons
-    const plusOneElements = ['ATTACK+1', 'MOVE+1', 'HEAL+1', 'TARGET_CIRCLE+1'];
-    if (plusOneElements.contains(element)) {
+    // Handle +1 overlay icons (configured via AssetConfig.hasPlusOneOverlay)
+    if (hasPlusOneOverlay) {
       return Stack(
         alignment: const Alignment(1.75, -1.75),
         children: [
-          _buildSvgPicture(assetPath, invertColor, darkTheme),
+          _buildSvgPicture(
+            assetPath,
+            usesForegroundColor,
+            darkTheme,
+            usesCurrentColor,
+          ),
           SvgPicture.asset(
             'images/plus_one.svg',
             width: iconSize * 0.5,
@@ -178,20 +197,46 @@ class IconToken extends GameTextToken {
       );
     }
 
-    return _buildSvgPicture(assetPath, invertColor, darkTheme);
+    return _buildSvgPicture(
+      assetPath,
+      usesForegroundColor,
+      darkTheme,
+      usesCurrentColor,
+    );
   }
 
+  /// Builds an [SvgPicture] with appropriate color handling based on theme.
+  ///
+  /// Color behavior:
+  /// - [usesForegroundColor]: Applies white tint in dark mode (entire icon)
+  /// - [usesCurrentColor]: Sets `currentColor` to white/black based on theme
+  /// - Neither: Renders SVG as-is with no color modification
   SvgPicture _buildSvgPicture(
     String assetPath,
-    bool invertColor,
+    bool usesForegroundColor,
     bool darkTheme,
+    bool usesCurrentColor,
   ) {
-    if (invertColor && darkTheme) {
+    // Tint entire icon white in dark mode (for monochrome icons)
+    if (usesForegroundColor && darkTheme) {
       return SvgPicture.asset(
         'images/$assetPath',
         colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
       );
     }
+    // Set currentColor for SVGs that use it (for multi-color icons with themed parts)
+    // Note: theme must be set on SvgAssetLoader, not on SvgPicture.asset directly
+    if (usesCurrentColor) {
+      return SvgPicture(
+        SvgAssetLoader(
+          'images/$assetPath',
+          theme: SvgTheme(
+            currentColor: darkTheme ? Colors.white : Colors.black,
+          ),
+        ),
+      );
+    }
+    // No color modification
     return SvgPicture.asset('images/$assetPath');
   }
 }
@@ -428,7 +473,10 @@ class GameTextTokenizer {
       IconToken(
         element: word,
         assetPath: config.path!,
-        invertColor: config.invertColor,
+        usesForegroundColor: config.usesForegroundColor,
+        usesCurrentColor: config.usesCurrentColor,
+        widthMultiplier: config.widthMultiplier,
+        hasPlusOneOverlay: config.hasPlusOneOverlay,
       ),
     );
 

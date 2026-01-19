@@ -70,6 +70,7 @@ class PerksRepository {
   static const _loot = 'LOOT';
   static const _recover = 'RECOVER';
   static const _refresh = 'REFRESH';
+  static const _spent = 'SPENT';
   static const _section = 'SECTION';
 
   // Class specific
@@ -2162,7 +2163,7 @@ class PerksRepository {
           quantity: 2,
         ),
         Perk(
-          '$_wheneverYouShortRest, you may spend $_one unspent SPENT item for no effect to $_recover a different spent item',
+          '$_wheneverYouShortRest, you may spend $_one unspent $_spent item for no effect to $_recover a different spent item',
         ),
         Perk(
           'At the start of your first turn each $_scenario, you may perform $_move 3',

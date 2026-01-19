@@ -9,7 +9,9 @@ import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 // import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
@@ -35,8 +37,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   Widget build(BuildContext context) {
     EnhancementCalculatorModel enhancementCalculatorModel = context
         .watch<EnhancementCalculatorModel>();
+    // Watch ThemeProvider to rebuild when theme changes
+    final themeProvider = context.watch<ThemeProvider>();
     enhancementCalculatorModel.calculateCost(notify: false);
-    final darkTheme = SharedPrefs().darkTheme;
+    final darkTheme = themeProvider.useDarkMode;
     final edition = SharedPrefs().gameEdition;
 
     return Column(
@@ -91,9 +95,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                     ),
                     subtitle: Text(
                       'Forgotten Circles spoilers',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: Colors.grey,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(color: Colors.grey),
                     ),
                     secondary: IconButton(
                       icon: const Icon(Icons.info_outline_rounded),
@@ -164,9 +168,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         title: const Text('Building 44'),
                         subtitle: Text(
                           'Frosthaven spoilers',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: Colors.grey,
-                          ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleSmall?.copyWith(color: Colors.grey),
                         ),
                         onTap: () {
                           showDialog<bool>(
@@ -177,7 +181,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 title: Center(
                                   child: Text(
                                     'Enhancer',
-                                    style: Theme.of(context).textTheme.headlineLarge,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.headlineLarge,
                                   ),
                                 ),
                                 content: StatefulBuilder(
@@ -189,7 +195,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                       child: SingleChildScrollView(
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             CheckboxListTile(
                                               title: Text(
@@ -199,7 +206,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     .bodyMedium
                                                     ?.copyWith(
                                                       color: null,
-                                                      fontSize: SharedPrefs().useDefaultFonts ? 25 : null,
+                                                      fontSize:
+                                                          SharedPrefs()
+                                                              .useDefaultFonts
+                                                          ? 25
+                                                          : null,
                                                     ),
                                               ),
                                               subtitle: Text(
@@ -208,7 +219,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     .textTheme
                                                     .titleMedium
                                                     ?.copyWith(
-                                                      color: SharedPrefs().enhancerLvl1 ? null : Colors.grey,
+                                                      color:
+                                                          SharedPrefs()
+                                                              .enhancerLvl1
+                                                          ? null
+                                                          : Colors.grey,
                                                       fontSize: 20,
                                                     ),
                                               ),
@@ -223,7 +238,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     .textTheme
                                                     .titleMedium
                                                     ?.copyWith(
-                                                      color: SharedPrefs().enhancerLvl2 ? null : Colors.grey,
+                                                      color:
+                                                          SharedPrefs()
+                                                              .enhancerLvl2
+                                                          ? null
+                                                          : Colors.grey,
                                                       fontSize: 20,
                                                     ),
                                               ),
@@ -231,8 +250,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               onChanged: (bool? val) {
                                                 if (val != null) {
                                                   innerSetState(() {
-                                                    SharedPrefs().enhancerLvl2 = val;
-                                                    enhancementCalculatorModel.calculateCost();
+                                                    SharedPrefs().enhancerLvl2 =
+                                                        val;
+                                                    enhancementCalculatorModel
+                                                        .calculateCost();
                                                   });
                                                 }
                                               },
@@ -245,7 +266,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     .textTheme
                                                     .titleMedium
                                                     ?.copyWith(
-                                                      color: SharedPrefs().enhancerLvl3 ? null : Colors.grey,
+                                                      color:
+                                                          SharedPrefs()
+                                                              .enhancerLvl3
+                                                          ? null
+                                                          : Colors.grey,
                                                       fontSize: 20,
                                                     ),
                                               ),
@@ -253,8 +278,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               onChanged: (bool? val) {
                                                 if (val != null) {
                                                   innerSetState(() {
-                                                    SharedPrefs().enhancerLvl3 = val;
-                                                    enhancementCalculatorModel.calculateCost();
+                                                    SharedPrefs().enhancerLvl3 =
+                                                        val;
+                                                    enhancementCalculatorModel
+                                                        .calculateCost();
                                                   });
                                                 }
                                               },
@@ -267,7 +294,11 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     .textTheme
                                                     .titleMedium
                                                     ?.copyWith(
-                                                      color: SharedPrefs().enhancerLvl4 ? null : Colors.grey,
+                                                      color:
+                                                          SharedPrefs()
+                                                              .enhancerLvl4
+                                                          ? null
+                                                          : Colors.grey,
                                                       fontSize: 20,
                                                     ),
                                               ),
@@ -275,8 +306,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               onChanged: (bool? val) {
                                                 if (val != null) {
                                                   innerSetState(() {
-                                                    SharedPrefs().enhancerLvl4 = val;
-                                                    enhancementCalculatorModel.calculateCost();
+                                                    SharedPrefs().enhancerLvl4 =
+                                                        val;
+                                                    enhancementCalculatorModel
+                                                        .calculateCost();
                                                   });
                                                 }
                                               },
@@ -309,7 +342,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           child: Icon(
                             Icons.open_in_new,
                             size: 30,
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .75),
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: .75),
                           ),
                         ),
                       ),
@@ -581,12 +616,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        SvgPicture.asset(
-                          Theme.of(context).brightness == Brightness.dark
-                              ? 'images/loss.svg'
-                              : 'images/loss_light.svg',
-                          width: iconSize,
-                        ),
+                        ThemedSvg(assetKey: 'LOSS', width: iconSize),
                         // Only show "not persistent" icon in FH mode
                         // (GH2E doesn't have persistent modifier)
                         if (edition.hasPersistentModifier)
@@ -597,11 +627,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               alignment: Alignment.center,
                               children: [
                                 Positioned(
-                                  child: SvgPicture.asset(
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? 'images/persistent.svg'
-                                        : 'images/persistent_light.svg',
+                                  child: ThemedSvg(
+                                    assetKey: 'PERSISTENT',
                                     width: iconSize,
                                   ),
                                 ),
@@ -649,12 +676,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         },
                       ),
                     ),
-                    title: SvgPicture.asset(
-                      Theme.of(context).brightness == Brightness.dark
-                          ? 'images/persistent.svg'
-                          : 'images/persistent_light.svg',
-                      width: iconSize,
-                    ),
+                    title: ThemedSvg(assetKey: 'PERSISTENT', width: iconSize),
                   ),
                   const SizedBox(height: 4),
                 ],
