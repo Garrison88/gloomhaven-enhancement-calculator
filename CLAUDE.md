@@ -128,6 +128,62 @@ Example: "Brute" in base game → "Bruiser" in Gloomhaven 2E
 - Attack modifiers: `images/attack_modifiers/`
 - Custom fonts: PirataOne (headers), HighTower, Nyala, Roboto, OpenSans, Inter
 
+## SVG Theming
+
+The app uses `flutter_svg` for rendering SVG icons. Icons adapt to light/dark themes automatically.
+
+### ThemedSvg Widget (`lib/utils/themed_svg.dart`)
+
+Use the `ThemedSvg` widget to render theme-aware SVG icons:
+
+```dart
+// Basic usage - just pass an asset key
+ThemedSvg(assetKey: 'MOVE', width: 24)
+
+// With custom color override
+ThemedSvg(assetKey: 'ATTACK', width: 24, color: Colors.red)
+
+// With +1 overlay badge (for enhancements)
+ThemedSvgWithPlusOne(assetKey: 'MOVE', width: 24)
+```
+
+The widget automatically:
+- Looks up the asset key in `asset_config.dart` to get the file path
+- Detects light/dark theme from `Theme.of(context)`
+- Applies appropriate coloring based on the asset's configuration
+
+### Asset Configuration (`lib/utils/asset_config.dart`)
+
+All SVG assets are configured here with their file paths and theming behavior:
+
+```dart
+// Preferred: SVG uses fill="currentColor" - only those parts change with theme
+'MOVE': AssetConfig('move.svg', usesCurrentColor: true)
+
+// Deprecated: Tints entire SVG white in dark mode (for legacy SVGs with embedded images)
+'CRYSTALLIZE': AssetConfig('crystallize.svg', usesForegroundColor: true)
+
+// No theming needed - renders as-is in both themes
+'hex': AssetConfig('hex.svg')
+```
+
+### Adding a New SVG Icon
+
+1. Add the SVG file to `images/`
+2. Edit the SVG to use `currentColor` for theme-aware parts:
+   - `fill="currentColor"` or `style="fill:currentColor"`
+   - `stroke="currentColor"` for strokes
+3. Add an entry in `asset_config.dart`:
+   ```dart
+   'MY_ICON': AssetConfig('my_icon.svg', usesCurrentColor: true)
+   ```
+4. Use it with `ThemedSvg(assetKey: 'MY_ICON', width: 24)`
+
+### How It Works
+
+- **`usesCurrentColor: true`**: Uses `SvgTheme` so only SVG elements with `fill="currentColor"` change color. Other colors in the SVG are preserved. This is ideal for multi-color icons where only some parts should adapt to the theme.
+- **`usesForegroundColor: true`** (deprecated): Applies a `colorFilter` to tint the entire SVG white in dark mode. Only use for legacy SVGs that can't be converted.
+
 ## Tips for AI Assistants
 
 1. **Read before modifying** - Always read files before suggesting changes
@@ -135,3 +191,5 @@ Example: "Brute" in base game → "Bruiser" in Gloomhaven 2E
 3. **SharedPrefs keys** - Settings stored in `shared_prefs.dart` - check existing keys before adding
 4. **Database migrations** - New schema changes need migration code in `database_migrations.dart`
 5. **Theme awareness** - Use `Theme.of(context)` and ThemeProvider for colors/styling
+6. **SVG icons** - Use `ThemedSvg` widget with asset keys, not direct `SvgPicture` calls
+7. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.275 0.48 2.08 2.08">
-    <g style="fill:#000;--darkreader-inline-fill:var(--darkreader-text-000000, #e8e6e3)">
+    <g style="fill:currentColor">
         <path
             d="M0 0a.257.257 0 0 1-.257.257h-3.707a.656.656 0 0 1-.656-.656v-4.694c0-.261.211-.472.472-.472h3.676c.261 0 .472.211.472.472v3.728a.47.47 0 0 1-.472.472H-2.16c-.008 0-.01-.01-.003-.013.12-.051.131-.192.131-.192v-2.051c0-.022-.027-.033-.042-.018l-.628.628a.057.057 0 0 1-.08 0l-.623-.622c-.016-.016-.043-.005-.043.017v2.026a.21.21 0 0 1-.091.182.25.25 0 0 1-.142.043h-.127a.318.318 0 0 0 0 .636h3.551C-.115-.257 0-.142 0 0"
-            style="fill:#000;fill-opacity:1;fill-rule:nonzero;stroke:none;--darkreader-inline-fill:var(--darkreader-text-000000, #e8e6e3);--darkreader-inline-stroke:none"
+            style="fill:currentColor;fill-opacity:1;fill-rule:nonzero;stroke:none"
             transform="matrix(.35278 0 0 -.35278 2.13 .59)" />
     </g>
 </svg>

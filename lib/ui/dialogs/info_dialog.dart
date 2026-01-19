@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
+import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 
 class InfoDialog extends StatefulWidget {
   final String? title;
@@ -30,8 +30,8 @@ class _InfoDialogState extends State<InfoDialog> {
       icons.add(
         Padding(
           padding: const EdgeInsets.only(right: smallPadding / 2),
-          child: SvgPicture.asset(
-            'images/plus_one.svg',
+          child: ThemedSvg(
+            assetKey: 'plus_one',
             height: iconSize,
             width: iconSize,
           ),
@@ -42,14 +42,10 @@ class _InfoDialogState extends State<InfoDialog> {
         icons.add(
           Padding(
             padding: const EdgeInsets.only(right: smallPadding / 2),
-            child: SvgPicture.asset(
-              'images/${enhancement.iconPath}',
+            child: ThemedSvg(
+              assetKey: enhancement.assetKey!,
               height: iconSize,
               width: iconSize,
-              colorFilter:
-                  SharedPrefs().darkTheme && enhancement.invertIconColor
-                  ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
-                  : null,
             ),
           ),
         );
@@ -127,7 +123,7 @@ class _InfoDialogState extends State<InfoDialog> {
                     EnhancementCategory.negEffect,
                     'Stun',
                     ghCost: 0,
-                    iconPath: 'stun.svg',
+                    assetKey: 'STUN',
                   ),
                 );
           break;
@@ -161,7 +157,7 @@ class _InfoDialogState extends State<InfoDialog> {
                     EnhancementCategory.posEffect,
                     'Invisible',
                     ghCost: 0,
-                    iconPath: 'invisible.svg',
+                    assetKey: 'INVISIBLE',
                   ),
                 );
           break;
@@ -191,37 +187,37 @@ class _InfoDialogState extends State<InfoDialog> {
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_air.svg',
+              assetKey: 'AIR',
             ),
             Enhancement(
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_earth.svg',
+              assetKey: 'EARTH',
             ),
             Enhancement(
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_fire.svg',
+              assetKey: 'FIRE',
             ),
             Enhancement(
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_ice.svg',
+              assetKey: 'ICE',
             ),
             Enhancement(
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_dark.svg',
+              assetKey: 'DARK',
             ),
             Enhancement(
               EnhancementCategory.specElem,
               'Specific Element',
               ghCost: 100,
-              iconPath: 'elem_light.svg',
+              assetKey: 'LIGHT',
             ),
           ];
           _eligibleForIcons =
@@ -248,7 +244,7 @@ class _InfoDialogState extends State<InfoDialog> {
                     EnhancementCategory.posEffect,
                     'Invisible',
                     ghCost: 0,
-                    iconPath: 'invisible.svg',
+                    assetKey: 'INVISIBLE',
                   ),
                 );
           break;
@@ -284,7 +280,7 @@ class _InfoDialogState extends State<InfoDialog> {
                     EnhancementCategory.posEffect,
                     'Invisible',
                     ghCost: 0,
-                    iconPath: 'invisible.svg',
+                    assetKey: 'INVISIBLE',
                   ),
                 );
           break;

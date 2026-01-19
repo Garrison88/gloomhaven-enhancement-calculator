@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/changelog_screen.dart';
@@ -201,14 +202,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                               content: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset(
-                                    'images/class_icons/bladeswarm.svg',
+                                  ThemedSvg(
+                                    assetKey: 'Bladeswarm',
                                     width: iconSize,
                                     height: iconSize,
-                                    colorFilter: ColorFilter.mode(
-                                      Theme.of(context).colorScheme.onSurface,
-                                      BlendMode.srcIn,
-                                    ),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                   const SizedBox(width: smallPadding),
                                   const Text('Bladeswarm unlocked'),
@@ -311,14 +311,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                               content: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  SvgPicture.asset(
-                                    'images/class_icons/vanquisher.svg',
+                                  ThemedSvg(
+                                    assetKey: 'RAGE',
                                     width: iconSize,
                                     height: iconSize,
-                                    colorFilter: ColorFilter.mode(
-                                      Theme.of(context).colorScheme.onSurface,
-                                      BlendMode.srcIn,
-                                    ),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                   const SizedBox(width: smallPadding),
                                   const Text('Vanquisher unlocked'),

@@ -6,16 +6,14 @@ class Enhancement {
   final String name;
   final int ghCost;
   final int? fhCost;
-  final String? iconPath;
-  final bool invertIconColor;
+  final String? assetKey;
 
   Enhancement(
     this.category,
     this.name, {
-    this.iconPath,
+    this.assetKey,
     this.ghCost = 0,
     this.fhCost,
-    this.invertIconColor = false,
   });
 
   int cost({required GameEdition edition}) {
