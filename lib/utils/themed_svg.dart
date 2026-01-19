@@ -15,6 +15,7 @@ import 'package:gloomhaven_enhancement_calc/utils/asset_config.dart';
 /// ```dart
 /// ThemedSvg(assetKey: 'MOVE', width: 24)
 /// ThemedSvg(assetKey: 'ATTACK', width: 24, color: Colors.red)
+/// ThemedSvg(assetKey: 'MOVE', width: 24, showPlusOneOverlay: true)
 /// ```
 class ThemedSvg extends StatelessWidget {
   /// The asset key to look up in [asset_config.dart].
@@ -32,12 +33,17 @@ class ThemedSvg extends StatelessWidget {
   /// When provided, overrides theme-based coloring.
   final Color? color;
 
+  /// When true, overlays a +1 badge on the icon.
+  /// Used for enhancement icons like ATTACK+1, MOVE+1, etc.
+  final bool showPlusOneOverlay;
+
   const ThemedSvg({
     super.key,
     required this.assetKey,
     this.width,
     this.height,
     this.color,
+    this.showPlusOneOverlay = false,
   });
 
   @override
@@ -52,6 +58,32 @@ class ThemedSvg extends StatelessWidget {
         ? width! * config.widthMultiplier
         : null;
 
+    final icon = _buildThemedIcon(fullPath, effectiveWidth, darkTheme, config);
+
+    if (showPlusOneOverlay) {
+      final size = width ?? height ?? 24.0;
+      return Stack(
+        alignment: const Alignment(1.75, -1.75),
+        children: [
+          icon,
+          SvgPicture.asset(
+            'images/plus_one.svg',
+            width: size * 0.5,
+            height: size * 0.5,
+          ),
+        ],
+      );
+    }
+
+    return icon;
+  }
+
+  Widget _buildThemedIcon(
+    String fullPath,
+    double? effectiveWidth,
+    bool darkTheme,
+    AssetConfig config,
+  ) {
     // Handle custom color override (takes precedence over all other coloring)
     if (color != null) {
       return SvgPicture.asset(
@@ -62,10 +94,11 @@ class ThemedSvg extends StatelessWidget {
       );
     }
 
-    // Handle usesCurrentColor - use SvgTheme so only parts with
-    // fill="currentColor" or stroke="currentColor" change color
-    if (config.usesCurrentColor) {
-      return SvgPicture(
+    // Use pattern matching on themeMode for type-safe theming
+    return switch (config.themeMode) {
+      // Use SvgTheme so only parts with fill="currentColor" or
+      // stroke="currentColor" change color
+      CurrentColorTheme() => SvgPicture(
         SvgAssetLoader(
           fullPath,
           theme: SvgTheme(
@@ -74,27 +107,25 @@ class ThemedSvg extends StatelessWidget {
         ),
         width: effectiveWidth,
         height: height,
-      );
-    }
-
-    // Handle usesForegroundColor (deprecated) - tint entire SVG white in dark mode
-    if (config.usesForegroundColor && darkTheme) {
-      return SvgPicture.asset(
+      ),
+      // Tint entire SVG white in dark mode (deprecated)
+      // ignore: deprecated_member_use_from_same_package
+      ForegroundColorTheme() when darkTheme => SvgPicture.asset(
         fullPath,
         width: effectiveWidth,
         height: height,
         colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      );
-    }
-
-    // No color modification needed
-    return SvgPicture.asset(fullPath, width: effectiveWidth, height: height);
+      ),
+      // No color modification needed
+      _ => SvgPicture.asset(fullPath, width: effectiveWidth, height: height),
+    };
   }
 }
 
-/// A variant of [ThemedSvg] that includes a +1 overlay badge.
+/// @Deprecated('Use ThemedSvg with showPlusOneOverlay: true instead')
 ///
-/// Used for enhancement icons like ATTACK+1, MOVE+1, etc.
+/// Temporary alias for backwards compatibility. Will be removed in a future release.
+@Deprecated('Use ThemedSvg(assetKey: key, showPlusOneOverlay: true) instead')
 class ThemedSvgWithPlusOne extends StatelessWidget {
   final String assetKey;
   final double? width;
@@ -109,18 +140,11 @@ class ThemedSvgWithPlusOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = width ?? height ?? 24.0;
-
-    return Stack(
-      alignment: const Alignment(1.75, -1.75),
-      children: [
-        ThemedSvg(assetKey: assetKey, width: size, height: height),
-        SvgPicture.asset(
-          'images/plus_one.svg',
-          width: size * 0.5,
-          height: size * 0.5,
-        ),
-      ],
+    return ThemedSvg(
+      assetKey: assetKey,
+      width: width,
+      height: height,
+      showPlusOneOverlay: true,
     );
   }
 }

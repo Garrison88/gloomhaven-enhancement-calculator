@@ -61,24 +61,24 @@ class BoldToken extends GameTextToken {
 
 /// Token for game icons (ATTACK, MOVE, HEAL, etc.)
 ///
-/// Icon coloring is controlled by two flags from [AssetConfig]:
-/// - [usesForegroundColor]: Tints entire icon white in dark mode (for monochrome icons)
-/// - [usesCurrentColor]: Sets SVG's `currentColor` per theme (for multi-color icons with themed borders)
+/// Icon coloring is controlled by [AssetConfig.themeMode]:
+/// - [ForegroundColorTheme]: Tints entire icon white in dark mode (for monochrome icons)
+/// - [CurrentColorTheme]: Sets SVG's `currentColor` per theme (for multi-color icons with themed borders)
+/// - [NoTheme]: No color modification
 class IconToken extends GameTextToken {
+  /// The original text element (e.g., 'ATTACK', 'MOVE+1')
   final String element;
-  final String assetPath;
-  final bool usesForegroundColor;
-  final bool usesCurrentColor;
-  final double widthMultiplier;
-  final bool hasPlusOneOverlay;
+
+  /// The asset configuration for this icon
+  final AssetConfig config;
+
+  /// Whether to show a +1 overlay badge (detected from "+1" suffix in element)
+  final bool showPlusOneOverlay;
 
   const IconToken({
     required this.element,
-    required this.assetPath,
-    required this.usesForegroundColor,
-    required this.usesCurrentColor,
-    this.widthMultiplier = 1.0,
-    this.hasPlusOneOverlay = false,
+    required this.config,
+    this.showPlusOneOverlay = false,
   });
 
   @override
@@ -90,15 +90,8 @@ class IconToken extends GameTextToken {
         message: _formatTooltipMessage(element),
         child: SizedBox(
           height: baseSize,
-          width: baseSize * widthMultiplier,
-          child: _buildIconContent(
-            assetPath,
-            element,
-            usesForegroundColor,
-            darkTheme,
-            usesCurrentColor,
-            hasPlusOneOverlay,
-          ),
+          width: baseSize * config.widthMultiplier,
+          child: _buildIconContent(darkTheme),
         ),
       ),
     );
@@ -118,26 +111,16 @@ class IconToken extends GameTextToken {
         .join(' ');
   }
 
-  Widget _buildIconContent(
-    String assetPath,
-    String element,
-    bool usesForegroundColor,
-    bool darkTheme,
-    bool usesCurrentColor,
-    bool hasPlusOneOverlay,
-  ) {
+  Widget _buildIconContent(bool darkTheme) {
+    final assetPath = config.path!;
+
     // Handle XP icons
     if (assetPath == 'xp.svg') {
       final xpNumber = RegExp(r'\d+').firstMatch(element)?.group(0) ?? '';
       return Stack(
         alignment: Alignment.center,
         children: [
-          _buildSvgPicture(
-            assetPath,
-            usesForegroundColor,
-            darkTheme,
-            usesCurrentColor,
-          ),
+          _buildSvgPicture(assetPath, darkTheme),
           Positioned(
             bottom: -1,
             child: Text(
@@ -158,12 +141,7 @@ class IconToken extends GameTextToken {
       return Stack(
         fit: StackFit.expand,
         children: [
-          _buildSvgPicture(
-            assetPath,
-            usesForegroundColor,
-            darkTheme,
-            usesCurrentColor,
-          ),
+          _buildSvgPicture(assetPath, darkTheme),
           Positioned(
             bottom: 0,
             right: 0,
@@ -177,17 +155,12 @@ class IconToken extends GameTextToken {
       );
     }
 
-    // Handle +1 overlay icons (configured via AssetConfig.hasPlusOneOverlay)
-    if (hasPlusOneOverlay) {
+    // Handle +1 overlay icons (detected from element suffix)
+    if (showPlusOneOverlay) {
       return Stack(
         alignment: const Alignment(1.75, -1.75),
         children: [
-          _buildSvgPicture(
-            assetPath,
-            usesForegroundColor,
-            darkTheme,
-            usesCurrentColor,
-          ),
+          _buildSvgPicture(assetPath, darkTheme),
           SvgPicture.asset(
             'images/plus_one.svg',
             width: iconSize * 0.5,
@@ -197,47 +170,34 @@ class IconToken extends GameTextToken {
       );
     }
 
-    return _buildSvgPicture(
-      assetPath,
-      usesForegroundColor,
-      darkTheme,
-      usesCurrentColor,
-    );
+    return _buildSvgPicture(assetPath, darkTheme);
   }
 
   /// Builds an [SvgPicture] with appropriate color handling based on theme.
   ///
-  /// Color behavior:
-  /// - [usesForegroundColor]: Applies white tint in dark mode (entire icon)
-  /// - [usesCurrentColor]: Sets `currentColor` to white/black based on theme
-  /// - Neither: Renders SVG as-is with no color modification
-  SvgPicture _buildSvgPicture(
-    String assetPath,
-    bool usesForegroundColor,
-    bool darkTheme,
-    bool usesCurrentColor,
-  ) {
-    // Tint entire icon white in dark mode (for monochrome icons)
-    if (usesForegroundColor && darkTheme) {
-      return SvgPicture.asset(
-        'images/$assetPath',
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      );
-    }
-    // Set currentColor for SVGs that use it (for multi-color icons with themed parts)
-    // Note: theme must be set on SvgAssetLoader, not on SvgPicture.asset directly
-    if (usesCurrentColor) {
-      return SvgPicture(
+  /// Color behavior is determined by [config.themeMode]:
+  /// - [ForegroundColorTheme]: Applies white tint in dark mode (entire icon)
+  /// - [CurrentColorTheme]: Sets `currentColor` to white/black based on theme
+  /// - [NoTheme]: Renders SVG as-is with no color modification
+  SvgPicture _buildSvgPicture(String assetPath, bool darkTheme) {
+    final fullPath = 'images/$assetPath';
+
+    return switch (config.themeMode) {
+      CurrentColorTheme() => SvgPicture(
         SvgAssetLoader(
-          'images/$assetPath',
+          fullPath,
           theme: SvgTheme(
             currentColor: darkTheme ? Colors.white : Colors.black,
           ),
         ),
-      );
-    }
-    // No color modification
-    return SvgPicture.asset('images/$assetPath');
+      ),
+      // ignore: deprecated_member_use_from_same_package
+      ForegroundColorTheme() when darkTheme => SvgPicture.asset(
+        fullPath,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      ),
+      _ => SvgPicture.asset(fullPath),
+    };
   }
 }
 
@@ -427,12 +387,27 @@ class GameTextTokenizer {
         continue;
       }
 
+      // Detect +1 suffix and strip it for asset lookup
+      // (e.g., 'MOVE+1' -> look up 'MOVE', set showPlusOneOverlay: true)
+      String assetKey = word;
+      bool showPlusOneOverlay = false;
+      if (word.endsWith('+1')) {
+        assetKey = word.substring(0, word.length - 2);
+        showPlusOneOverlay = true;
+      }
+
       // Try to get asset config for this word
-      final config = getAssetConfig(word, darkTheme);
+      final config = getAssetConfig(assetKey, darkTheme);
 
       if (config.path != null) {
         // This is an icon token
-        _addIconTokenWithPunctuation(tokens, word, config, darkTheme);
+        _addIconTokenWithPunctuation(
+          tokens,
+          word,
+          config,
+          darkTheme,
+          showPlusOneOverlay: showPlusOneOverlay,
+        );
       } else {
         // Plain text token
         tokens.add(PlainTextToken(word));
@@ -452,8 +427,9 @@ class GameTextTokenizer {
     List<GameTextToken> tokens,
     String word,
     AssetConfig config,
-    bool darkTheme,
-  ) {
+    bool darkTheme, {
+    bool showPlusOneOverlay = false,
+  }) {
     // Check for leading punctuation
     if (word.isNotEmpty && _leadingPunctuation.contains(word[0])) {
       tokens.add(PunctuationToken(word[0]));
@@ -472,11 +448,8 @@ class GameTextTokenizer {
     tokens.add(
       IconToken(
         element: word,
-        assetPath: config.path!,
-        usesForegroundColor: config.usesForegroundColor,
-        usesCurrentColor: config.usesCurrentColor,
-        widthMultiplier: config.widthMultiplier,
-        hasPlusOneOverlay: config.hasPlusOneOverlay,
+        config: config,
+        showPlusOneOverlay: showPlusOneOverlay,
       ),
     );
 

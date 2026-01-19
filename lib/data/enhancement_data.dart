@@ -478,9 +478,10 @@ class EnhancementData {
                                 EnhancementCategory.target ||
                             enhancement.category ==
                                 EnhancementCategory.summonPlusOne
-                        ? ThemedSvgWithPlusOne(
+                        ? ThemedSvg(
                             assetKey: enhancement.assetKey!,
                             width: iconSize,
+                            showPlusOneOverlay: true,
                           )
                         // otherwise, no +1 icon
                         : enhancement.name == 'Element'

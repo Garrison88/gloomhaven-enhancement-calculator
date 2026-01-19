@@ -1,10 +1,32 @@
-/// Configuration for how an SVG asset should be colored based on the app theme.
+// ============================================================================
+// SVG THEME MODE
+// ============================================================================
+
+/// Defines how an SVG asset's colors should adapt to the app theme.
 ///
-/// ## [usesCurrentColor] (preferred)
-/// When `true`, parts of the SVG that use `currentColor` in their fill or stroke
-/// will change based on the theme. Other colors remain unchanged.
+/// Uses a sealed class hierarchy to make invalid states unrepresentable.
+/// Previously this was two mutually-exclusive booleans.
+sealed class SvgThemeMode {
+  const SvgThemeMode();
+}
+
+/// No theming - renders SVG exactly as defined in the file.
+///
+/// Use this for:
+/// - Icons that look good on both light and dark backgrounds as-is
+/// - Colorful icons that don't need theme adaptation
+class NoTheme extends SvgThemeMode {
+  const NoTheme();
+}
+
+/// Modern approach: only `currentColor` parts change with theme.
+///
+/// Parts of the SVG that use `fill="currentColor"` or `stroke="currentColor"`
+/// will change based on the theme:
 /// - In dark mode: `currentColor` parts become white
 /// - In light mode: `currentColor` parts become black
+///
+/// Other colors in the SVG are preserved.
 ///
 /// This works for both **monochrome icons** (where the entire icon uses
 /// `currentColor`) and **multi-color icons** (where only specific parts like
@@ -14,63 +36,67 @@
 /// - Move icon, Attack icon - entire icon uses `fill="currentColor"`
 /// - Wild element icon - colorful pie chart stays the same, but the border
 ///   uses `currentColor` and adapts to the theme
+class CurrentColorTheme extends SvgThemeMode {
+  const CurrentColorTheme();
+}
+
+/// Legacy/deprecated: tints entire SVG white in dark mode.
 ///
-/// ## [usesForegroundColor] (deprecated)
-/// Legacy approach that applies a color filter to tint the entire SVG white
-/// in dark mode. This is deprecated in favor of [usesCurrentColor] with
-/// properly configured SVG assets that use `currentColor` for theme-aware parts.
+/// Applies a color filter to tint the entire SVG white in dark mode.
+/// This is deprecated in favor of [CurrentColorTheme] with properly configured
+/// SVG assets that use `currentColor` for theme-aware parts.
 ///
 /// Only use this for SVGs that cannot be converted to use `currentColor`
 /// (e.g., embedded raster images).
-///
-/// ## Neither flag set
-/// The SVG renders exactly as defined in the file with no color modifications.
-/// Use this for icons that look good on both light and dark backgrounds as-is,
-/// or for colorful icons that don't need theme adaptation.
+@Deprecated('Migrate SVGs to use currentColor instead')
+class ForegroundColorTheme extends SvgThemeMode {
+  const ForegroundColorTheme();
+}
+
+// ============================================================================
+// ASSET CONFIG
+// ============================================================================
+
+/// Configuration for how an SVG asset should be rendered and themed.
 class AssetConfig {
+  /// The file path to the SVG asset (relative to images/ directory).
   final String? path;
 
-  /// @deprecated Use [usesCurrentColor] with SVGs that have `currentColor` fills.
-  ///
-  /// When true, tints the entire SVG white in dark mode using a color filter.
-  /// Only use for legacy SVGs that cannot be converted (e.g., embedded images).
-  final bool usesForegroundColor;
-
-  /// When true, sets the SVG's `currentColor` value based on theme.
-  /// Only affects parts of the SVG that explicitly use `currentColor`.
-  /// This is the preferred approach for theme-aware icons.
-  final bool usesCurrentColor;
+  /// How the SVG's colors should adapt to the app theme.
+  final SvgThemeMode themeMode;
 
   /// Width multiplier for non-square icons.
   /// Default is 1.0 (square). Use 1.5, 2.0, 3.0 for wider icons.
   final double widthMultiplier;
 
-  /// When true, overlays a +1 badge on the icon.
-  /// Used for ATTACK+1, MOVE+1, HEAL+1, TARGET_CIRCLE+1 variants.
-  final bool hasPlusOneOverlay;
-
   const AssetConfig(
     this.path, {
-    @Deprecated('Prefer useCurrentColor with corrected SVG assets')
-    this.usesForegroundColor = false,
-    this.usesCurrentColor = false,
+    this.themeMode = const NoTheme(),
     this.widthMultiplier = 1.0,
-    this.hasPlusOneOverlay = false,
   });
+
+  /// Convenience getters for backward compatibility during migration.
+  /// These can be removed once all code uses [themeMode] directly.
+  bool get usesCurrentColor => themeMode is CurrentColorTheme;
+
+  // ignore: deprecated_member_use_from_same_package
+  bool get usesForegroundColor => themeMode is ForegroundColorTheme;
 }
 
-// Create a map for theme-dependent assets
+// ============================================================================
+// ASSET MAPS
+// ============================================================================
+
+/// Assets that require different files for light/dark themes.
+/// These cannot be converted to use currentColor because they need
+/// fundamentally different graphics per theme.
 final themeSpecificAssets = {
-  // Must remain two separate assets
   'REFRESH': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'refresh.svg' : 'refresh_light.svg'),
-  // Must remain two separate assets
   'SPENT': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'spent.svg' : 'spent_light.svg'),
-  // Must remain two separate assets
   'PERSISTENT': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'persistent.svg' : 'persistent_light.svg'),
-  // Must remain two separate assets
   'DAMAGE': (bool darkTheme) =>
       AssetConfig(darkTheme ? 'damage.svg' : 'damage_light.svg'),
   'item_minus_one': (bool darkTheme) => AssetConfig(
@@ -79,11 +105,11 @@ final themeSpecificAssets = {
   ),
 };
 
-// Create a map for standard assets
+/// Standard assets that use the same file regardless of theme.
+/// Theme adaptation is handled via [SvgThemeMode].
 const standardAssets = {
   // Attack modifiers
   'NULL': AssetConfig('attack_modifiers/null.svg'),
-  'SHUFFLE': AssetConfig('shuffle.svg', usesCurrentColor: true),
   '-2': AssetConfig('attack_modifiers/minus_2.svg'),
   '-1': AssetConfig('attack_modifiers/minus_1.svg'),
   '+0': AssetConfig('attack_modifiers/plus_0.svg'),
@@ -105,43 +131,41 @@ const standardAssets = {
   // Equipment slots
   'One_Hand': AssetConfig(
     'equipment_slots/one_handed.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
   'Two_Hand': AssetConfig(
     'equipment_slots/two_handed.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
-  'Head': AssetConfig('equipment_slots/head.svg', usesCurrentColor: true),
-  'Body': AssetConfig('equipment_slots/body.svg', usesCurrentColor: true),
-  'Pocket': AssetConfig('equipment_slots/pocket.svg', usesCurrentColor: true),
+  'Head': AssetConfig(
+    'equipment_slots/head.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'Body': AssetConfig(
+    'equipment_slots/body.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'Pocket': AssetConfig(
+    'equipment_slots/pocket.svg',
+    themeMode: CurrentColorTheme(),
+  ),
 
   // Movement and actions
-  'MOVE': AssetConfig('move.svg', usesCurrentColor: true),
-  'MOVE+1': AssetConfig(
-    'move.svg',
-    usesCurrentColor: true,
-    hasPlusOneOverlay: true,
-  ),
-  'FLYING': AssetConfig('flying.svg', usesCurrentColor: true),
-  'JUMP': AssetConfig('jump.svg', usesCurrentColor: true),
-  'SHIELD': AssetConfig('shield.svg', usesCurrentColor: true),
-  'TELEPORT': AssetConfig('teleport.svg', usesCurrentColor: true),
+  'MOVE': AssetConfig('move.svg', themeMode: CurrentColorTheme()),
+  'FLYING': AssetConfig('flying.svg', themeMode: CurrentColorTheme()),
+  'JUMP': AssetConfig('jump.svg', themeMode: CurrentColorTheme()),
+  'SHIELD': AssetConfig('shield.svg', themeMode: CurrentColorTheme()),
+  'TELEPORT': AssetConfig('teleport.svg', themeMode: CurrentColorTheme()),
   'PUSH': AssetConfig('push.svg'),
   'PULL': AssetConfig('pull.svg'),
-  'RECOVER': AssetConfig('recover_card.svg', usesCurrentColor: true),
-  'LOSS': AssetConfig('loss.svg', usesCurrentColor: true),
-  'TARGET_CIRCLE': AssetConfig('target_circle.svg', usesCurrentColor: true),
-  'TARGET_CIRCLE+1': AssetConfig(
+  'RECOVER': AssetConfig('recover_card.svg', themeMode: CurrentColorTheme()),
+  'LOSS': AssetConfig('loss.svg', themeMode: CurrentColorTheme()),
+  'TARGET_CIRCLE': AssetConfig(
     'target_circle.svg',
-    usesCurrentColor: true,
-    hasPlusOneOverlay: true,
+    themeMode: CurrentColorTheme(),
   ),
-  'HEAL': AssetConfig('heal.svg', usesCurrentColor: true),
-  'HEAL+1': AssetConfig(
-    'heal.svg',
-    usesCurrentColor: true,
-    hasPlusOneOverlay: true,
-  ),
+  'HEAL': AssetConfig('heal.svg', themeMode: CurrentColorTheme()),
+  'SHUFFLE': AssetConfig('shuffle.svg', themeMode: CurrentColorTheme()),
 
   // Status effects
   'STUN': AssetConfig('stun.svg'),
@@ -171,71 +195,93 @@ const standardAssets = {
 
   // Combat related
   'TARGET_DIAMOND': AssetConfig('target.svg'),
-  'RANGE': AssetConfig('range.svg', usesCurrentColor: true),
-  'LOOT': AssetConfig('loot.svg', usesCurrentColor: true),
-  'RETALIATE': AssetConfig('retaliate.svg', usesCurrentColor: true),
-  'ATTACK': AssetConfig('attack.svg', usesCurrentColor: true),
-  'ATTACK+1': AssetConfig(
-    'attack.svg',
-    usesCurrentColor: true,
-    hasPlusOneOverlay: true,
-  ),
+  'RANGE': AssetConfig('range.svg', themeMode: CurrentColorTheme()),
+  'LOOT': AssetConfig('loot.svg', themeMode: CurrentColorTheme()),
+  'RETALIATE': AssetConfig('retaliate.svg', themeMode: CurrentColorTheme()),
+  'ATTACK': AssetConfig('attack.svg', themeMode: CurrentColorTheme()),
   'Rolling': AssetConfig('rolling.svg'),
 
   // Other
-  'xp': AssetConfig('xp.svg', usesCurrentColor: true),
-  'SECTION': AssetConfig('section.svg', usesCurrentColor: true),
+  'xp': AssetConfig('xp.svg', themeMode: CurrentColorTheme()),
+  'SECTION': AssetConfig('section.svg', themeMode: CurrentColorTheme()),
   'plus_one': AssetConfig('plus_one.svg'),
-  'hp': AssetConfig('hp.svg', usesCurrentColor: true),
+  'hp': AssetConfig('hp.svg', themeMode: CurrentColorTheme()),
   'hex': AssetConfig('hex.svg'), // Multi-color icon, no theming needed
   // Class-specific abilities and icons
-  'Shackle': AssetConfig('class_icons/chainguard.svg', usesCurrentColor: true),
-  'Shackled': AssetConfig('class_icons/chainguard.svg', usesCurrentColor: true),
-  'Cultivate': AssetConfig('cultivate.svg', usesCurrentColor: true),
-  'Chieftain': AssetConfig('class_icons/chieftain.svg', usesCurrentColor: true),
+  'Shackle': AssetConfig(
+    'class_icons/chainguard.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'Shackled': AssetConfig(
+    'class_icons/chainguard.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'Cultivate': AssetConfig('cultivate.svg', themeMode: CurrentColorTheme()),
+  'Chieftain': AssetConfig(
+    'class_icons/chieftain.svg',
+    themeMode: CurrentColorTheme(),
+  ),
   'Boneshaper': AssetConfig(
     'class_icons/boneshaper.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
-  'Berserker': AssetConfig('class_icons/berserker.svg', usesCurrentColor: true),
+  'Berserker': AssetConfig(
+    'class_icons/berserker.svg',
+    themeMode: CurrentColorTheme(),
+  ),
   'Doomstalker': AssetConfig(
     'class_icons/doomstalker.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
   'Bladeswarm': AssetConfig(
     'class_icons/bladeswarm.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
-  'HAIL': AssetConfig('class_icons/hail.svg', usesCurrentColor: true),
+  'HAIL': AssetConfig('class_icons/hail.svg', themeMode: CurrentColorTheme()),
   'Glow': AssetConfig('glow.svg'),
   'Spirit': AssetConfig(
     'class_icons/spirit_caller.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
   ),
   'SWING': AssetConfig('swing.svg'),
   'SATED': AssetConfig('sated.svg'),
-  'Ladder': AssetConfig('ladder.svg', usesCurrentColor: true),
-  'Shrug_Off': AssetConfig('shrug_off.svg', usesCurrentColor: true),
-  'Projectile': AssetConfig('class_icons/bombard.svg', usesCurrentColor: true),
+  'Ladder': AssetConfig('ladder.svg', themeMode: CurrentColorTheme()),
+  'Shrug_Off': AssetConfig('shrug_off.svg', themeMode: CurrentColorTheme()),
+  'Projectile': AssetConfig(
+    'class_icons/bombard.svg',
+    themeMode: CurrentColorTheme(),
+  ),
   'VOID': AssetConfig('void.svg'),
-  'VOIDSIGHT': AssetConfig('voidsight.svg', usesCurrentColor: true),
+  'VOIDSIGHT': AssetConfig('voidsight.svg', themeMode: CurrentColorTheme()),
   'CONQUEROR': AssetConfig('conqueror.svg'),
   'REAVER': AssetConfig('reaver.svg'),
   'RITUALIST': AssetConfig('ritualist.svg'),
   'ALL_STANCES': AssetConfig('incarnate_all_stances.svg', widthMultiplier: 3.0),
-  // TODO: Replace crystallize.svg with vector version, then switch to usesCurrentColor
-  'CRYSTALLIZE': AssetConfig('crystallize.svg', usesForegroundColor: true),
-  // TODO: Replace spark.svg with vector version, then switch to usesCurrentColor
-  'SPARK': AssetConfig('spark.svg', usesForegroundColor: true),
-  'consume_SPARK': AssetConfig('spark.svg', usesForegroundColor: true),
-  'RAGE': AssetConfig('class_icons/vanquisher.svg', usesCurrentColor: true),
-  'PROJECT': AssetConfig('project.svg', usesCurrentColor: true),
-  'BARRIER_PLUS': AssetConfig('barrier_plus.svg', usesCurrentColor: true),
-  'CRITTERS': AssetConfig('critters.svg', usesCurrentColor: true),
+  // TODO: Replace crystallize.svg with vector version, then switch to CurrentColorTheme
+  // ignore: deprecated_member_use_from_same_package
+  'CRYSTALLIZE': AssetConfig(
+    'crystallize.svg',
+    themeMode: ForegroundColorTheme(),
+  ),
+  // TODO: Replace spark.svg with vector version, then switch to CurrentColorTheme
+  // ignore: deprecated_member_use_from_same_package
+  'SPARK': AssetConfig('spark.svg', themeMode: ForegroundColorTheme()),
+  // ignore: deprecated_member_use_from_same_package
+  'consume_SPARK': AssetConfig('spark.svg', themeMode: ForegroundColorTheme()),
+  'RAGE': AssetConfig(
+    'class_icons/vanquisher.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'PROJECT': AssetConfig('project.svg', themeMode: CurrentColorTheme()),
+  'BARRIER_PLUS': AssetConfig(
+    'barrier_plus.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'CRITTERS': AssetConfig('critters.svg', themeMode: CurrentColorTheme()),
   'LUMINARY_HEXES': AssetConfig('luminary_hexes.svg', widthMultiplier: 1.5),
   'SHADOW': AssetConfig('shadow.svg'),
   'TIME_TOKEN': AssetConfig('time_token.svg'),
-  'PERSIST': AssetConfig('persist.svg', usesCurrentColor: true),
+  'PERSIST': AssetConfig('persist.svg', themeMode: CurrentColorTheme()),
   'RESONANCE': AssetConfig('resonance.svg'),
   'INFUSION': AssetConfig('infusion.svg'),
   'TRANSFER': AssetConfig('transfer.svg', widthMultiplier: 2.0),
@@ -246,23 +292,32 @@ const standardAssets = {
   'PRESSURE_LOW': AssetConfig('pressure_low.svg'),
   'PRESSURE_HIGH': AssetConfig('pressure_high.svg'),
   'EXPERIMENT': AssetConfig('experiment.svg'),
-  'RESOLVE': AssetConfig('resolve.svg', usesCurrentColor: true),
+  'RESOLVE': AssetConfig('resolve.svg', themeMode: CurrentColorTheme()),
 
   // Elements and their combinations
-  'EARTH': AssetConfig('elem_earth.svg', usesCurrentColor: true),
-  'consume_EARTH': AssetConfig('elem_earth.svg', usesCurrentColor: true),
-  'AIR': AssetConfig('elem_air.svg', usesCurrentColor: true),
-  'consume_AIR': AssetConfig('elem_air.svg', usesCurrentColor: true),
-  'DARK': AssetConfig('elem_dark.svg', usesCurrentColor: true),
-  'consume_DARK': AssetConfig('elem_dark.svg', usesCurrentColor: true),
-  'LIGHT': AssetConfig('elem_light.svg', usesCurrentColor: true),
-  'consume_LIGHT': AssetConfig('elem_light.svg', usesCurrentColor: true),
-  'ICE': AssetConfig('elem_ice.svg', usesCurrentColor: true),
-  'consume_ICE': AssetConfig('elem_ice.svg', usesCurrentColor: true),
-  'FIRE': AssetConfig('elem_fire.svg', usesCurrentColor: true),
-  'consume_FIRE': AssetConfig('elem_fire.svg', usesCurrentColor: true),
-  'Wild_Element': AssetConfig('elem_wild.svg', usesCurrentColor: true),
-  'consume_Wild_Element': AssetConfig('elem_wild.svg', usesCurrentColor: true),
+  'EARTH': AssetConfig('elem_earth.svg', themeMode: CurrentColorTheme()),
+  'consume_EARTH': AssetConfig(
+    'elem_earth.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'AIR': AssetConfig('elem_air.svg', themeMode: CurrentColorTheme()),
+  'consume_AIR': AssetConfig('elem_air.svg', themeMode: CurrentColorTheme()),
+  'DARK': AssetConfig('elem_dark.svg', themeMode: CurrentColorTheme()),
+  'consume_DARK': AssetConfig('elem_dark.svg', themeMode: CurrentColorTheme()),
+  'LIGHT': AssetConfig('elem_light.svg', themeMode: CurrentColorTheme()),
+  'consume_LIGHT': AssetConfig(
+    'elem_light.svg',
+    themeMode: CurrentColorTheme(),
+  ),
+  'ICE': AssetConfig('elem_ice.svg', themeMode: CurrentColorTheme()),
+  'consume_ICE': AssetConfig('elem_ice.svg', themeMode: CurrentColorTheme()),
+  'FIRE': AssetConfig('elem_fire.svg', themeMode: CurrentColorTheme()),
+  'consume_FIRE': AssetConfig('elem_fire.svg', themeMode: CurrentColorTheme()),
+  'Wild_Element': AssetConfig('elem_wild.svg', themeMode: CurrentColorTheme()),
+  'consume_Wild_Element': AssetConfig(
+    'elem_wild.svg',
+    themeMode: CurrentColorTheme(),
+  ),
   'AIR/DARK': AssetConfig('elem_air_or_dark.svg', widthMultiplier: 2.0),
   'consume_AIR/DARK': AssetConfig('elem_air_or_dark.svg', widthMultiplier: 2.0),
   'AIR/EARTH': AssetConfig('elem_air_or_earth.svg', widthMultiplier: 2.0),
@@ -325,10 +380,10 @@ const standardAssets = {
   ),
   'FIRE/ICE/EARTH': AssetConfig(
     'elem_fire_ice_earth.svg',
-    usesCurrentColor: true,
+    themeMode: CurrentColorTheme(),
     widthMultiplier: 3.0,
   ),
-  'Vial_Wild': AssetConfig('vial_wild.svg', usesCurrentColor: true),
+  'Vial_Wild': AssetConfig('vial_wild.svg', themeMode: CurrentColorTheme()),
 };
 
 /// Get asset configuration for a given element
@@ -355,7 +410,7 @@ AssetConfig getAssetConfig(String element, bool darkTheme) {
 
   // Handle XP pattern (xp8, xp10, etc.)
   if (RegExp(r'^xp\d+$').hasMatch(cleanElement)) {
-    return const AssetConfig('xp.svg', usesCurrentColor: true);
+    return const AssetConfig('xp.svg', themeMode: CurrentColorTheme());
   }
 
   // Check theme-specific assets first (by key)
