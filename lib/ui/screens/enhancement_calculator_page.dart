@@ -11,6 +11,7 @@ import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/cost_bottom_sheet.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
@@ -43,41 +44,43 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
     final darkTheme = themeProvider.useDarkMode;
     final edition = SharedPrefs().gameEdition;
 
-    return Column(
+    return Stack(
       children: [
-        OutlinedButton(
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (_) {
-              return InfoDialog(
-                title: Strings.generalInfoTitle,
-                message: Strings.generalInfoBody(
-                  context,
-                  edition: edition,
-                  darkMode: Theme.of(context).brightness == Brightness.dark,
-                ),
-              );
-            },
-          ),
-          style: OutlinedButton.styleFrom(
-            side: BorderSide(
-              width: 1.0,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          child: Text(
-            'General Guidelines',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        Expanded(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: maxWidth),
-            padding: const EdgeInsets.symmetric(horizontal: smallPadding),
-            child: ListView(
-              padding: EdgeInsets.only(
-                bottom: enhancementCalculatorModel.showCost ? 0 : 88,
+        Column(
+          children: [
+            OutlinedButton(
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) {
+                  return InfoDialog(
+                    title: Strings.generalInfoTitle,
+                    message: Strings.generalInfoBody(
+                      context,
+                      edition: edition,
+                      darkMode: Theme.of(context).brightness == Brightness.dark,
+                    ),
+                  );
+                },
               ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  width: 1.0,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              child: Text(
+                'General Guidelines',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            Expanded(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: maxWidth),
+                padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+                child: ListView(
+                  padding: EdgeInsets.only(
+                    bottom: enhancementCalculatorModel.showCost ? 100 : 88,
+                  ),
               children: <Widget>[
                 // SCENARIO 114 REWARD (PARTY BOON) - Gloomhaven/GH2E only
                 if (edition.supportsPartyBoon) ...[
@@ -684,35 +687,17 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             ),
           ),
         ),
-        Visibility(
-          visible: enhancementCalculatorModel.showCost,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Divider(height: 0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (enhancementCalculatorModel.temporaryEnhancementMode ||
-                        enhancementCalculatorModel.hailsDiscount)
-                      const Text(' '),
-                    Text(
-                      '${enhancementCalculatorModel.totalCost}g',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    if (enhancementCalculatorModel.temporaryEnhancementMode)
-                      Text(' †', style: Theme.of(context).textTheme.bodyMedium),
-                    if (enhancementCalculatorModel.hailsDiscount)
-                      Text(' ‡', style: Theme.of(context).textTheme.bodyMedium),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
-        SizedBox(height: enhancementCalculatorModel.showCost ? 24 : 0),
+        // Cost bottom sheet overlay
+        if (enhancementCalculatorModel.showCost)
+          CostBottomSheet(
+            totalCost: enhancementCalculatorModel.totalCost,
+            steps: enhancementCalculatorModel.getCalculationBreakdown(),
+            enhancement: enhancementCalculatorModel.enhancement,
+            temporaryMode: enhancementCalculatorModel.temporaryEnhancementMode,
+            hailsDiscount: enhancementCalculatorModel.hailsDiscount,
+          ),
       ],
     );
   }

@@ -43,7 +43,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final appModel = context.watch<AppModel>();
-    final charactersModel = context.read<CharactersModel>();
+    final charactersModel = context.watch<CharactersModel>();
+    final enhancementModel = context.watch<EnhancementCalculatorModel>();
+
+    // Hide FAB when cost sheet is expanded on enhancement calculator page
+    final hideFab = appModel.page == 1 && enhancementModel.isSheetExpanded;
+
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
       // extendBody: true,
@@ -55,6 +60,8 @@ class _HomeState extends State<Home> {
         onPageChanged: (index) {
           charactersModel.isEditMode = false;
           context.read<AppModel>().page = index;
+          // Reset sheet expanded state when navigating away from enhancement calculator
+          context.read<EnhancementCalculatorModel>().isSheetExpanded = false;
           setState(() {});
         },
         children: [
@@ -86,34 +93,32 @@ class _HomeState extends State<Home> {
           const EnhancementCalculatorPage(),
         ],
       ),
-      floatingActionButton: Builder(
-        builder: (context) {
-          return FloatingActionButton(
-            heroTag: null,
-            onPressed: context.read<AppModel>().page == 1
-                ? () => context.read<EnhancementCalculatorModel>().resetCost()
-                // must watch
-                : context.watch<CharactersModel>().characters.isEmpty
-                ? () => showDialog<bool>(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (_) =>
-                        CreateCharacterDialog(charactersModel: charactersModel),
-                  )
-                : () =>
-                      charactersModel.isEditMode = !charactersModel.isEditMode,
-            child: Icon(
-              appModel.page == 1
-                  ? Icons.clear_rounded
+      floatingActionButton: hideFab
+          ? null
+          : FloatingActionButton(
+              heroTag: null,
+              onPressed: appModel.page == 1
+                  ? () => enhancementModel.resetCost()
                   : charactersModel.characters.isEmpty
-                  ? Icons.add
-                  : charactersModel.isEditMode
-                  ? Icons.edit_off_rounded
-                  : Icons.edit_rounded,
+                      ? () => showDialog<bool>(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) => CreateCharacterDialog(
+                              charactersModel: charactersModel,
+                            ),
+                          )
+                      : () => charactersModel.isEditMode =
+                            !charactersModel.isEditMode,
+              child: Icon(
+                appModel.page == 1
+                    ? Icons.clear_rounded
+                    : charactersModel.characters.isEmpty
+                        ? Icons.add
+                        : charactersModel.isEditMode
+                            ? Icons.edit_off_rounded
+                            : Icons.edit_rounded,
+              ),
             ),
-          );
-        },
-      ),
       bottomNavigationBar: const GHCBottomNavigationBar(),
     );
   }
