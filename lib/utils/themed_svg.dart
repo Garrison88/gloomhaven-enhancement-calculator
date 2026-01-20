@@ -62,12 +62,14 @@ class ThemedSvg extends StatelessWidget {
 
     if (showPlusOneOverlay) {
       final size = width ?? height ?? 24.0;
+      final plusOneConfig = getAssetConfig('plus_one', darkTheme);
+      final plusOnePath = plusOneConfig.path ?? 'plus_one.svg';
       return Stack(
         alignment: const Alignment(1.75, -1.75),
         children: [
           icon,
           SvgPicture.asset(
-            'images/plus_one.svg',
+            'images/$plusOnePath',
             width: size * 0.5,
             height: size * 0.5,
           ),

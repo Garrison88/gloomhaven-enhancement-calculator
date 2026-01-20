@@ -103,6 +103,8 @@ final themeSpecificAssets = {
     darkTheme ? 'item_minus_one_light.svg' : 'item_minus_one.svg',
     widthMultiplier: 1.5,
   ),
+  'plus_one': (bool darkTheme) =>
+      AssetConfig(darkTheme ? 'plus_one_light.svg' : 'plus_one.svg'),
 };
 
 /// Standard assets that use the same file regardless of theme.
@@ -204,7 +206,6 @@ const standardAssets = {
   // Other
   'xp': AssetConfig('xp.svg', themeMode: CurrentColorTheme()),
   'SECTION': AssetConfig('section.svg', themeMode: CurrentColorTheme()),
-  'plus_one': AssetConfig('plus_one.svg'),
   'hp': AssetConfig('hp.svg', themeMode: CurrentColorTheme()),
   'hex': AssetConfig('hex.svg'), // Multi-color icon, no theming needed
   // Class-specific abilities and icons
