@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:device_region/device_region.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -43,17 +42,6 @@ Future<void> main() async {
       SharedPrefs().isUSRegion = deviceLocale?.toUpperCase() == 'US';
     }
   }
-
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarIconBrightness: SharedPrefs().darkTheme
-          ? Brightness.light
-          : Brightness.dark,
-      systemNavigationBarColor: SharedPrefs().darkTheme
-          ? const Color(0xff1c1b1f)
-          : Colors.white,
-    ),
-  );
 
   runApp(
     MultiProvider(

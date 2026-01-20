@@ -184,6 +184,36 @@ All SVG assets are configured here with their file paths and theming behavior:
 - **`usesCurrentColor: true`**: Uses `SvgTheme` so only SVG elements with `fill="currentColor"` change color. Other colors in the SVG are preserved. This is ideal for multi-color icons where only some parts should adapt to the theme.
 - **`usesForegroundColor: true`** (deprecated): Applies a `colorFilter` to tint the entire SVG white in dark mode. Only use for legacy SVGs that can't be converted.
 
+## Android System Navigation Bar
+
+The Android system navigation bar (soft buttons at bottom of screen) color is managed by `ThemeProvider`.
+
+### Key Implementation Details
+
+1. **Single source of truth**: `ThemeProvider._updateSystemUI()` is the only place that sets the navigation bar style. Don't duplicate this in `main.dart` or elsewhere.
+
+2. **Post-frame callback required**: The system UI style must be set after the first frame renders, otherwise Flutter may override it during initialization:
+   ```dart
+   // In ThemeProvider constructor:
+   SchedulerBinding.instance.addPostFrameCallback((_) {
+     _updateSystemUI();
+   });
+   ```
+
+3. **Colors used**:
+   - Dark mode: `AppThemeBuilder.darkSurface` (0xff1c1b1f)
+   - Light mode: `Colors.white`
+
+4. **Icon brightness**: Set `systemNavigationBarIconBrightness` to ensure buttons are visible:
+   - Dark mode: `Brightness.light` (white icons on dark background)
+   - Light mode: `Brightness.dark` (dark icons on light background)
+
+### Common Pitfalls
+
+- **Don't set system UI in `main.dart`**: It will be overridden by Flutter before ThemeProvider initializes
+- **Don't use transparent nav bar** unless you want app content to show through (requires edge-to-edge mode)
+- **Always call `SystemChrome.setSystemUIOverlayStyle()`**: Creating a `SystemUiOverlayStyle` object without passing it to this method does nothing
+
 ## Tips for AI Assistants
 
 1. **Read before modifying** - Always read files before suggesting changes

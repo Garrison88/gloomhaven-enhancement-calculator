@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/app_theme_builder.dart';
@@ -19,6 +20,10 @@ class ThemeProvider extends ChangeNotifier {
          useDefaultFonts: initialDefaultFonts ?? SharedPrefs().useDefaultFonts,
        ) {
     _rebuildThemes();
+    // Apply system UI after first frame to ensure it takes effect
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _updateSystemUI();
+    });
   }
 
   ThemeData get lightTheme => _cachedLightTheme!;
@@ -83,7 +88,7 @@ class ThemeProvider extends ChangeNotifier {
             ? Brightness.light
             : Brightness.dark,
         systemNavigationBarColor: _config.useDarkMode
-            ? const Color(0xff1c1b1f)
+            ? AppThemeBuilder.darkSurface
             : Colors.white,
       ),
     );

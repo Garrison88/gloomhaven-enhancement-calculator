@@ -4,6 +4,9 @@ import 'package:gloomhaven_enhancement_calc/theme/theme_config.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_extensions.dart';
 
 class AppThemeBuilder {
+  /// The dark surface color used throughout the app.
+  /// Used for: Scaffold background, BottomNavigationBar, system nav bar, etc.
+  static const Color darkSurface = Color(0xff1c1b1f);
   // Cache themes to avoid rebuilding
   static final Map<int, ThemeData> _lightThemeCache = {};
   static final Map<int, ThemeData> _darkThemeCache = {};
@@ -66,6 +69,7 @@ class AppThemeBuilder {
             outline: Colors.grey[600],
           )
         : ColorScheme.dark(
+            // surface: darkSurface,
             primary: primaryColor,
             secondary: primaryColor,
             primaryContainer: primaryColor,
@@ -123,24 +127,20 @@ class AppThemeBuilder {
 
       snackBarTheme: SnackBarThemeData(
         backgroundColor: brightness == Brightness.dark
-            ? const Color(0xff1c1b1f)
+            ? darkSurface
             : Colors.white,
         actionTextColor: brightness == Brightness.dark
             ? Colors.white
-            : const Color(0xff1c1b1f),
+            : darkSurface,
         contentTextStyle: textTheme.bodyMedium?.copyWith(
-          color: brightness == Brightness.dark
-              ? Colors.white
-              : const Color(0xff1c1b1f),
+          color: brightness == Brightness.dark ? Colors.white : darkSurface,
         ),
       ),
 
       dividerTheme: DividerThemeData(color: Colors.grey.withValues(alpha: 0.5)),
 
       bottomNavigationBarTheme: brightness == Brightness.dark
-          ? const BottomNavigationBarThemeData(
-              backgroundColor: Color(0xff1c1b1f),
-            )
+          ? const BottomNavigationBarThemeData(backgroundColor: darkSurface)
           : null,
 
       // Add custom extension with exact character color

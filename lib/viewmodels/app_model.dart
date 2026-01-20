@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class AppModel extends ChangeNotifier {
@@ -27,16 +26,6 @@ class AppModel extends ChangeNotifier {
   void updateTheme({ThemeMode? themeMode}) {
     if (themeMode != null) {
       _themeMode = themeMode;
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          systemNavigationBarIconBrightness: themeMode == ThemeMode.dark
-              ? Brightness.light
-              : Brightness.dark,
-          systemNavigationBarColor: themeMode == ThemeMode.dark
-              ? const Color(0xff1c1b1f)
-              : Colors.white,
-        ),
-      );
     }
     notifyListeners();
   }
