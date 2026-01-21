@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/resources_repository.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/resource_field.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -117,7 +118,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
             ),
             enabled: charactersModel.isEditMode && !character.isRetired,
             decoration: InputDecoration(
-              labelText: 'Previous retirements',
+              labelText: AppLocalizations.of(context).previousRetirements,
               border: charactersModel.isEditMode && !character.isRetired
                   ? const OutlineInputBorder()
                   : InputBorder.none,
@@ -131,7 +132,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
         const SizedBox(width: 75),
         Tooltip(
           message:
-              '${(Character.level(character.xp) / 2).round()} pocket item${(Character.level(character.xp) / 2).round() > 1 ? 's' : ''} allowed',
+              AppLocalizations.of(context).pocketItemsAllowed((Character.level(character.xp) / 2).round()),
           child: Padding(
             padding: const EdgeInsets.only(
               right: smallPadding,
@@ -185,9 +186,9 @@ class _NameAndClassSection extends StatelessWidget {
                 onChanged: (String value) {
                   charactersModel.updateCharacter(character..name = value);
                 },
-                decoration: const InputDecoration(
-                  label: Text('Name'),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).name),
+                  border: const OutlineInputBorder(),
                 ),
                 minLines: 1,
                 maxLines: 2,
@@ -259,7 +260,7 @@ class _NameAndClassSection extends StatelessWidget {
           ),
         ],
         if (character.isRetired)
-          const Text('(retired)', style: TextStyle(fontSize: 20)),
+          Text(AppLocalizations.of(context).retired, style: const TextStyle(fontSize: 20)),
       ],
     );
   }
@@ -300,7 +301,7 @@ class _StatsSectionState extends State<_StatsSection> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Tooltip(
-          message: 'XP',
+          message: AppLocalizations.of(context).xp,
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
@@ -336,9 +337,9 @@ class _StatsSectionState extends State<_StatsSection> {
                               ),
                             ],
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              label: Text('XP'),
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              label: Text(AppLocalizations.of(context).xp),
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                           IconButton(
@@ -348,7 +349,7 @@ class _StatsSectionState extends State<_StatsSection> {
                                 context: context,
                                 builder: (_) => AddSubtractDialog(
                                   widget.character.xp,
-                                  'XP',
+                                  AppLocalizations.of(context).xp,
                                 ),
                               );
                               if (value != null) {
@@ -384,7 +385,7 @@ class _StatsSectionState extends State<_StatsSection> {
           ),
         ),
         Tooltip(
-          message: 'Gold',
+          message: AppLocalizations.of(context).gold,
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
@@ -418,9 +419,9 @@ class _StatsSectionState extends State<_StatsSection> {
                               ),
                             ],
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              label: Text('Gold'),
-                              border: OutlineInputBorder(),
+                            decoration: InputDecoration(
+                              label: Text(AppLocalizations.of(context).gold),
+                              border: const OutlineInputBorder(),
                             ),
                           ),
                           IconButton(
@@ -430,7 +431,7 @@ class _StatsSectionState extends State<_StatsSection> {
                                 context: context,
                                 builder: (_) => AddSubtractDialog(
                                   widget.character.gold,
-                                  'Gold',
+                                  AppLocalizations.of(context).gold,
                                 ),
                               );
                               if (value != null) {
@@ -452,7 +453,7 @@ class _StatsSectionState extends State<_StatsSection> {
           ),
         ),
         Tooltip(
-          message: 'Battle Goal Checkmarks',
+          message: AppLocalizations.of(context).battleGoalCheckmarks,
           child: SizedBox(
             width: 90,
             child: Row(
@@ -513,7 +514,7 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
           onExpansionChanged: (value) =>
               SharedPrefs().resourcesExpanded = value,
           initiallyExpanded: SharedPrefs().resourcesExpanded,
-          title: const Text('Resources'),
+          title: Text(AppLocalizations.of(context).resources),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: smallPadding),
@@ -575,7 +576,7 @@ class _NotesSection extends StatelessWidget {
     return Column(
       children: <Widget>[
         Text(
-          'Notes',
+          AppLocalizations.of(context).notes,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
@@ -590,9 +591,9 @@ class _NotesSection extends StatelessWidget {
                   charactersModel.updateCharacter(character..notes = value);
                 },
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  label: Text('Notes'),
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  label: Text(AppLocalizations.of(context).notes),
+                  border: const OutlineInputBorder(),
                 ),
               )
             : Text(character.notes),
@@ -613,8 +614,8 @@ class _BattleGoalCheckmarksSection extends StatelessWidget {
             padding: const EdgeInsets.all(smallPadding),
             child: Column(
               children: <Widget>[
-                const AutoSizeText(
-                  'Battle Goal Checkmarks',
+                AutoSizeText(
+                  AppLocalizations.of(context).battleGoalCheckmarks,
                   textAlign: TextAlign.center,
                   minFontSize: titleFontSize,
                 ),

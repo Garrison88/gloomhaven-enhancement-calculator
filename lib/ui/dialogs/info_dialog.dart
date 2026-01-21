@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
@@ -330,9 +331,9 @@ class _InfoDialogState extends State<InfoDialog> {
               if (widget.title == null)
                 Column(
                   children: <Widget>[
-                    const Text(
-                      'Eligible For',
-                      style: TextStyle(decoration: TextDecoration.underline),
+                    Text(
+                      AppLocalizations.of(context).eligibleFor,
+                      style: const TextStyle(decoration: TextDecoration.underline),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(
@@ -363,7 +364,7 @@ class _InfoDialogState extends State<InfoDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
-            'Got it!',
+            AppLocalizations.of(context).gotIt,
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
         ),

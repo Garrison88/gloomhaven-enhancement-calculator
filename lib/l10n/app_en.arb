@@ -1,0 +1,148 @@
+{
+  "@@locale": "en",
+
+  "appTitleIOS": "Gloomhaven Utility",
+  "appTitleAndroid": "Gloomhaven Companion",
+
+  "close": "Close",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "create": "Create",
+  "continue_": "Continue",
+  "copy": "Copy",
+  "share": "Share",
+  "gotIt": "Got it!",
+  "pleaseWait": "Please wait...",
+  "restoring": "Restoring...",
+  "solve": "Solve",
+  "unlock": "Unlock",
+
+  "settings": "Settings",
+  "changelog": "Changelog",
+  "license": "License",
+  "supportAndFeedback": "Support & Feedback",
+
+  "name": "Name",
+  "xp": "XP",
+  "gold": "Gold",
+  "resources": "Resources",
+  "notes": "Notes",
+  "retired": "(retired)",
+
+  "previousRetirements": "Previous retirements",
+  "pocketItemsAllowed": "{count} pocket item{count, plural, =1{} other{s}} allowed",
+  "@pocketItemsAllowed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "battleGoalCheckmarks": "Battle Goal Checkmarks",
+
+  "cardLevel": "Card Level",
+  "previousEnhancements": "Previous Enhancements",
+  "enhancementType": "Enhancement Type",
+  "type": "Type",
+  "multipleTargets": "Multiple Targets",
+  "generalGuidelines": "General Guidelines",
+  "scenario114Reward": "Scenario 114 Reward",
+  "forgottenCirclesSpoilers": "Forgotten Circles spoilers",
+  "temporaryEnhancementVariant": "Variant: Temporary Enhancement \u2020",
+  "building44": "Building 44",
+  "frosthavenSpoilers": "Frosthaven spoilers",
+  "enhancer": "Enhancer",
+  "lvl1": "Lvl 1",
+  "lvl2": "Lvl 2",
+  "lvl3": "Lvl 3",
+  "lvl4": "Lvl 4",
+  "buyEnhancements": "Buy enhancements",
+  "reduceEnhancementCosts": "and reduce all enhancement costs by 10 gold",
+  "reduceLevelPenalties": "and reduce level penalties by 10 gold per level",
+  "reduceRepeatPenalties": "and reduce repeat penalties by 25 gold per enhancement",
+  "hailsDiscount": "Hail's Discount \u2021",
+  "eligibleFor": "Eligible For",
+
+  "gameplay": "GAMEPLAY",
+  "display": "DISPLAY",
+  "backupAndRestore": "BACKUP & RESTORE",
+  "testing": "TESTING",
+
+  "customClasses": "Custom Classes",
+  "customClassesDescription": "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the CCUG community",
+  "solveEnvelopeX": "Solve 'Envelope X'",
+  "gloomhavenSpoilers": "Gloomhaven spoilers",
+  "enterSolution": "Enter the solution to the puzzle",
+  "solution": "Solution",
+  "bladeswarmUnlocked": "Bladeswarm unlocked",
+  "unlockEnvelopeV": "Unlock 'Envelope V'",
+  "crimsonScalesSpoilers": "Crimson Scales spoilers",
+  "enterPassword": "What is the password for unlocking this envelope?",
+  "password": "Password",
+  "vanquisherUnlocked": "Vanquisher unlocked",
+
+  "brightness": "Brightness",
+  "dark": "Dark",
+  "light": "Light",
+  "useInterFont": "Use Inter Font",
+  "useInterFontDescription": "Replace stylized fonts with Inter to improve readability",
+  "showRetiredCharacters": "Show Retired Characters",
+  "showRetiredCharactersDescription": "Toggle visibility of retired characters in the Characters tab to reduce clutter",
+
+  "backup": "Backup",
+  "backupDescription": "Backup your current characters",
+  "restore": "Restore",
+  "restoreDescription": "Restore your characters from a backup file",
+  "backupFileWarning": "If another backup file already exists in the Downloads folder with the same name, it will be overwritten",
+  "filename": "Filename",
+  "savedTo": "Saved to {path}",
+  "@savedTo": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreWarning": "Restoring a backup file will overwrite any current characters. Do you wish to continue?",
+  "errorDuringRestore": "Error During Restore Operation",
+  "restoreErrorMessage": "There was an error during the restoration process. Your existing data was saved and your backup hasn't been modified. Please contact the developer (through the Settings menu) with your existing backup file and this information:\n\n{error}",
+  "@restoreErrorMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "createAll": "Create All",
+  "gloomhaven": "Gloomhaven",
+  "frosthaven": "Frosthaven",
+  "crimsonScales": "Crimson Scales",
+  "custom": "Custom",
+  "andVariants": "& variants",
+
+  "createCharacterPrompt": "Create {article} character using the button below, or restore a backup from the Settings menu",
+  "@createCharacterPrompt": {
+    "placeholders": {
+      "article": {
+        "type": "String"
+      }
+    }
+  },
+  "articleA": "a",
+  "articleYourFirst": "your first",
+
+  "class_": "Class",
+  "classWithVariant": "Class ({variant})",
+  "@classWithVariant": {
+    "placeholders": {
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "startingLevel": "Starting level",
+  "prosperityLevel": "Prosperity level",
+  "pleaseSelectClass": "Please select a Class"
+}
