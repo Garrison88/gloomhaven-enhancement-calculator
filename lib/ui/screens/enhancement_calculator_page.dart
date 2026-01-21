@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 // import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -69,7 +70,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 ),
               ),
               child: Text(
-                'General Guidelines',
+                AppLocalizations.of(context).generalGuidelines,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -92,12 +93,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         enhancementCalculatorModel.calculateCost();
                       });
                     },
-                    title: const AutoSizeText(
-                      'Scenario 114 Reward',
+                    title: AutoSizeText(
+                      AppLocalizations.of(context).scenario114Reward,
                       maxLines: 1,
                     ),
                     subtitle: Text(
-                      'Forgotten Circles spoilers',
+                      AppLocalizations.of(context).forgottenCirclesSpoilers,
                       style: Theme.of(
                         context,
                       ).textTheme.titleSmall?.copyWith(color: Colors.grey),
@@ -126,8 +127,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   onChanged: (bool value) {
                     enhancementCalculatorModel.temporaryEnhancementMode = value;
                   },
-                  title: const AutoSizeText(
-                    'Variant: Temporary Enhancement †',
+                  title: AutoSizeText(
+                    AppLocalizations.of(context).temporaryEnhancementVariant,
                     maxLines: 2,
                   ),
                   secondary: IconButton(
@@ -168,9 +169,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             },
                           ),
                         ),
-                        title: const Text('Building 44'),
+                        title: Text(AppLocalizations.of(context).building44),
                         subtitle: Text(
-                          'Frosthaven spoilers',
+                          AppLocalizations.of(context).frosthavenSpoilers,
                           style: Theme.of(
                             context,
                           ).textTheme.titleSmall?.copyWith(color: Colors.grey),
@@ -183,7 +184,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                               return AlertDialog(
                                 title: Center(
                                   child: Text(
-                                    'Enhancer',
+                                    AppLocalizations.of(context).enhancer,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.headlineLarge,
@@ -203,7 +204,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                           children: [
                                             CheckboxListTile(
                                               title: Text(
-                                                'Lvl 1',
+                                                AppLocalizations.of(context).lvl1,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium
@@ -217,7 +218,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                                     ),
                                               ),
                                               subtitle: Text(
-                                                'Buy enhancements',
+                                                AppLocalizations.of(context).buyEnhancements,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleMedium
@@ -234,9 +235,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               onChanged: null,
                                             ),
                                             CheckboxListTile(
-                                              title: const Text('Lvl 2'),
+                                              title: Text(AppLocalizations.of(context).lvl2),
                                               subtitle: Text(
-                                                'and reduce all enhancement costs by 10 gold',
+                                                AppLocalizations.of(context).reduceEnhancementCosts,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleMedium
@@ -262,9 +263,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               },
                                             ),
                                             CheckboxListTile(
-                                              title: const Text('Lvl 3'),
+                                              title: Text(AppLocalizations.of(context).lvl3),
                                               subtitle: Text(
-                                                'and reduce level penalties by 10 gold per level',
+                                                AppLocalizations.of(context).reduceLevelPenalties,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleMedium
@@ -290,9 +291,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                               },
                                             ),
                                             CheckboxListTile(
-                                              title: const Text('Lvl 4'),
+                                              title: Text(AppLocalizations.of(context).lvl4),
                                               subtitle: Text(
-                                                'and reduce repeat penalties by 25 gold per enhancement',
+                                                AppLocalizations.of(context).reduceRepeatPenalties,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleMedium
@@ -325,7 +326,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Close'),
+                                    child: Text(AppLocalizations.of(context).close),
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
@@ -377,7 +378,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       },
                     ),
                   ),
-                  title: const AutoSizeText('Hail\'s Discount ‡', maxLines: 1),
+                  title: AutoSizeText(AppLocalizations.of(context).hailsDiscount, maxLines: 1),
                 ),
                 const EnhancementDivider(),
                 // CARD LEVEL
@@ -407,7 +408,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Card Level'),
+                      Text(AppLocalizations.of(context).cardLevel),
                       Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButtonHideUnderline(
@@ -458,7 +459,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Previous Enhancements'),
+                      Text(AppLocalizations.of(context).previousEnhancements),
                       Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButtonHideUnderline(
@@ -509,14 +510,14 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Enhancement Type'),
+                      Text(AppLocalizations.of(context).enhancementType),
                       DropdownButtonHideUnderline(
                         child: DropdownButton<Enhancement>(
                           alignment: Alignment.center,
                           hint: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Type',
+                              AppLocalizations.of(context).type,
                               style: DropdownMenuThemeData(
                                 textStyle: Theme.of(
                                   context,
@@ -574,7 +575,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                       },
                     ),
                   ),
-                  title: const AutoSizeText('Multiple Targets'),
+                  title: AutoSizeText(AppLocalizations.of(context).multipleTargets),
                 ),
                 // LOSS NON-PERSISTENT (GH2E and FH only)
                 if (edition.hasLostModifier) ...[

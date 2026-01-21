@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
@@ -77,13 +78,13 @@ class _HomeState extends State<Home> {
                 return SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Please wait...'),
-                      SizedBox(height: smallPadding),
-                      CircularProgressIndicator(),
+                      Text(AppLocalizations.of(context).pleaseWait),
+                      const SizedBox(height: smallPadding),
+                      const CircularProgressIndicator(),
                     ],
                   ),
                 );

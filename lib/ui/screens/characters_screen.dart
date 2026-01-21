@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,11 @@ class _CharactersScreenState extends State<CharactersScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Create ${charactersModel.retiredCharactersAreHidden ? 'a' : 'your first'} character using the button below, or restore a backup from the Settings menu',
+                  AppLocalizations.of(context).createCharacterPrompt(
+                    charactersModel.retiredCharactersAreHidden
+                        ? AppLocalizations.of(context).articleA
+                        : AppLocalizations.of(context).articleYourFirst,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 if (charactersModel.retiredCharactersAreHidden) ...[
@@ -48,7 +53,7 @@ class _CharactersScreenState extends State<CharactersScreen>
                       charactersModel.toggleShowRetired();
                     },
                     child: Text(
-                      'Show Retired Characters',
+                      AppLocalizations.of(context).showRetiredCharacters,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                       ),

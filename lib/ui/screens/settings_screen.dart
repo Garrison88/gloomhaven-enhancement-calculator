@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/changelog_screen.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
@@ -78,7 +79,7 @@ class SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           title: Text(
-            'Settings',
+            AppLocalizations.of(context).settings,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
         ),
@@ -87,7 +88,7 @@ class SettingsScreenState extends State<SettingsScreen> {
             constraints: const BoxConstraints(maxWidth: maxWidth),
             child: ListView(
               children: <Widget>[
-                const SettingsSection(title: 'GAMEPLAY'),
+                SettingsSection(title: AppLocalizations.of(context).gameplay),
                 SwitchListTile(
                   secondary: Icon(
                     SharedPrefs().customClasses
@@ -95,10 +96,10 @@ class SettingsScreenState extends State<SettingsScreen> {
                         : MdiIcons.testTubeOff,
                   ),
                   subtitle: Text(
-                    "Include Crimson Scales, Trail of Ashes, and 'released' custom classes created by the CCUG community",
+                    AppLocalizations.of(context).customClassesDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  title: const Text('Custom Classes'),
+                  title: Text(AppLocalizations.of(context).customClasses),
                   value: SharedPrefs().customClasses,
                   onChanged: (val) {
                     setState(() {
@@ -108,9 +109,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SwitchListTile(
                   secondary: const Icon(Icons.warning_rounded),
-                  title: const Text("Solve 'Envelope X'"),
+                  title: Text(AppLocalizations.of(context).solveEnvelopeX),
                   subtitle: Text(
-                    'Gloomhaven spoilers',
+                    AppLocalizations.of(context).gloomhavenSpoilers,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   value: SharedPrefs().envelopeX,
@@ -135,8 +136,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Text(
-                                            'Enter the solution to the puzzle',
+                                          Text(
+                                            AppLocalizations.of(context).enterSolution,
                                           ),
                                           const SizedBox(height: 8),
                                           TextField(
@@ -148,9 +149,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                     'bladeswarm';
                                               });
                                             },
-                                            decoration: const InputDecoration(
-                                              labelText: 'Solution',
-                                              border: OutlineInputBorder(),
+                                            decoration: InputDecoration(
+                                              labelText: AppLocalizations.of(context).solution,
+                                              border: const OutlineInputBorder(),
                                             ),
                                           ),
                                         ],
@@ -158,7 +159,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: const Text('Cancel'),
+                                        child: Text(AppLocalizations.of(context).cancel),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
@@ -170,7 +171,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                               }
                                             : null,
                                         child: Text(
-                                          'Solve',
+                                          AppLocalizations.of(context).solve,
                                           style: TextStyle(
                                             color: envelopeXSolved
                                                 ? Theme.of(
@@ -208,7 +209,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ).colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: smallPadding),
-                                    const Text('Bladeswarm unlocked'),
+                                    Text(AppLocalizations.of(context).bladeswarmUnlocked),
                                   ],
                                 ),
                               ),
@@ -220,9 +221,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SwitchListTile(
                   secondary: const Icon(Icons.warning_rounded),
-                  title: const Text("Unlock 'Envelope V'"),
+                  title: Text(AppLocalizations.of(context).unlockEnvelopeV),
                   subtitle: Text(
-                    'Crimson Scales spoilers',
+                    AppLocalizations.of(context).crimsonScalesSpoilers,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   value: SharedPrefs().envelopeV,
@@ -246,8 +247,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Text(
-                                        'What is the password for unlocking this envelope?',
+                                      Text(
+                                        AppLocalizations.of(context).enterPassword,
                                       ),
                                       const SizedBox(height: 8),
                                       TextField(
@@ -259,9 +260,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                                 'ashes';
                                           });
                                         },
-                                        decoration: const InputDecoration(
-                                          labelText: 'Password',
-                                          border: OutlineInputBorder(),
+                                        decoration: InputDecoration(
+                                          labelText: AppLocalizations.of(context).password,
+                                          border: const OutlineInputBorder(),
                                         ),
                                       ),
                                     ],
@@ -269,7 +270,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Cancel'),
+                                    child: Text(AppLocalizations.of(context).cancel),
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
@@ -281,7 +282,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           }
                                         : null,
                                     child: Text(
-                                      'Unlock',
+                                      AppLocalizations.of(context).unlock,
                                       style: TextStyle(
                                         color: envelopeVSolved
                                             ? Theme.of(
@@ -317,7 +318,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ).colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: smallPadding),
-                                    const Text('Vanquisher unlocked'),
+                                    Text(AppLocalizations.of(context).vanquisherUnlocked),
                                   ],
                                 ),
                               ),
@@ -327,7 +328,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                     }
                   },
                 ),
-                const SettingsSection(title: 'DISPLAY'),
+                SettingsSection(title: AppLocalizations.of(context).display),
                 Theme(
                   data: Theme.of(context).copyWith(
                     colorScheme: Theme.of(
@@ -340,11 +341,11 @@ class SettingsScreenState extends State<SettingsScreen> {
                           ? Icons.dark_mode_rounded
                           : Icons.light_mode_rounded,
                     ),
-                    title: const Text('Brightness'),
+                    title: Text(AppLocalizations.of(context).brightness),
                     subtitle: Text(
                       Theme.of(context).brightness == Brightness.dark
-                          ? 'Dark'
-                          : 'Light',
+                          ? AppLocalizations.of(context).dark
+                          : AppLocalizations.of(context).light,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     activeThumbImage: const AssetImage('images/elem_dark.png'),
@@ -365,9 +366,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 SwitchListTile(
                   secondary: Icon(MdiIcons.formatFont),
-                  title: const Text('Use Inter Font'),
+                  title: Text(AppLocalizations.of(context).useInterFont),
                   subtitle: Text(
-                    'Replace stylized fonts with Inter to improve readability',
+                    AppLocalizations.of(context).useInterFontDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   value: context.watch<ThemeProvider>().useDefaultFonts,
@@ -381,9 +382,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ? Icons.visibility_rounded
                         : Icons.visibility_off_rounded,
                   ),
-                  title: const Text('Show Retired Characters'),
+                  title: Text(AppLocalizations.of(context).showRetiredCharacters),
                   subtitle: Text(
-                    'Toggle visibility of retired characters in the Characters tab to reduce clutter',
+                    AppLocalizations.of(context).showRetiredCharactersDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   value: context.read<CharactersModel>().showRetired,
@@ -393,12 +394,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                     });
                   },
                 ),
-                const SettingsSection(title: 'BACKUP & RESTORE'),
+                SettingsSection(title: AppLocalizations.of(context).backupAndRestore),
                 ListTile(
                   leading: const Icon(Icons.upload_rounded),
-                  title: const Text('Backup'),
+                  title: Text(AppLocalizations.of(context).backup),
                   subtitle: Text(
-                    'Backup your current characters',
+                    AppLocalizations.of(context).backupDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   onTap: () async {
@@ -422,15 +423,15 @@ class SettingsScreenState extends State<SettingsScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 if (Platform.isAndroid) ...[
-                                  const Text(
-                                    'If another backup file already exists in the Downloads folder with the same name, it will be overwritten',
+                                  Text(
+                                    AppLocalizations.of(context).backupFileWarning,
                                   ),
                                   const SizedBox(height: 8),
                                 ],
                                 TextField(
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Filename',
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    labelText: AppLocalizations.of(context).filename,
                                   ),
                                   controller: fileNameController,
                                   inputFormatters: [
@@ -446,7 +447,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context).cancel),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
                             if (Platform.isAndroid)
@@ -455,7 +456,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   Icons.save,
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
-                                label: const Text('Save'),
+                                label: Text(AppLocalizations.of(context).save),
                                 onPressed: () async {
                                   if (!await _getStoragePermission()) {
                                     return;
@@ -485,7 +486,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     )
                                   : Container(),
                               label: Text(
-                                Platform.isAndroid ? 'Share' : 'Continue',
+                                Platform.isAndroid ? AppLocalizations.of(context).share : AppLocalizations.of(context).continue_,
                               ),
                             ),
                           ],
@@ -497,7 +498,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
-                              SnackBar(content: Text('Saved to $downloadPath')),
+                              SnackBar(content: Text(AppLocalizations.of(context).savedTo(downloadPath))),
                             );
                         } else {
                           Directory directory = await getTemporaryDirectory();
@@ -524,9 +525,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.download_rounded),
-                  title: const Text('Restore'),
+                  title: Text(AppLocalizations.of(context).restore),
                   subtitle: Text(
-                    'Restore your characters from a backup file',
+                    AppLocalizations.of(context).restoreDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   onTap: () async {
@@ -538,19 +539,19 @@ class SettingsScreenState extends State<SettingsScreen> {
                             constraints: const BoxConstraints(
                               maxWidth: maxDialogWidth,
                             ),
-                            child: const Text(
-                              'Restoring a backup file will overwrite any current characters. Do you wish to continue?',
+                            child: Text(
+                              AppLocalizations.of(context).restoreWarning,
                             ),
                           ),
                           actions: <Widget>[
                             TextButton(
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context).cancel),
                               onPressed: () {
                                 Navigator.of(context).pop(false);
                               },
                             ),
                             TextButton(
-                              child: const Text('Continue'),
+                              child: Text(AppLocalizations.of(context).continue_),
                               onPressed: () async {
                                 if (!await _getStoragePermission()) {
                                   return;
@@ -598,7 +599,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text(
-                                      'Error During Restore Operation',
+                                      AppLocalizations.of(context).errorDuringRestore,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.headlineLarge,
@@ -609,12 +610,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           ClipboardData(text: e.toString()),
                                         ),
                                         icon: const Icon(Icons.copy),
-                                        label: const Text('Copy'),
+                                        label: Text(AppLocalizations.of(context).copy),
                                       ),
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.of(context).pop(),
-                                        child: const Text('Close'),
+                                        child: Text(AppLocalizations.of(context).close),
                                       ),
                                     ],
                                     content: Container(
@@ -623,7 +624,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                       child: SingleChildScrollView(
                                         child: Text(
-                                          'There was an error during the restoration process. Your existing data was saved and your backup hasn\'t been modified. Please contact the developer (through the Settings menu) with your existing backup file and this information:\n\n${e.toString()}',
+                                          AppLocalizations.of(context).restoreErrorMessage(e.toString()),
                                         ),
                                       ),
                                     ),
@@ -638,22 +639,22 @@ class SettingsScreenState extends State<SettingsScreen> {
                   },
                 ),
                 if (kDebugMode) ...[
-                  const SettingsSection(title: 'TESTING'),
+                  SettingsSection(title: AppLocalizations.of(context).testing),
                   ListTile(
-                    title: const Text('Create All'),
+                    title: Text(AppLocalizations.of(context).createAll),
                     onTap: () => context
                         .read<CharactersModel>()
                         .createCharactersTest(includeAllVariants: true),
                   ),
                   ListTile(
-                    title: const Text('Gloomhaven'),
+                    title: Text(AppLocalizations.of(context).gloomhaven),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.gloomhaven,
                         ),
                   ),
                   ListTile(
-                    title: const Text('Gloomhaven & variants'),
+                    title: Text('${AppLocalizations.of(context).gloomhaven} ${AppLocalizations.of(context).andVariants}'),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.gloomhaven,
@@ -661,14 +662,14 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: const Text('Frosthaven'),
+                    title: Text(AppLocalizations.of(context).frosthaven),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.frosthaven,
                         ),
                   ),
                   ListTile(
-                    title: const Text('Frosthaven & variants'),
+                    title: Text('${AppLocalizations.of(context).frosthaven} ${AppLocalizations.of(context).andVariants}'),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.frosthaven,
@@ -676,14 +677,14 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: const Text('Crimson Scales'),
+                    title: Text(AppLocalizations.of(context).crimsonScales),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.crimsonScales,
                         ),
                   ),
                   ListTile(
-                    title: const Text('Crimson Scales & variants'),
+                    title: Text('${AppLocalizations.of(context).crimsonScales} ${AppLocalizations.of(context).andVariants}'),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.crimsonScales,
@@ -691,14 +692,14 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: const Text('Custom'),
+                    title: Text(AppLocalizations.of(context).custom),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.custom,
                         ),
                   ),
                   ListTile(
-                    title: const Text('Custom & variants'),
+                    title: Text('${AppLocalizations.of(context).custom} ${AppLocalizations.of(context).andVariants}'),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.custom,
@@ -732,8 +733,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 8),
-                    const Text(
-                      'Support & Feedback',
+                    Text(
+                      AppLocalizations.of(context).supportAndFeedback,
                       textAlign: TextAlign.center,
                     ),
                     Row(
@@ -834,9 +835,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               );
                             },
-                            child: const Text(
-                              'Changelog',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context).changelog,
+                              style: const TextStyle(
                                 color: Colors.blue,
                                 fontSize: 16,
                               ),
@@ -854,9 +855,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               );
                             },
-                            child: const Text(
-                              'License',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context).license,
+                              style: const TextStyle(
                                 color: Colors.blue,
                                 fontSize: 16,
                               ),
@@ -905,7 +906,7 @@ void _showLoaderDialog(BuildContext context) {
             Container(
               constraints: const BoxConstraints(maxWidth: maxDialogWidth),
               margin: const EdgeInsets.only(left: 7),
-              child: const Text('Restoring...'),
+              child: Text(AppLocalizations.of(context).restoring),
             ),
           ],
         ),

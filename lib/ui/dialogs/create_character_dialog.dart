@@ -9,6 +9,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/character_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 // import 'package:gloomhaven_enhancement_calc/models/personal_goal.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
@@ -101,7 +102,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   focusNode: nameFocusNode,
                   decoration: InputDecoration(
                     hintText: placeholderName,
-                    labelText: 'Name',
+                    labelText: AppLocalizations.of(context).name,
                     border: const OutlineInputBorder(),
                   ),
                   controller: _nameTextFieldController,
@@ -129,14 +130,15 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 minVerticalPadding: 0,
                 title: TextFormField(
                   validator: (value) =>
-                      _selectedClass == null ? 'Please select a Class' : null,
+                      _selectedClass == null ? AppLocalizations.of(context).pleaseSelectClass : null,
                   readOnly: true,
                   controller: _classTextFieldController,
                   decoration: InputDecoration(
                     // hintText: 'Class',
                     border: const OutlineInputBorder(),
-                    labelText:
-                        'Class${_variant != Variant.base ? ' (${ClassVariants.classVariants[_variant]})' : ''}',
+                    labelText: _variant != Variant.base
+                        ? AppLocalizations.of(context).classWithVariant(ClassVariants.classVariants[_variant]!)
+                        : AppLocalizations.of(context).class_,
                   ),
                   onTap: () async {
                     SelectedPlayerClass? selectedPlayerClass =
@@ -194,14 +196,14 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   controller: _levelTextFieldController,
                   readOnly: true,
                   onTap: () async => await _showLevelGridDialog(context),
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.arrow_drop_down),
-                    suffixIconConstraints: BoxConstraints(
+                  decoration: InputDecoration(
+                    suffixIcon: const Icon(Icons.arrow_drop_down),
+                    suffixIconConstraints: const BoxConstraints(
                       maxHeight: 0,
                       minWidth: 48,
                     ),
-                    labelText: 'Starting level',
-                    border: OutlineInputBorder(),
+                    labelText: AppLocalizations.of(context).startingLevel,
+                    border: const OutlineInputBorder(),
                   ),
                 ),
                 trailing: SizedBox(
@@ -262,9 +264,9 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 title: TextFormField(
                   enableInteractiveSelection: false,
                   controller: _previousRetirementsTextFieldController,
-                  decoration: const InputDecoration(
-                    labelText: 'Previous retirements',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).previousRetirements,
+                    border: const OutlineInputBorder(),
                   ),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(
@@ -284,9 +286,9 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     child: TextFormField(
                       enableInteractiveSelection: false,
                       controller: _prosperityLevelTextFieldController,
-                      decoration: const InputDecoration(
-                        labelText: 'Prosperity level',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context).prosperityLevel,
+                        border: const OutlineInputBorder(),
                       ),
                       inputFormatters: [
                         FilteringTextInputFormatter.deny(
@@ -327,7 +329,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   children: [
                     Flexible(
                       child: AutoSizeText(
-                        'Gloomhaven',
+                        AppLocalizations.of(context).gloomhaven,
                         minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -359,7 +361,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     ),
                     Flexible(
                       child: AutoSizeText(
-                        'Frosthaven',
+                        AppLocalizations.of(context).frosthaven,
                         minFontSize: 8,
                         maxLines: 1,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -377,7 +379,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context).cancel),
         ),
         ElevatedButton.icon(
           style: Theme.of(context).textButtonTheme.style?.copyWith(
@@ -408,7 +410,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
             }
           },
           label: Text(
-            'Create',
+            AppLocalizations.of(context).create,
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(color: Colors.white),

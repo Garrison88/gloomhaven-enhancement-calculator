@@ -58,6 +58,10 @@ lib/
 │   ├── perks/               # Perk definitions by class
 │   ├── masteries/           # Mastery definitions
 │   └── player_classes/      # Class definitions
+├── l10n/                    # Localization (ARB files + generated code)
+│   ├── app_en.arb           # English strings (template)
+│   ├── app_pt.arb           # Portuguese translations
+│   └── app_localizations.dart # Generated - do not edit
 ├── viewmodels/              # ChangeNotifier models
 ├── ui/
 │   ├── screens/             # Full-page views
@@ -214,6 +218,66 @@ The Android system navigation bar (soft buttons at bottom of screen) color is ma
 - **Don't use transparent nav bar** unless you want app content to show through (requires edge-to-edge mode)
 - **Always call `SystemChrome.setSystemUIOverlayStyle()`**: Creating a `SystemUiOverlayStyle` object without passing it to this method does nothing
 
+## Localization (i18n)
+
+The app uses Flutter's official `gen_l10n` system for internationalization. Currently supports English (default) and Portuguese.
+
+### Configuration
+
+- **`l10n.yaml`** (project root) - Localization settings
+- **`pubspec.yaml`** - Requires `flutter_localizations` dependency and `generate: true`
+
+### Using Localized Strings
+
+```dart
+import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
+
+// In build methods:
+Text(AppLocalizations.of(context).close)
+Text(AppLocalizations.of(context).gold)
+
+// With parameters:
+Text(AppLocalizations.of(context).pocketItemsAllowed(count))
+Text(AppLocalizations.of(context).savedTo(filePath))
+```
+
+### Adding New Strings
+
+1. Add the string to `lib/l10n/app_en.arb` (English template):
+   ```json
+   "myNewString": "Hello world",
+   ```
+
+2. For strings with parameters, add metadata:
+   ```json
+   "greeting": "Hello {name}!",
+   "@greeting": {
+     "placeholders": {
+       "name": { "type": "String" }
+     }
+   }
+   ```
+
+3. Add translation to `lib/l10n/app_pt.arb`:
+   ```json
+   "myNewString": "Olá mundo",
+   "greeting": "Olá {name}!"
+   ```
+
+4. Run `flutter pub get` or `flutter gen-l10n` to regenerate
+
+### What's NOT Localized (By Design)
+
+- **`strings.dart`** - Complex markdown content with inline icons (`{ATTACK}`, `{MOVE}`) used by `GameTextParser`. These are tightly coupled with icon rendering and should be localized in a future phase.
+- **`perks_repository.dart`** - Perk descriptions with icon placeholders. Game-specific terminology that players recognize across languages.
+
+### Adding a New Language
+
+1. Create `lib/l10n/app_XX.arb` (where XX is the locale code)
+2. Copy all keys from `app_en.arb` and translate values
+3. Run `flutter pub get` - the language is automatically detected
+4. For iOS: Add the language to Xcode project (Runner > Info > Localizations)
+
 ## Tips for AI Assistants
 
 1. **Read before modifying** - Always read files before suggesting changes
@@ -222,4 +286,5 @@ The Android system navigation bar (soft buttons at bottom of screen) color is ma
 4. **Database migrations** - New schema changes need migration code in `database_migrations.dart`
 5. **Theme awareness** - Use `Theme.of(context)` and ThemeProvider for colors/styling
 6. **SVG icons** - Use `ThemedSvg` widget with asset keys, not direct `SvgPicture` calls
-7. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.
+7. **Localization** - Use `AppLocalizations.of(context).xxx` for UI strings, not hardcoded text. Add new strings to ARB files.
+8. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.
