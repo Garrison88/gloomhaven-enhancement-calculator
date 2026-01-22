@@ -158,11 +158,8 @@ Simply add it to `asset_config.dart`:
 const standardAssets = {
   // ... existing assets
 
-  // For monochrome icons that should become white in dark mode:
-  'MY_NEW_ASSET': AssetConfig('my_new_asset.svg', usesForegroundColor: true),
-
-  // For multi-color icons where only parts using `currentColor` should change:
-  'MY_THEMED_ASSET': AssetConfig('my_themed_asset.svg', usesCurrentColor: true),
+  // For icons where parts using `currentColor` should change with theme:
+  'MY_THEMED_ASSET': AssetConfig('my_themed_asset.svg', themeMode: CurrentColorTheme()),
 
   // For icons that look good as-is on both light and dark backgrounds:
   'MY_COLORFUL_ASSET': AssetConfig('my_colorful_asset.svg'),
@@ -170,9 +167,8 @@ const standardAssets = {
 ```
 
 **Color behavior options:**
-- `usesForegroundColor: true` - Tints entire icon white in dark mode (for single-color black icons)
-- `usesCurrentColor: true` - Sets the SVG's `currentColor` based on theme (for multi-color icons with themed borders)
-- Neither flag - Renders SVG exactly as defined with no color modification
+- `themeMode: CurrentColorTheme()` - Sets the SVG's `currentColor` based on theme (for icons with themed parts)
+- No themeMode - Renders SVG exactly as defined with no color modification
 
 The parser will automatically recognize and render it!
 

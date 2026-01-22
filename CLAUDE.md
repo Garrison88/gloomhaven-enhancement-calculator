@@ -161,11 +161,8 @@ The widget automatically:
 All SVG assets are configured here with their file paths and theming behavior:
 
 ```dart
-// Preferred: SVG uses fill="currentColor" - only those parts change with theme
-'MOVE': AssetConfig('move.svg', usesCurrentColor: true)
-
-// Deprecated: Tints entire SVG white in dark mode (for legacy SVGs with embedded images)
-'CRYSTALLIZE': AssetConfig('crystallize.svg', usesForegroundColor: true)
+// SVG uses fill="currentColor" - only those parts change with theme
+'MOVE': AssetConfig('move.svg', themeMode: CurrentColorTheme())
 
 // No theming needed - renders as-is in both themes
 'hex': AssetConfig('hex.svg')
@@ -179,14 +176,13 @@ All SVG assets are configured here with their file paths and theming behavior:
    - `stroke="currentColor"` for strokes
 3. Add an entry in `asset_config.dart`:
    ```dart
-   'MY_ICON': AssetConfig('my_icon.svg', usesCurrentColor: true)
+   'MY_ICON': AssetConfig('my_icon.svg', themeMode: CurrentColorTheme())
    ```
 4. Use it with `ThemedSvg(assetKey: 'MY_ICON', width: 24)`
 
 ### How It Works
 
-- **`usesCurrentColor: true`**: Uses `SvgTheme` so only SVG elements with `fill="currentColor"` change color. Other colors in the SVG are preserved. This is ideal for multi-color icons where only some parts should adapt to the theme.
-- **`usesForegroundColor: true`** (deprecated): Applies a `colorFilter` to tint the entire SVG white in dark mode. Only use for legacy SVGs that can't be converted.
+- **`themeMode: CurrentColorTheme()`**: Uses `SvgTheme` so only SVG elements with `fill="currentColor"` change color. Other colors in the SVG are preserved. This is ideal for multi-color icons where only some parts should adapt to the theme.
 
 ## Android System Navigation Bar
 

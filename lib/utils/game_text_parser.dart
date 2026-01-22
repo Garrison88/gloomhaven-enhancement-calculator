@@ -62,8 +62,7 @@ class BoldToken extends GameTextToken {
 /// Token for game icons (ATTACK, MOVE, HEAL, etc.)
 ///
 /// Icon coloring is controlled by [AssetConfig.themeMode]:
-/// - [ForegroundColorTheme]: Tints entire icon white in dark mode (for monochrome icons)
-/// - [CurrentColorTheme]: Sets SVG's `currentColor` per theme (for multi-color icons with themed borders)
+/// - [CurrentColorTheme]: Sets SVG's `currentColor` per theme (for icons with themed parts)
 /// - [NoTheme]: No color modification
 class IconToken extends GameTextToken {
   /// The original text element (e.g., 'ATTACK', 'MOVE+1')
@@ -183,7 +182,6 @@ class IconToken extends GameTextToken {
   /// Builds an [SvgPicture] with appropriate color handling based on theme.
   ///
   /// Color behavior is determined by [config.themeMode]:
-  /// - [ForegroundColorTheme]: Applies white tint in dark mode (entire icon)
   /// - [CurrentColorTheme]: Sets `currentColor` to white/black based on theme
   /// - [NoTheme]: Renders SVG as-is with no color modification
   SvgPicture _buildSvgPicture(String assetPath, bool darkTheme) {
@@ -197,11 +195,6 @@ class IconToken extends GameTextToken {
             currentColor: darkTheme ? Colors.white : Colors.black,
           ),
         ),
-      ),
-      // ignore: deprecated_member_use_from_same_package
-      ForegroundColorTheme() when darkTheme => SvgPicture.asset(
-        fullPath,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
       ),
       _ => SvgPicture.asset(fullPath),
     };

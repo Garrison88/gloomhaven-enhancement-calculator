@@ -106,14 +106,6 @@ class ThemedSvg extends StatelessWidget {
         width: effectiveWidth,
         height: height,
       ),
-      // Tint entire SVG white in dark mode (deprecated)
-      // ignore: deprecated_member_use_from_same_package
-      ForegroundColorTheme() when darkTheme => SvgPicture.asset(
-        fullPath,
-        width: effectiveWidth,
-        height: height,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      ),
       // No color modification needed
       _ => SvgPicture.asset(fullPath, width: effectiveWidth, height: height),
     };

@@ -40,19 +40,6 @@ class CurrentColorTheme extends SvgThemeMode {
   const CurrentColorTheme();
 }
 
-/// Legacy/deprecated: tints entire SVG white in dark mode.
-///
-/// Applies a color filter to tint the entire SVG white in dark mode.
-/// This is deprecated in favor of [CurrentColorTheme] with properly configured
-/// SVG assets that use `currentColor` for theme-aware parts.
-///
-/// Only use this for SVGs that cannot be converted to use `currentColor`
-/// (e.g., embedded raster images).
-@Deprecated('Migrate SVGs to use currentColor instead')
-class ForegroundColorTheme extends SvgThemeMode {
-  const ForegroundColorTheme();
-}
-
 // ============================================================================
 // ASSET CONFIG
 // ============================================================================
@@ -84,12 +71,8 @@ class AssetConfig {
   /// Returns the appropriate path based on theme.
   String pathForTheme(bool darkTheme) => darkTheme ? path : (lightPath ?? path);
 
-  /// Convenience getters for backward compatibility during migration.
-  /// These can be removed once all code uses [themeMode] directly.
+  /// Convenience getter for checking if asset uses currentColor theming.
   bool get usesCurrentColor => themeMode is CurrentColorTheme;
-
-  // ignore: deprecated_member_use_from_same_package
-  bool get usesForegroundColor => themeMode is ForegroundColorTheme;
 }
 
 // ============================================================================
@@ -192,11 +175,9 @@ const standardAssets = {
     'class_abilities/critters.svg',
     themeMode: CurrentColorTheme(),
   ),
-  // TODO: Replace crystallize.svg with vector version, then switch to CurrentColorTheme
-  // ignore: deprecated_member_use_from_same_package
   'CRYSTALLIZE': AssetConfig(
     'class_abilities/crystallize.svg',
-    themeMode: ForegroundColorTheme(),
+    themeMode: CurrentColorTheme(),
   ),
   'Cultivate': AssetConfig(
     'class_abilities/cultivate.svg',
@@ -234,16 +215,13 @@ const standardAssets = {
     'class_abilities/shrug_off.svg',
     themeMode: CurrentColorTheme(),
   ),
-  // TODO: Replace spark.svg with vector version, then switch to CurrentColorTheme
-  // ignore: deprecated_member_use_from_same_package
   'SPARK': AssetConfig(
     'class_abilities/spark.svg',
-    themeMode: ForegroundColorTheme(),
+    themeMode: CurrentColorTheme(),
   ),
-  // ignore: deprecated_member_use_from_same_package
   'consume_SPARK': AssetConfig(
     'class_abilities/spark.svg',
-    themeMode: ForegroundColorTheme(),
+    themeMode: CurrentColorTheme(),
   ),
   'SWING': AssetConfig('class_abilities/swing.svg'),
   'TIDE': AssetConfig('class_abilities/tide.svg'),
