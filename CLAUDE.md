@@ -325,6 +325,47 @@ builder: (context, scrollController) {
 
 When the sheet first expands, scroll metrics aren't immediately available (`maxScrollExtent` is 0). The logic defaults to showing the shadow (`_isScrolledToEnd = false`) and only hides it once we confirm the user has scrolled to the end. This avoids the shadow being hidden on first expand.
 
+## CI/CD Pipeline
+
+The project uses GitHub Actions to deploy Android app bundles to Google Play's internal test track.
+
+### Triggering a Deploy
+
+```bash
+# Deploy using current pubspec.yaml version
+gh workflow run deploy-internal.yml
+
+# Deploy with a specific version name
+gh workflow run deploy-internal.yml -f version_name=4.3.3
+```
+
+Or use the GitHub Actions web UI → Actions tab → "Deploy to Internal Track" → "Run workflow".
+
+### How It Works
+
+1. Triggered manually via `workflow_dispatch`
+2. Sets up Java 17 and Flutter (version specified in workflow file)
+3. Decodes keystore from GitHub secrets and creates `key.properties`
+4. Auto-increments build number using `github.run_number + BUILD_NUMBER_OFFSET`
+5. Builds release app bundle
+6. Uploads to Play Store internal track via service account
+
+### Configuration
+
+- **Workflow file**: `.github/workflows/deploy-internal.yml`
+- **Flutter version**: Update `FLUTTER_VERSION` env var when upgrading Flutter locally
+- **Build number offset**: `BUILD_NUMBER_OFFSET` ensures build numbers exceed previous releases
+
+### GitHub Secrets Required
+
+| Secret | Description |
+|--------|-------------|
+| `KEYSTORE_BASE64` | Base64-encoded signing keystore |
+| `KEYSTORE_PASSWORD` | Keystore password |
+| `KEY_PASSWORD` | Key password |
+| `KEY_ALIAS` | Key alias |
+| `PLAY_STORE_SERVICE_ACCOUNT_JSON` | Base64-encoded Google Play service account JSON |
+
 ## Tips for AI Assistants
 
 1. **Read before modifying** - Always read files before suggesting changes
@@ -335,3 +376,4 @@ When the sheet first expands, scroll metrics aren't immediately available (`maxS
 6. **SVG icons** - Use `ThemedSvg` widget with asset keys, not direct `SvgPicture` calls
 7. **Localization** - Use `AppLocalizations.of(context).xxx` for UI strings, not hardcoded text. Add new strings to ARB files.
 8. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.
+9. **CI/CD prompts** - After the user pushes changes to GitHub, suggest running a deploy to the internal test track: `gh workflow run deploy-internal.yml`
