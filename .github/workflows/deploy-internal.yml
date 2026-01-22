@@ -11,7 +11,7 @@ on:
 env:
   FLUTTER_VERSION: "3.29.0"
   JAVA_VERSION: "17"
-  BUILD_NUMBER_OFFSET: 320  # Adjust so build_number > current (322)
+  BUILD_NUMBER_OFFSET: 322  # First run = 1 + 322 = 323
 
 jobs:
   deploy:
