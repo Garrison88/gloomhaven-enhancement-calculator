@@ -451,11 +451,6 @@ class EnhancementCalculatorModel with ChangeNotifier {
       );
     }
 
-    // === FINAL TOTAL ===
-    steps.add(
-      CalculationStep(description: 'Total', value: runningTotal, isTotal: true),
-    );
-
     return steps;
   }
 

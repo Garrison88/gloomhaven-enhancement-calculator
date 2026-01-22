@@ -696,8 +696,6 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             totalCost: enhancementCalculatorModel.totalCost,
             steps: enhancementCalculatorModel.getCalculationBreakdown(),
             enhancement: enhancementCalculatorModel.enhancement,
-            temporaryMode: enhancementCalculatorModel.temporaryEnhancementMode,
-            hailsDiscount: enhancementCalculatorModel.hailsDiscount,
           ),
       ],
     );

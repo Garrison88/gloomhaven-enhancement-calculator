@@ -278,6 +278,57 @@ Text(AppLocalizations.of(context).savedTo(filePath))
 3. Run `flutter pub get` - the language is automatically detected
 4. For iOS: Add the language to Xcode project (Runner > Info > Localizations)
 
+## Cost Bottom Sheet (`lib/ui/widgets/cost_bottom_sheet.dart`)
+
+The enhancement calculator uses a custom bottom sheet with a "reveal from behind" effect where the total cost stays fixed while the breakdown slides up behind it.
+
+### Architecture
+
+The widget uses a `Stack` with three layers:
+1. **Scrim** - Semi-transparent overlay when expanded
+2. **DraggableScrollableSheet** - Contains drag handle + breakdown content
+3. **Fixed cost overlay** - Positioned at bottom, displays total cost
+
+### Key Design Decisions
+
+1. **Drag handle moves with sheet**: The drag handle is part of the `DraggableScrollableSheet`, not the fixed overlay. This provides natural affordance that the sheet is draggable.
+
+2. **Cost overlay is separate**: The total cost display is a `Positioned` widget stacked on top. It uses `IgnorePointer` so touches pass through to the sheet underneath.
+
+3. **Bottom padding for last item**: The breakdown content has extra padding (`_costOverlayHeight + 24`) at the bottom so the last item can scroll above the fixed overlay.
+
+4. **Conditional shadow**: The overlay shows an upward shadow only when:
+   - Sheet is expanded (`_isExpanded`)
+   - User hasn't scrolled to the end (`!_isScrolledToEnd`)
+
+   This indicates there's content "behind" the overlay.
+
+### Scroll Controller Tracking
+
+The `DraggableScrollableSheet` provides a new `ScrollController` in its builder. To track scroll position:
+
+```dart
+builder: (context, scrollController) {
+  // Store reference and add listener when controller changes
+  if (_scrollController != scrollController) {
+    _scrollController?.removeListener(_onScrollChanged);
+    _scrollController = scrollController;
+    _scrollController!.addListener(_onScrollChanged);
+  }
+  // ...
+}
+```
+
+### State Management
+
+- `_isExpanded` - True when sheet is above threshold (20% of screen)
+- `_isScrolledToEnd` - True when scrolled to bottom (hides shadow)
+- Reset `_isScrolledToEnd` when collapsing so shadow shows on next expand
+
+### Important: Default Shadow Visibility
+
+When the sheet first expands, scroll metrics aren't immediately available (`maxScrollExtent` is 0). The logic defaults to showing the shadow (`_isScrolledToEnd = false`) and only hides it once we confirm the user has scrolled to the end. This avoids the shadow being hidden on first expand.
+
 ## Tips for AI Assistants
 
 1. **Read before modifying** - Always read files before suggesting changes

@@ -284,13 +284,87 @@ class PunctuationToken extends GameTextToken {
 }
 
 // ============================================================================
+// WORD PARSING
+// ============================================================================
+
+/// Result of parsing a raw word into its components.
+///
+/// Handles extraction of:
+/// - Leading punctuation (e.g., quotes, parentheses)
+/// - Trailing punctuation (e.g., commas, periods)
+/// - +1 overlay suffix detection
+/// - Clean asset key for lookup
+class ParsedWord {
+  static const _leadingPunctuation = ['"', "'", '('];
+  static const _trailingPunctuation = ['"', "'", ',', ')', '.'];
+
+  /// The cleaned asset key (no punctuation, no +1 suffix)
+  final String assetKey;
+
+  /// Leading punctuation character, if any
+  final String? leadingPunct;
+
+  /// Trailing punctuation character, if any
+  final String? trailingPunct;
+
+  /// Whether the word had a +1 suffix (e.g., "MOVE+1")
+  final bool hasPlusOneOverlay;
+
+  const ParsedWord({
+    required this.assetKey,
+    this.leadingPunct,
+    this.trailingPunct,
+    this.hasPlusOneOverlay = false,
+  });
+
+  /// Parse a raw word into its components.
+  ///
+  /// Example: `"MOVE+1,` -> ParsedWord(
+  ///   assetKey: 'MOVE',
+  ///   leadingPunct: '"',
+  ///   trailingPunct: ',',
+  ///   hasPlusOneOverlay: true,
+  /// )
+  factory ParsedWord.from(String word) {
+    String working = word;
+    String? leading;
+    String? trailing;
+
+    // Strip leading punctuation
+    if (working.isNotEmpty && _leadingPunctuation.contains(working[0])) {
+      leading = working[0];
+      working = working.substring(1);
+    }
+
+    // Strip trailing punctuation
+    if (working.isNotEmpty &&
+        _trailingPunctuation.contains(working[working.length - 1])) {
+      trailing = working[working.length - 1];
+      working = working.substring(0, working.length - 1);
+    }
+
+    // Detect and strip +1 suffix
+    bool plusOne = false;
+    if (working.endsWith('+1')) {
+      working = working.substring(0, working.length - 2);
+      plusOne = true;
+    }
+
+    return ParsedWord(
+      assetKey: working,
+      leadingPunct: leading,
+      trailingPunct: trailing,
+      hasPlusOneOverlay: plusOne,
+    );
+  }
+}
+
+// ============================================================================
 // TOKENIZER
 // ============================================================================
 
 /// Converts raw game text strings into a list of tokens
 class GameTextTokenizer {
-  static const _leadingPunctuation = ['"', "'", '('];
-  static const _trailingPunctuation = ['"', "'", ',', ')', '.'];
 
   /// Tokenize a complete game text string
   static List<GameTextToken> tokenize(String text, bool darkTheme) {
@@ -387,27 +461,15 @@ class GameTextTokenizer {
         continue;
       }
 
-      // Detect +1 suffix and strip it for asset lookup
-      // (e.g., 'MOVE+1' -> look up 'MOVE', set showPlusOneOverlay: true)
-      String assetKey = word;
-      bool showPlusOneOverlay = false;
-      if (word.endsWith('+1')) {
-        assetKey = word.substring(0, word.length - 2);
-        showPlusOneOverlay = true;
-      }
+      // Parse word to extract punctuation and +1 overlay
+      final parsed = ParsedWord.from(word);
 
-      // Try to get asset config for this word
-      final config = getAssetConfig(assetKey, darkTheme);
+      // Try to get asset config for the cleaned asset key
+      final config = getAssetConfig(parsed.assetKey, darkTheme);
 
       if (config.path != null) {
-        // This is an icon token
-        _addIconTokenWithPunctuation(
-          tokens,
-          word,
-          config,
-          darkTheme,
-          showPlusOneOverlay: showPlusOneOverlay,
-        );
+        // This is an icon token - add with punctuation
+        _addIconToken(tokens, parsed, config);
       } else {
         // Plain text token
         tokens.add(PlainTextToken(word));
@@ -422,40 +484,29 @@ class GameTextTokenizer {
     return tokens;
   }
 
-  /// Add icon token with proper punctuation handling
-  static void _addIconTokenWithPunctuation(
+  /// Add icon token with punctuation from parsed word
+  static void _addIconToken(
     List<GameTextToken> tokens,
-    String word,
+    ParsedWord parsed,
     AssetConfig config,
-    bool darkTheme, {
-    bool showPlusOneOverlay = false,
-  }) {
-    // Check for leading punctuation
-    if (word.isNotEmpty && _leadingPunctuation.contains(word[0])) {
-      tokens.add(PunctuationToken(word[0]));
-      word = word.substring(1);
-    }
-
-    // Check for trailing punctuation
-    String? trailingPunct;
-    if (word.isNotEmpty &&
-        _trailingPunctuation.contains(word[word.length - 1])) {
-      trailingPunct = word[word.length - 1];
-      word = word.substring(0, word.length - 1);
+  ) {
+    // Add leading punctuation if present
+    if (parsed.leadingPunct != null) {
+      tokens.add(PunctuationToken(parsed.leadingPunct!));
     }
 
     // Add the icon
     tokens.add(
       IconToken(
-        element: word,
+        element: parsed.assetKey,
         config: config,
-        showPlusOneOverlay: showPlusOneOverlay,
+        showPlusOneOverlay: parsed.hasPlusOneOverlay,
       ),
     );
 
     // Add trailing punctuation if present
-    if (trailingPunct != null) {
-      tokens.add(PunctuationToken(trailingPunct));
+    if (parsed.trailingPunct != null) {
+      tokens.add(PunctuationToken(parsed.trailingPunct!));
     }
   }
 

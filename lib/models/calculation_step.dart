@@ -15,14 +15,10 @@ class CalculationStep {
   /// Optional modifier description (e.g., "Party Boon: −5g/level")
   final String? modifier;
 
-  /// If true, this step represents the final total
-  final bool isTotal;
-
   const CalculationStep({
     required this.description,
     required this.value,
     this.formula,
     this.modifier,
-    this.isTotal = false,
   });
 }
