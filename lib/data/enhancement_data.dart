@@ -495,7 +495,7 @@ class EnhancementData {
                                   top: 5,
                                   left: 5,
                                   child: SvgPicture.asset(
-                                    'images/elem_dark.svg',
+                                    'images/elements/elem_dark.svg',
                                     width: 10,
                                   ),
                                 ),
@@ -503,7 +503,7 @@ class EnhancementData {
                                   top: 4,
                                   left: 7,
                                   child: SvgPicture.asset(
-                                    'images/elem_air.svg',
+                                    'images/elements/elem_air.svg',
                                     width: 11,
                                   ),
                                 ),
@@ -511,7 +511,7 @@ class EnhancementData {
                                   top: 3,
                                   right: 6,
                                   child: SvgPicture.asset(
-                                    'images/elem_ice.svg',
+                                    'images/elements/elem_ice.svg',
                                     width: 12,
                                   ),
                                 ),
@@ -520,7 +520,7 @@ class EnhancementData {
                                   right: 2,
                                   bottom: 2,
                                   child: SvgPicture.asset(
-                                    'images/elem_fire.svg',
+                                    'images/elements/elem_fire.svg',
                                     width: 13,
                                   ),
                                 ),
@@ -528,7 +528,7 @@ class EnhancementData {
                                   bottom: 1,
                                   right: 4,
                                   child: SvgPicture.asset(
-                                    'images/elem_earth.svg',
+                                    'images/elements/elem_earth.svg',
                                     width: 14,
                                   ),
                                 ),
@@ -536,7 +536,7 @@ class EnhancementData {
                                   bottom: 0,
                                   left: 3,
                                   child: SvgPicture.asset(
-                                    'images/elem_light.svg',
+                                    'images/elements/elem_light.svg',
                                     width: 15,
                                   ),
                                 ),

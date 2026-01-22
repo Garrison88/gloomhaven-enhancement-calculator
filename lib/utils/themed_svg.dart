@@ -49,11 +49,8 @@ class ThemedSvg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final darkTheme = Theme.of(context).brightness == Brightness.dark;
-    final config = getAssetConfig(assetKey, darkTheme);
-    final assetPath = config.path ?? assetKey;
-    final fullPath = assetPath.startsWith('images/')
-        ? assetPath
-        : 'images/$assetPath';
+    final config = getAssetConfig(assetKey);
+    final fullPath = 'images/${config.pathForTheme(darkTheme)}';
     final effectiveWidth = width != null
         ? width! * config.widthMultiplier
         : null;
@@ -62,14 +59,13 @@ class ThemedSvg extends StatelessWidget {
 
     if (showPlusOneOverlay) {
       final size = width ?? height ?? 24.0;
-      final plusOneConfig = getAssetConfig('plus_one', darkTheme);
-      final plusOnePath = plusOneConfig.path ?? 'plus_one.svg';
+      final plusOneConfig = getAssetConfig('plus_one');
       return Stack(
         alignment: const Alignment(1.75, -1.75),
         children: [
           icon,
           SvgPicture.asset(
-            'images/$plusOnePath',
+            'images/${plusOneConfig.pathForTheme(darkTheme)}',
             width: size * 0.5,
             height: size * 0.5,
           ),

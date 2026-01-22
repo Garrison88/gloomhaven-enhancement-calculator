@@ -58,15 +58,19 @@ flutter:
   assets:
     # - icons/
     # - icons/android/
-    - images/
     - images/attack_modifiers/
     - images/class_icons/
-    # - images/elements/
+    - images/elements/
     - images/equipment_slots/
     - images/pips/
     - images/titles/
     - images/resources/
-    # - images/status_effects/
+    - images/status_effects/
+    - images/actions/
+    - images/card_mechanics/
+    - images/class_abilities/
+    - images/ui/
+    - images/branding/
 
   fonts:
     - family: PirataOne

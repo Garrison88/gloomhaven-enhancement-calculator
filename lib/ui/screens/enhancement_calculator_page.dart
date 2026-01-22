@@ -639,7 +639,7 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                                 Positioned(
                                   right: 5,
                                   child: SvgPicture.asset(
-                                    'images/not.svg',
+                                    'images/ui/not.svg',
                                     width: iconSize + 11,
                                   ),
                                 ),

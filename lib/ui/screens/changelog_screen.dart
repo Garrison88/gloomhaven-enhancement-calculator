@@ -10,79 +10,83 @@ class ChangelogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: FutureBuilder<PackageInfo>(
-          future: PackageInfo.fromPlatform(),
-          builder: (context, snapshot) {
-            return Column(
-              children: [
-                Text(AppLocalizations.of(context).changelog),
-                if (snapshot.hasData)
-                  Text(
-                    kDebugMode
-                        ? 'v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
-                        : 'v${snapshot.data!.version}',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ],
-            );
-          },
+    return SafeArea(
+      top: false,
+      bottom: Platform.isAndroid,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              return Column(
+                children: [
+                  Text(AppLocalizations.of(context).changelog),
+                  if (snapshot.hasData)
+                    Text(
+                      kDebugMode
+                          ? 'v${snapshot.data!.version}+${snapshot.data!.buildNumber}'
+                          : 'v${snapshot.data!.version}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                ],
+              );
+            },
+          ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _VersionSection(
-            version: '4.3.1',
-            date: '2026-01-17',
-            changes: [
-              'Added Gloomhaven 2nd Edition mode to the Enhancement Calculator.',
-              'Move "Scenario 114 Reward" and "Building 44" toggles to Enhancement Calculator page.',
-              'Added device information to email feedback pre-populated body text.',
-            ],
-          ),
-          const SizedBox(height: 24),
-          _VersionSection(
-            version: '4.3.0',
-            date: '2026-01-11',
-            changes: [
-              'Added all Gloomhaven 2nd Edition unlockable classes.',
-              'Added Mercenary Pack classes.',
-              '⚠️ Some icons still unavailable for some GH2E and Mercenary Pack classes. Will update when they become available.',
-              'Added "Hail\'s Discount" option to Enhancement Calculator.',
-              if (Platform.isAndroid)
-                '(US based Android users only) Added "Buy me a Coffee" link to the Settings screen for donations (no added perks or features - just a way to show support)',
-            ],
-          ),
-          const SizedBox(height: 24),
-          const _VersionSection(
-            version: '4.2.2',
-            date: '2025-10-16',
-            changes: [
-              'Added all Gloomhaven 2nd Edition starter classes (locked classes coming soon).',
-            ],
-          ),
-          const SizedBox(height: 24),
-          const _VersionSection(
-            version: '4.2.1',
-            date: '2025-10-06',
-            changes: [
-              'Added Vimthreader, DOME, CORE, and Skitterclaw custom classes from CCUG.',
-            ],
-          ),
-          const SizedBox(height: 24),
-          const _VersionSection(
-            version: '4.2.0',
-            date: '2025-06-19',
-            changes: [
-              'Added all Frosthaven variants of Gloomhaven and JotL classes (Crimson Scales coming soon).',
-              'Corrected an error present in the "Astral" class perk list.',
-              '⚠️ Breaking database migration: backups created before version 4.2.0 can no longer be restored.',
-            ],
-          ),
-        ],
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _VersionSection(
+              version: '4.3.1',
+              date: '2026-01-17',
+              changes: [
+                'Added Gloomhaven 2nd Edition mode to the Enhancement Calculator.',
+                'Move "Scenario 114 Reward" and "Building 44" toggles to Enhancement Calculator page.',
+                'Added device information to email feedback pre-populated body text.',
+              ],
+            ),
+            const SizedBox(height: 24),
+            _VersionSection(
+              version: '4.3.0',
+              date: '2026-01-11',
+              changes: [
+                'Added all Gloomhaven 2nd Edition unlockable classes.',
+                'Added Mercenary Pack classes.',
+                '⚠️ Some icons still unavailable for some GH2E and Mercenary Pack classes. Will update when they become available.',
+                'Added "Hail\'s Discount" option to Enhancement Calculator.',
+                if (Platform.isAndroid)
+                  '(US based Android users only) Added "Buy me a Coffee" link to the Settings screen for donations (no added perks or features - just a way to show support)',
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _VersionSection(
+              version: '4.2.2',
+              date: '2025-10-16',
+              changes: [
+                'Added all Gloomhaven 2nd Edition starter classes (locked classes coming soon).',
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _VersionSection(
+              version: '4.2.1',
+              date: '2025-10-06',
+              changes: [
+                'Added Vimthreader, DOME, CORE, and Skitterclaw custom classes from CCUG.',
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _VersionSection(
+              version: '4.2.0',
+              date: '2025-06-19',
+              changes: [
+                'Added all Frosthaven variants of Gloomhaven and JotL classes (Crimson Scales coming soon).',
+                'Corrected an error present in the "Astral" class perk list.',
+                '⚠️ Breaking database migration: backups created before version 4.2.0 can no longer be restored.',
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

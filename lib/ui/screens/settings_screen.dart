@@ -69,6 +69,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
+      bottom: Platform.isAndroid,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -137,7 +138,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            AppLocalizations.of(context).enterSolution,
+                                            AppLocalizations.of(
+                                              context,
+                                            ).enterSolution,
                                           ),
                                           const SizedBox(height: 8),
                                           TextField(
@@ -150,8 +153,11 @@ class SettingsScreenState extends State<SettingsScreen> {
                                               });
                                             },
                                             decoration: InputDecoration(
-                                              labelText: AppLocalizations.of(context).solution,
-                                              border: const OutlineInputBorder(),
+                                              labelText: AppLocalizations.of(
+                                                context,
+                                              ).solution,
+                                              border:
+                                                  const OutlineInputBorder(),
                                             ),
                                           ),
                                         ],
@@ -159,7 +165,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                     actions: <Widget>[
                                       TextButton(
-                                        child: Text(AppLocalizations.of(context).cancel),
+                                        child: Text(
+                                          AppLocalizations.of(context).cancel,
+                                        ),
                                         onPressed: () {
                                           Navigator.of(context).pop(false);
                                         },
@@ -209,7 +217,11 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ).colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: smallPadding),
-                                    Text(AppLocalizations.of(context).bladeswarmUnlocked),
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).bladeswarmUnlocked,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -238,63 +250,73 @@ class SettingsScreenState extends State<SettingsScreen> {
                         builder: (_) {
                           bool envelopeVSolved = false;
                           return StatefulBuilder(
-                            builder: (BuildContext context, StateSetter setState) {
-                              return AlertDialog(
-                                content: Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: maxDialogWidth,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context).enterPassword,
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                                  return AlertDialog(
+                                    content: Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: maxDialogWidth,
                                       ),
-                                      const SizedBox(height: 8),
-                                      TextField(
-                                        autofocus: true,
-                                        onChanged: (String val) {
-                                          setState(() {
-                                            envelopeVSolved =
-                                                val.toLowerCase().trim() ==
-                                                'ashes';
-                                          });
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            ).enterPassword,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          TextField(
+                                            autofocus: true,
+                                            onChanged: (String val) {
+                                              setState(() {
+                                                envelopeVSolved =
+                                                    val.toLowerCase().trim() ==
+                                                    'ashes';
+                                              });
+                                            },
+                                            decoration: InputDecoration(
+                                              labelText: AppLocalizations.of(
+                                                context,
+                                              ).password,
+                                              border:
+                                                  const OutlineInputBorder(),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text(
+                                          AppLocalizations.of(context).cancel,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
                                         },
-                                        decoration: InputDecoration(
-                                          labelText: AppLocalizations.of(context).password,
-                                          border: const OutlineInputBorder(),
+                                      ),
+                                      TextButton(
+                                        onPressed: envelopeVSolved
+                                            ? () {
+                                                Navigator.of(context).pop(true);
+                                              }
+                                            : null,
+                                        child: Text(
+                                          AppLocalizations.of(context).unlock,
+                                          style: TextStyle(
+                                            color: envelopeVSolved
+                                                ? Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary
+                                                : Theme.of(
+                                                    context,
+                                                  ).disabledColor,
+                                          ),
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text(AppLocalizations.of(context).cancel),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                  ),
-                                  TextButton(
-                                    onPressed: envelopeVSolved
-                                        ? () {
-                                            Navigator.of(context).pop(true);
-                                          }
-                                        : null,
-                                    child: Text(
-                                      AppLocalizations.of(context).unlock,
-                                      style: TextStyle(
-                                        color: envelopeVSolved
-                                            ? Theme.of(
-                                                context,
-                                              ).colorScheme.primary
-                                            : Theme.of(context).disabledColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
                           );
                         },
                       ).then((bool? value) {
@@ -318,7 +340,11 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ).colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: smallPadding),
-                                    Text(AppLocalizations.of(context).vanquisherUnlocked),
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      ).vanquisherUnlocked,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -348,7 +374,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                           : AppLocalizations.of(context).light,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    activeThumbImage: const AssetImage('images/elem_dark.png'),
+                    activeThumbImage: const AssetImage(
+                      'images/elements/elem_dark.png',
+                    ),
                     activeThumbColor: const Color(0xff1f272e),
                     inactiveThumbColor: const Color(0xffeda50b),
                     inactiveTrackColor: const Color(
@@ -356,7 +384,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                     ).withValues(alpha: 0.75),
                     activeTrackColor: const Color(0xff1f272e),
                     inactiveThumbImage: const AssetImage(
-                      'images/elem_light.png',
+                      'images/elements/elem_light.png',
                     ),
                     value: context.watch<ThemeProvider>().useDarkMode,
                     onChanged: (val) {
@@ -382,9 +410,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ? Icons.visibility_rounded
                         : Icons.visibility_off_rounded,
                   ),
-                  title: Text(AppLocalizations.of(context).showRetiredCharacters),
+                  title: Text(
+                    AppLocalizations.of(context).showRetiredCharacters,
+                  ),
                   subtitle: Text(
-                    AppLocalizations.of(context).showRetiredCharactersDescription,
+                    AppLocalizations.of(
+                      context,
+                    ).showRetiredCharactersDescription,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   value: context.read<CharactersModel>().showRetired,
@@ -394,7 +426,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                     });
                   },
                 ),
-                SettingsSection(title: AppLocalizations.of(context).backupAndRestore),
+                SettingsSection(
+                  title: AppLocalizations.of(context).backupAndRestore,
+                ),
                 ListTile(
                   leading: const Icon(Icons.upload_rounded),
                   title: Text(AppLocalizations.of(context).backup),
@@ -424,14 +458,18 @@ class SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 if (Platform.isAndroid) ...[
                                   Text(
-                                    AppLocalizations.of(context).backupFileWarning,
+                                    AppLocalizations.of(
+                                      context,
+                                    ).backupFileWarning,
                                   ),
                                   const SizedBox(height: 8),
                                 ],
                                 TextField(
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
-                                    labelText: AppLocalizations.of(context).filename,
+                                    labelText: AppLocalizations.of(
+                                      context,
+                                    ).filename,
                                   ),
                                   controller: fileNameController,
                                   inputFormatters: [
@@ -486,7 +524,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                     )
                                   : Container(),
                               label: Text(
-                                Platform.isAndroid ? AppLocalizations.of(context).share : AppLocalizations.of(context).continue_,
+                                Platform.isAndroid
+                                    ? AppLocalizations.of(context).share
+                                    : AppLocalizations.of(context).continue_,
                               ),
                             ),
                           ],
@@ -498,7 +538,13 @@ class SettingsScreenState extends State<SettingsScreen> {
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
-                              SnackBar(content: Text(AppLocalizations.of(context).savedTo(downloadPath))),
+                              SnackBar(
+                                content: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  ).savedTo(downloadPath),
+                                ),
+                              ),
                             );
                         } else {
                           Directory directory = await getTemporaryDirectory();
@@ -551,7 +597,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                               },
                             ),
                             TextButton(
-                              child: Text(AppLocalizations.of(context).continue_),
+                              child: Text(
+                                AppLocalizations.of(context).continue_,
+                              ),
                               onPressed: () async {
                                 if (!await _getStoragePermission()) {
                                   return;
@@ -599,7 +647,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text(
-                                      AppLocalizations.of(context).errorDuringRestore,
+                                      AppLocalizations.of(
+                                        context,
+                                      ).errorDuringRestore,
                                       style: Theme.of(
                                         context,
                                       ).textTheme.headlineLarge,
@@ -610,12 +660,16 @@ class SettingsScreenState extends State<SettingsScreen> {
                                           ClipboardData(text: e.toString()),
                                         ),
                                         icon: const Icon(Icons.copy),
-                                        label: Text(AppLocalizations.of(context).copy),
+                                        label: Text(
+                                          AppLocalizations.of(context).copy,
+                                        ),
                                       ),
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.of(context).pop(),
-                                        child: Text(AppLocalizations.of(context).close),
+                                        child: Text(
+                                          AppLocalizations.of(context).close,
+                                        ),
                                       ),
                                     ],
                                     content: Container(
@@ -624,7 +678,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                       child: SingleChildScrollView(
                                         child: Text(
-                                          AppLocalizations.of(context).restoreErrorMessage(e.toString()),
+                                          AppLocalizations.of(
+                                            context,
+                                          ).restoreErrorMessage(e.toString()),
                                         ),
                                       ),
                                     ),
@@ -654,7 +710,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: Text('${AppLocalizations.of(context).gloomhaven} ${AppLocalizations.of(context).andVariants}'),
+                    title: Text(
+                      '${AppLocalizations.of(context).gloomhaven} ${AppLocalizations.of(context).andVariants}',
+                    ),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.gloomhaven,
@@ -669,7 +727,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: Text('${AppLocalizations.of(context).frosthaven} ${AppLocalizations.of(context).andVariants}'),
+                    title: Text(
+                      '${AppLocalizations.of(context).frosthaven} ${AppLocalizations.of(context).andVariants}',
+                    ),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.frosthaven,
@@ -684,7 +744,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: Text('${AppLocalizations.of(context).crimsonScales} ${AppLocalizations.of(context).andVariants}'),
+                    title: Text(
+                      '${AppLocalizations.of(context).crimsonScales} ${AppLocalizations.of(context).andVariants}',
+                    ),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.crimsonScales,
@@ -699,7 +761,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                         ),
                   ),
                   ListTile(
-                    title: Text('${AppLocalizations.of(context).custom} ${AppLocalizations.of(context).andVariants}'),
+                    title: Text(
+                      '${AppLocalizations.of(context).custom} ${AppLocalizations.of(context).andVariants}',
+                    ),
                     onTap: () =>
                         context.read<CharactersModel>().createCharactersTest(
                           classCategory: ClassCategory.custom,
@@ -797,7 +861,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                         (Platform.isAndroid && SharedPrefs().isUSRegion))
                       IconButton(
                         icon: SvgPicture.asset(
-                          'images/bmc-button.svg',
+                          'images/branding/bmc-button.svg',
                           height: 32,
                         ),
                         tooltip: 'Buy Me a Coffee',

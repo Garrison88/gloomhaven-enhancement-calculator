@@ -209,7 +209,7 @@ class _NameAndClassSection extends StatelessWidget {
               alignment: const Alignment(0, 0.3),
               children: <Widget>[
                 SvgPicture.asset(
-                  'images/level.svg',
+                  'images/ui/level.svg',
                   width: iconSize * 1.5,
                   colorFilter: ColorFilter.mode(
                     Theme.of(context).colorScheme.onSurface,
@@ -241,7 +241,7 @@ class _NameAndClassSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'images/trait.svg',
+                'images/ui/trait.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.onSurface,
@@ -305,7 +305,7 @@ class _StatsSectionState extends State<_StatsSection> {
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
-                'images/xp.svg',
+                'images/ui/xp.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.onSurface,
@@ -389,7 +389,7 @@ class _StatsSectionState extends State<_StatsSection> {
           child: Row(
             children: <Widget>[
               SvgPicture.asset(
-                'images/gold.svg',
+                'images/ui/gold.svg',
                 width: iconSize,
                 colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.onSurface,
@@ -460,7 +460,7 @@ class _StatsSectionState extends State<_StatsSection> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 SvgPicture.asset(
-                  'images/goal.svg',
+                  'images/ui/goal.svg',
                   width: iconSize,
                   colorFilter: ColorFilter.mode(
                     Theme.of(context).colorScheme.onSurface,

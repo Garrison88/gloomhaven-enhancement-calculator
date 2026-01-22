@@ -112,10 +112,10 @@ class IconToken extends GameTextToken {
   }
 
   Widget _buildIconContent(bool darkTheme) {
-    final assetPath = config.path!;
+    final assetPath = config.pathForTheme(darkTheme);
 
     // Handle XP icons
-    if (assetPath == 'xp.svg') {
+    if (assetPath == 'ui/xp.svg') {
       final xpNumber = RegExp(r'\d+').firstMatch(element)?.group(0) ?? '';
       return Stack(
         alignment: Alignment.center,
@@ -148,7 +148,14 @@ class IconToken extends GameTextToken {
             child: SizedBox(
               height: 12,
               width: 12,
-              child: SvgPicture.asset('images/consume.svg'),
+              child: SvgPicture(
+                SvgAssetLoader(
+                  'images/${standardAssets['CONSUME']!.path}',
+                  theme: SvgTheme(
+                    currentColor: darkTheme ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -162,7 +169,7 @@ class IconToken extends GameTextToken {
         children: [
           _buildSvgPicture(assetPath, darkTheme),
           SvgPicture.asset(
-            'images/plus_one.svg',
+            'images/ui/plus_one.svg',
             width: iconSize * 0.5,
             height: iconSize * 0.5,
           ),
@@ -221,7 +228,7 @@ class StackedElementToken extends GameTextToken {
               top: 0,
               left: 0,
               child: SvgPicture.asset(
-                'images/elem_${element1.toLowerCase()}.svg',
+                'images/elements/elem_${element1.toLowerCase()}.svg',
                 width: iconSize * 0.7,
                 height: iconSize * 0.7,
               ),
@@ -230,7 +237,7 @@ class StackedElementToken extends GameTextToken {
               bottom: 0,
               right: 0,
               child: SvgPicture.asset(
-                'images/elem_${element2.toLowerCase()}.svg',
+                'images/elements/elem_${element2.toLowerCase()}.svg',
                 width: iconSize * 0.7,
                 height: iconSize * 0.7,
               ),
@@ -465,9 +472,9 @@ class GameTextTokenizer {
       final parsed = ParsedWord.from(word);
 
       // Try to get asset config for the cleaned asset key
-      final config = getAssetConfig(parsed.assetKey, darkTheme);
+      final config = tryGetAssetConfig(parsed.assetKey);
 
-      if (config.path != null) {
+      if (config != null) {
         // This is an icon token - add with punctuation
         _addIconToken(tokens, parsed, config);
       } else {

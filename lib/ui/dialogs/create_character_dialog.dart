@@ -212,7 +212,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: SvgPicture.asset(
-                      'images/level.svg',
+                      'images/ui/level.svg',
                       colorFilter: ColorFilter.mode(
                         Theme.of(context).colorScheme.onSurface,
                         BlendMode.srcIn,
@@ -340,7 +340,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                     Expanded(
                       child: Switch(
                         inactiveThumbImage: const AssetImage(
-                          'images/switch_gh.png',
+                          'images/branding/switch_gh.png',
                         ),
                         activeColor: const Color(0xff005cb2),
                         trackColor: WidgetStateProperty.resolveWith(
@@ -428,7 +428,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: SvgPicture.asset(
-            'images/level.svg',
+            'images/ui/level.svg',
             width: iconSize + 5,
             colorFilter: ColorFilter.mode(
               Theme.of(context).colorScheme.onSurface,

@@ -391,7 +391,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     );
   }
 
-  static const List<String> anyElementIcon = ['elem_wild.svg'];
+  static const List<String> anyElementIcon = ['elements/elem_wild.svg'];
 
   // ============================================================================
   // HEX
@@ -406,8 +406,8 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     return _buildRichText(context, _hexContent, darkMode);
   }
 
-  static const List<String> hexIcon = ['hex.svg'];
-  static const List<String> hexEligibleIcons = ['hex.svg'];
+  static const List<String> hexIcon = ['ui/hex.svg'];
+  static const List<String> hexEligibleIcons = ['ui/hex.svg'];
 
   // ============================================================================
   // MULTIPLE TARGETS
