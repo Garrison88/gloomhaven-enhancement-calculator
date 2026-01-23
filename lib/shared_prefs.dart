@@ -226,4 +226,27 @@ class SharedPrefs {
   bool get isUSRegion => _sharedPrefs.getBool('isUSRegion') ?? false;
 
   set isUSRegion(bool value) => _sharedPrefs.setBool('isUSRegion', value);
+
+  // ===========================================================================
+  // Element Tracker States
+  // Stored as int: 0=gone, 1=strong, 2=waning
+  // ===========================================================================
+
+  int get earthState => _sharedPrefs.getInt('elementEarthState') ?? 0;
+  set earthState(int value) => _sharedPrefs.setInt('elementEarthState', value);
+
+  int get fireState => _sharedPrefs.getInt('elementFireState') ?? 0;
+  set fireState(int value) => _sharedPrefs.setInt('elementFireState', value);
+
+  int get iceState => _sharedPrefs.getInt('elementIceState') ?? 0;
+  set iceState(int value) => _sharedPrefs.setInt('elementIceState', value);
+
+  int get lightState => _sharedPrefs.getInt('elementLightState') ?? 0;
+  set lightState(int value) => _sharedPrefs.setInt('elementLightState', value);
+
+  int get darkState => _sharedPrefs.getInt('elementDarkState') ?? 0;
+  set darkState(int value) => _sharedPrefs.setInt('elementDarkState', value);
+
+  int get airState => _sharedPrefs.getInt('elementAirState') ?? 0;
+  set airState(int value) => _sharedPrefs.setInt('elementAirState', value);
 }

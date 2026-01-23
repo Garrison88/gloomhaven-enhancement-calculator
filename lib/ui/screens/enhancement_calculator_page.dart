@@ -80,7 +80,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 padding: const EdgeInsets.symmetric(horizontal: smallPadding),
                 child: ListView(
                   padding: EdgeInsets.only(
-                    bottom: enhancementCalculatorModel.showCost ? 100 : 88,
+                    // Extra padding only needed when bottom sheet (and FAB) are present
+                    bottom: enhancementCalculatorModel.showCost ? 100 : 16,
                   ),
                   children: <Widget>[
                     // SCENARIO 114 REWARD (PARTY BOON) - Gloomhaven/GH2E only

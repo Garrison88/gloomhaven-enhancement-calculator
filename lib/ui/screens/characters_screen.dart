@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/element_tracker_sheet.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,17 @@ class _CharactersScreenState extends State<CharactersScreen>
     CharactersModel charactersModel = context.read<CharactersModel>();
 
     // must watch
+    return Stack(
+      children: [
+        // Main content (empty state or character PageView)
+        _buildContent(context, charactersModel),
+        // Element tracker sheet
+        const ElementTrackerSheet(),
+      ],
+    );
+  }
+
+  Widget _buildContent(BuildContext context, CharactersModel charactersModel) {
     if (context.watch<CharactersModel>().characters.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 80),

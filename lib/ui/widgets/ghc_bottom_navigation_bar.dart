@@ -35,6 +35,7 @@ class GHCBottomNavigationBar extends StatelessWidget {
         final CharactersModel charactersModel = context.read<CharactersModel>();
         charactersModel.isScrolledToTop = true;
         charactersModel.isEditMode = false;
+        charactersModel.isElementSheetExpanded = false;
       },
     );
   }

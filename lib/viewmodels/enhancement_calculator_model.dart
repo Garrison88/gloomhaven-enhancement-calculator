@@ -7,6 +7,11 @@ import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 
 class EnhancementCalculatorModel with ChangeNotifier {
+  EnhancementCalculatorModel() {
+    // Calculate initial cost based on saved state so showCost is correct
+    calculateCost(notify: false);
+  }
+
   int _cardLevel = SharedPrefs().targetCardLvl;
 
   int _previousEnhancements = SharedPrefs().previousEnhancements;

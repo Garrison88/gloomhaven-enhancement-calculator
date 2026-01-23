@@ -47,10 +47,13 @@ class _HomeState extends State<Home> {
     final charactersModel = context.watch<CharactersModel>();
     final enhancementModel = context.watch<EnhancementCalculatorModel>();
 
-    // Hide FAB on enhancement calculator page when sheet is expanded or nothing to clear
+    // Hide FAB when:
+    // - On enhancement calculator page (1) when sheet is expanded or nothing to clear
+    // - On characters page (0) when element sheet is expanded
     final hideFab =
-        appModel.page == 1 &&
-        (enhancementModel.isSheetExpanded || !enhancementModel.showCost);
+        (appModel.page == 1 &&
+            (enhancementModel.isSheetExpanded || !enhancementModel.showCost)) ||
+        (appModel.page == 0 && charactersModel.isElementSheetExpanded);
 
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
@@ -63,8 +66,9 @@ class _HomeState extends State<Home> {
         onPageChanged: (index) {
           charactersModel.isEditMode = false;
           context.read<AppModel>().page = index;
-          // Reset sheet expanded state when navigating away from enhancement calculator
+          // Reset sheet expanded states when navigating between pages
           context.read<EnhancementCalculatorModel>().isSheetExpanded = false;
+          charactersModel.isElementSheetExpanded = false;
           setState(() {});
         },
         children: [

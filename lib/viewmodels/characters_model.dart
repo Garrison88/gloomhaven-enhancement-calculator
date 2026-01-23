@@ -34,12 +34,22 @@ class CharactersModel with ChangeNotifier {
 
   bool showRetired;
   bool _isEditMode = false;
+  bool _isElementSheetExpanded = false;
 
   bool get isEditMode => _isEditMode;
 
   set isEditMode(bool value) {
     _isEditMode = value;
     notifyListeners();
+  }
+
+  bool get isElementSheetExpanded => _isElementSheetExpanded;
+
+  set isElementSheetExpanded(bool value) {
+    if (_isElementSheetExpanded != value) {
+      _isElementSheetExpanded = value;
+      notifyListeners();
+    }
   }
 
   @override
