@@ -131,8 +131,9 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
         ),
         const SizedBox(width: 75),
         Tooltip(
-          message:
-              AppLocalizations.of(context).pocketItemsAllowed((Character.level(character.xp) / 2).round()),
+          message: AppLocalizations.of(
+            context,
+          ).pocketItemsAllowed((Character.level(character.xp) / 2).round()),
           child: Padding(
             padding: const EdgeInsets.only(
               right: smallPadding,
@@ -260,7 +261,10 @@ class _NameAndClassSection extends StatelessWidget {
           ),
         ],
         if (character.isRetired)
-          Text(AppLocalizations.of(context).retired, style: const TextStyle(fontSize: 20)),
+          Text(
+            AppLocalizations.of(context).retired,
+            style: const TextStyle(fontSize: 20),
+          ),
       ],
     );
   }

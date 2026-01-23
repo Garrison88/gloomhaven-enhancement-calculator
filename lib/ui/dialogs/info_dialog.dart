@@ -333,7 +333,9 @@ class _InfoDialogState extends State<InfoDialog> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context).eligibleFor,
-                      style: const TextStyle(decoration: TextDecoration.underline),
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(

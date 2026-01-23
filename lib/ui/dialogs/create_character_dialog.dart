@@ -129,15 +129,18 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,
                 title: TextFormField(
-                  validator: (value) =>
-                      _selectedClass == null ? AppLocalizations.of(context).pleaseSelectClass : null,
+                  validator: (value) => _selectedClass == null
+                      ? AppLocalizations.of(context).pleaseSelectClass
+                      : null,
                   readOnly: true,
                   controller: _classTextFieldController,
                   decoration: InputDecoration(
                     // hintText: 'Class',
                     border: const OutlineInputBorder(),
                     labelText: _variant != Variant.base
-                        ? AppLocalizations.of(context).classWithVariant(ClassVariants.classVariants[_variant]!)
+                        ? AppLocalizations.of(context).classWithVariant(
+                            ClassVariants.classVariants[_variant]!,
+                          )
                         : AppLocalizations.of(context).class_,
                   ),
                   onTap: () async {

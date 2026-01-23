@@ -101,23 +101,23 @@ class _HomeState extends State<Home> {
               onPressed: appModel.page == 1
                   ? () => enhancementModel.resetCost()
                   : charactersModel.characters.isEmpty
-                      ? () => showDialog<bool>(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_) => CreateCharacterDialog(
-                              charactersModel: charactersModel,
-                            ),
-                          )
-                      : () => charactersModel.isEditMode =
-                            !charactersModel.isEditMode,
+                  ? () => showDialog<bool>(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (_) => CreateCharacterDialog(
+                        charactersModel: charactersModel,
+                      ),
+                    )
+                  : () => charactersModel.isEditMode =
+                        !charactersModel.isEditMode,
               child: Icon(
                 appModel.page == 1
                     ? Icons.clear_rounded
                     : charactersModel.characters.isEmpty
-                        ? Icons.add
-                        : charactersModel.isEditMode
-                            ? Icons.edit_off_rounded
-                            : Icons.edit_rounded,
+                    ? Icons.add
+                    : charactersModel.isEditMode
+                    ? Icons.edit_off_rounded
+                    : Icons.edit_rounded,
               ),
             ),
       bottomNavigationBar: const GHCBottomNavigationBar(),
