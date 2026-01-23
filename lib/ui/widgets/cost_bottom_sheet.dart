@@ -40,6 +40,9 @@ class CostBottomSheetState extends State<CostBottomSheet> {
       DraggableScrollableController();
   ScrollController? _scrollController;
   bool _isExpanded = false;
+
+  /// Whether content is scrolled to end (or doesn't need scrolling).
+  /// Controls shadow visibility on the cost overlay.
   bool _isScrolledToEnd = false;
 
   // Height of the fixed cost overlay
@@ -65,14 +68,23 @@ class CostBottomSheetState extends State<CostBottomSheet> {
     super.dispose();
   }
 
+  /// Updates [_isScrolledToEnd] based on scroll position and content size.
+  /// Called when user scrolls or when sheet size changes.
   void _onScrollChanged() {
     if (_scrollController == null || !_scrollController!.hasClients) return;
 
-    final maxExtent = _scrollController!.position.maxScrollExtent;
+    // Only evaluate scroll state when expanded (breakdown content is visible)
+    if (!_isExpanded) return;
 
-    // Only mark as scrolled to end if we have valid metrics and are at the end
-    final isAtEnd = maxExtent > 1 &&
-        _scrollController!.offset >= maxExtent - 1;
+    final position = _scrollController!.position;
+
+    // Wait until content dimensions are known before deciding to hide shadow
+    if (!position.hasContentDimensions) return;
+
+    final maxExtent = position.maxScrollExtent;
+
+    // Hide shadow if content doesn't need scrolling OR user has scrolled to end
+    final isAtEnd = maxExtent <= 1 || position.pixels >= maxExtent - 1;
 
     if (isAtEnd != _isScrolledToEnd) {
       setState(() {
@@ -81,6 +93,8 @@ class CostBottomSheetState extends State<CostBottomSheet> {
     }
   }
 
+  /// Handles sheet drag position changes.
+  /// Updates [_isExpanded] state and triggers scroll state re-evaluation.
   void _onSheetPositionChanged() {
     final isNowExpanded = _controller.size > _expansionThreshold;
     if (isNowExpanded != _isExpanded) {
@@ -94,6 +108,14 @@ class CostBottomSheetState extends State<CostBottomSheet> {
       // Update model to hide/show FAB
       context.read<EnhancementCalculatorModel>().isSheetExpanded =
           isNowExpanded;
+    }
+
+    // Re-evaluate scroll state as sheet size changes while expanded
+    // (determines if content is scrollable at current sheet height)
+    if (isNowExpanded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _onScrollChanged();
+      });
     }
   }
 
@@ -156,51 +178,52 @@ class CostBottomSheetState extends State<CostBottomSheet> {
               });
             }
             return Container(
-            decoration: BoxDecoration(
-              color: sheetColor,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, -2),
+              decoration: BoxDecoration(
+                color: sheetColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
                 ),
-              ],
-            ),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                // Drag handle area (tappable to toggle)
-                SliverToBoxAdapter(
-                  child: GestureDetector(
-                    onTap: _toggleExpanded,
-                    behavior: HitTestBehavior.opaque,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 8),
-                        // Drag handle
-                        Container(
-                          width: 40,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onSurface
-                                .withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  // Drag handle area (tappable to toggle)
+                  SliverToBoxAdapter(
+                    child: GestureDetector(
+                      onTap: _toggleExpanded,
+                      behavior: HitTestBehavior.opaque,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          // Drag handle
+                          Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.3,
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
+                          const SizedBox(height: 12),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Breakdown content (slides up behind the cost overlay)
-                if (_isExpanded)
-                  SliverToBoxAdapter(child: _buildBreakdown(theme)),
-              ],
-            ),
-          );
+                  // Breakdown content (slides up behind the cost overlay)
+                  if (_isExpanded)
+                    SliverToBoxAdapter(child: _buildBreakdown(theme)),
+                ],
+              ),
+            );
           },
         ),
         // Fixed cost overlay - stays at bottom, in front of the sheet
