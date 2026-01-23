@@ -50,8 +50,7 @@ class CostBottomSheetState extends State<CostBottomSheet> {
 
   // Sheet size configuration
   static const double _collapsedSize = 0.12;
-  static const double _expandedSize = 0.55;
-  static const double _fullSize = 1.0;
+  static const double _expandedSize = 0.65;
   static const double _expansionThreshold = 0.2;
 
   @override
@@ -163,9 +162,9 @@ class CostBottomSheetState extends State<CostBottomSheet> {
           controller: _controller,
           initialChildSize: _collapsedSize,
           minChildSize: _collapsedSize,
-          maxChildSize: _fullSize,
+          maxChildSize: _expandedSize,
           snap: true,
-          snapSizes: const [_collapsedSize, _expandedSize, _fullSize],
+          snapSizes: const [_collapsedSize, _expandedSize],
           builder: (context, scrollController) {
             // Track the scroll controller to detect when content is scrolled
             if (_scrollController != scrollController) {

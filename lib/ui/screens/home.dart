@@ -47,8 +47,10 @@ class _HomeState extends State<Home> {
     final charactersModel = context.watch<CharactersModel>();
     final enhancementModel = context.watch<EnhancementCalculatorModel>();
 
-    // Hide FAB when cost sheet is expanded on enhancement calculator page
-    final hideFab = appModel.page == 1 && enhancementModel.isSheetExpanded;
+    // Hide FAB on enhancement calculator page when sheet is expanded or nothing to clear
+    final hideFab =
+        appModel.page == 1 &&
+        (enhancementModel.isSheetExpanded || !enhancementModel.showCost);
 
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
