@@ -149,7 +149,7 @@ class IconToken extends GameTextToken {
               width: 12,
               child: SvgPicture(
                 SvgAssetLoader(
-                  'images/${standardAssets['CONSUME']!.path}',
+                  'images/${assets['CONSUME']!.path}',
                   theme: SvgTheme(
                     currentColor: darkTheme ? Colors.white : Colors.black,
                   ),
@@ -365,7 +365,6 @@ class ParsedWord {
 
 /// Converts raw game text strings into a list of tokens
 class GameTextTokenizer {
-
   /// Tokenize a complete game text string
   static List<GameTextToken> tokenize(String text, bool darkTheme) {
     final List<GameTextToken> tokens = [];

@@ -83,7 +83,7 @@ class AssetConfig {
 ///
 /// For assets that need different files per theme, use [lightPath].
 /// For assets that adapt via SVG theming, use [themeMode].
-const standardAssets = {
+const Map<String, AssetConfig> assets = {
   // ===========================================================================
   // actions/
   // ===========================================================================
@@ -538,16 +538,13 @@ const standardAssets = {
   'xp': AssetConfig('ui/xp.svg', themeMode: CurrentColorTheme()),
 };
 
-/// Get asset configuration for a given element.
+/// Get asset configuration for a given asset key.
 ///
 /// This function cleans the input string and returns the appropriate
 /// asset configuration. Use [AssetConfig.pathForTheme] to get the correct
 /// path for light/dark themes.
 ///
-/// Special handling for:
-/// - XP values (xp8 -> ui/xp.svg)
-/// - Standard game assets
-/// - File path lookups (e.g., 'actions/move.svg' finds config for 'MOVE')
+/// Special handling for XP values (xp8, xp10, etc. -> ui/xp.svg).
 ///
 /// Throws [AssertionError] if no configuration is found.
 AssetConfig getAssetConfig(String element) {
@@ -568,18 +565,9 @@ AssetConfig getAssetConfig(String element) {
   }
 
   // Check assets by key
-  final asset = standardAssets[cleanElement];
+  final asset = assets[cleanElement];
   if (asset != null) {
     return asset;
-  }
-
-  // Fallback: search by file path (e.g., 'actions/move.svg' -> find 'MOVE' config)
-  // This handles cases where Enhancement.iconPath is used as the key
-  for (final entry in standardAssets.entries) {
-    final config = entry.value;
-    if (config.path == cleanElement || config.lightPath == cleanElement) {
-      return config;
-    }
   }
 
   // No configuration found - this indicates a missing asset definition
@@ -612,19 +600,5 @@ AssetConfig? tryGetAssetConfig(String element) {
   }
 
   // Check assets by key
-  final asset = standardAssets[cleanElement];
-  if (asset != null) {
-    return asset;
-  }
-
-  // Fallback: search by file path (e.g., 'actions/move.svg' -> find 'MOVE' config)
-  for (final entry in standardAssets.entries) {
-    final config = entry.value;
-    if (config.path == cleanElement || config.lightPath == cleanElement) {
-      return config;
-    }
-  }
-
-  // No configuration found
-  return null;
+  return assets[cleanElement];
 }
