@@ -19,8 +19,36 @@ import 'package:provider/provider.dart';
 class CharacterScreen extends StatelessWidget {
   const CharacterScreen({required this.character, super.key});
   final Character character;
+
+  // Bottom sheet sizes (must match element_tracker_sheet.dart)
+  static const double _sheetExpandedSize = 0.18;
+  static const double _sheetFullExpandedSize = 0.85;
+  // Base padding for FAB clearance when sheet is collapsed
+  static const double _baseFabPadding = 82.0;
+
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<CharactersModel>();
+    final isSheetExpanded = model.isElementSheetExpanded;
+    final isSheetFullExpanded = model.isElementSheetFullExpanded;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate bottom padding based on sheet state
+    // When collapsed: just enough for FAB
+    // When expanded: enough to scroll content above the expanded sheet
+    // When full expanded: most of the screen is covered
+    final double bottomPadding;
+    if (isSheetFullExpanded) {
+      // Full expanded - sheet covers most of screen
+      bottomPadding = screenHeight * _sheetFullExpandedSize;
+    } else if (isSheetExpanded) {
+      // Expanded sheet height
+      bottomPadding = screenHeight * _sheetExpandedSize;
+    } else {
+      // Collapsed: FAB padding (sheet is small, FAB floats above it)
+      bottomPadding = _baseFabPadding;
+    }
+
     return SingleChildScrollView(
       controller: context.read<CharactersModel>().charScreenScrollController,
       child: Padding(
@@ -86,8 +114,8 @@ class CharacterScreen extends StatelessWidget {
                   charactersModel: context.watch<CharactersModel>(),
                 ),
               ),
-            // PADDING FOR FAB
-            const SizedBox(height: 82),
+            // PADDING FOR FAB AND BOTTOM SHEET
+            SizedBox(height: bottomPadding),
           ],
         ),
       ),

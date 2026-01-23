@@ -35,6 +35,7 @@ class CharactersModel with ChangeNotifier {
   bool showRetired;
   bool _isEditMode = false;
   bool _isElementSheetExpanded = false;
+  bool _isElementSheetFullExpanded = false;
 
   bool get isEditMode => _isEditMode;
 
@@ -48,6 +49,15 @@ class CharactersModel with ChangeNotifier {
   set isElementSheetExpanded(bool value) {
     if (_isElementSheetExpanded != value) {
       _isElementSheetExpanded = value;
+      notifyListeners();
+    }
+  }
+
+  bool get isElementSheetFullExpanded => _isElementSheetFullExpanded;
+
+  set isElementSheetFullExpanded(bool value) {
+    if (_isElementSheetFullExpanded != value) {
+      _isElementSheetFullExpanded = value;
       notifyListeners();
     }
   }

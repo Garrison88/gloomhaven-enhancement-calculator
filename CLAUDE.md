@@ -294,6 +294,77 @@ Text(AppLocalizations.of(context).savedTo(filePath))
 3. Run `flutter pub get` - the language is automatically detected
 4. For iOS: Add the language to Xcode project (Runner > Info > Localizations)
 
+## Element Tracker Sheet (`lib/ui/widgets/element_tracker_sheet.dart`)
+
+The Characters screen includes a draggable bottom sheet for tracking the 6 Gloomhaven elements (FIRE, ICE, AIR, EARTH, LIGHT, DARK). Each element cycles through states when tapped: gone → strong → waning → gone.
+
+### Architecture
+
+**Files involved:**
+- `lib/ui/widgets/element_tracker_sheet.dart` - The draggable sheet with three expansion states
+- `lib/ui/widgets/element_icon.dart` - Animated element icons with glow effects
+- `lib/ui/screens/characters_screen.dart` - Contains scrim overlay for full expansion
+- `lib/viewmodels/characters_model.dart` - State for sheet expansion, collapse notifier
+
+### Sheet States
+
+The sheet has three snap positions:
+- **Collapsed** (6.5%): Icons in a compact row, minimal state representation
+- **Expanded** (18%): Icons in a spaced row, interactive with animations
+- **Full Expanded** (85%): Icons in 2x3 grid with responsive spacing
+
+### Element Icon States (`lib/ui/widgets/element_icon.dart`)
+
+**Static (collapsed sheet):**
+- Gone: 30% opacity
+- Strong: 100% opacity
+- Waning: Bisected horizontally (top dim, bottom bright) with sharp line
+
+**Animated (expanded sheet):**
+- Gone: 30% opacity, no glow
+- Strong: Element-specific animated glow effect
+- Waning: Bisected with animated glow on bottom half
+
+### Animation System
+
+Each element has 2 AnimationControllers at different speeds combined via `Listenable.merge`:
+
+| Element | Controllers | Effect |
+|---------|-------------|--------|
+| FIRE | 2000ms, 1300ms, 800ms | Layered orange/amber breathing glow |
+| ICE | 2200ms, 800ms | Sharp crystalline shimmer (cyan/white) |
+| AIR | 3000ms, 1800ms | Gentle breeze, theme-aware colors |
+| EARTH | 2800ms, 1600ms | Tremor/shake with brown/orange glow |
+| LIGHT | 2200ms, 1400ms | Shimmering sparkle (yellow/white) |
+| DARK | 2600ms, 1700ms | Horizontal cloud drift (purple) |
+
+### Crossfade Transitions
+
+All elements use a shared fade controller (250ms) for smooth transitions:
+- `_fireIceFadeController` - Despite the name, used for all elements
+- Handles: gone↔strong, strong↔waning, sheet expand/collapse
+- `_buildFadeToGone()` handles fade-out to gone state specifically
+
+### Key Implementation Details
+
+1. **Responsive grid spacing**: In full-expanded mode, icon spacing adapts to screen width using 45% of remaining horizontal space (clamped 24-80px)
+
+2. **Scrim overlay**: When fully expanded, a semi-transparent scrim blocks interaction with content behind. Tapping the scrim collapses to partially expanded.
+
+3. **Collapse communication**: Uses `ValueNotifier<int>` pattern - `CharactersModel.collapseSheetNotifier` is incremented to trigger collapse from outside the sheet widget.
+
+4. **State persistence**: Element states are stored in SharedPreferences (`fireState`, `iceState`, etc.)
+
+### Adding Animation to a New Element
+
+1. Add controllers in `initState()` with appropriate durations
+2. Dispose controllers in `dispose()`
+3. Add `_isXxxElement` getter
+4. Add element to conditions in `didUpdateWidget()` and `_buildAnimatedIcon()`
+5. Create `_buildXxxStrongIcon()` and `_buildXxxWaningIcon()` methods
+6. Wrap with `_wrapWithFireIceFade()` in the routing methods
+7. Add to `_buildFadeToGone()` for both strong and waning cases
+
 ## Cost Bottom Sheet (`lib/ui/widgets/cost_bottom_sheet.dart`)
 
 The enhancement calculator uses a custom bottom sheet with a "reveal from behind" effect where the total cost stays fixed while the breakdown slides up behind it.

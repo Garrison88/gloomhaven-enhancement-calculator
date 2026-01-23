@@ -22,7 +22,6 @@ class _CharactersScreenState extends State<CharactersScreen>
     super.build(context);
     CharactersModel charactersModel = context.read<CharactersModel>();
 
-    // must watch
     return Stack(
       children: [
         // Main content (empty state or character PageView)
