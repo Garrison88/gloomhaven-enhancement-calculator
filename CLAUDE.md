@@ -33,6 +33,26 @@ dart run flutter_launcher_icons
 flutter analyze
 ```
 
+## Git Branching Strategy
+
+**IMPORTANT:** Always start new development work by branching from `dev`, not `master`.
+
+- **`master`** - Production-ready code only. Should always be in a deployable state. Only merge into master when preparing a production release.
+- **`dev`** - Main development branch. Pushes here auto-deploy to Google Play's internal testing track. Merge feature branches here for QA testing.
+- **Feature branches** - Branch from `dev` for new features or fixes. Merge back to `dev` when complete.
+
+```bash
+# Starting new work
+git checkout dev
+git pull origin dev
+git checkout -b feature/my-new-feature
+
+# When feature is complete
+git checkout dev
+git merge feature/my-new-feature
+git push origin dev  # Auto-deploys to internal testing
+```
+
 ## Architecture
 
 ### State Management: Provider + ChangeNotifier
@@ -325,6 +345,45 @@ builder: (context, scrollController) {
 
 When the sheet first expands, scroll metrics aren't immediately available (`maxScrollExtent` is 0). The logic defaults to showing the shadow (`_isScrolledToEnd = false`) and only hides it once we confirm the user has scrolled to the end. This avoids the shadow being hidden on first expand.
 
+### WIP: Dynamic Height Limiting (Incomplete)
+
+**Goal**: Limit the sheet's max height to just show content when content is small, preventing white space at the bottom. When content is large, allow full expansion with scrolling.
+
+**Current Approach** (not working well):
+- Estimate content height based on number of steps and their fields
+- Compute `dynamicMaxSize` as `contentHeight / availableHeight`
+- Use this to set `DraggableScrollableSheet.maxChildSize` and `snapSizes`
+
+**Problems Encountered**:
+1. **Height estimation is inaccurate**: The estimated heights for ListTiles don't match actual rendered heights. We tried various constants but the estimates are consistently too low.
+2. **Variables affecting actual height**:
+   - Font size and text style from theme
+   - Device pixel density
+   - ListTile's internal padding/spacing behavior
+   - Text wrapping if content is long
+3. **DraggableScrollableSheet limitations**: Changing `maxChildSize`/`snapSizes` dynamically during builds can cause the sheet to snap back unexpectedly. Values must be stable.
+
+**Current Constants** (still too low):
+```dart
+_listTileBaseHeight = 56.0      // Base ListTile height
+_subtitleLineHeight = 28.0      // Per subtitle line (modifier/formula)
+_safetyBufferBase = 60.0        // Base buffer
+_safetyBufferPerStep = 8.0      // Additional buffer per step
+```
+
+**What Works**:
+- Layout is computed in `didChangeDependencies()` (stable, not during build)
+- Shadow logic correctly hides when content is non-scrollable (`maxScrollExtent <= 1`)
+- Sheet expands/collapses smoothly when values don't change during drag
+
+**Recommended Next Steps**:
+1. **Measure actual content height** instead of estimating:
+   - Use a `GlobalKey` on the breakdown widget and measure after first frame
+   - Or use `LayoutBuilder` inside the sheet content to get actual constraints
+   - Or wrap content in `IntrinsicHeight` and measure
+2. **Alternative approach**: Keep `maxChildSize` at 1.0 but use `SliverFillRemaining` or similar to prevent visual white space while still allowing full drag range
+3. **Simplest fix**: Just increase constants significantly (e.g., multiply estimate by 1.5) - less elegant but would work
+
 ## CI/CD Pipeline
 
 The project uses GitHub Actions to deploy Android app bundles to Google Play's internal test track.
@@ -343,7 +402,7 @@ Or use the GitHub Actions web UI → Actions tab → "Deploy to Internal Track" 
 
 ### How It Works
 
-1. Triggered manually via `workflow_dispatch`
+1. Triggered automatically on push to `dev` branch, or manually via `workflow_dispatch`
 2. Sets up Java 17 and Flutter (version specified in workflow file)
 3. Decodes keystore from GitHub secrets and creates `key.properties`
 4. Auto-increments build number using `github.run_number + BUILD_NUMBER_OFFSET`
@@ -376,4 +435,4 @@ Or use the GitHub Actions web UI → Actions tab → "Deploy to Internal Track" 
 6. **SVG icons** - Use `ThemedSvg` widget with asset keys, not direct `SvgPicture` calls
 7. **Localization** - Use `AppLocalizations.of(context).xxx` for UI strings, not hardcoded text. Add new strings to ARB files.
 8. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.
-9. **CI/CD prompts** - After the user pushes changes to GitHub, suggest running a deploy to the internal test track: `gh workflow run deploy-internal.yml`
+9. **Branching** - Always suggest starting new work from the `dev` branch, not `master`. Pushes to `dev` auto-deploy to internal testing.

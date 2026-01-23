@@ -1,6 +1,12 @@
 name: Deploy to Internal Track
 
 on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   workflow_dispatch:
     inputs:
       version_name:
