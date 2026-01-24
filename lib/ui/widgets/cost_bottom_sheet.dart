@@ -293,12 +293,7 @@ class CostBottomSheetState extends State<CostBottomSheet> {
           // Steps with separators
           for (int i = 0; i < widget.steps.length; i++) ...[
             _buildStepRow(theme, widget.steps[i]),
-            if (i < widget.steps.length - 1)
-              Divider(
-                height: 1,
-                thickness: 0.5,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.12),
-              ),
+            if (i < widget.steps.length - 1) const Divider(height: 1),
           ],
           // Extra padding so last item can scroll above the fixed cost overlay
           SizedBox(height: _costOverlayHeight + 24),

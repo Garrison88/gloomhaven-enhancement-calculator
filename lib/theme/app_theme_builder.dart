@@ -137,11 +137,17 @@ class AppThemeBuilder {
         ),
       ),
 
-      dividerTheme: DividerThemeData(color: Colors.grey.withValues(alpha: 0.5)),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.onSurface.withValues(alpha: 0.12),
+        thickness: 0.5,
+      ),
 
-      bottomNavigationBarTheme: brightness == Brightness.dark
-          ? const BottomNavigationBarThemeData(backgroundColor: darkSurface)
-          : null,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: brightness == Brightness.dark
+            ? darkSurface
+            : Colors.white,
+        elevation: 0,
+      ),
 
       // Add custom extension with exact character color
       extensions: [
