@@ -26,7 +26,7 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
 
   // Sheet size configuration (three states)
   static const double _collapsedSize = 0.065;
-  static const double _expandedSize = 0.18;
+  static const double _expandedSize = 0.14;
   static const double _fullExpandedSize = 0.85;
 
   // Thresholds for determining current state
@@ -59,11 +59,33 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
   late final Map<String, int Function()> _stateGetters;
   late final Map<String, void Function(int)> _stateSetters;
 
+  ValueNotifier<int>? _collapseNotifier;
+
   @override
   void initState() {
     super.initState();
     _controller.addListener(_onSheetPositionChanged);
     _initStateAccessors();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen for collapse signals from navigation (only subscribe once)
+    final notifier = context
+        .read<CharactersModel>()
+        .collapseElementSheetNotifier;
+    if (_collapseNotifier != notifier) {
+      _collapseNotifier?.removeListener(_onCollapseSignal);
+      _collapseNotifier = notifier;
+      _collapseNotifier!.addListener(_onCollapseSignal);
+    }
+  }
+
+  void _onCollapseSignal() {
+    if (_controller.isAttached && _controller.size > _collapsedSize) {
+      _controller.jumpTo(_collapsedSize);
+    }
   }
 
   void _initStateAccessors() {
@@ -88,6 +110,7 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
 
   @override
   void dispose() {
+    _collapseNotifier?.removeListener(_onCollapseSignal);
     _controller.removeListener(_onSheetPositionChanged);
     _controller.dispose();
     super.dispose();
@@ -98,8 +121,7 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
   double get _expansionProgress {
     if (!_controller.isAttached) return 0.0;
     final size = _controller.size;
-    final progress =
-        (size - _collapsedSize) / (_expandedSize - _collapsedSize);
+    final progress = (size - _collapsedSize) / (_expandedSize - _collapsedSize);
     return progress.clamp(0.0, 1.0);
   }
 
@@ -114,8 +136,10 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
     return progress.clamp(0.0, 1.0);
   }
 
-  bool get _isExpanded => _controller.isAttached && _controller.size > _expansionThreshold;
-  bool get _isFullExpanded => _controller.isAttached && _controller.size > _fullExpansionThreshold;
+  bool get _isExpanded =>
+      _controller.isAttached && _controller.size > _expansionThreshold;
+  bool get _isFullExpanded =>
+      _controller.isAttached && _controller.size > _fullExpansionThreshold;
 
   void _onSheetPositionChanged() {
     // Trigger rebuild to update interpolated values
@@ -174,7 +198,8 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
         // Interpolate padding values (two-stage interpolation)
         // Stage 1: collapsed -> expanded
         final topPadding1 = lerpDouble(6, 8, progress)!;
-        final handleBottomPadding1 = lerpDouble(4, 8, progress)!;
+        // Space below handle when expanded (fixed, no interpolation)
+        const handleBottomPadding1 = 4.0;
         final verticalPadding1 = lerpDouble(
           _collapsedVerticalPadding,
           _expandedVerticalPadding,
@@ -184,7 +209,11 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
 
         // Stage 2: expanded -> full expanded
         final topPadding = lerpDouble(topPadding1, 16, fullProgress)!;
-        final handleBottomPadding = lerpDouble(handleBottomPadding1, 16, fullProgress)!;
+        final handleBottomPadding = lerpDouble(
+          handleBottomPadding1,
+          16,
+          fullProgress,
+        )!;
         final verticalPadding = lerpDouble(
           verticalPadding1,
           _fullExpandedVerticalPadding,
@@ -195,9 +224,7 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
         return Container(
           decoration: BoxDecoration(
             color: sheetColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.2),
@@ -252,8 +279,16 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
 
   Widget _buildElementLayout(double progress, double fullProgress) {
     // Two-stage icon size interpolation
-    final iconSize1 = lerpDouble(_collapsedIconSize, _expandedIconSize, progress)!;
-    final iconSize = lerpDouble(iconSize1, _fullExpandedIconSize, fullProgress)!;
+    final iconSize1 = lerpDouble(
+      _collapsedIconSize,
+      _expandedIconSize,
+      progress,
+    )!;
+    final iconSize = lerpDouble(
+      iconSize1,
+      _fullExpandedIconSize,
+      fullProgress,
+    )!;
 
     // AnimatedElementIcon adds ring padding (2px each side = 4px total)
     const double ringPaddingTotal = 4.0;
@@ -305,8 +340,16 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
         // Interpolate between row and grid positions
         final positions = <Offset>[];
         for (int i = 0; i < 6; i++) {
-          final x = lerpDouble(rowPositions[i].dx, gridPositions[i].dx, fullProgress)!;
-          final y = lerpDouble(rowPositions[i].dy, gridPositions[i].dy, fullProgress)!;
+          final x = lerpDouble(
+            rowPositions[i].dx,
+            gridPositions[i].dx,
+            fullProgress,
+          )!;
+          final y = lerpDouble(
+            rowPositions[i].dy,
+            gridPositions[i].dy,
+            fullProgress,
+          )!;
           positions.add(Offset(x, y));
         }
 
@@ -338,16 +381,29 @@ class _ElementTrackerSheetState extends State<ElementTrackerSheet> {
     double iconSize,
     double progress,
   ) {
-    final iconPadding1 = lerpDouble(_collapsedIconPadding, _expandedIconPadding, progress)!;
+    // Reserve space for FAB on the right when expanded (FAB is ~56px + 16px margin)
+    const fabReservedSpace = 72.0;
+    final rightPadding = fabReservedSpace * progress;
+    final effectiveWidth = availableWidth - rightPadding;
+
+    final iconPadding1 = lerpDouble(
+      _collapsedIconPadding,
+      _expandedIconPadding,
+      progress,
+    )!;
     final paddedIconWidth = iconSize + (iconPadding1 * 2);
     final totalIconsWidth = 6 * paddedIconWidth;
 
-    final extraSpace = (availableWidth - totalIconsWidth).clamp(0.0, double.infinity);
+    final extraSpace = (effectiveWidth - totalIconsWidth).clamp(
+      0.0,
+      double.infinity,
+    );
     final distributedSpace = extraSpace * progress;
     final spaceBetween = distributedSpace / 5; // 5 gaps between 6 icons
 
     final positions = <Offset>[];
-    final startX = (availableWidth - totalIconsWidth - distributedSpace) / 2;
+    // Center within the effective width (left-shifted to avoid FAB)
+    final startX = (effectiveWidth - totalIconsWidth - distributedSpace) / 2;
 
     for (int i = 0; i < 6; i++) {
       final x = startX + iconPadding1 + (i * (paddedIconWidth + spaceBetween));

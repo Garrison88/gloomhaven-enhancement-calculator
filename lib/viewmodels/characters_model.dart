@@ -37,6 +37,10 @@ class CharactersModel with ChangeNotifier {
   bool _isElementSheetExpanded = false;
   bool _isElementSheetFullExpanded = false;
 
+  /// Notifier to trigger element sheet collapse from outside the widget.
+  /// Increment the value to signal collapse.
+  final ValueNotifier<int> collapseElementSheetNotifier = ValueNotifier<int>(0);
+
   bool get isEditMode => _isEditMode;
 
   set isEditMode(bool value) {

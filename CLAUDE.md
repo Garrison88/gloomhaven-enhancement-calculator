@@ -402,7 +402,7 @@ All elements use a shared fade controller (250ms) for smooth transitions:
 
 2. **Scrim overlay**: When fully expanded, a semi-transparent scrim blocks interaction with content behind. Tapping the scrim collapses to partially expanded.
 
-3. **Collapse communication**: Uses `ValueNotifier<int>` pattern - `CharactersModel.collapseSheetNotifier` is incremented to trigger collapse from outside the sheet widget.
+3. **Collapse communication**: Uses `ValueNotifier<int>` pattern - `CharactersModel.collapseElementSheetNotifier` is incremented to trigger collapse from outside the sheet widget (e.g., when navigating away from the Characters screen).
 
 4. **State persistence**: Element states are stored in SharedPreferences (`fireState`, `iceState`, etc.)
 
@@ -452,6 +452,10 @@ builder: (context, scrollController) {
 - `_isExpanded` - True when sheet is above threshold (20% of screen)
 - `_isScrolledToEnd` - True when scrolled to bottom (hides shadow)
 - Reset `_isScrolledToEnd` when collapsing so shadow shows on next expand
+
+### Collapse Communication
+
+Uses `ValueNotifier<int>` pattern - `EnhancementCalculatorModel.collapseCostSheetNotifier` is incremented to trigger collapse when navigating away from the Enhancement Calculator screen.
 
 ### Important: Default Shadow Visibility
 

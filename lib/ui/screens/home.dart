@@ -49,11 +49,11 @@ class _HomeState extends State<Home> {
 
     // Hide FAB when:
     // - On enhancement calculator page (1) when sheet is expanded or nothing to clear
-    // - On characters page (0) when element sheet is expanded
+    // - On characters page (0) when element sheet is fully expanded
     final hideFab =
         (appModel.page == 1 &&
             (enhancementModel.isSheetExpanded || !enhancementModel.showCost)) ||
-        (appModel.page == 0 && charactersModel.isElementSheetExpanded);
+        (appModel.page == 0 && charactersModel.isElementSheetFullExpanded);
 
     return Scaffold(
       // this is necessary to make notched FAB background transparent, effectively
