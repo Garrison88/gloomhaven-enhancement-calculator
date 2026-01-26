@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/strikethrough_text.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 
@@ -339,17 +340,19 @@ class EnhancementData {
           child: RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyMedium,
-              children: <TextSpan>[
+              children: <InlineSpan>[
                 if (x == 0)
                   const TextSpan(text: '1 / x')
                 else ...[
                   TextSpan(text: '${x + 1} ('),
                   if (enhancerLvl3 || (!enhancerLvl3 && partyBoon)) ...[
-                    TextSpan(
-                      text: '${25 * x}g',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: StrikethroughText(
+                        '${25 * x}g',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     const TextSpan(text: ' '),
@@ -391,17 +394,19 @@ class EnhancementData {
           child: RichText(
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyMedium,
-              children: <TextSpan>[
+              children: <InlineSpan>[
                 if (x == 0)
                   const TextSpan(text: 'None')
                 else ...[
                   TextSpan(text: '$x ('),
                   if (enhancerLvl4 || tempEnhancements) ...[
-                    TextSpan(
-                      text: '${75 * x}g',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey,
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: StrikethroughText(
+                        '${75 * x}g',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     const TextSpan(text: ' '),

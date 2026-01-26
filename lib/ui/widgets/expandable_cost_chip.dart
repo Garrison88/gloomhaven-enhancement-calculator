@@ -138,13 +138,13 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                         colors: [
                           Theme.of(
                             context,
-                          ).colorScheme.surface.withValues(alpha: 0.7),
+                          ).colorScheme.surface.withValues(alpha: 0.6),
                           Theme.of(
                             context,
                           ).colorScheme.surface.withValues(alpha: 0.8),
                           Theme.of(
                             context,
-                          ).colorScheme.surface.withValues(alpha: 0.9),
+                          ).colorScheme.surface.withValues(alpha: 1.0),
                         ],
                       ),
                     ),

@@ -13,6 +13,7 @@ import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/enhancement_type_selector.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/expandable_cost_chip.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/strikethrough_text.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
@@ -631,30 +632,35 @@ class _CardLevelSelector extends StatelessWidget {
     final enhancerLvl3 =
         edition.hasEnhancerLevels && SharedPrefs().enhancerLvl3;
 
-    return ListTile(
-      leading: IconButton(
-        icon: const Icon(Icons.info_outline_rounded),
-        onPressed: () => showDialog<void>(
-          context: context,
-          builder: (_) {
-            return InfoDialog(
-              title: Strings.cardLevelInfoTitle,
-              message: Strings.cardLevelInfoBody(
-                context,
-                darkTheme,
-                edition: edition,
-                partyBoon: partyBoon,
-                enhancerLvl3: enhancerLvl3,
-              ),
-            );
-          },
-        ),
-      ),
-      title: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.of(context).cardLevel),
-          const SizedBox(height: 8),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return InfoDialog(
+                      title: Strings.cardLevelInfoTitle,
+                      message: Strings.cardLevelInfoBody(
+                        context,
+                        darkTheme,
+                        edition: edition,
+                        partyBoon: partyBoon,
+                        enhancerLvl3: enhancerLvl3,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: largePadding),
+              Text(AppLocalizations.of(context).cardLevel),
+            ],
+          ),
           _buildCardLevelSlider(context, enhancementCalculatorModel),
         ],
       ),
@@ -668,7 +674,6 @@ class _CardLevelSelector extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final level = model.cardLevel;
-    final displayLevel = level + 1;
     final baseCost = 25 * level;
     final actualCost = model.cardLevelPenalty(level);
     final hasDiscount = actualCost != baseCost && level > 0;
@@ -681,26 +686,31 @@ class _CardLevelSelector extends StatelessWidget {
           min: 0,
           max: 8,
           divisions: 8,
-          label: displayLevel.toString(),
           onChanged: (value) {
             model.cardLevel = value.round();
           },
         ),
         // Level numbers below slider
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(9, (i) {
-            final isSelected = i == level;
-            return Text(
-              '${i + 1}',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: isSelected
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
-                fontWeight: isSelected ? FontWeight.bold : null,
-              ),
-            );
-          }),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(9, (i) {
+              final isSelected = i == level;
+              final isAboveSelected = i > level;
+              return Text(
+                '${i + 1}',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isSelected
+                      ? colorScheme.primary
+                      : isAboveSelected
+                      ? colorScheme.onSurfaceVariant.withValues(alpha: 0.4)
+                      : colorScheme.onSurfaceVariant,
+                  fontWeight: isSelected ? FontWeight.bold : null,
+                ),
+              );
+            }),
+          ),
         ),
         const SizedBox(height: mediumPadding),
         // Cost display
@@ -721,10 +731,9 @@ class _CardLevelSelector extends StatelessWidget {
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    StrikethroughText(
                       '${baseCost}g',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        decoration: TextDecoration.lineThrough,
                         color: colorScheme.onSurfaceVariant.withValues(
                           alpha: 0.6,
                         ),
@@ -771,29 +780,34 @@ class _PreviousEnhancementsSelector extends StatelessWidget {
     final tempEnhancements =
         enhancementCalculatorModel.temporaryEnhancementMode;
 
-    return ListTile(
-      leading: IconButton(
-        icon: const Icon(Icons.info_outline_rounded),
-        onPressed: () => showDialog<void>(
-          context: context,
-          builder: (_) {
-            return InfoDialog(
-              title: Strings.previousEnhancementsInfoTitle,
-              message: Strings.previousEnhancementsInfoBody(
-                context,
-                darkTheme,
-                edition: edition,
-                enhancerLvl4: enhancerLvl4,
-              ),
-            );
-          },
-        ),
-      ),
-      title: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.of(context).previousEnhancements),
-          const SizedBox(height: smallPadding),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return InfoDialog(
+                      title: Strings.previousEnhancementsInfoTitle,
+                      message: Strings.previousEnhancementsInfoBody(
+                        context,
+                        darkTheme,
+                        edition: edition,
+                        enhancerLvl4: enhancerLvl4,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: largePadding),
+              Text(AppLocalizations.of(context).previousEnhancements),
+            ],
+          ),
           // Cost breakdown text
           _buildCostBreakdown(context, enhancerLvl4, tempEnhancements),
           const SizedBox(height: smallPadding),
@@ -813,6 +827,22 @@ class _PreviousEnhancementsSelector extends StatelessWidget {
                     selected.first;
               },
               showSelectedIcon: false,
+              style: ButtonStyle(
+                textStyle: WidgetStatePropertyAll(
+                  Theme.of(context).textTheme.bodyMedium,
+                ),
+                foregroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    final isDark =
+                        ThemeData.estimateBrightnessForColor(
+                          Theme.of(context).colorScheme.primary,
+                        ) ==
+                        Brightness.dark;
+                    return isDark ? Colors.white : Colors.black;
+                  }
+                  return null;
+                }),
+              ),
             ),
           ),
         ],
@@ -849,10 +879,9 @@ class _PreviousEnhancementsSelector extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (hasDiscount) ...[
-            Text(
+            StrikethroughText(
               '${baseCost}g',
               style: theme.textTheme.bodyMedium?.copyWith(
-                decoration: TextDecoration.lineThrough,
                 color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
             ),
@@ -899,23 +928,28 @@ class _EnhancementTypeSelector extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final enhancement = enhancementCalculatorModel.enhancement;
 
-    return ListTile(
-      leading: IconButton(
-        icon: const Icon(Icons.info_outline_rounded),
-        onPressed: enhancement != null
-            ? () => showDialog<void>(
-                context: context,
-                builder: (_) {
-                  return InfoDialog(category: enhancement.category);
-                },
-              )
-            : null,
-      ),
-      title: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.of(context).enhancementType),
-          const SizedBox(height: 8),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: enhancement != null
+                    ? () => showDialog<void>(
+                        context: context,
+                        builder: (_) {
+                          return InfoDialog(category: enhancement.category);
+                        },
+                      )
+                    : null,
+              ),
+              const SizedBox(width: largePadding),
+              Text(AppLocalizations.of(context).enhancementType),
+            ],
+          ),
           // Tappable button that shows current selection or placeholder
           InkWell(
             onTap: () {
@@ -942,7 +976,7 @@ class _EnhancementTypeSelector extends StatelessWidget {
                         ? _buildSelectedEnhancement(context, enhancement)
                         : Text(
                             AppLocalizations.of(context).type,
-                            style: theme.textTheme.bodyLarge?.copyWith(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
@@ -984,24 +1018,23 @@ class _EnhancementTypeSelector extends StatelessWidget {
           const SizedBox(width: 12),
         ],
         Expanded(
-          child: Text(enhancement.name, style: theme.textTheme.bodyLarge),
+          child: Text(enhancement.name, style: theme.textTheme.bodyMedium),
         ),
         // Cost display
         hasDiscount
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  StrikethroughText(
                     '${baseCost}g',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      decoration: TextDecoration.lineThrough,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(width: 6),
                   Text(
                     '${discountedCost}g',
-                    style: theme.textTheme.bodyLarge?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1010,7 +1043,7 @@ class _EnhancementTypeSelector extends StatelessWidget {
               )
             : Text(
                 '${baseCost}g',
-                style: theme.textTheme.bodyLarge?.copyWith(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),

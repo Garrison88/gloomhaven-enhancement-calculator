@@ -5,6 +5,7 @@ import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/strikethrough_text.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
@@ -369,10 +370,9 @@ class _EnhancementTypeSelectorState extends State<EnhancementTypeSelector> {
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                StrikethroughText(
                   '${baseCost}g',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    decoration: TextDecoration.lineThrough,
                     color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
