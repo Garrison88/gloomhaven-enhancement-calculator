@@ -86,6 +86,7 @@ lib/
 ├── ui/
 │   ├── screens/             # Full-page views
 │   ├── widgets/             # Reusable components
+│   │   └── calculator/      # Enhancement calculator card components
 │   └── dialogs/             # Modal dialogs
 ├── theme/                   # Theme system (ThemeProvider, extensions)
 ├── utils/                   # Helpers, text parsing
@@ -134,6 +135,12 @@ Example: "Brute" in base game → "Bruiser" in Gloomhaven 2E
 - Screens use `context.watch<Model>()` for reactive rebuilds
 - One-time reads use `context.read<Model>()`
 - Complex widgets are StatefulWidget with local controllers
+
+### Spacing & Padding
+Use constants from `lib/data/constants.dart` instead of hardcoded values:
+- `smallPadding` (4) - use instead of `4`
+- `mediumPadding` (8) - use instead of `8`
+- `largePadding` (16) - use instead of `16`
 
 ### Database
 - UUID for character IDs (with legacy migration for old int IDs)
@@ -466,6 +473,128 @@ _cardExpandedFraction = 0.85  // of available height
 _bottomOffset = 20.0
 _horizontalPadding = 16.0
 ```
+
+## Calculator Section Cards (`lib/ui/widgets/calculator/`)
+
+The enhancement calculator uses a standardized card component system for consistent layout and styling across all calculator sections.
+
+### File Structure
+
+```
+lib/ui/widgets/calculator/
+├── calculator.dart                # Barrel export file
+├── calculator_section_card.dart   # Main card component with layout variants
+├── info_button_config.dart        # Configuration for info buttons
+├── cost_display.dart              # Standardized cost chip with strikethrough
+├── card_level_body.dart           # SfSlider for card level selection
+├── previous_enhancements_body.dart # Segmented button (0-3)
+├── enhancement_type_body.dart     # Dropdown selector
+└── modifier_toggles_body.dart     # Multi-target/Loss/Persistent toggles
+```
+
+### CalculatorSectionCard
+
+The main reusable card component with two layout variants:
+
+**Standard Layout** (`CardLayoutVariant.standard`):
+```
++--------------------------------------------------+
+| [i] Title                                        |
+|                                                  |
+| [Body Widget - full width]                       |
+|                                                  |
+| [Cost Display Chip]                              |
++--------------------------------------------------+
+```
+
+**Toggle Layout** (`CardLayoutVariant.toggle`):
+```
++--------------------------------------------------+
+| [i]  Title                              [Toggle] |
+|      Subtitle (optional)                         |
++--------------------------------------------------+
+```
+
+### Usage Example
+
+```dart
+// Standard card with slider body and cost display
+CalculatorSectionCard(
+  infoConfig: InfoButtonConfig.titleMessage(
+    title: 'Card Level',
+    message: richTextWidget,
+  ),
+  title: 'Card Level: 5',
+  body: CardLevelBody(model: calculatorModel),
+  costConfig: CostDisplayConfig(
+    baseCost: 100,
+    discountedCost: 75,  // Shows strikethrough when different
+  ),
+)
+
+// Toggle card
+CalculatorSectionCard(
+  layout: CardLayoutVariant.toggle,
+  infoConfig: InfoButtonConfig.titleMessage(
+    title: 'Hail\'s Discount',
+    message: richTextWidget,
+  ),
+  title: 'Hail\'s Discount',
+  toggleValue: model.hailsDiscount,
+  onToggleChanged: (value) => model.hailsDiscount = value,
+)
+```
+
+### InfoButtonConfig
+
+Two ways to configure info buttons:
+
+```dart
+// Option 1: Title + pre-built RichText message
+InfoButtonConfig.titleMessage(
+  title: 'Card Level',
+  message: Strings.cardLevelInfoBody(context, darkTheme),
+)
+
+// Option 2: Auto-configure based on enhancement category
+InfoButtonConfig.category(category: EnhancementCategory.posEffect)
+```
+
+### CostDisplay
+
+Standardized cost chip with optional strikethrough for discounts:
+
+```dart
+CostDisplayConfig(
+  baseCost: 100,
+  discountedCost: 75,    // Optional - shows strikethrough when different
+  marker: '†',           // Optional suffix (e.g., for temporary enhancements)
+)
+```
+
+### SfSlider (Card Level)
+
+The card level selector uses `syncfusion_flutter_sliders` package for a cleaner slider with built-in labels:
+
+```dart
+SfSlider(
+  min: 1.0,
+  max: 9.0,
+  value: displayLevel,
+  interval: 1,
+  stepSize: 1,
+  showLabels: true,
+  activeColor: colorScheme.primary,
+  onChanged: (value) => model.cardLevel = value.round() - 1,
+)
+```
+
+### Adding a New Calculator Card
+
+1. Create a body widget in `lib/ui/widgets/calculator/` if needed
+2. Use `CalculatorSectionCard` with appropriate layout variant
+3. Configure `InfoButtonConfig` for the info dialog
+4. Add `CostDisplayConfig` if the section has associated costs
 
 ## CI/CD Pipeline
 
