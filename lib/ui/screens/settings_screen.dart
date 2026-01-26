@@ -614,7 +614,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                     if (choice == null || !choice) {
                       return;
                     }
-                    await FilePicker.pickFiles(
+                    await FilePicker.platform
+                        .pickFiles(
                           type: FileType.custom,
                           allowMultiple: false,
                           allowedExtensions: ['txt'],
