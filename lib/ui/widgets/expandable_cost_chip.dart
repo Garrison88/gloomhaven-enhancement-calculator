@@ -37,7 +37,6 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
 
   // Chip dimensions
   static const double _chipHeight = 48.0;
-  static const double _chipWidth = 160.0;
   static const double _chipBorderRadius = 24.0;
 
   // Card dimensions
@@ -49,6 +48,9 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
   // Positioning - 20dp aligns chip center with FAB center (FAB is 56dp at 16dp offset)
   static const double _bottomOffset = 20.0;
   static const double _horizontalPadding = 16.0;
+
+  // Height of the touch-absorbing bar at the bottom (covers chip + FAB area)
+  static const double _absorberHeight = 76.0;
 
   @override
   void initState() {
@@ -108,6 +110,15 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
     return SizedBox.expand(
       child: Stack(
         children: [
+          // Touch absorber bar - prevents taps on content behind chip/FAB area
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: _absorberHeight,
+            child: const AbsorbPointer(),
+          ),
+
           // Scrim overlay
           AnimatedBuilder(
             animation: _expandAnimation,
@@ -135,17 +146,8 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
               child: AnimatedBuilder(
                 animation: _expandAnimation,
                 builder: (context, child) {
-                  // Interpolate dimensions
-                  final width = _lerpDouble(
-                    _chipWidth,
-                    cardWidth,
-                    _expandAnimation.value,
-                  );
-                  final height = _lerpDouble(
-                    _chipHeight,
-                    cardHeight,
-                    _expandAnimation.value,
-                  );
+                  // Use _isExpanded for size changes so AnimatedSize starts immediately
+                  final isExpanding = _isExpanded;
 
                   // Interpolate border radius
                   final borderRadius = BorderRadius.vertical(
@@ -165,32 +167,50 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                     ),
                   );
 
-                  // Interpolate elevation
-                  final elevation = _lerpDouble(
-                    3.0,
-                    6.0,
-                    _expandAnimation.value,
-                  );
-
                   final chipColor =
                       theme.bottomNavigationBarTheme.backgroundColor ??
                       colorScheme.surface;
 
-                  return Material(
-                    elevation: elevation,
-                    borderRadius: borderRadius,
-                    color: chipColor,
-                    clipBehavior: Clip.antiAlias,
-                    child: SizedBox(
-                      width: width,
-                      height: height,
-                      child: _isExpanded || _expandAnimation.value > 0.5
-                          ? GestureDetector(
-                              onTap: _collapse,
-                              behavior: HitTestBehavior.opaque,
-                              child: _buildExpandedContent(theme),
-                            )
-                          : _buildCollapsedContent(theme),
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: borderRadius,
+                      boxShadow: [
+                        // Primary color glow (only when collapsed)
+                        if (!isExpanding)
+                          BoxShadow(
+                            color: colorScheme.primary.withValues(alpha: 0.7),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                          ),
+                        // Soft shadow for depth
+                        BoxShadow(
+                          color: colorScheme.shadow.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: borderRadius),
+                      color: chipColor,
+                      clipBehavior: Clip.antiAlias,
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOutCubic,
+                        child: SizedBox(
+                          width: isExpanding ? cardWidth : null,
+                          height: isExpanding ? cardHeight : _chipHeight,
+                          child: _isExpanded || _expandAnimation.value > 0.5
+                              ? GestureDetector(
+                                  onTap: _collapse,
+                                  behavior: HitTestBehavior.opaque,
+                                  child: _buildExpandedContent(theme),
+                                )
+                              : _buildCollapsedContent(theme),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -205,40 +225,30 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
   Widget _buildCollapsedContent(ThemeData theme) {
     return InkWell(
       onTap: _toggleExpanded,
-      child: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Stack(
-          alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Centered icon + cost
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (widget.enhancement?.assetKey != null) ...[
-                  ThemedSvg(
-                    assetKey: widget.enhancement!.assetKey!,
-                    width: 22,
-                    height: 22,
-                    showPlusOneOverlay: _isPlusOneEnhancement(widget.enhancement!),
-                  ),
-                  const SizedBox(width: smallPadding),
-                ],
-                Text(
-                  '${widget.totalCost}g',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            // Arrow on the right
-            Positioned(
-              right: 8,
-              child: Icon(
-                Icons.keyboard_arrow_up,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            if (widget.enhancement?.assetKey != null) ...[
+              ThemedSvg(
+                assetKey: widget.enhancement!.assetKey!,
+                width: 22,
+                height: 22,
+                showPlusOneOverlay: _isPlusOneEnhancement(widget.enhancement!),
               ),
+              const SizedBox(width: smallPadding),
+            ],
+            Text(
+              '${widget.totalCost}g',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.keyboard_arrow_up,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ],
         ),
@@ -287,7 +297,7 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                 Positioned(
                   right: 0,
                   child: IconButton(
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(Icons.keyboard_arrow_down),
                     onPressed: _collapse,
                     tooltip: 'Close',
                   ),
