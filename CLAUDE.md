@@ -406,99 +406,66 @@ All elements use a shared fade controller (250ms) for smooth transitions:
 
 4. **State persistence**: Element states are stored in SharedPreferences (`fireState`, `iceState`, etc.)
 
-## Cost Bottom Sheet (`lib/ui/widgets/cost_bottom_sheet.dart`)
+## Expandable Cost Chip (`lib/ui/widgets/expandable_cost_chip.dart`)
 
-The enhancement calculator uses a custom bottom sheet with a "reveal from behind" effect where the total cost stays fixed while the breakdown slides up behind it.
+The enhancement calculator displays a floating chip that shows the total cost and expands into a full breakdown card when tapped.
 
 ### Architecture
 
-The widget uses a `Stack` with three layers:
-1. **Scrim** - Semi-transparent overlay when expanded
-2. **DraggableScrollableSheet** - Contains drag handle + breakdown content
-3. **Fixed cost overlay** - Positioned at bottom, displays total cost
+The widget uses a `Stack` with two layers:
+1. **Scrim** - Semi-transparent overlay (50% black) when expanded, tapping collapses
+2. **Expandable chip/card** - Morphs between collapsed chip and expanded card states
 
-### Key Design Decisions
+### States
 
-1. **Drag handle moves with sheet**: The drag handle is part of the `DraggableScrollableSheet`, not the fixed overlay. This provides natural affordance that the sheet is draggable.
+**Collapsed (Chip)**:
+- 48dp tall, 160dp wide pill shape
+- Centered icon + cost with expand arrow on right
+- Positioned 20dp from bottom (vertically centered with FAB)
+- Background matches bottom navigation bar color
 
-2. **Cost overlay is separate**: The total cost display is a `Positioned` widget stacked on top. It uses `IgnorePointer` so touches pass through to the sheet underneath.
+**Expanded (Card)**:
+- 85% of available screen height
+- Max width 468dp, horizontally centered
+- Header with centered icon + cost, close button on right
+- Scrollable breakdown list below divider
+- Tapping anywhere on the card collapses it
 
-3. **Bottom padding for last item**: The breakdown content has extra padding (`_costOverlayHeight + 24`) at the bottom so the last item can scroll above the fixed overlay.
+### Animation
 
-4. **Conditional shadow**: The overlay shows an upward shadow only when:
-   - Sheet is expanded (`_isExpanded`)
-   - User hasn't scrolled to the end (`!_isScrolledToEnd`)
+- 300ms duration with `easeOutCubic` (expand) / `easeInCubic` (collapse)
+- Interpolates: width, height, border radius, elevation
+- Scrim fades in/out with expansion
+- Content switches at 50% animation progress
 
-   This indicates there's content "behind" the overlay.
+### Key Implementation Details
 
-### Scroll Controller Tracking
+1. **FAB alignment**: Chip is positioned 20dp from bottom to vertically center-align with the 56dp FAB (which sits at 16dp offset)
 
-The `DraggableScrollableSheet` provides a new `ScrollController` in its builder. To track scroll position:
+2. **Scrim interaction**: The scrim uses `GestureDetector` to collapse on tap. Returns `SizedBox.shrink()` when fully collapsed to avoid blocking touches.
+
+3. **Tap to close**: The expanded card is wrapped in a `GestureDetector` with `HitTestBehavior.opaque` so tapping anywhere (including empty space) closes it. The `ListView` still scrolls normally.
+
+4. **FAB visibility**: Updates `EnhancementCalculatorModel.isSheetExpanded` when toggling, which the home screen uses to hide the FAB when expanded.
+
+### Dimensions
 
 ```dart
-builder: (context, scrollController) {
-  // Store reference and add listener when controller changes
-  if (_scrollController != scrollController) {
-    _scrollController?.removeListener(_onScrollChanged);
-    _scrollController = scrollController;
-    _scrollController!.addListener(_onScrollChanged);
-  }
-  // ...
-}
+// Chip (collapsed)
+_chipHeight = 48.0
+_chipWidth = 160.0
+_chipBorderRadius = 24.0
+
+// Card (expanded)
+_cardTopRadius = 28.0
+_cardBottomRadius = 24.0
+_cardMaxWidth = 468.0
+_cardExpandedFraction = 0.85  // of available height
+
+// Positioning
+_bottomOffset = 20.0
+_horizontalPadding = 16.0
 ```
-
-### State Management
-
-- `_isExpanded` - True when sheet is above threshold (20% of screen)
-- `_isScrolledToEnd` - True when scrolled to bottom (hides shadow)
-- Reset `_isScrolledToEnd` when collapsing so shadow shows on next expand
-
-### Collapse Communication
-
-Uses `ValueNotifier<int>` pattern - `EnhancementCalculatorModel.collapseCostSheetNotifier` is incremented to trigger collapse when navigating away from the Enhancement Calculator screen.
-
-### Important: Default Shadow Visibility
-
-When the sheet first expands, scroll metrics aren't immediately available (`maxScrollExtent` is 0). The logic defaults to showing the shadow (`_isScrolledToEnd = false`) and only hides it once we confirm the user has scrolled to the end. This avoids the shadow being hidden on first expand.
-
-### WIP: Dynamic Height Limiting (Incomplete)
-
-**Goal**: Limit the sheet's max height to just show content when content is small, preventing white space at the bottom. When content is large, allow full expansion with scrolling.
-
-**Current Approach** (not working well):
-- Estimate content height based on number of steps and their fields
-- Compute `dynamicMaxSize` as `contentHeight / availableHeight`
-- Use this to set `DraggableScrollableSheet.maxChildSize` and `snapSizes`
-
-**Problems Encountered**:
-1. **Height estimation is inaccurate**: The estimated heights for ListTiles don't match actual rendered heights. We tried various constants but the estimates are consistently too low.
-2. **Variables affecting actual height**:
-   - Font size and text style from theme
-   - Device pixel density
-   - ListTile's internal padding/spacing behavior
-   - Text wrapping if content is long
-3. **DraggableScrollableSheet limitations**: Changing `maxChildSize`/`snapSizes` dynamically during builds can cause the sheet to snap back unexpectedly. Values must be stable.
-
-**Current Constants** (still too low):
-```dart
-_listTileBaseHeight = 56.0      // Base ListTile height
-_subtitleLineHeight = 28.0      // Per subtitle line (modifier/formula)
-_safetyBufferBase = 60.0        // Base buffer
-_safetyBufferPerStep = 8.0      // Additional buffer per step
-```
-
-**What Works**:
-- Layout is computed in `didChangeDependencies()` (stable, not during build)
-- Shadow logic correctly hides when content is non-scrollable (`maxScrollExtent <= 1`)
-- Sheet expands/collapses smoothly when values don't change during drag
-
-**Recommended Next Steps**:
-1. **Measure actual content height** instead of estimating:
-   - Use a `GlobalKey` on the breakdown widget and measure after first frame
-   - Or use `LayoutBuilder` inside the sheet content to get actual constraints
-   - Or wrap content in `IntrinsicHeight` and measure
-2. **Alternative approach**: Keep `maxChildSize` at 1.0 but use `SliverFillRemaining` or similar to prevent visual white space while still allowing full drag range
-3. **Simplest fix**: Just increase constants significantly (e.g., multiply estimate by 1.5) - less elegant but would work
 
 ## CI/CD Pipeline
 
@@ -552,3 +519,4 @@ Or use the GitHub Actions web UI → Actions tab → "Deploy to Internal Track" 
 7. **Localization** - Use `AppLocalizations.of(context).xxx` for UI strings, not hardcoded text. Add new strings to ARB files.
 8. **User interaction** - When speaking with the developer who is working on this project, push back again their ideas if they aren't technically sound. Don't just do whatever they want - think about it in the context of the app and if you think there's a better way to do something, suggest it.
 9. **Branching** - Always suggest starting new work from the `dev` branch, not `master`. Pushes to `dev` auto-deploy to internal testing.
+10. **Responsive design** - UI must adapt to smaller screens (minimum ~5" phones). Avoid hardcoding pixel values for layout sizing. Use `MediaQuery`, `LayoutBuilder`, or relative sizing (percentages with minimum constraints) to ensure UI elements remain visible and usable on all screen sizes.

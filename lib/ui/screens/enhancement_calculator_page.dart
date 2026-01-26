@@ -12,7 +12,7 @@ import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/cost_bottom_sheet.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/expandable_cost_chip.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
@@ -80,8 +80,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                 padding: const EdgeInsets.symmetric(horizontal: smallPadding),
                 child: ListView(
                   padding: EdgeInsets.only(
-                    // Extra padding only needed when bottom sheet (and FAB) are present
-                    bottom: enhancementCalculatorModel.showCost ? 100 : 16,
+                    // Extra padding when chip and FAB are present
+                    bottom: enhancementCalculatorModel.showCost ? 80 : 16,
                   ),
                   children: <Widget>[
                     // SCENARIO 114 REWARD (PARTY BOON) - Gloomhaven/GH2E only
@@ -738,9 +738,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
             ),
           ],
         ),
-        // Cost bottom sheet overlay
+        // Cost chip overlay
         if (enhancementCalculatorModel.showCost)
-          CostBottomSheet(
+          ExpandableCostChip(
             totalCost: enhancementCalculatorModel.totalCost,
             steps: enhancementCalculatorModel.getCalculationBreakdown(),
             enhancement: enhancementCalculatorModel.enhancement,
