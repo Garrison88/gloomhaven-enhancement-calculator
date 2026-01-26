@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
     final enhancementModel = context.watch<EnhancementCalculatorModel>();
 
     // Hide FAB when:
-    // - On enhancement calculator page (1) when sheet is expanded or nothing to clear
+    // - On enhancement calculator page (1) when cost chip is expanded or nothing to clear
     // - On characters page (0) when element sheet is fully expanded
     final hideFab =
         (appModel.page == 1 &&

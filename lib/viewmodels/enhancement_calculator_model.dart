@@ -34,7 +34,7 @@ class EnhancementCalculatorModel with ChangeNotifier {
 
   bool showCost = false;
 
-  /// Whether the cost bottom sheet is expanded (used to hide FAB)
+  /// Whether the cost chip is expanded (used to hide FAB)
   bool _isSheetExpanded = false;
 
   bool get isSheetExpanded => _isSheetExpanded;
