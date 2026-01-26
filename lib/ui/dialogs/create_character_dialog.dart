@@ -304,7 +304,7 @@ class CreateCharacterDialogState extends State<CreateCharacterDialog> {
                 ),
               ],
 
-              const SizedBox(height: smallPadding),
+              const SizedBox(height: mediumPadding),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 minVerticalPadding: 0,

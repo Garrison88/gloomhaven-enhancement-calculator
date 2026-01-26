@@ -52,9 +52,7 @@ class MasteryRowState extends State<MasteryRow>
   }
 
   bool get _isAchieved => widget.character.characterMasteries
-      .firstWhere(
-        (mastery) => mastery.associatedMasteryId == widget.mastery.id,
-      )
+      .firstWhere((mastery) => mastery.associatedMasteryId == widget.mastery.id)
       .characterMasteryAchieved;
 
   @override
@@ -96,7 +94,7 @@ class MasteryRowState extends State<MasteryRow>
           );
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
+          padding: const EdgeInsets.symmetric(vertical: mediumPadding / 2),
           child: Row(
             children: <Widget>[
               ConditionalCheckbox(
@@ -119,7 +117,8 @@ class MasteryRowState extends State<MasteryRow>
               ),
               CheckRowDivider(
                 height: height,
-                color: widget.character.characterMasteries
+                color:
+                    widget.character.characterMasteries
                         .firstWhere(
                           (mastery) =>
                               mastery.associatedMasteryId == widget.mastery.id,
@@ -138,13 +137,12 @@ class MasteryRowState extends State<MasteryRow>
                 },
                 child: Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: smallPadding),
+                    padding: const EdgeInsets.only(right: mediumPadding),
                     child: RichText(
                       text: TextSpan(
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(letterSpacing: 0.7),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(letterSpacing: 0.7),
                         children: Utils.generateCheckRowDetails(
                           context,
                           widget.mastery.masteryDetails,

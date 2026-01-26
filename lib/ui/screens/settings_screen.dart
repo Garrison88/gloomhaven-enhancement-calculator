@@ -216,7 +216,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         context,
                                       ).colorScheme.onSurface,
                                     ),
-                                    const SizedBox(width: smallPadding),
+                                    const SizedBox(width: mediumPadding),
                                     Text(
                                       AppLocalizations.of(
                                         context,
@@ -339,7 +339,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         context,
                                       ).colorScheme.onSurface,
                                     ),
-                                    const SizedBox(width: smallPadding),
+                                    const SizedBox(width: mediumPadding),
                                     Text(
                                       AppLocalizations.of(
                                         context,
@@ -877,8 +877,8 @@ class SettingsScreenState extends State<SettingsScreen> {
                       ),
                     Padding(
                       padding: const EdgeInsets.only(
-                        bottom: smallPadding,
-                        right: smallPadding,
+                        bottom: mediumPadding,
+                        right: mediumPadding,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

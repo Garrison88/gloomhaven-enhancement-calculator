@@ -99,12 +99,12 @@ class CustomSearchDelegate extends SearchDelegate<SelectedPlayerClass> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                left: smallPadding,
-                top: smallPadding,
+                left: mediumPadding,
+                top: mediumPadding,
               ),
               child: Wrap(
-                runSpacing: smallPadding,
-                spacing: smallPadding,
+                runSpacing: mediumPadding,
+                spacing: mediumPadding,
                 children: [
                   _buildCategoryFilterChip(
                     context: context,
@@ -470,7 +470,7 @@ class _WordSuggestionListState extends State<_WordSuggestionList> {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(width: smallPadding * 2),
+              const SizedBox(width: mediumPadding * 2),
               Text(
                 selectedPlayerClass.name,
                 style: Theme.of(context).textTheme.headlineLarge,

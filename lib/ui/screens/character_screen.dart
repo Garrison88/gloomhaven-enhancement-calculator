@@ -41,19 +41,19 @@ class CharacterScreen extends StatelessWidget {
     return SingleChildScrollView(
       controller: context.read<CharactersModel>().charScreenScrollController,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+        padding: const EdgeInsets.symmetric(horizontal: mediumPadding),
         child: Column(
           children: <Widget>[
             // RETIREMENTS and POCKET ITEMS
             Padding(
-              padding: const EdgeInsets.all(smallPadding),
+              padding: const EdgeInsets.all(mediumPadding),
               child: _RetirementsAndPocketItemsSection(character: character),
             ),
             // NAME and CLASS
             Container(
               constraints: const BoxConstraints(maxWidth: maxWidth),
               child: Padding(
-                padding: const EdgeInsets.all(smallPadding),
+                padding: const EdgeInsets.all(mediumPadding),
                 child: _NameAndClassSection(character: character),
               ),
             ),
@@ -61,20 +61,20 @@ class CharacterScreen extends StatelessWidget {
             Container(
               constraints: const BoxConstraints(maxWidth: 400),
               child: Padding(
-                padding: const EdgeInsets.all(smallPadding),
+                padding: const EdgeInsets.all(mediumPadding),
                 child: _StatsSection(character: character),
               ),
             ),
             // RESOURCES
             Padding(
-              padding: const EdgeInsets.all(smallPadding),
+              padding: const EdgeInsets.all(mediumPadding),
               child: _ResourcesSection(character: character),
             ),
             // NOTES
             Container(
               constraints: const BoxConstraints(maxWidth: maxWidth),
               child: Padding(
-                padding: const EdgeInsets.all(smallPadding),
+                padding: const EdgeInsets.all(mediumPadding),
                 child:
                     character.notes.isNotEmpty ||
                         context.read<CharactersModel>().isEditMode
@@ -88,15 +88,15 @@ class CharacterScreen extends StatelessWidget {
               _BattleGoalCheckmarksSection(character: character),
             // PERKS
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: smallPadding),
+              padding: const EdgeInsets.symmetric(horizontal: mediumPadding),
               child: PerksSection(character: character),
             ),
-            const SizedBox(height: smallPadding),
+            const SizedBox(height: mediumPadding),
             // MASTERIES
             if (character.characterMasteries.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: smallPadding - 3,
+                  horizontal: mediumPadding - 3,
                 ),
                 child: MasteriesSection(
                   character: character,
@@ -153,8 +153,8 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
           ).pocketItemsAllowed((Character.level(character.xp) / 2).round()),
           child: Padding(
             padding: const EdgeInsets.only(
-              right: smallPadding,
-              top: smallPadding,
+              right: mediumPadding,
+              top: mediumPadding,
             ),
             child: Stack(
               alignment: AlignmentDirectional.bottomCenter,
@@ -178,7 +178,7 @@ class _RetirementsAndPocketItemsSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: smallPadding),
+                const SizedBox(width: mediumPadding),
               ],
             ),
           ),
@@ -243,7 +243,7 @@ class _NameAndClassSection extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(width: smallPadding),
+            const SizedBox(width: mediumPadding),
             Flexible(
               child: AutoSizeText(
                 character.getClassSubtitle(),
@@ -254,7 +254,7 @@ class _NameAndClassSection extends StatelessWidget {
           ],
         ),
         if (character.showTraits()) ...[
-          const SizedBox(height: smallPadding),
+          const SizedBox(height: mediumPadding),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -266,7 +266,7 @@ class _NameAndClassSection extends StatelessWidget {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(width: smallPadding),
+              const SizedBox(width: mediumPadding),
               Flexible(
                 child: AutoSizeText(
                   '${character.playerClass.traits[0]} · ${character.playerClass.traits[1]} · ${character.playerClass.traits[2]}',
@@ -333,7 +333,7 @@ class _StatsSectionState extends State<_StatsSection> {
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(width: smallPadding),
+              const SizedBox(width: mediumPadding),
               context.watch<CharactersModel>().isEditMode &&
                       !widget.character.isRetired
                   ? Container(
@@ -538,10 +538,10 @@ class _ResourcesSectionState extends State<_ResourcesSection> {
           title: Text(AppLocalizations.of(context).resources),
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: smallPadding),
+              padding: const EdgeInsets.only(bottom: mediumPadding),
               child: Wrap(
-                runSpacing: smallPadding,
-                spacing: smallPadding,
+                runSpacing: mediumPadding,
+                spacing: mediumPadding,
                 alignment: WrapAlignment.spaceEvenly,
                 children: _buildResourceCards(
                   context,
@@ -601,7 +601,7 @@ class _NotesSection extends StatelessWidget {
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
-        const SizedBox(height: smallPadding),
+        const SizedBox(height: mediumPadding),
         context.watch<CharactersModel>().isEditMode && !character.isRetired
             ? TextFormField(
                 key: ValueKey('notes_${character.uuid}'),
@@ -632,7 +632,7 @@ class _BattleGoalCheckmarksSection extends StatelessWidget {
     CharactersModel charactersModel = context.watch<CharactersModel>();
     return charactersModel.isEditMode
         ? Padding(
-            padding: const EdgeInsets.all(smallPadding),
+            padding: const EdgeInsets.all(mediumPadding),
             child: Column(
               children: <Widget>[
                 AutoSizeText(

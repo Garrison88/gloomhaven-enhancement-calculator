@@ -1,7 +1,9 @@
 const double secondaryFontSize = 25.0,
     titleFontSize = 30.0,
     iconSize = 30,
-    smallPadding = 8.0,
+    smallPadding = 4.0,
+    mediumPadding = 8.0,
+    largePadding = 16.0,
     maxWidth = 500,
     maxDialogWidth = 400;
 const String highTower = 'HighTower',

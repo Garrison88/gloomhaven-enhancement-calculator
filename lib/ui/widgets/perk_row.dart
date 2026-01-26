@@ -86,7 +86,7 @@ class PerkRowState extends State<PerkRow> with SingleTickerProviderStateMixin {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: smallPadding / 2),
+      padding: const EdgeInsets.symmetric(vertical: mediumPadding / 2),
       child: Row(
         children: <Widget>[
           widget.perks[0].grouped
@@ -117,7 +117,7 @@ class PerkRowState extends State<PerkRow> with SingleTickerProviderStateMixin {
                   ),
                 ),
           widget.perks[0].grouped
-              ? const SizedBox(width: smallPadding)
+              ? const SizedBox(width: mediumPadding)
               : CheckRowDivider(
                   height: height,
                   color: Theme.of(context).dividerTheme.color,

@@ -20,7 +20,7 @@ class PerksSection extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            SizedBox(width: smallPadding * 2),
+            SizedBox(width: mediumPadding * 2),
             Text(
               '${character.numOfSelectedPerks()}',
               textAlign: TextAlign.center,
@@ -39,7 +39,7 @@ class PerksSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: smallPadding),
+        const SizedBox(height: mediumPadding),
         ListView(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
