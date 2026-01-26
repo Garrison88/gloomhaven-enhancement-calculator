@@ -29,6 +29,7 @@ dependencies:
   device_info_plus: ^12.3.0
   url_launcher: ^6.2.1
   faker: ^2.2.0
+  syncfusion_flutter_sliders: ^32.1.24
   path: ^1.8.3
   # maybe URL launcher is problematic
   font_awesome_flutter: ^10.6.0

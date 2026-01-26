@@ -1,20 +1,21 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
-import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/enhancement_type_selector.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/calculator_section_card.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/card_level_body.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/cost_display.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/enhancement_type_body.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/info_button_config.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/modifier_toggles_body.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/calculator/previous_enhancements_body.dart';
 import 'package:gloomhaven_enhancement_calc/ui/widgets/expandable_cost_chip.dart';
-import 'package:gloomhaven_enhancement_calc/ui/widgets/strikethrough_text.dart';
-import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
+import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
 class EnhancementCalculatorPage extends StatefulWidget {
@@ -26,19 +27,9 @@ class EnhancementCalculatorPage extends StatefulWidget {
 }
 
 class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
-  // Color _editionColor(GameEdition edition) {
-  //   switch (edition) {
-  //     case GameEdition.gloomhaven:
-  //     case GameEdition.gloomhaven2e:
-  //       return const Color(0xffa98274);
-  //     case GameEdition.frosthaven:
-  //       return const Color(0xff6ab7ff);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    EnhancementCalculatorModel enhancementCalculatorModel = context
+    final enhancementCalculatorModel = context
         .watch<EnhancementCalculatorModel>();
     // Watch ThemeProvider to rebuild when theme changes
     final themeProvider = context.watch<ThemeProvider>();
@@ -50,543 +41,115 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
       children: [
         Column(
           children: [
-            OutlinedButton(
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) {
-                  return InfoDialog(
-                    title: Strings.generalInfoTitle,
-                    message: Strings.generalInfoBody(
-                      context,
-                      edition: edition,
-                      darkMode: Theme.of(context).brightness == Brightness.dark,
-                    ),
-                  );
-                },
-              ),
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  width: 1.0,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              child: Text(
-                AppLocalizations.of(context).generalGuidelines,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
             Expanded(
               child: Container(
                 constraints: const BoxConstraints(maxWidth: maxWidth),
                 padding: const EdgeInsets.symmetric(horizontal: mediumPadding),
                 child: ListView(
+                  controller: context
+                      .read<CharactersModel>()
+                      .enhancementCalcScrollController,
                   padding: EdgeInsets.only(
                     // Extra padding when chip and FAB are present
                     bottom: enhancementCalculatorModel.showCost ? 80 : 16,
                   ),
                   children: <Widget>[
                     // SCENARIO 114 REWARD (PARTY BOON) - Gloomhaven/GH2E only
-                    if (edition.supportsPartyBoon) ...[
-                      SwitchListTile(
-                        value: SharedPrefs().partyBoon,
-                        onChanged: (bool value) {
+                    if (edition.supportsPartyBoon)
+                      CalculatorSectionCard(
+                        layout: CardLayoutVariant.toggle,
+                        infoConfig: InfoButtonConfig.titleMessage(
+                          title: Strings.scenario114RewardTitle,
+                          message: Strings.scenario114RewardInfoBody(
+                            context,
+                            darkTheme,
+                          ),
+                        ),
+                        title: AppLocalizations.of(context).scenario114Reward,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        ).forgottenCirclesSpoilers,
+                        toggleValue: SharedPrefs().partyBoon,
+                        onToggleChanged: (bool value) {
                           setState(() {
                             SharedPrefs().partyBoon = value;
                             enhancementCalculatorModel.calculateCost();
                           });
                         },
-                        title: AutoSizeText(
-                          AppLocalizations.of(context).scenario114Reward,
-                          maxLines: 1,
-                        ),
-                        subtitle: Text(
-                          AppLocalizations.of(context).forgottenCirclesSpoilers,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleSmall?.copyWith(color: Colors.grey),
-                        ),
-                        secondary: IconButton(
-                          icon: const Icon(Icons.info_outline_rounded),
-                          onPressed: () => showDialog<void>(
-                            context: context,
-                            builder: (_) {
-                              return InfoDialog(
-                                title: Strings.scenario114RewardTitle,
-                                message: Strings.scenario114RewardInfoBody(
-                                  context,
-                                  darkTheme,
-                                ),
-                              );
-                            },
-                          ),
+                      ),
+
+                    // TEMPORARY ENHANCEMENT
+                    CalculatorSectionCard(
+                      layout: CardLayoutVariant.toggle,
+                      infoConfig: InfoButtonConfig.titleMessage(
+                        title: Strings.temporaryEnhancement,
+                        message: Strings.temporaryEnhancementInfoBody(
+                          context,
+                          darkTheme,
                         ),
                       ),
-                      const EnhancementDivider(),
-                    ],
-                    // TEMPORARY ENHANCEMENT
-                    SwitchListTile(
-                      value:
+                      title: AppLocalizations.of(
+                        context,
+                      ).temporaryEnhancementVariant,
+                      toggleValue:
                           enhancementCalculatorModel.temporaryEnhancementMode,
-                      onChanged: (bool value) {
+                      onToggleChanged: (bool value) {
                         enhancementCalculatorModel.temporaryEnhancementMode =
                             value;
                       },
-                      title: AutoSizeText(
-                        AppLocalizations.of(
-                          context,
-                        ).temporaryEnhancementVariant,
-                        maxLines: 2,
+                    ),
+
+                    // BUILDING 44 (ENHANCER) - Frosthaven only
+                    if (edition.hasEnhancerLevels)
+                      _Building44Card(
+                        enhancementCalculatorModel: enhancementCalculatorModel,
+                        darkTheme: darkTheme,
+                        onDialogClosed: () => setState(() {}),
                       ),
-                      secondary: IconButton(
-                        icon: const Icon(Icons.info_outline_rounded),
-                        onPressed: () => showDialog<void>(
-                          context: context,
-                          builder: (_) {
-                            return InfoDialog(
-                              title: Strings.temporaryEnhancement,
-                              message: Strings.temporaryEnhancementInfoBody(
-                                context,
-                                darkTheme,
-                              ),
-                            );
-                          },
+
+                    // HAIL'S DISCOUNT
+                    CalculatorSectionCard(
+                      layout: CardLayoutVariant.toggle,
+                      infoConfig: InfoButtonConfig.titleMessage(
+                        title: Strings.hailsDiscountTitle,
+                        message: Strings.hailsDiscountInfoBody(
+                          context,
+                          darkTheme,
                         ),
                       ),
-                    ),
-                    const EnhancementDivider(),
-                    // BUILDING 44 (ENHANCER) - Frosthaven only
-                    if (edition.hasEnhancerLevels) ...[
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ListTile(
-                            leading: IconButton(
-                              icon: const Icon(Icons.info_outline_rounded),
-                              onPressed: () => showDialog<void>(
-                                context: context,
-                                builder: (_) {
-                                  return InfoDialog(
-                                    title: Strings.building44Title,
-                                    message: Strings.building44InfoBody(
-                                      context,
-                                      darkTheme,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context).building44,
-                            ),
-                            subtitle: Text(
-                              AppLocalizations.of(context).frosthavenSpoilers,
-                              style: Theme.of(context).textTheme.titleSmall
-                                  ?.copyWith(color: Colors.grey),
-                            ),
-                            onTap: () {
-                              showDialog<bool>(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context).enhancer,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.headlineLarge,
-                                      ),
-                                    ),
-                                    content: StatefulBuilder(
-                                      builder: (_, innerSetState) {
-                                        return Container(
-                                          constraints: const BoxConstraints(
-                                            maxWidth: maxDialogWidth,
-                                          ),
-                                          child: SingleChildScrollView(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                CheckboxListTile(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).lvl1,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                          color: null,
-                                                          fontSize:
-                                                              SharedPrefs()
-                                                                  .useDefaultFonts
-                                                              ? 25
-                                                              : null,
-                                                        ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).buyEnhancements,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              SharedPrefs()
-                                                                  .enhancerLvl1
-                                                              ? null
-                                                              : Colors.grey,
-                                                          fontSize: 20,
-                                                        ),
-                                                  ),
-                                                  value: true,
-                                                  onChanged: null,
-                                                ),
-                                                CheckboxListTile(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).lvl2,
-                                                  ),
-                                                  subtitle: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).reduceEnhancementCosts,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              SharedPrefs()
-                                                                  .enhancerLvl2
-                                                              ? null
-                                                              : Colors.grey,
-                                                          fontSize: 20,
-                                                        ),
-                                                  ),
-                                                  value: SharedPrefs()
-                                                      .enhancerLvl2,
-                                                  onChanged: (bool? val) {
-                                                    if (val != null) {
-                                                      innerSetState(() {
-                                                        SharedPrefs()
-                                                                .enhancerLvl2 =
-                                                            val;
-                                                        enhancementCalculatorModel
-                                                            .calculateCost();
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                                CheckboxListTile(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).lvl3,
-                                                  ),
-                                                  subtitle: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).reduceLevelPenalties,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              SharedPrefs()
-                                                                  .enhancerLvl3
-                                                              ? null
-                                                              : Colors.grey,
-                                                          fontSize: 20,
-                                                        ),
-                                                  ),
-                                                  value: SharedPrefs()
-                                                      .enhancerLvl3,
-                                                  onChanged: (bool? val) {
-                                                    if (val != null) {
-                                                      innerSetState(() {
-                                                        SharedPrefs()
-                                                                .enhancerLvl3 =
-                                                            val;
-                                                        enhancementCalculatorModel
-                                                            .calculateCost();
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                                CheckboxListTile(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).lvl4,
-                                                  ),
-                                                  subtitle: Text(
-                                                    AppLocalizations.of(
-                                                      context,
-                                                    ).reduceRepeatPenalties,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium
-                                                        ?.copyWith(
-                                                          color:
-                                                              SharedPrefs()
-                                                                  .enhancerLvl4
-                                                              ? null
-                                                              : Colors.grey,
-                                                          fontSize: 20,
-                                                        ),
-                                                  ),
-                                                  value: SharedPrefs()
-                                                      .enhancerLvl4,
-                                                  onChanged: (bool? val) {
-                                                    if (val != null) {
-                                                      innerSetState(() {
-                                                        SharedPrefs()
-                                                                .enhancerLvl4 =
-                                                            val;
-                                                        enhancementCalculatorModel
-                                                            .calculateCost();
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text(
-                                          AppLocalizations.of(context).close,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ).then((_) {
-                                setState(() {});
-                              });
-                            },
-                          ),
-                          Positioned(
-                            right: 32.5,
-                            child: IgnorePointer(
-                              ignoring: true,
-                              child: Icon(
-                                Icons.open_in_new,
-                                size: 30,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurface.withValues(alpha: .75),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 32.5),
-                        ],
-                      ),
-                      const EnhancementDivider(),
-                    ],
-                    // HAIL'S DISCOUNT
-                    SwitchListTile(
-                      value: enhancementCalculatorModel.hailsDiscount,
-                      onChanged: (bool value) {
+                      title: AppLocalizations.of(context).hailsDiscount,
+                      toggleValue: enhancementCalculatorModel.hailsDiscount,
+                      onToggleChanged: (bool value) {
                         enhancementCalculatorModel.hailsDiscount = value;
                       },
-                      secondary: IconButton(
-                        icon: const Icon(Icons.info_outline_rounded),
-                        onPressed: () => showDialog<void>(
-                          context: context,
-                          builder: (_) {
-                            return InfoDialog(
-                              title: Strings.hailsDiscountTitle,
-                              message: Strings.hailsDiscountInfoBody(
-                                context,
-                                darkTheme,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      title: AutoSizeText(
-                        AppLocalizations.of(context).hailsDiscount,
-                        maxLines: 1,
-                      ),
                     ),
-                    const EnhancementDivider(),
+
                     // CARD LEVEL
-                    _CardLevelSelector(
+                    _CardLevelCard(
                       edition: edition,
                       enhancementCalculatorModel: enhancementCalculatorModel,
                       darkTheme: darkTheme,
                     ),
-                    const EnhancementDivider(),
+
                     // PREVIOUS ENHANCEMENTS
-                    _PreviousEnhancementsSelector(
+                    _PreviousEnhancementsCard(
                       edition: edition,
                       enhancementCalculatorModel: enhancementCalculatorModel,
                       darkTheme: darkTheme,
                     ),
-                    const EnhancementDivider(),
-                    // ENHANCEMENT
-                    _EnhancementTypeSelector(
+
+                    // ENHANCEMENT TYPE
+                    _EnhancementTypeCard(
                       edition: edition,
                       enhancementCalculatorModel: enhancementCalculatorModel,
                     ),
-                    const EnhancementDivider(),
-                    // MULTIPLE TARGETS
-                    SwitchListTile(
-                      value: enhancementCalculatorModel.multipleTargets,
-                      onChanged:
-                          !enhancementCalculatorModel.disableMultiTargetsSwitch
-                          ? (bool value) {
-                              enhancementCalculatorModel.multipleTargets =
-                                  value;
-                            }
-                          : null,
-                      secondary: IconButton(
-                        icon: Icon(
-                          Icons.info_outline_rounded,
-                          color: darkTheme ? Colors.white : Colors.black,
-                        ),
-                        onPressed: () => showDialog<void>(
-                          context: context,
-                          builder: (_) {
-                            return InfoDialog(
-                              title: Strings.multipleTargetsInfoTitle,
-                              message: Strings.multipleTargetsInfoBody(
-                                context,
-                                edition: edition,
-                                enhancerLvl2:
-                                    edition.hasEnhancerLevels &&
-                                    SharedPrefs().enhancerLvl2,
-                                darkMode: darkTheme,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      title: AutoSizeText(
-                        AppLocalizations.of(context).multipleTargets,
-                      ),
+
+                    // MULTIPLE TARGETS, LOSS NON-PERSISTENT, PERSISTENT
+                    _ModifierTogglesCard(
+                      edition: edition,
+                      enhancementCalculatorModel: enhancementCalculatorModel,
+                      darkTheme: darkTheme,
                     ),
-                    // LOSS NON-PERSISTENT (GH2E and FH only)
-                    if (edition.hasLostModifier) ...[
-                      SwitchListTile(
-                        value: enhancementCalculatorModel.lostNonPersistent,
-                        // Disable when: persistent is on (FH), OR
-                        // in GH2E mode with summon stat selected (summons excluded)
-                        onChanged:
-                            enhancementCalculatorModel.persistent ||
-                                (!edition.hasPersistentModifier &&
-                                    enhancementCalculatorModel
-                                            .enhancement
-                                            ?.category ==
-                                        EnhancementCategory.summonPlusOne)
-                            ? null
-                            : (bool value) {
-                                enhancementCalculatorModel.lostNonPersistent =
-                                    value;
-                              },
-                        secondary: IconButton(
-                          icon: Icon(
-                            Icons.info_outline_rounded,
-                            color: darkTheme ? Colors.white : Colors.black,
-                          ),
-                          onPressed: () => showDialog<void>(
-                            context: context,
-                            builder: (_) {
-                              return InfoDialog(
-                                title: Strings.lostNonPersistentInfoTitle(
-                                  edition: edition,
-                                ),
-                                message: Strings.lostNonPersistentInfoBody(
-                                  context,
-                                  edition,
-                                  darkTheme,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        title: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ThemedSvg(assetKey: 'LOSS', width: iconSize),
-                            // Only show "not persistent" icon in FH mode
-                            // (GH2E doesn't have persistent modifier)
-                            if (edition.hasPersistentModifier)
-                              SizedBox(
-                                width: iconSize + 16,
-                                height: iconSize + 11,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Positioned(
-                                      child: ThemedSvg(
-                                        assetKey: 'PERSISTENT',
-                                        width: iconSize,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 5,
-                                      child: SvgPicture.asset(
-                                        'images/ui/not.svg',
-                                        width: iconSize + 11,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    // PERSISTENT (FH only)
-                    if (edition.hasPersistentModifier) ...[
-                      SwitchListTile(
-                        value: enhancementCalculatorModel.persistent,
-                        onChanged:
-                            enhancementCalculatorModel.enhancement?.category ==
-                                    EnhancementCategory.summonPlusOne ||
-                                enhancementCalculatorModel.lostNonPersistent
-                            ? null
-                            : (bool value) {
-                                enhancementCalculatorModel.persistent = value;
-                              },
-                        secondary: IconButton(
-                          icon: Icon(
-                            Icons.info_outline_rounded,
-                            color: darkTheme ? Colors.white : Colors.black,
-                          ),
-                          onPressed: () => showDialog<void>(
-                            context: context,
-                            builder: (_) {
-                              return InfoDialog(
-                                title: Strings.persistentInfoTitle,
-                                message: Strings.persistentInfoBody(
-                                  context,
-                                  darkTheme,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        title: ThemedSvg(
-                          assetKey: 'PERSISTENT',
-                          width: iconSize,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                    ],
                   ],
                 ),
               ),
@@ -605,22 +168,13 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
   }
 }
 
-class EnhancementDivider extends StatelessWidget {
-  const EnhancementDivider({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(endIndent: 24, indent: 24, height: 1);
-  }
-}
-
-/// Material 3 DropdownMenu for selecting card level (1-9)
-class _CardLevelSelector extends StatelessWidget {
+/// Card Level selector card using the new component system.
+class _CardLevelCard extends StatelessWidget {
   final dynamic edition;
   final EnhancementCalculatorModel enhancementCalculatorModel;
   final bool darkTheme;
 
-  const _CardLevelSelector({
+  const _CardLevelCard({
     required this.edition,
     required this.enhancementCalculatorModel,
     required this.darkTheme,
@@ -631,143 +185,38 @@ class _CardLevelSelector extends StatelessWidget {
     final partyBoon = edition.supportsPartyBoon && SharedPrefs().partyBoon;
     final enhancerLvl3 =
         edition.hasEnhancerLevels && SharedPrefs().enhancerLvl3;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.info_outline_rounded),
-                onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (_) {
-                    return InfoDialog(
-                      title: Strings.cardLevelInfoTitle,
-                      message: Strings.cardLevelInfoBody(
-                        context,
-                        darkTheme,
-                        edition: edition,
-                        partyBoon: partyBoon,
-                        enhancerLvl3: enhancerLvl3,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(width: largePadding),
-              Text(AppLocalizations.of(context).cardLevel),
-            ],
-          ),
-          _buildCardLevelSlider(context, enhancementCalculatorModel),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCardLevelSlider(
-    BuildContext context,
-    EnhancementCalculatorModel model,
-  ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final level = model.cardLevel;
+    final level = enhancementCalculatorModel.cardLevel;
     final baseCost = 25 * level;
-    final actualCost = model.cardLevelPenalty(level);
-    final hasDiscount = actualCost != baseCost && level > 0;
+    final actualCost = enhancementCalculatorModel.cardLevelPenalty(level);
 
-    return Column(
-      children: [
-        // Slider with level labels
-        Slider(
-          value: level.toDouble(),
-          min: 0,
-          max: 8,
-          divisions: 8,
-          onChanged: (value) {
-            model.cardLevel = value.round();
-          },
+    return CalculatorSectionCard(
+      infoConfig: InfoButtonConfig.titleMessage(
+        title: Strings.cardLevelInfoTitle,
+        message: Strings.cardLevelInfoBody(
+          context,
+          darkTheme,
+          edition: edition,
+          partyBoon: partyBoon,
+          enhancerLvl3: enhancerLvl3,
         ),
-        // Level numbers below slider
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(9, (i) {
-              final isSelected = i == level;
-              final isAboveSelected = i > level;
-              return Text(
-                '${i + 1}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: isSelected
-                      ? colorScheme.primary
-                      : isAboveSelected
-                      ? colorScheme.onSurfaceVariant.withValues(alpha: 0.4)
-                      : colorScheme.onSurfaceVariant,
-                  fontWeight: isSelected ? FontWeight.bold : null,
-                ),
-              );
-            }),
-          ),
-        ),
-        const SizedBox(height: mediumPadding),
-        // Cost display
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: level == 0
-              ? Text(
-                  '0g',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                )
-              : hasDiscount
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    StrikethroughText(
-                      '${baseCost}g',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${actualCost}g',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                )
-              : Text(
-                  '${baseCost}g',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-        ),
-      ],
+      ),
+      title: '${AppLocalizations.of(context).cardLevel}: ${level + 1}',
+      body: CardLevelBody(model: enhancementCalculatorModel),
+      costConfig: CostDisplayConfig(
+        baseCost: baseCost,
+        discountedCost: actualCost != baseCost ? actualCost : null,
+      ),
     );
   }
 }
 
-/// Material 3 SegmentedButton for selecting previous enhancements (0-3)
-class _PreviousEnhancementsSelector extends StatelessWidget {
+/// Previous Enhancements selector card using the new component system.
+class _PreviousEnhancementsCard extends StatelessWidget {
   final dynamic edition;
   final EnhancementCalculatorModel enhancementCalculatorModel;
   final bool darkTheme;
 
-  const _PreviousEnhancementsSelector({
+  const _PreviousEnhancementsCard({
     required this.edition,
     required this.enhancementCalculatorModel,
     required this.darkTheme,
@@ -779,344 +228,308 @@ class _PreviousEnhancementsSelector extends StatelessWidget {
         edition.hasEnhancerLevels && SharedPrefs().enhancerLvl4;
     final tempEnhancements =
         enhancementCalculatorModel.temporaryEnhancementMode;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.info_outline_rounded),
-                onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (_) {
-                    return InfoDialog(
-                      title: Strings.previousEnhancementsInfoTitle,
-                      message: Strings.previousEnhancementsInfoBody(
-                        context,
-                        darkTheme,
-                        edition: edition,
-                        enhancerLvl4: enhancerLvl4,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(width: largePadding),
-              Text(AppLocalizations.of(context).previousEnhancements),
-            ],
-          ),
-          // Cost breakdown text
-          _buildCostBreakdown(context, enhancerLvl4, tempEnhancements),
-          const SizedBox(height: smallPadding),
-          // Segmented button
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<int>(
-              segments: const [
-                ButtonSegment<int>(value: 0, label: Text('None')),
-                ButtonSegment<int>(value: 1, label: Text('1')),
-                ButtonSegment<int>(value: 2, label: Text('2')),
-                ButtonSegment<int>(value: 3, label: Text('3')),
-              ],
-              selected: {enhancementCalculatorModel.previousEnhancements},
-              onSelectionChanged: (Set<int> selected) {
-                enhancementCalculatorModel.previousEnhancements =
-                    selected.first;
-              },
-              showSelectedIcon: false,
-              style: ButtonStyle(
-                textStyle: WidgetStatePropertyAll(
-                  Theme.of(context).textTheme.bodyMedium,
-                ),
-                foregroundColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    final isDark =
-                        ThemeData.estimateBrightnessForColor(
-                          Theme.of(context).colorScheme.primary,
-                        ) ==
-                        Brightness.dark;
-                    return isDark ? Colors.white : Colors.black;
-                  }
-                  return null;
-                }),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCostBreakdown(
-    BuildContext context,
-    bool enhancerLvl4,
-    bool tempEnhancements,
-  ) {
     final selected = enhancementCalculatorModel.previousEnhancements;
-    // if (selected == 0) {
-    //   return const SizedBox.shrink();
-    // }
-
     final baseCost = 75 * selected;
     final actualCost = enhancementCalculatorModel.previousEnhancementsPenalty(
       selected,
     );
-    final hasDiscount = actualCost != baseCost;
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
+    return CalculatorSectionCard(
+      infoConfig: InfoButtonConfig.titleMessage(
+        title: Strings.previousEnhancementsInfoTitle,
+        message: Strings.previousEnhancementsInfoBody(
+          context,
+          darkTheme,
+          edition: edition,
+          enhancerLvl4: enhancerLvl4,
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (hasDiscount) ...[
-            StrikethroughText(
-              '${baseCost}g',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${actualCost}g',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            if (tempEnhancements)
-              Text(
-                ' \u2020',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-          ] else
-            Text(
-              '${baseCost}g',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-        ],
+      title: AppLocalizations.of(context).previousEnhancements,
+      body: PreviousEnhancementsBody(model: enhancementCalculatorModel),
+      costConfig: CostDisplayConfig(
+        baseCost: baseCost,
+        discountedCost: actualCost != baseCost ? actualCost : null,
+        marker: tempEnhancements ? '\u2020' : null,
       ),
     );
   }
 }
 
-/// Material 3 button that opens a searchable bottom sheet for enhancement type
-class _EnhancementTypeSelector extends StatelessWidget {
+/// Enhancement Type selector card using the new component system.
+class _EnhancementTypeCard extends StatelessWidget {
   final dynamic edition;
   final EnhancementCalculatorModel enhancementCalculatorModel;
 
-  const _EnhancementTypeSelector({
+  const _EnhancementTypeCard({
     required this.edition,
     required this.enhancementCalculatorModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final enhancement = enhancementCalculatorModel.enhancement;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              IconButton(
+    return CalculatorSectionCard(
+      infoConfig: enhancement != null
+          ? InfoButtonConfig.category(category: enhancement.category)
+          : InfoButtonConfig.titleMessage(
+              title: '',
+              message: RichText(text: const TextSpan()),
+              enabled: false,
+            ),
+      title: AppLocalizations.of(context).enhancementType,
+      body: EnhancementTypeBody(
+        model: enhancementCalculatorModel,
+        edition: edition,
+      ),
+    );
+  }
+}
+
+/// Card for the combined modifier toggles (Multi-target, Loss, Persistent).
+class _ModifierTogglesCard extends StatelessWidget {
+  final dynamic edition;
+  final EnhancementCalculatorModel enhancementCalculatorModel;
+  final bool darkTheme;
+
+  const _ModifierTogglesCard({
+    required this.edition,
+    required this.enhancementCalculatorModel,
+    required this.darkTheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // This card uses the old EnhancementCard wrapper style since it
+    // contains multiple SwitchListTiles that handle their own layout
+    return Card(
+      elevation: isDark ? 4 : 1,
+      color: isDark
+          ? colorScheme.surfaceContainerHighest
+          : colorScheme.surfaceContainerLow,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: mediumPadding),
+        child: ModifierTogglesBody(
+          model: enhancementCalculatorModel,
+          edition: edition,
+          darkTheme: darkTheme,
+        ),
+      ),
+    );
+  }
+}
+
+/// Building 44 (Enhancer) card - special case with dialog.
+class _Building44Card extends StatelessWidget {
+  final EnhancementCalculatorModel enhancementCalculatorModel;
+  final bool darkTheme;
+  final VoidCallback onDialogClosed;
+
+  const _Building44Card({
+    required this.enhancementCalculatorModel,
+    required this.darkTheme,
+    required this.onDialogClosed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Card(
+      elevation: isDark ? 4 : 1,
+      color: isDark
+          ? colorScheme.surfaceContainerHighest
+          : colorScheme.surfaceContainerLow,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: mediumPadding),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            ListTile(
+              leading: IconButton(
                 icon: const Icon(Icons.info_outline_rounded),
-                onPressed: enhancement != null
-                    ? () => showDialog<void>(
-                        context: context,
-                        builder: (_) {
-                          return InfoDialog(category: enhancement.category);
-                        },
-                      )
-                    : null,
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return InfoDialog(
+                      title: Strings.building44Title,
+                      message: Strings.building44InfoBody(context, darkTheme),
+                    );
+                  },
+                ),
               ),
-              const SizedBox(width: largePadding),
-              Text(AppLocalizations.of(context).enhancementType),
-            ],
-          ),
-          // Tappable button that shows current selection or placeholder
-          InkWell(
-            onTap: () {
-              EnhancementTypeSelector.show(
-                context,
-                currentSelection: enhancement,
-                edition: edition,
-                onSelected: (selected) {
-                  enhancementCalculatorModel.enhancementSelected(selected);
-                },
-              );
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
+              title: Text(AppLocalizations.of(context).building44),
+              subtitle: Text(
+                AppLocalizations.of(context).frosthavenSpoilers,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: Colors.grey),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: enhancement != null
-                        ? _buildSelectedEnhancement(context, enhancement)
-                        : Text(
-                            AppLocalizations.of(context).type,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ],
+              onTap: () => _showEnhancerDialog(context),
+            ),
+            Positioned(
+              right: 32.5,
+              child: IgnorePointer(
+                ignoring: true,
+                child: Icon(
+                  Icons.open_in_new,
+                  size: 30,
+                  color: colorScheme.onSurface.withValues(alpha: .75),
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 32.5),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSelectedEnhancement(
-    BuildContext context,
-    Enhancement enhancement,
-  ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isPlusOne =
-        enhancement.category == EnhancementCategory.charPlusOne ||
-        enhancement.category == EnhancementCategory.target ||
-        enhancement.category == EnhancementCategory.summonPlusOne;
-
-    final baseCost = enhancement.cost(edition: edition);
-    final discountedCost = enhancementCalculatorModel.enhancementCost(
-      enhancement,
-    );
-    final hasDiscount = discountedCost != baseCost;
-
-    return Row(
-      children: [
-        if (enhancement.assetKey != null) ...[
-          _buildEnhancementIcon(enhancement, isPlusOne),
-          const SizedBox(width: 12),
-        ],
-        Expanded(
-          child: Text(enhancement.name, style: theme.textTheme.bodyMedium),
-        ),
-        // Cost display
-        hasDiscount
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  StrikethroughText(
-                    '${baseCost}g',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
+  void _showEnhancerDialog(BuildContext context) {
+    showDialog<bool>(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              AppLocalizations.of(context).enhancer,
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+          ),
+          content: StatefulBuilder(
+            builder: (_, innerSetState) {
+              return Container(
+                constraints: const BoxConstraints(maxWidth: maxDialogWidth),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildEnhancerLevel(
+                        context,
+                        innerSetState,
+                        level: 1,
+                        subtitle: AppLocalizations.of(context).buyEnhancements,
+                        value: true,
+                        enabled: false,
+                      ),
+                      _buildEnhancerLevel(
+                        context,
+                        innerSetState,
+                        level: 2,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        ).reduceEnhancementCosts,
+                        value: SharedPrefs().enhancerLvl2,
+                        onChanged: (val) {
+                          if (val != null) {
+                            innerSetState(() {
+                              SharedPrefs().enhancerLvl2 = val;
+                              enhancementCalculatorModel.calculateCost();
+                            });
+                          }
+                        },
+                      ),
+                      _buildEnhancerLevel(
+                        context,
+                        innerSetState,
+                        level: 3,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        ).reduceLevelPenalties,
+                        value: SharedPrefs().enhancerLvl3,
+                        onChanged: (val) {
+                          if (val != null) {
+                            innerSetState(() {
+                              SharedPrefs().enhancerLvl3 = val;
+                              enhancementCalculatorModel.calculateCost();
+                            });
+                          }
+                        },
+                      ),
+                      _buildEnhancerLevel(
+                        context,
+                        innerSetState,
+                        level: 4,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        ).reduceRepeatPenalties,
+                        value: SharedPrefs().enhancerLvl4,
+                        onChanged: (val) {
+                          if (val != null) {
+                            innerSetState(() {
+                              SharedPrefs().enhancerLvl4 = val;
+                              enhancementCalculatorModel.calculateCost();
+                            });
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${discountedCost}g',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              )
-            : Text(
-                '${baseCost}g',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
                 ),
-              ),
-      ],
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(AppLocalizations.of(context).close),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+          ],
+        );
+      },
+    ).then((_) => onDialogClosed());
+  }
+
+  Widget _buildEnhancerLevel(
+    BuildContext context,
+    StateSetter innerSetState, {
+    required int level,
+    required String subtitle,
+    required bool value,
+    bool enabled = true,
+    ValueChanged<bool?>? onChanged,
+  }) {
+    final isActive = value;
+
+    return CheckboxListTile(
+      title: Text(
+        _getLevelLabel(context, level),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontSize: SharedPrefs().useDefaultFonts ? 25 : null,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: isActive ? null : Colors.grey,
+          fontSize: 20,
+        ),
+      ),
+      value: value,
+      onChanged: enabled ? onChanged : null,
     );
   }
 
-  Widget _buildEnhancementIcon(Enhancement enhancement, bool isPlusOne) {
-    if (enhancement.name == 'Element') {
-      return SizedBox(
-        width: iconSize,
-        height: iconSize,
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 5,
-              top: 5,
-              left: 5,
-              child: SvgPicture.asset(
-                'images/elements/elem_dark.svg',
-                width: 10,
-              ),
-            ),
-            Positioned(
-              top: 4,
-              left: 7,
-              child: SvgPicture.asset(
-                'images/elements/elem_air.svg',
-                width: 11,
-              ),
-            ),
-            Positioned(
-              top: 3,
-              right: 6,
-              child: SvgPicture.asset(
-                'images/elements/elem_ice.svg',
-                width: 12,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 2,
-              bottom: 2,
-              child: SvgPicture.asset(
-                'images/elements/elem_fire.svg',
-                width: 13,
-              ),
-            ),
-            Positioned(
-              bottom: 1,
-              right: 4,
-              child: SvgPicture.asset(
-                'images/elements/elem_earth.svg',
-                width: 14,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 3,
-              child: SvgPicture.asset(
-                'images/elements/elem_light.svg',
-                width: 15,
-              ),
-            ),
-          ],
-        ),
-      );
+  String _getLevelLabel(BuildContext context, int level) {
+    switch (level) {
+      case 1:
+        return AppLocalizations.of(context).lvl1;
+      case 2:
+        return AppLocalizations.of(context).lvl2;
+      case 3:
+        return AppLocalizations.of(context).lvl3;
+      case 4:
+        return AppLocalizations.of(context).lvl4;
+      default:
+        return '';
     }
-
-    return ThemedSvg(
-      assetKey: enhancement.assetKey!,
-      width: iconSize,
-      showPlusOneOverlay: isPlusOne,
-    );
   }
 }

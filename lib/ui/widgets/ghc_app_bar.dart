@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
@@ -81,15 +83,24 @@ class _GHCAppBarState extends State<GHCAppBar> {
         .read<EnhancementCalculatorModel>();
     final appModel = context.read<AppModel>();
     final charactersModel = context.watch<CharactersModel>();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // Base and scrolled colors for tint effect
+    final baseColor = colorScheme.surface;
+    final scrolledColor = Color.alphaBlend(
+      colorScheme.surfaceTint.withValues(alpha: 0.08),
+      baseColor,
+    );
+
     return TweenAnimationBuilder<double>(
-      tween: Tween<double>(end: charactersModel.isScrolledToTop ? 0.0 : 4.0),
+      tween: Tween<double>(end: charactersModel.isScrolledToTop ? 0.0 : 1.0),
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      builder: (context, elevation, child) {
+      builder: (context, progress, child) {
         return AppBar(
           automaticallyImplyLeading: false,
-          // leading: Icon(Icons.settings),
-          elevation: elevation,
+          elevation: progress * 4.0,
+          backgroundColor: Color.lerp(baseColor, scrolledColor, progress),
           centerTitle: true,
           title:
               context.watch<AppModel>().page == 0 &&
@@ -305,6 +316,33 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             },
                           );
                         },
+                ),
+              ),
+            // General Guidelines info button (calculator page only)
+            if (appModel.page == 1)
+              Tooltip(
+                message: 'General Guidelines',
+                child: IconButton(
+                  icon: Icon(
+                    Icons.info_outline_rounded,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return InfoDialog(
+                        title: Strings.generalInfoTitle,
+                        message: Strings.generalInfoBody(
+                          context,
+                          edition: SharedPrefs().gameEdition,
+                          darkMode:
+                              Theme.of(context).brightness == Brightness.dark,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             Tooltip(
