@@ -1,30 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
-import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:provider/provider.dart';
 
 import '../models/enhancement.dart';
-import 'constants.dart';
 
 enum EnhancementCategory {
-  title,
   charPlusOne,
   target,
   summonPlusOne,
-  negEffect,
   posEffect,
+  negEffect,
   jump,
   specElem,
   anyElem,
-  hex,
+  hex;
+
+  /// Returns the section title for this category
+  String get sectionTitle {
+    switch (this) {
+      case EnhancementCategory.charPlusOne:
+      case EnhancementCategory.target:
+        return 'Character';
+      case EnhancementCategory.summonPlusOne:
+        return 'Summon';
+      case EnhancementCategory.posEffect:
+      case EnhancementCategory.negEffect:
+      case EnhancementCategory.jump:
+      case EnhancementCategory.specElem:
+      case EnhancementCategory.anyElem:
+        return 'Effect';
+      case EnhancementCategory.hex:
+        return 'Current Hexes';
+    }
+  }
+
+  /// Returns the asset key for the section icon, if any
+  String? get sectionAssetKey {
+    switch (this) {
+      case EnhancementCategory.charPlusOne:
+      case EnhancementCategory.target:
+      case EnhancementCategory.summonPlusOne:
+        return 'plus_one';
+      case EnhancementCategory.hex:
+        return 'hex';
+      default:
+        return null;
+    }
+  }
 }
 
 class EnhancementData {
   static final List<Enhancement> enhancements = [
-    // plus one
-    Enhancement(EnhancementCategory.title, 'Character', assetKey: 'plus_one'),
+    // Character +1 stats
     Enhancement(
       EnhancementCategory.charPlusOne,
       'Move',
@@ -96,7 +124,7 @@ class EnhancementData {
       assetKey: 'TELEPORT',
       fhCost: 50,
     ),
-    Enhancement(EnhancementCategory.title, 'Summon', assetKey: 'plus_one'),
+    // Summon +1 stats
     Enhancement(
       EnhancementCategory.summonPlusOne,
       'HP',
@@ -123,8 +151,7 @@ class EnhancementData {
       ghCost: 50,
       assetKey: 'RANGE',
     ),
-    Enhancement(EnhancementCategory.title, 'Effect'),
-    // positive effects
+    // Effects (positive)
     Enhancement(
       EnhancementCategory.posEffect,
       'Regenerate',
@@ -213,7 +240,7 @@ class EnhancementData {
       ghCost: 150,
       assetKey: 'Wild_Element',
     ),
-    Enhancement(EnhancementCategory.title, 'Current Hexes', assetKey: 'hex'),
+    // Current Hexes
     Enhancement(
       EnhancementCategory.hex,
       '2 hexes',
@@ -413,179 +440,4 @@ class EnhancementData {
     }
   }
 
-  static List<DropdownMenuItem<Enhancement>> enhancementTypes(
-    BuildContext context, {
-    required GameEdition edition,
-  }) {
-    EnhancementCalculatorModel enhancementCalculatorModel = Provider.of(
-      context,
-      listen: false,
-    );
-    List<DropdownMenuItem<Enhancement>> list = [];
-    for (final Enhancement enhancement in enhancements) {
-      if (!isAvailableInEdition(enhancement, edition)) {
-        continue;
-      }
-      list.add(
-        enhancement.category == EnhancementCategory.title
-            ? DropdownMenuItem(
-                value: enhancement,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // if there is an icon beside the title, display it and add
-                    // a spacer
-                    children: enhancement.assetKey != null
-                        ? <Widget>[
-                            ThemedSvg(
-                              assetKey: enhancement.assetKey!,
-                              width: iconSize,
-                              height: iconSize,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              enhancement.name,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    // decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            // add an empty spacer to the right to center the
-                            // title
-                            const SizedBox(width: iconSize),
-                          ]
-                        : <Widget>[
-                            Text(
-                              enhancement.name,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    // decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ],
-                  ),
-                ),
-              )
-            : DropdownMenuItem(
-                value: enhancement,
-                child: Row(
-                  children: <Widget>[
-                    // add small +1 icon beside move if it's eligible
-                    enhancement.category == EnhancementCategory.charPlusOne ||
-                            enhancement.category ==
-                                EnhancementCategory.target ||
-                            enhancement.category ==
-                                EnhancementCategory.summonPlusOne
-                        ? ThemedSvg(
-                            assetKey: enhancement.assetKey!,
-                            width: iconSize,
-                            showPlusOneOverlay: true,
-                          )
-                        // otherwise, no +1 icon
-                        : enhancement.name == 'Element'
-                        ? SizedBox(
-                            width: iconSize,
-                            height: iconSize,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  bottom: 5,
-                                  top: 5,
-                                  left: 5,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_dark.svg',
-                                    width: 10,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 4,
-                                  left: 7,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_air.svg',
-                                    width: 11,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 3,
-                                  right: 6,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_ice.svg',
-                                    width: 12,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 0,
-                                  right: 2,
-                                  bottom: 2,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_fire.svg',
-                                    width: 13,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 1,
-                                  right: 4,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_earth.svg',
-                                    width: 14,
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  left: 3,
-                                  child: SvgPicture.asset(
-                                    'images/elements/elem_light.svg',
-                                    width: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : ThemedSvg(
-                            assetKey: enhancement.assetKey!,
-                            width: iconSize,
-                          ),
-                    RichText(
-                      text: TextSpan(
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        children: <TextSpan>[
-                          TextSpan(text: ' ${enhancement.name} '),
-                          const TextSpan(text: '('),
-                          if (enhancementCalculatorModel.enhancementCost(
-                                enhancement,
-                              ) !=
-                              enhancement.cost(edition: edition)) ...[
-                            TextSpan(
-                              text: '${enhancement.cost(edition: edition)}g',
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: Colors.grey,
-                                    color: Colors.grey,
-                                    decorationThickness: .75,
-                                  ),
-                            ),
-                            const TextSpan(text: ' '),
-                            TextSpan(
-                              text:
-                                  '${enhancementCalculatorModel.enhancementCost(enhancement)}g${enhancementCalculatorModel.hailsDiscount ? ' ‡' : ''}',
-                            ),
-                            const TextSpan(text: ')'),
-                          ] else ...[
-                            TextSpan(
-                              text: '${enhancement.cost(edition: edition)}g)',
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-      );
-    }
-    return list;
-  }
 }

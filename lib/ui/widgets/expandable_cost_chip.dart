@@ -1,3 +1,5 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,9 +50,6 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
   // Positioning - 20dp aligns chip center with FAB center (FAB is 56dp at 16dp offset)
   static const double _bottomOffset = 20.0;
   static const double _horizontalPadding = 16.0;
-
-  // Height of the touch-absorbing bar at the bottom (covers chip + FAB area)
-  static const double _absorberHeight = 76.0;
 
   @override
   void initState() {
@@ -110,13 +109,49 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
     return SizedBox.expand(
       child: Stack(
         children: [
-          // Touch absorber bar - prevents taps on content behind chip/FAB area
+          // Blur bar at bottom - provides frosted glass effect behind chip/FAB
+          // Uses ShaderMask to fade the blur at the top edge for a soft transition
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
-            height: _absorberHeight,
-            child: const AbsorbPointer(),
+            height: 100,
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.0, 0.4, 1.0],
+                  colors: [Colors.transparent, Colors.white, Colors.white],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstIn,
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0.0, 0.5, 1.0],
+                        colors: [
+                          Theme.of(
+                            context,
+                          ).colorScheme.surface.withValues(alpha: 0.7),
+                          Theme.of(
+                            context,
+                          ).colorScheme.surface.withValues(alpha: 0.8),
+                          Theme.of(
+                            context,
+                          ).colorScheme.surface.withValues(alpha: 0.9),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
 
           // Scrim overlay
@@ -237,7 +272,7 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                 height: 22,
                 showPlusOneOverlay: _isPlusOneEnhancement(widget.enhancement!),
               ),
-              const SizedBox(width: smallPadding),
+              const SizedBox(width: mediumPadding),
             ],
             Text(
               '${widget.totalCost}g',
@@ -322,7 +357,7 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
   Widget _buildEmptyState(ThemeData theme) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(smallPadding * 2),
+        padding: const EdgeInsets.all(mediumPadding * 2),
         child: Text(
           'Select options to see cost breakdown',
           style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),

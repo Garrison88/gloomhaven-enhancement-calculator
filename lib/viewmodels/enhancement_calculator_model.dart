@@ -492,8 +492,6 @@ class EnhancementCalculatorModel with ChangeNotifier {
     }
 
     switch (selectedEnhancement.category) {
-      case EnhancementCategory.title:
-        return;
       case EnhancementCategory.target:
         // Target: multi-target applies in GH only
         multipleTargets = edition.multiTargetAppliesToAll;

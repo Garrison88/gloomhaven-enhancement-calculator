@@ -15,6 +15,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get appTitleAndroid => 'Gloomhaven Companion';
 
   @override
+  String get search => 'Pesquisar...';
+
+  @override
   String get close => 'Fechar';
 
   @override
