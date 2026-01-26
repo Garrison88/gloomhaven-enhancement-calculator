@@ -13,23 +13,25 @@ class Update430Dialog extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 30),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (SharedPrefs().showUpdate420Dialog)
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (SharedPrefs().showUpdate420Dialog)
+              Text(
+                '• ⚠️ A necessary database migration means you cannot restore backups created before version 4.2.0. Please create a new backup now to replace any existing ones.',
+              ),
             Text(
-              '• ⚠️ A necessary database migration means you cannot restore backups created before version 4.2.0. Please create a new backup now to replace any existing ones.',
+              '• Added all remaining Gloomhaven Second Edition and Mercenary Pack classes.',
             ),
-          Text(
-            '• Added all remaining Gloomhaven Second Edition and Mercenary Pack classes.',
-          ),
-          if (SharedPrefs().isUSRegion)
-            Text('• Added a "Buy me a Coffee" link in the Settings screen.'),
-          Text(
-            '• Changelog and license link added to the bottom of the Settings screen.',
-          ),
-        ],
+            if (SharedPrefs().isUSRegion)
+              Text('• Added a "Buy me a Coffee" link in the Settings screen.'),
+            Text(
+              '• Changelog and license link added to the bottom of the Settings screen.',
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
