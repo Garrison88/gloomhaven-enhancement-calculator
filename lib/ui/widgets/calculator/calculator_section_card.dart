@@ -43,8 +43,11 @@ class CalculatorSectionCard extends StatelessWidget {
   /// Optional info button configuration. If null, no info button is shown.
   final InfoButtonConfig? infoConfig;
 
-  /// The section title displayed in the header.
-  final String title;
+  /// The section title displayed in the header. Required unless [titleWidget] is provided.
+  final String? title;
+
+  /// Optional widget to display instead of [title]. Useful for icon-based titles.
+  final Widget? titleWidget;
 
   /// Optional subtitle displayed below the title (toggle layout only).
   final String? subtitle;
@@ -71,7 +74,8 @@ class CalculatorSectionCard extends StatelessWidget {
   const CalculatorSectionCard({
     super.key,
     this.infoConfig,
-    required this.title,
+    this.title,
+    this.titleWidget,
     this.subtitle,
     this.body,
     this.costConfig,
@@ -80,6 +84,10 @@ class CalculatorSectionCard extends StatelessWidget {
     this.onToggleChanged,
     this.toggleEnabled = true,
   }) : assert(
+          title != null || titleWidget != null,
+          'Either title or titleWidget must be provided',
+        ),
+        assert(
           layout == CardLayoutVariant.standard || toggleValue != null,
           'Toggle layout requires toggleValue',
         );
@@ -126,6 +134,12 @@ class CalculatorSectionCard extends StatelessWidget {
   Widget _buildToggleLayout(BuildContext context) {
     final theme = Theme.of(context);
 
+    void handleTap() {
+      if (toggleEnabled && onToggleChanged != null) {
+        onToggleChanged!(!toggleValue!);
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(
         left: largePadding,
@@ -133,38 +147,46 @@ class CalculatorSectionCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Info button
+          // Info button (not tappable for toggle)
           if (infoConfig != null) _buildInfoButton(context),
-          // Title and subtitle
+          // Tappable area: title/subtitle and switch
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: infoConfig != null ? largePadding : 0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AutoSizeText(
-                    title,
-                    maxLines: 2,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: Colors.grey,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: handleTap,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: infoConfig != null ? largePadding : 0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    titleWidget ??
+                        AutoSizeText(
+                          title!,
+                          maxLines: 2,
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                    if (subtitle != null)
+                      Text(
+                        subtitle!,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          // Switch
-          Switch(
-            value: toggleValue!,
-            onChanged: toggleEnabled ? onToggleChanged : null,
+          // Switch (also tappable via GestureDetector wrapping it)
+          GestureDetector(
+            onTap: handleTap,
+            child: Switch(
+              value: toggleValue!,
+              onChanged: toggleEnabled ? onToggleChanged : null,
+            ),
           ),
           const SizedBox(width: mediumPadding),
         ],
@@ -182,10 +204,11 @@ class CalculatorSectionCard extends StatelessWidget {
           const SizedBox(width: largePadding),
         ],
         Expanded(
-          child: Text(
-            title,
-            style: theme.textTheme.bodyLarge,
-          ),
+          child: titleWidget ??
+              Text(
+                title!,
+                style: theme.textTheme.bodyLarge,
+              ),
         ),
       ],
     );
