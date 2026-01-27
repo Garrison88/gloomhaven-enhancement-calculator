@@ -60,10 +60,7 @@ class EnhancementTypeBody extends StatelessWidget {
                       ),
                     ),
             ),
-            Icon(
-              Icons.arrow_drop_down,
-              color: colorScheme.onSurfaceVariant,
-            ),
+            Icon(Icons.arrow_drop_down, color: colorScheme.onSurfaceVariant),
           ],
         ),
       ),
@@ -78,8 +75,8 @@ class EnhancementTypeBody extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final isPlusOne =
         enhancement.category == EnhancementCategory.charPlusOne ||
-            enhancement.category == EnhancementCategory.target ||
-            enhancement.category == EnhancementCategory.summonPlusOne;
+        enhancement.category == EnhancementCategory.target ||
+        enhancement.category == EnhancementCategory.summonPlusOne;
 
     final baseCost = enhancement.cost(edition: edition);
     final discountedCost = model.enhancementCost(enhancement);

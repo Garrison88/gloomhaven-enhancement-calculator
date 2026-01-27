@@ -127,8 +127,7 @@ class _PreviousRetirementsSection extends StatelessWidget {
         textAlign: TextAlign.center,
         enableInteractiveSelection: false,
         onChanged: (String value) => charactersModel.updateCharacter(
-          character
-            ..previousRetirements = value.isEmpty ? 0 : int.parse(value),
+          character..previousRetirements = value.isEmpty ? 0 : int.parse(value),
         ),
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context).previousRetirements,

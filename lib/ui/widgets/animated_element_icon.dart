@@ -68,14 +68,7 @@ import 'package:gloomhaven_enhancement_calc/utils/asset_config.dart';
 // ============================================================================
 
 /// Animation style presets - each element has its own named style
-enum ElementAnimationStyle {
-  fire,
-  ice,
-  air,
-  earth,
-  light,
-  dark,
-}
+enum ElementAnimationStyle { fire, ice, air, earth, light, dark }
 
 /// Configuration for element glow animations.
 ///
@@ -133,144 +126,144 @@ class ElementAnimationConfig {
 
   /// FIRE: Breathing, warm, layered orange/amber glow
   factory ElementAnimationConfig.fire() => const ElementAnimationConfig(
-        baseDuration: Duration(milliseconds: 2000),
-        secondaryDuration: Duration(milliseconds: 1300),
-        tertiaryDuration: Duration(milliseconds: 800),
-        outerGlowColor: Colors.deepOrange,
-        middleGlowColor: Colors.orange,
-        innerGradientColors: [
-          Colors.amber,
-          Colors.orange,
-          Colors.deepOrange,
-          Colors.transparent,
-        ],
-        innerGradientStops: [0.0, 0.35, 0.65, 1.0],
-        outerSizeOffset: 16,
-        middleSizeOffset: 8,
-        outerBlurRadius: 20,
-        middleBlurRadius: 12,
-        baseIntensity: 0.6,
-        intensityVariation: 0.4,
-        sizeVariation: 4,
-        style: ElementAnimationStyle.fire,
-      );
+    baseDuration: Duration(milliseconds: 2000),
+    secondaryDuration: Duration(milliseconds: 1300),
+    tertiaryDuration: Duration(milliseconds: 800),
+    outerGlowColor: Colors.deepOrange,
+    middleGlowColor: Colors.orange,
+    innerGradientColors: [
+      Colors.amber,
+      Colors.orange,
+      Colors.deepOrange,
+      Colors.transparent,
+    ],
+    innerGradientStops: [0.0, 0.35, 0.65, 1.0],
+    outerSizeOffset: 16,
+    middleSizeOffset: 8,
+    outerBlurRadius: 20,
+    middleBlurRadius: 12,
+    baseIntensity: 0.6,
+    intensityVariation: 0.4,
+    sizeVariation: 4,
+    style: ElementAnimationStyle.fire,
+  );
 
   /// ICE: Sharp, crystalline shimmer (cyan/lightBlue/white)
   static ElementAnimationConfig ice() => ElementAnimationConfig(
-        baseDuration: const Duration(milliseconds: 2200),
-        secondaryDuration: const Duration(milliseconds: 800),
-        outerGlowColor: Colors.cyan,
-        middleGlowColor: Colors.lightBlue.shade200,
-        innerGradientColors: [
-          Colors.white,
-          Colors.lightBlue.shade100,
-          Colors.cyan.shade300,
-          Colors.transparent,
-        ],
-        innerGradientStops: const [0.0, 0.25, 0.5, 1.0],
-        outerSizeOffset: 14,
-        middleSizeOffset: 6,
-        outerBlurRadius: 16,
-        middleBlurRadius: 8,
-        baseIntensity: 0.55,
-        intensityVariation: 0.45,
-        sizeVariation: 5,
-        style: ElementAnimationStyle.ice,
-      );
+    baseDuration: const Duration(milliseconds: 2200),
+    secondaryDuration: const Duration(milliseconds: 800),
+    outerGlowColor: Colors.cyan,
+    middleGlowColor: Colors.lightBlue.shade200,
+    innerGradientColors: [
+      Colors.white,
+      Colors.lightBlue.shade100,
+      Colors.cyan.shade300,
+      Colors.transparent,
+    ],
+    innerGradientStops: const [0.0, 0.25, 0.5, 1.0],
+    outerSizeOffset: 14,
+    middleSizeOffset: 6,
+    outerBlurRadius: 16,
+    middleBlurRadius: 8,
+    baseIntensity: 0.55,
+    intensityVariation: 0.45,
+    sizeVariation: 5,
+    style: ElementAnimationStyle.ice,
+  );
 
   /// AIR: Gentle breeze, soft and flowing (theme-aware colors)
   factory ElementAnimationConfig.air() => const ElementAnimationConfig(
-        baseDuration: Duration(milliseconds: 3000),
-        secondaryDuration: Duration(milliseconds: 1800),
-        // Colors are overridden based on theme in build methods
-        outerGlowColor: Colors.white,
-        middleGlowColor: Colors.grey,
-        innerGradientColors: [
-          Colors.white,
-          Colors.grey,
-          Colors.transparent,
-          Colors.transparent,
-        ],
-        innerGradientStops: [0.0, 0.5, 1.0, 1.0],
-        outerSizeOffset: 18,
-        middleSizeOffset: 10,
-        outerBlurRadius: 28,
-        middleBlurRadius: 16,
-        baseIntensity: 0.25,
-        intensityVariation: 0.2,
-        sizeVariation: 1.5,
-        style: ElementAnimationStyle.air,
-        isThemeAware: true,
-      );
+    baseDuration: Duration(milliseconds: 3000),
+    secondaryDuration: Duration(milliseconds: 1800),
+    // Colors are overridden based on theme in build methods
+    outerGlowColor: Colors.white,
+    middleGlowColor: Colors.grey,
+    innerGradientColors: [
+      Colors.white,
+      Colors.grey,
+      Colors.transparent,
+      Colors.transparent,
+    ],
+    innerGradientStops: [0.0, 0.5, 1.0, 1.0],
+    outerSizeOffset: 18,
+    middleSizeOffset: 10,
+    outerBlurRadius: 28,
+    middleBlurRadius: 16,
+    baseIntensity: 0.25,
+    intensityVariation: 0.2,
+    sizeVariation: 1.5,
+    style: ElementAnimationStyle.air,
+    isThemeAware: true,
+  );
 
   /// EARTH: Crunchy tremor with deep rumble (brown/orange/amber)
   static ElementAnimationConfig earth() => ElementAnimationConfig(
-        baseDuration: const Duration(milliseconds: 2800),
-        secondaryDuration: const Duration(milliseconds: 1600),
-        outerGlowColor: Colors.brown.shade800,
-        middleGlowColor: Colors.orange.shade900,
-        innerGradientColors: [
-          Colors.amber.shade700,
-          Colors.orange.shade800,
-          Colors.brown.shade700,
-          Colors.transparent,
-        ],
-        innerGradientStops: const [0.0, 0.35, 0.65, 1.0],
-        outerSizeOffset: 14,
-        middleSizeOffset: 8,
-        outerBlurRadius: 18,
-        middleBlurRadius: 12,
-        baseIntensity: 0.5,
-        intensityVariation: 0.45,
-        sizeVariation: 4,
-        style: ElementAnimationStyle.earth,
-      );
+    baseDuration: const Duration(milliseconds: 2800),
+    secondaryDuration: const Duration(milliseconds: 1600),
+    outerGlowColor: Colors.brown.shade800,
+    middleGlowColor: Colors.orange.shade900,
+    innerGradientColors: [
+      Colors.amber.shade700,
+      Colors.orange.shade800,
+      Colors.brown.shade700,
+      Colors.transparent,
+    ],
+    innerGradientStops: const [0.0, 0.35, 0.65, 1.0],
+    outerSizeOffset: 14,
+    middleSizeOffset: 8,
+    outerBlurRadius: 18,
+    middleBlurRadius: 12,
+    baseIntensity: 0.5,
+    intensityVariation: 0.45,
+    sizeVariation: 4,
+    style: ElementAnimationStyle.earth,
+  );
 
   /// LIGHT: Steady, radiant divine shimmer (yellow/amber/white)
   static ElementAnimationConfig light() => ElementAnimationConfig(
-        baseDuration: const Duration(milliseconds: 2200),
-        secondaryDuration: const Duration(milliseconds: 1400),
-        outerGlowColor: Colors.amber.shade300,
-        middleGlowColor: Colors.yellow.shade200,
-        innerGradientColors: [
-          Colors.white,
-          Colors.yellow.shade50,
-          Colors.yellow.shade100,
-          Colors.transparent,
-        ],
-        innerGradientStops: const [0.0, 0.25, 0.5, 1.0],
-        outerSizeOffset: 8,
-        middleSizeOffset: 4,
-        outerBlurRadius: 12,
-        middleBlurRadius: 8,
-        baseIntensity: 0.7,
-        intensityVariation: 0.15,
-        sizeVariation: 2,
-        style: ElementAnimationStyle.light,
-      );
+    baseDuration: const Duration(milliseconds: 2200),
+    secondaryDuration: const Duration(milliseconds: 1400),
+    outerGlowColor: Colors.amber.shade300,
+    middleGlowColor: Colors.yellow.shade200,
+    innerGradientColors: [
+      Colors.white,
+      Colors.yellow.shade50,
+      Colors.yellow.shade100,
+      Colors.transparent,
+    ],
+    innerGradientStops: const [0.0, 0.25, 0.5, 1.0],
+    outerSizeOffset: 8,
+    middleSizeOffset: 4,
+    outerBlurRadius: 12,
+    middleBlurRadius: 8,
+    baseIntensity: 0.7,
+    intensityVariation: 0.15,
+    sizeVariation: 2,
+    style: ElementAnimationStyle.light,
+  );
 
   /// DARK: Eerie drifting clouds across the moon (purple/deepPurple)
   static ElementAnimationConfig dark() => ElementAnimationConfig(
-        baseDuration: const Duration(milliseconds: 2600),
-        secondaryDuration: const Duration(milliseconds: 1700),
-        outerGlowColor: Colors.deepPurple.shade900,
-        middleGlowColor: Colors.purple.shade700,
-        innerGradientColors: [
-          Colors.purple.shade200,
-          Colors.purple.shade400,
-          Colors.deepPurple.shade700,
-          Colors.transparent,
-        ],
-        innerGradientStops: const [0.0, 0.3, 0.6, 1.0],
-        outerSizeOffset: 16,
-        middleSizeOffset: 8,
-        outerBlurRadius: 20,
-        middleBlurRadius: 14,
-        baseIntensity: 0.55,
-        intensityVariation: 0.3,
-        sizeVariation: 3,
-        style: ElementAnimationStyle.dark,
-      );
+    baseDuration: const Duration(milliseconds: 2600),
+    secondaryDuration: const Duration(milliseconds: 1700),
+    outerGlowColor: Colors.deepPurple.shade900,
+    middleGlowColor: Colors.purple.shade700,
+    innerGradientColors: [
+      Colors.purple.shade200,
+      Colors.purple.shade400,
+      Colors.deepPurple.shade700,
+      Colors.transparent,
+    ],
+    innerGradientStops: const [0.0, 0.3, 0.6, 1.0],
+    outerSizeOffset: 16,
+    middleSizeOffset: 8,
+    outerBlurRadius: 20,
+    middleBlurRadius: 14,
+    baseIntensity: 0.55,
+    intensityVariation: 0.3,
+    sizeVariation: 3,
+    style: ElementAnimationStyle.dark,
+  );
 
   /// Config lookup map by asset key
   static final Map<String, ElementAnimationConfig> _configs = {
@@ -500,7 +493,10 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
 
   /// Static icon display (when collapsed) - minimalist state representation
   Widget _buildStaticIcon(
-      String fullPath, bool darkTheme, AssetConfig assetConfig) {
+    String fullPath,
+    bool darkTheme,
+    AssetConfig assetConfig,
+  ) {
     switch (widget.state) {
       case ElementState.gone:
         return Center(
@@ -511,9 +507,7 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         );
 
       case ElementState.strong:
-        return Center(
-          child: _buildSvg(fullPath, darkTheme, assetConfig),
-        );
+        return Center(child: _buildSvg(fullPath, darkTheme, assetConfig));
 
       case ElementState.waning:
         // Bisected: top half dim, bottom half bright with sharp horizontal line
@@ -555,7 +549,10 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
 
   /// Animated icon display (when expanded)
   Widget _buildAnimatedIcon(
-      String fullPath, bool darkTheme, AssetConfig assetConfig) {
+    String fullPath,
+    bool darkTheme,
+    AssetConfig assetConfig,
+  ) {
     final ringColor = darkTheme
         ? Colors.white.withValues(alpha: 0.6)
         : Colors.black.withValues(alpha: 0.4);
@@ -566,15 +563,28 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
     // Handle fade-to-gone transition
     if (_isFadingToGone && _config != null) {
       return _buildFadeToGone(
-          fullPath, darkTheme, assetConfig, glowColor, ringColor);
+        fullPath,
+        darkTheme,
+        assetConfig,
+        glowColor,
+        ringColor,
+      );
     }
 
     return switch (widget.state) {
       ElementState.gone => _buildGoneIcon(fullPath, darkTheme, assetConfig),
-      ElementState.strong =>
-        _buildStrongState(fullPath, darkTheme, assetConfig, glowColor),
-      ElementState.waning =>
-        _buildWaningState(fullPath, darkTheme, assetConfig, ringColor),
+      ElementState.strong => _buildStrongState(
+        fullPath,
+        darkTheme,
+        assetConfig,
+        glowColor,
+      ),
+      ElementState.waning => _buildWaningState(
+        fullPath,
+        darkTheme,
+        assetConfig,
+        ringColor,
+      ),
     };
   }
 
@@ -589,11 +599,19 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
     // Build the animation we're fading FROM
     final Widget fadingOutWidget;
     if (_fadeFromState == ElementState.strong) {
-      fadingOutWidget =
-          _buildStrongGlow(fullPath, darkTheme, assetConfig, _config!);
+      fadingOutWidget = _buildStrongGlow(
+        fullPath,
+        darkTheme,
+        assetConfig,
+        _config!,
+      );
     } else {
-      fadingOutWidget =
-          _buildWaningGlow(fullPath, darkTheme, assetConfig, _config!);
+      fadingOutWidget = _buildWaningGlow(
+        fullPath,
+        darkTheme,
+        assetConfig,
+        _config!,
+      );
     }
 
     // The gone state we're fading TO
@@ -632,7 +650,12 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         glowColor,
       );
     }
-    return _buildFallbackStrongIcon(fullPath, darkTheme, assetConfig, glowColor);
+    return _buildFallbackStrongIcon(
+      fullPath,
+      darkTheme,
+      assetConfig,
+      glowColor,
+    );
   }
 
   /// Build waning state with fade wrapper
@@ -652,7 +675,12 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         ringColor,
       );
     }
-    return _buildFallbackWaningIcon(fullPath, darkTheme, assetConfig, ringColor);
+    return _buildFallbackWaningIcon(
+      fullPath,
+      darkTheme,
+      assetConfig,
+      ringColor,
+    );
   }
 
   /// Wraps animated icons with fade transition
@@ -673,9 +701,17 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
           // Determine which fallback to show
           final fallback = glowColor != null
               ? _buildFallbackStrongIcon(
-                  fullPath, darkTheme, assetConfig, glowColor)
+                  fullPath,
+                  darkTheme,
+                  assetConfig,
+                  glowColor,
+                )
               : _buildFallbackWaningIcon(
-                  fullPath, darkTheme, assetConfig, ringColor!);
+                  fullPath,
+                  darkTheme,
+                  assetConfig,
+                  ringColor!,
+                );
 
           return Stack(
             alignment: Alignment.center,
@@ -718,10 +754,7 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         Container(
           width: widget.size + AnimatedElementIcon.ringPadding,
           height: widget.size + AnimatedElementIcon.ringPadding,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: glowColor,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: glowColor),
         ),
         _buildSvg(fullPath, darkTheme, assetConfig),
       ],
@@ -743,10 +776,7 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
           height: widget.size + AnimatedElementIcon.ringPadding,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: ringColor,
-              width: _ringStrokeWidth,
-            ),
+            border: Border.all(color: ringColor, width: _ringStrokeWidth),
           ),
         ),
         _buildSvg(fullPath, darkTheme, assetConfig),
@@ -759,8 +789,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   // ============================================================================
 
   /// Compute animation values for the current element style
-  ({double combined, double shimmer, double cloudPosition}) _computeAnimationValues(
-      ElementAnimationConfig config) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeAnimationValues(ElementAnimationConfig config) {
     final baseValue = _baseController.value;
     final secondaryValue = _secondaryController.value;
     final tertiaryValue = _tertiaryController?.value ?? 0.0;
@@ -782,8 +812,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   }
 
   /// FIRE: Eased sine waves, 3 layers combined
-  ({double combined, double shimmer, double cloudPosition}) _computeFireAnimation(
-      double base, double secondary, double tertiary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeFireAnimation(double base, double secondary, double tertiary) {
     final baseCurve = Curves.easeInOut.transform(base);
     final basePulse = math.sin(baseCurve * math.pi);
     final flareCurve = Curves.easeInOut.transform(secondary);
@@ -794,22 +824,23 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   }
 
   /// ICE: Multi-frequency (4x, 7x, 11x) with abs() for crystalline feel
-  ({double combined, double shimmer, double cloudPosition}) _computeIceAnimation(
-      double base, double secondary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeIceAnimation(double base, double secondary) {
     final baseCurve = Curves.easeOut.transform(base);
     final basePulse = math.sin(baseCurve * math.pi * 1.5);
     final shimmerRaw = secondary;
-    final shimmer = (math.sin(shimmerRaw * math.pi * 4) * 0.5 +
-            math.sin(shimmerRaw * math.pi * 7) * 0.3)
-        .abs();
+    final shimmer =
+        (math.sin(shimmerRaw * math.pi * 4) * 0.5 +
+                math.sin(shimmerRaw * math.pi * 7) * 0.3)
+            .abs();
     final flicker = math.sin(shimmerRaw * math.pi * 11) * 0.2;
     final combined = (basePulse * 0.4) + (shimmer * 0.4) + flicker;
     return (combined: combined, shimmer: shimmer, cloudPosition: 0.0);
   }
 
   /// AIR: Cosine undulation, minimal variation
-  ({double combined, double shimmer, double cloudPosition}) _computeAirAnimation(
-      double base, double secondary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeAirAnimation(double base, double secondary) {
     final flow = math.cos(base * math.pi * 2) * 0.5 + 0.5;
     final gust = math.sin(secondary * math.pi * 2) * 0.3;
     final combined = (flow * 0.7) + (gust * 0.3);
@@ -817,8 +848,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   }
 
   /// EARTH: High-freq (11x, 17x, 23x) + threshold cracks
-  ({double combined, double shimmer, double cloudPosition}) _computeEarthAnimation(
-      double base, double secondary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeEarthAnimation(double base, double secondary) {
     final baseCurve = Curves.easeInOut.transform(base);
     final basePulse = math.sin(baseCurve * math.pi);
     final tremorRaw = secondary;
@@ -833,8 +864,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   }
 
   /// LIGHT: Smooth breathing, steady radiance
-  ({double combined, double shimmer, double cloudPosition}) _computeLightAnimation(
-      double base, double secondary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeLightAnimation(double base, double secondary) {
     final baseCurve = Curves.easeInOut.transform(base);
     final basePulse = math.sin(baseCurve * math.pi);
     final secondaryCurve = Curves.easeInOut.transform(secondary);
@@ -844,8 +875,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
   }
 
   /// DARK: Horizontal cosine drift for cloud effect
-  ({double combined, double shimmer, double cloudPosition}) _computeDarkAnimation(
-      double base, double secondary) {
+  ({double combined, double shimmer, double cloudPosition})
+  _computeDarkAnimation(double base, double secondary) {
     final driftX = math.cos(base * math.pi * 2) * 0.4;
     final drift2X = math.cos(secondary * math.pi * 2 + 1.5) * 0.3;
     final cloudPosition = driftX + drift2X;
@@ -857,7 +888,8 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
 
   /// Get theme-aware colors for AIR element
   ({Color outer, Color middle, Color inner, Color innerFade}) _getAirColors(
-      bool darkTheme) {
+    bool darkTheme,
+  ) {
     return (
       outer: darkTheme ? Colors.white : Colors.blueGrey.shade400,
       middle: darkTheme ? Colors.blueGrey.shade100 : Colors.blueGrey.shade300,
@@ -885,8 +917,10 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         final combined = values.combined;
 
         // Calculate intensities
-        final glowIntensity = config.baseIntensity + (combined * config.intensityVariation);
-        final outerGlowIntensity = (config.baseIntensity - 0.2).clamp(0.0, 1.0) +
+        final glowIntensity =
+            config.baseIntensity + (combined * config.intensityVariation);
+        final outerGlowIntensity =
+            (config.baseIntensity - 0.2).clamp(0.0, 1.0) +
             (combined * (config.intensityVariation - 0.1).clamp(0.0, 1.0));
 
         // Calculate sizes
@@ -1017,10 +1051,7 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         // Icon on top
         children.add(child!);
 
-        return Stack(
-          alignment: Alignment.center,
-          children: children,
-        );
+        return Stack(alignment: Alignment.center, children: children);
       },
       child: _buildSvg(fullPath, darkTheme, assetConfig),
     );
@@ -1046,9 +1077,11 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
         final combined = values.combined;
 
         // Waning uses reduced intensity and size variation
-        final glowIntensity = (config.baseIntensity * _waningIntensityMultiplier) +
+        final glowIntensity =
+            (config.baseIntensity * _waningIntensityMultiplier) +
             (combined * config.intensityVariation * _waningIntensityMultiplier);
-        final sizeVariation = combined * config.sizeVariation * _waningSizeMultiplier;
+        final sizeVariation =
+            combined * config.sizeVariation * _waningSizeMultiplier;
         final baseSize = widget.size + AnimatedElementIcon.ringPadding;
 
         // Get colors (theme-aware for AIR)
@@ -1090,11 +1123,7 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
                   return const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.white,
-                      Colors.white,
-                    ],
+                    colors: [Colors.transparent, Colors.white, Colors.white],
                     stops: [0.45, 0.55, 1.0],
                   ).createShader(bounds);
                 },
@@ -1107,8 +1136,16 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
                     children: [
                       // Glow using gradient
                       Container(
-                        width: baseSize + config.outerSizeOffset - 4 + sizeVariation,
-                        height: baseSize + config.outerSizeOffset - 4 + sizeVariation,
+                        width:
+                            baseSize +
+                            config.outerSizeOffset -
+                            4 +
+                            sizeVariation,
+                        height:
+                            baseSize +
+                            config.outerSizeOffset -
+                            4 +
+                            sizeVariation,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
@@ -1117,23 +1154,30 @@ class _AnimatedElementIconState extends State<AnimatedElementIcon>
                                 : Alignment.center,
                             colors: config.isThemeAware
                                 ? [
-                                    innerColors[0]
-                                        .withValues(alpha: glowIntensity * 0.6),
-                                    innerColors[1]
-                                        .withValues(alpha: glowIntensity * 0.4),
-                                    innerColors[2]
-                                        .withValues(alpha: glowIntensity * 0.3),
-                                    innerColors[3]
-                                        .withValues(alpha: glowIntensity * 0.2),
+                                    innerColors[0].withValues(
+                                      alpha: glowIntensity * 0.6,
+                                    ),
+                                    innerColors[1].withValues(
+                                      alpha: glowIntensity * 0.4,
+                                    ),
+                                    innerColors[2].withValues(
+                                      alpha: glowIntensity * 0.3,
+                                    ),
+                                    innerColors[3].withValues(
+                                      alpha: glowIntensity * 0.2,
+                                    ),
                                     Colors.transparent,
                                   ]
                                 : [
-                                    innerColors[0]
-                                        .withValues(alpha: glowIntensity * 0.7),
-                                    innerColors[1]
-                                        .withValues(alpha: glowIntensity * 0.5),
-                                    innerColors[2]
-                                        .withValues(alpha: glowIntensity * 0.3),
+                                    innerColors[0].withValues(
+                                      alpha: glowIntensity * 0.7,
+                                    ),
+                                    innerColors[1].withValues(
+                                      alpha: glowIntensity * 0.5,
+                                    ),
+                                    innerColors[2].withValues(
+                                      alpha: glowIntensity * 0.3,
+                                    ),
                                     Colors.transparent,
                                   ],
                             stops: config.isThemeAware

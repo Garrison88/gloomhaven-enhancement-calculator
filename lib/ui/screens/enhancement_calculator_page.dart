@@ -88,7 +88,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         message: Strings.multipleTargetsInfoBody(
                           context,
                           edition: edition,
-                          enhancerLvl2: edition.hasEnhancerLevels &&
+                          enhancerLvl2:
+                              edition.hasEnhancerLevels &&
                               SharedPrefs().enhancerLvl2,
                           darkMode: darkTheme,
                         ),
@@ -116,7 +117,9 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             darkTheme,
                           ),
                         ),
-                        subtitle: AppLocalizations.of(context).lossNonPersistent,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        ).lossNonPersistent,
                         titleWidget: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -148,10 +151,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         ),
                         toggleValue:
                             enhancementCalculatorModel.lostNonPersistent,
-                        toggleEnabled: !enhancementCalculatorModel.persistent &&
+                        toggleEnabled:
+                            !enhancementCalculatorModel.persistent &&
                             (edition.hasPersistentModifier ||
                                 enhancementCalculatorModel
-                                        .enhancement?.category !=
+                                        .enhancement
+                                        ?.category !=
                                     EnhancementCategory.summonPlusOne),
                         onToggleChanged: (bool value) {
                           enhancementCalculatorModel.lostNonPersistent = value;
@@ -164,7 +169,10 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                         layout: CardLayoutVariant.toggle,
                         infoConfig: InfoButtonConfig.titleMessage(
                           title: Strings.persistentInfoTitle,
-                          message: Strings.persistentInfoBody(context, darkTheme),
+                          message: Strings.persistentInfoBody(
+                            context,
+                            darkTheme,
+                          ),
                         ),
                         subtitle: AppLocalizations.of(context).persistent,
                         titleWidget: ThemedSvg(
@@ -172,8 +180,8 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                           width: iconSize,
                         ),
                         toggleValue: enhancementCalculatorModel.persistent,
-                        toggleEnabled: enhancementCalculatorModel
-                                    .enhancement?.category !=
+                        toggleEnabled:
+                            enhancementCalculatorModel.enhancement?.category !=
                                 EnhancementCategory.summonPlusOne &&
                             !enhancementCalculatorModel.lostNonPersistent,
                         onToggleChanged: (bool value) {
@@ -195,9 +203,12 @@ class _EnhancementCalculatorPageState extends State<EnhancementCalculatorPage> {
                             ),
                             child: Text(
                               AppLocalizations.of(context).discountsAndSettings,
-                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
                             ),
                           ),
                           const Expanded(child: Divider()),

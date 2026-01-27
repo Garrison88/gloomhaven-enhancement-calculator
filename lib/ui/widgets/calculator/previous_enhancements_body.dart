@@ -34,7 +34,7 @@ class PreviousEnhancementsBody extends StatelessWidget {
             if (states.contains(WidgetState.selected)) {
               final isDark =
                   ThemeData.estimateBrightnessForColor(colorScheme.primary) ==
-                      Brightness.dark;
+                  Brightness.dark;
               return isDark ? Colors.white : Colors.black;
             }
             return null;

@@ -84,13 +84,13 @@ class CalculatorSectionCard extends StatelessWidget {
     this.onToggleChanged,
     this.toggleEnabled = true,
   }) : assert(
-          title != null || titleWidget != null,
-          'Either title or titleWidget must be provided',
-        ),
-        assert(
-          layout == CardLayoutVariant.standard || toggleValue != null,
-          'Toggle layout requires toggleValue',
-        );
+         title != null || titleWidget != null,
+         'Either title or titleWidget must be provided',
+       ),
+       assert(
+         layout == CardLayoutVariant.standard || toggleValue != null,
+         'Toggle layout requires toggleValue',
+       );
 
   @override
   Widget build(BuildContext context) {
@@ -141,10 +141,7 @@ class CalculatorSectionCard extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(
-        left: largePadding,
-        right: smallPadding,
-      ),
+      padding: const EdgeInsets.only(left: largePadding, right: smallPadding),
       child: Row(
         children: [
           // Info button (not tappable for toggle)
@@ -204,11 +201,7 @@ class CalculatorSectionCard extends StatelessWidget {
           const SizedBox(width: largePadding),
         ],
         Expanded(
-          child: titleWidget ??
-              Text(
-                title!,
-                style: theme.textTheme.bodyLarge,
-              ),
+          child: titleWidget ?? Text(title!, style: theme.textTheme.bodyLarge),
         ),
       ],
     );
@@ -232,10 +225,7 @@ class CalculatorSectionCard extends StatelessWidget {
         if (config.category != null) {
           return InfoDialog(category: config.category);
         }
-        return InfoDialog(
-          title: config.title,
-          message: config.message,
-        );
+        return InfoDialog(title: config.title, message: config.message);
       },
     );
   }

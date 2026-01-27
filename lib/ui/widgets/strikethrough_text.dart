@@ -26,10 +26,7 @@ class StrikethroughText extends StatelessWidget {
         Text(text, style: effectiveStyle),
         Positioned.fill(
           child: Center(
-            child: Container(
-              height: lineThickness,
-              color: lineColor,
-            ),
+            child: Container(height: lineThickness, color: lineColor),
           ),
         ),
       ],

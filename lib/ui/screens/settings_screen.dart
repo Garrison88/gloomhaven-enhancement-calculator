@@ -112,12 +112,14 @@ class SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.info_outline_rounded),
-                  title: Text(AppLocalizations.of(context).enhancementGuidelines),
+                  title: Text(
+                    AppLocalizations.of(context).enhancementGuidelines,
+                  ),
                   trailing: Icon(
                     Icons.open_in_new,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(
-                      alpha: 0.5,
-                    ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                   onTap: () => showDialog<void>(
                     context: context,

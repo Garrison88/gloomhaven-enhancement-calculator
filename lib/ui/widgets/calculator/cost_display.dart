@@ -21,8 +21,7 @@ class CostDisplayConfig {
   });
 
   /// Whether there's a discount (discounted cost differs from base cost).
-  bool get hasDiscount =>
-      discountedCost != null && discountedCost != baseCost;
+  bool get hasDiscount => discountedCost != null && discountedCost != baseCost;
 
   /// The cost to display as the final/current cost.
   int get displayCost => discountedCost ?? baseCost;
@@ -93,9 +92,7 @@ class CostDisplay extends StatelessWidget {
 
     return Text(
       '${config.baseCost}g',
-      style: theme.textTheme.bodyMedium?.copyWith(
-        color: colorScheme.onSurface,
-      ),
+      style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
     );
   }
 }

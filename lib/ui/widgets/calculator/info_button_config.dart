@@ -31,18 +31,11 @@ class InfoButtonConfig {
     required String title,
     required RichText message,
     bool enabled = true,
-  }) : this._(
-          title: title,
-          message: message,
-          enabled: enabled,
-        );
+  }) : this._(title: title, message: message, enabled: enabled);
 
   /// Creates a config that auto-configures the dialog based on enhancement category.
   const InfoButtonConfig.category({
     required EnhancementCategory category,
     bool enabled = true,
-  }) : this._(
-          category: category,
-          enabled: enabled,
-        );
+  }) : this._(category: category, enabled: enabled);
 }

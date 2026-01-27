@@ -350,9 +350,9 @@ class EnhancementData {
                       alignment: PlaceholderAlignment.middle,
                       child: StrikethroughText(
                         '${25 * x}g',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                       ),
                     ),
                     const TextSpan(text: ' '),
@@ -404,9 +404,9 @@ class EnhancementData {
                       alignment: PlaceholderAlignment.middle,
                       child: StrikethroughText(
                         '${75 * x}g',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                       ),
                     ),
                     const TextSpan(text: ' '),
@@ -444,5 +444,4 @@ class EnhancementData {
         return true;
     }
   }
-
 }
