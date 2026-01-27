@@ -10,6 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
+import 'package:gloomhaven_enhancement_calc/data/strings.dart';
+import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/l10n/app_localizations.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/changelog_screen.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
@@ -107,6 +109,30 @@ class SettingsScreenState extends State<SettingsScreen> {
                       SharedPrefs().customClasses = val;
                     });
                   },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info_outline_rounded),
+                  title: Text(AppLocalizations.of(context).enhancementGuidelines),
+                  trailing: Icon(
+                    Icons.open_in_new,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(
+                      alpha: 0.5,
+                    ),
+                  ),
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (_) {
+                      return InfoDialog(
+                        title: Strings.generalInfoTitle,
+                        message: Strings.generalInfoBody(
+                          context,
+                          edition: SharedPrefs().gameEdition,
+                          darkMode:
+                              Theme.of(context).brightness == Brightness.dark,
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 SwitchListTile(
                   secondary: const Icon(Icons.warning_rounded),

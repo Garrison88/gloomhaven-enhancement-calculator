@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/data/constants.dart';
-import 'package:gloomhaven_enhancement_calc/data/strings.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/ui/dialogs/create_character_dialog.dart';
-import 'package:gloomhaven_enhancement_calc/ui/dialogs/info_dialog.dart';
 import 'package:gloomhaven_enhancement_calc/ui/screens/settings_screen.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/app_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
@@ -316,33 +314,6 @@ class _GHCAppBarState extends State<GHCAppBar> {
                             },
                           );
                         },
-                ),
-              ),
-            // General Guidelines info button (calculator page only)
-            if (appModel.page == 1)
-              Tooltip(
-                message: 'General Guidelines',
-                child: IconButton(
-                  icon: Icon(
-                    Icons.info_outline_rounded,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (_) {
-                      return InfoDialog(
-                        title: Strings.generalInfoTitle,
-                        message: Strings.generalInfoBody(
-                          context,
-                          edition: SharedPrefs().gameEdition,
-                          darkMode:
-                              Theme.of(context).brightness == Brightness.dark,
-                        ),
-                      );
-                    },
-                  ),
                 ),
               ),
             Tooltip(
