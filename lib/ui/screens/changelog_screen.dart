@@ -38,13 +38,20 @@ class ChangelogScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             const _VersionSection(
-              version: '4.3.2',
-              date: '2026-01-26',
+              version: '4.3.3',
+              date: '2026-01-27',
               changes: [
-                'Added Alchemancer class.',
                 'UI overhaul of Enhancement Calculator.',
                 'Added element tracker to Characters screen.',
                 'Added cost breakdown details.',
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _VersionSection(
+              version: '4.3.2',
+              date: '2026-01-18',
+              changes: [
+                'Added Alchemancer class.',
               ],
             ),
             const SizedBox(height: 24),
