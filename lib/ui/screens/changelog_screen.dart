@@ -37,6 +37,14 @@ class ChangelogScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            const _VersionSection(
+              version: '4.3.2',
+              date: '2026-01-18',
+              changes: [
+                'Added Alchemancer class.',
+              ],
+            ),
+            const SizedBox(height: 24),
             _VersionSection(
               version: '4.3.1',
               date: '2026-01-17',
