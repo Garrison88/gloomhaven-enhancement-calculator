@@ -39,9 +39,12 @@ class ChangelogScreen extends StatelessWidget {
           children: [
             const _VersionSection(
               version: '4.3.2',
-              date: '2026-01-18',
+              date: '2026-01-26',
               changes: [
                 'Added Alchemancer class.',
+                'UI overhaul of Enhancement Calculator.',
+                'Added element tracker to Characters screen.',
+                'Added cost breakdown details.',
               ],
             ),
             const SizedBox(height: 24),
