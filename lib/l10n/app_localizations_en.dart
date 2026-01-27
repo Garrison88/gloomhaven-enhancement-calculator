@@ -113,6 +113,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enhancementType => 'Enhancement Type';
 
   @override
+  String get discountsAndSettings => 'Discounts & Settings';
+
+  @override
+  String get enhancementCalculator => 'Enhancement Calculator';
+
+  @override
+  String get enhancementGuidelines => 'Enhancement Guidelines';
+
+  @override
   String get type => 'Type';
 
   @override
@@ -128,7 +137,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgottenCirclesSpoilers => 'Forgotten Circles spoilers';
 
   @override
-  String get temporaryEnhancementVariant => 'Variant: Temporary Enhancement †';
+  String get temporaryEnhancement => 'Temporary Enhancement †';
+
+  @override
+  String get variant => 'Variant';
 
   @override
   String get building44 => 'Building 44';
@@ -168,6 +180,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hailsDiscount => 'Hail\'s Discount ‡';
+
+  @override
+  String get lossNonPersistent => 'Loss non-persistent';
+
+  @override
+  String get persistent => 'Persistent';
 
   @override
   String get eligibleFor => 'Eligible For';

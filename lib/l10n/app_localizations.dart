@@ -290,6 +290,24 @@ abstract class AppLocalizations {
   /// **'Enhancement Type'**
   String get enhancementType;
 
+  /// No description provided for @discountsAndSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts & Settings'**
+  String get discountsAndSettings;
+
+  /// No description provided for @enhancementCalculator.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhancement Calculator'**
+  String get enhancementCalculator;
+
+  /// No description provided for @enhancementGuidelines.
+  ///
+  /// In en, this message translates to:
+  /// **'Enhancement Guidelines'**
+  String get enhancementGuidelines;
+
   /// No description provided for @type.
   ///
   /// In en, this message translates to:
@@ -320,11 +338,17 @@ abstract class AppLocalizations {
   /// **'Forgotten Circles spoilers'**
   String get forgottenCirclesSpoilers;
 
-  /// No description provided for @temporaryEnhancementVariant.
+  /// No description provided for @temporaryEnhancement.
   ///
   /// In en, this message translates to:
-  /// **'Variant: Temporary Enhancement †'**
-  String get temporaryEnhancementVariant;
+  /// **'Temporary Enhancement †'**
+  String get temporaryEnhancement;
+
+  /// No description provided for @variant.
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get variant;
 
   /// No description provided for @building44.
   ///
@@ -397,6 +421,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hail\'s Discount ‡'**
   String get hailsDiscount;
+
+  /// No description provided for @lossNonPersistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss non-persistent'**
+  String get lossNonPersistent;
+
+  /// No description provided for @persistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent'**
+  String get persistent;
 
   /// No description provided for @eligibleFor.
   ///
