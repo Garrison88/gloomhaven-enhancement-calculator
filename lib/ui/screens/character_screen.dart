@@ -44,11 +44,6 @@ class CharacterScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: mediumPadding),
         child: Column(
           children: <Widget>[
-            // RETIREMENTS and POCKET ITEMS
-            Padding(
-              padding: const EdgeInsets.all(mediumPadding),
-              child: _RetirementsAndPocketItemsSection(character: character),
-            ),
             // NAME and CLASS
             Container(
               constraints: const BoxConstraints(maxWidth: maxWidth),
@@ -65,6 +60,12 @@ class CharacterScreen extends StatelessWidget {
                 child: _StatsSection(character: character),
               ),
             ),
+            // PREVIOUS RETIREMENTS (edit mode only)
+            if (model.isEditMode && !character.isRetired)
+              Padding(
+                padding: const EdgeInsets.all(mediumPadding),
+                child: _PreviousRetirementsSection(character: character),
+              ),
             // RESOURCES
             Padding(
               padding: const EdgeInsets.all(mediumPadding),
@@ -112,78 +113,32 @@ class CharacterScreen extends StatelessWidget {
   }
 }
 
-class _RetirementsAndPocketItemsSection extends StatelessWidget {
-  const _RetirementsAndPocketItemsSection({required this.character});
+class _PreviousRetirementsSection extends StatelessWidget {
+  const _PreviousRetirementsSection({required this.character});
   final Character character;
   @override
   Widget build(BuildContext context) {
-    CharactersModel charactersModel = context.read<CharactersModel>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(
-          child: TextFormField(
-            key: ValueKey('previous_retirements_${character.uuid}'),
-            initialValue: character.previousRetirements.toString(),
-            textAlign: charactersModel.isEditMode && !character.isRetired
-                ? TextAlign.center
-                : TextAlign.start,
-            enableInteractiveSelection: false,
-            onChanged: (String value) => charactersModel.updateCharacter(
-              character
-                ..previousRetirements = value.isEmpty ? 0 : int.parse(value),
-            ),
-            enabled: charactersModel.isEditMode && !character.isRetired,
-            decoration: InputDecoration(
-              labelText: AppLocalizations.of(context).previousRetirements,
-              border: charactersModel.isEditMode && !character.isRetired
-                  ? const OutlineInputBorder()
-                  : InputBorder.none,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]')),
-            ],
-            keyboardType: TextInputType.number,
-          ),
+    final charactersModel = context.read<CharactersModel>();
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 200),
+      child: TextFormField(
+        key: ValueKey('previous_retirements_${character.uuid}'),
+        initialValue: character.previousRetirements.toString(),
+        textAlign: TextAlign.center,
+        enableInteractiveSelection: false,
+        onChanged: (String value) => charactersModel.updateCharacter(
+          character
+            ..previousRetirements = value.isEmpty ? 0 : int.parse(value),
         ),
-        const SizedBox(width: 75),
-        Tooltip(
-          message: AppLocalizations.of(
-            context,
-          ).pocketItemsAllowed((Character.level(character.xp) / 2).round()),
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: mediumPadding,
-              top: mediumPadding,
-            ),
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: <Widget>[
-                SvgPicture.asset(
-                  'images/equipment_slots/pocket.svg',
-                  width: iconSize,
-                  colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.onSurface,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 3.5),
-                  child: Text(
-                    '${(Character.level(character.xp) / 2).round()}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: mediumPadding),
-              ],
-            ),
-          ),
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).previousRetirements,
+          border: const OutlineInputBorder(),
         ),
-      ],
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp('[\\.|\\,|\\ |\\-]')),
+        ],
+        keyboardType: TextInputType.number,
+      ),
     );
   }
 }
@@ -501,6 +456,35 @@ class _StatsSectionState extends State<_StatsSection> {
                 ),
               ],
             ),
+          ),
+        ),
+        Tooltip(
+          message: AppLocalizations.of(context).pocketItemsAllowed(
+            (Character.level(widget.character.xp) / 2).round(),
+          ),
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: <Widget>[
+              SvgPicture.asset(
+                'images/equipment_slots/pocket.svg',
+                width: iconSize,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 3.5),
+                child: Text(
+                  '${(Character.level(widget.character.xp) / 2).round()}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
