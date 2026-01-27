@@ -1,209 +1,238 @@
-# Feature Plans & TODO
+# Personal Quests Implementation Plan
 
-## CI/CD Pipeline for Google Play Internal Track Deployment
+## Overview
 
-### Goal
+Add Personal Quests feature to track character retirement goals. Data sourced from [gloomhavensecretariat](https://github.com/Lurkars/gloomhavensecretariat) repository, bundled statically like perks/masteries.
 
-Automate the release process so a single command deploys the latest code from master to Google Play's internal test track:
-1. Auto-increment the build number
-2. Build a signed Android app bundle
-3. Upload to internal test track
+## Scope
 
-### Approach
-
-**GitHub Actions + `r0adkll/upload-google-play` action** (simpler than Fastlane for this use case)
-
-#### How Build Number Auto-Increment Works
-
-Use `--build-number` flag at build time with GitHub's run number:
-```bash
-flutter build appbundle --release --build-number=$(( github.run_number + OFFSET ))
-```
-
-This overrides the pubspec.yaml value without needing to commit changes back to the repo. Each workflow run gets a unique, incrementing number.
-
-The offset ensures the new build number is higher than the current one (322). Set `BUILD_NUMBER_OFFSET=320` initially.
-
-#### Workflow Trigger
-
-Manual trigger (`workflow_dispatch`) - run with:
-```bash
-gh workflow run deploy-internal.yml
-```
-
-Or use the GitHub Actions web UI "Run workflow" button.
+- **Editions**: Gloomhaven (24 quests), GH 2E, Frosthaven (Jaws of the Lion has no personal quests)
+- **Per Character**: Each character has ONE assigned quest
+- **Progress Tracking**: Counter-based requirements (e.g., "Kill 15 bandits: 7/15")
+- **Retirement**: Quest completion enables retirement
 
 ---
 
-### Implementation Checklist
+## Data Models
 
-#### 1. Create GitHub Secrets
+### PersonalQuest (static game data)
+**File**: `lib/models/personal_quest.dart`
 
-Add these in GitHub repo settings → Secrets and variables → Actions:
+```dart
+class PersonalQuest {
+  String questId;           // "gh_510", "fh_581"
+  String edition;           // "gh", "gh2e", "fh"
+  String cardId;            // "510" (original card number)
+  String title;             // "Seeker of Xorn"
+  List<QuestRequirement> requirements;
+  QuestReward reward;       // unlockCharacter or openEnvelope
+}
 
-| Secret Name | Value |
-|-------------|-------|
-| `KEYSTORE_BASE64` | Base64-encoded keystore file |
-| `KEYSTORE_PASSWORD` | Keystore password |
-| `KEY_PASSWORD` | Key password |
-| `KEY_ALIAS` | Key alias (`key`) |
-| `PLAY_STORE_SERVICE_ACCOUNT_JSON` | Base64-encoded Google Play service account JSON |
+class QuestRequirement {
+  String description;       // "Crypt scenarios completed"
+  int targetCount;          // 3
+}
 
-**To encode files as base64 (macOS):**
-```bash
-base64 -i /path/to/key.jks | pbcopy  # copies to clipboard
-base64 -i service-account.json | pbcopy
+class QuestReward {
+  QuestRewardType type;     // character | envelope
+  String value;             // "squidface" | "X"
+}
 ```
 
-#### 2. Set Up Google Play Service Account (One-Time)
+### CharacterPersonalQuest (character progress)
+**File**: `lib/models/character_personal_quest.dart`
 
-##### 2a. Create Google Cloud Project (if needed)
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project (or use existing one / Firebase project)
-
-##### 2b. Enable the Google Play Developer API
-1. Go to [Google Play Android Developer API](https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com)
-2. Select your project
-3. Click **Enable**
-
-##### 2c. Create Service Account
-1. Go to [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)
-2. Click **Create Service Account**
-3. Enter a name (e.g., "GitHub Actions Deploy")
-4. Click **Create and Continue**
-5. Skip the role assignment (permissions set in Play Console)
-6. Click **Done**
-
-##### 2d. Download JSON Key
-1. In the Service Accounts list, find your new account
-2. Click the **⋮** menu → **Manage keys**
-3. Click **Add key** → **Create new key**
-4. Select **JSON** format
-5. Click **Create** - file downloads automatically
-6. Keep this file secure!
-
-##### 2e. Grant Permissions in Google Play Console
-1. Go to [Google Play Console](https://play.google.com/console) → **Users and permissions**
-2. Click **Invite new users**
-3. Enter the service account email (looks like `name@project.iam.gserviceaccount.com`)
-4. Under **App permissions**, click **Add app** → select your app
-5. Grant these permissions:
-   - **Releases** → Manage production releases (or at minimum: Manage testing track releases)
-6. Click **Invite user** → **Send invitation**
-
-**Note**: Service account may take up to 24 hours to activate. To speed this up, make any small edit to a product/subscription in Play Console.
-
-**Prerequisites**:
-- App must already exist in Google Play Console
-- At least one AAB/APK must have been manually uploaded before (API can't create the initial app listing)
-
-#### 3. Create Workflow File
-
-Create `.github/workflows/deploy-internal.yml`:
-
-```yaml
-name: Deploy to Internal Track
-
-on:
-  workflow_dispatch:
-    inputs:
-      version_name:
-        description: 'Version name (e.g., 4.3.3) - leave empty to use pubspec.yaml'
-        required: false
-        type: string
-
-env:
-  FLUTTER_VERSION: "3.29.0"
-  JAVA_VERSION: "17"
-  BUILD_NUMBER_OFFSET: 320  # Adjust so build_number > current (322)
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Decode keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
-
-      - name: Create key.properties
-        run: |
-          echo "storeFile=keystore.jks" > android/key.properties
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-
-      - name: Calculate build number
-        id: build_number
-        run: echo "value=$(( ${{ github.run_number }} + ${{ env.BUILD_NUMBER_OFFSET }} ))" >> $GITHUB_OUTPUT
-
-      - name: Build App Bundle
-        run: |
-          BUILD_ARGS="--release --build-number=${{ steps.build_number.outputs.value }}"
-          if [ -n "${{ inputs.version_name }}" ]; then
-            BUILD_ARGS="$BUILD_ARGS --build-name=${{ inputs.version_name }}"
-          fi
-          flutter build appbundle $BUILD_ARGS
-
-      - name: Decode service account
-        run: echo "${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
-
-      - name: Upload to Play Store (Internal Track)
-        uses: r0adkll/upload-google-play@v1.1.3
-        with:
-          serviceAccountJson: service-account.json
-          packageName: tomkatcreative.gloomhavenenhancementcalc
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
-          track: internal
-          status: completed
+```dart
+class CharacterPersonalQuest {
+  String characterUuid;
+  String questId;
+  List<int> progress;       // [2, 0] for 2-requirement quest
+  bool isCompleted;
+}
 ```
 
 ---
 
-### Usage
+## Repository
 
-After setup is complete:
+**File**: `lib/data/personal_quests/personal_quests_repository.dart`
 
-```bash
-# Deploy using current pubspec.yaml version
-gh workflow run deploy-internal.yml
+Static data converted from gloomhavensecretariat JSON:
 
-# Deploy with a specific version name
-gh workflow run deploy-internal.yml -f version_name=4.3.3
+```dart
+class PersonalQuestsRepository {
+  static final Map<String, List<PersonalQuest>> questsByEdition = {
+    'gh': [...],    // 24 quests (510-533)
+    'gh2e': [...],  // GH 2E quests
+    'fh': [...],    // Frosthaven quests (581+)
+  };
+
+  static List<PersonalQuest>? getQuestsForEdition(String edition) =>
+      questsByEdition[edition];
+}
 ```
 
-Or use the GitHub Actions web UI → "Run workflow" button.
+---
+
+## Database Changes
+
+### New Tables
+
+**PersonalQuestsTable** (regenerated from repository):
+```sql
+CREATE TABLE PersonalQuestsTable (
+  _id TEXT PRIMARY KEY,        -- "gh_510"
+  Edition TEXT NOT NULL,
+  Title TEXT NOT NULL,
+  Requirements TEXT NOT NULL,  -- JSON
+  RewardType TEXT NOT NULL,
+  RewardValue TEXT NOT NULL
+)
+```
+
+**CharacterPersonalQuests** (persisted):
+```sql
+CREATE TABLE CharacterPersonalQuests (
+  CharacterUuid TEXT NOT NULL,
+  QuestID TEXT NOT NULL,
+  Progress TEXT NOT NULL,      -- JSON array [2, 0]
+  IsCompleted BOOL NOT NULL,
+  PRIMARY KEY (CharacterUuid, QuestID)
+)
+```
+
+### Character Table Update
+```sql
+ALTER TABLE Characters ADD COLUMN PersonalQuestId TEXT
+```
+
+### Migration
+- Increment to version 17
+- Add migration in `database_migrations.dart`
 
 ---
 
-### Verification
+## Character Model Updates
 
-1. Run the workflow manually from GitHub Actions
-2. Check the workflow logs for successful build and upload
-3. Go to Google Play Console → Internal testing → Releases
-4. Verify new build appears with the correct version code
+**File**: `lib/models/character.dart`
+
+Add fields:
+```dart
+String? personalQuestId;
+CharacterPersonalQuest? characterPersonalQuest;
+```
+
+Add helpers:
+```dart
+bool supportsPersonalQuests() => category != ClassCategory.jawsOfTheLion;
+bool isQuestComplete() => characterPersonalQuest?.isCompleted ?? false;
+```
 
 ---
 
-### Security Notes
+## State Management
 
-- Keystore and service account JSON are stored as base64-encoded GitHub secrets
-- Secrets are never logged or exposed in workflow output
-- Sensitive files are created at runtime and not committed to the repo
+**File**: `lib/viewmodels/characters_model.dart`
+
+Add methods:
+- `assignPersonalQuest(character, questId)` - Assign quest, create progress record
+- `updateQuestProgress(character, requirementIndex, newValue)` - Update counter
+- `_loadPersonalQuest(character)` - Load quest progress on character load
+
+---
+
+## UI Components
+
+### PersonalQuestSection
+**File**: `lib/ui/widgets/personal_quest_section.dart`
+
+Location: Character screen, after Stats row, before Resources
+
+```
++------------------------------------------+
+| Personal Quest                      [v]  |
+|------------------------------------------|
+| #510 - Seeker of Xorn                    |
+|                                          |
+| [ ] Crypt scenarios          [2] / 3     |
+| [ ] Follow Noxious Cellar    [0] / 1     |
+|                                          |
+| Reward: [eye icon to reveal]             |
++------------------------------------------+
+```
+
+- `ExpansionTile` like Resources section
+- Shows quest card ID + title
+- Requirement rows with counter widgets
+- Edit mode: +/- buttons on counters
+- Spoiler toggle for reward
+
+### SelectPersonalQuestDialog
+**File**: `lib/ui/dialogs/select_personal_quest_dialog.dart`
+
+- Lists quests for character's edition
+- Shows card ID + title (reward hidden)
+- "Random" selection option
+
+---
+
+## Localization
+
+Add to ARB files:
+```json
+"personalQuest": "Personal Quest",
+"assignPersonalQuest": "Assign Personal Quest",
+"questComplete": "Quest Complete!",
+"readyToRetire": "Ready to Retire",
+"noQuestAssigned": "No quest assigned"
+```
+
+---
+
+## Implementation Phases
+
+### Phase 1: Data Layer
+1. Create `PersonalQuest` and `CharacterPersonalQuest` models
+2. Create `PersonalQuestsRepository` with converted static data
+3. Add database tables and migration (v17)
+4. Update `Character` model
+5. Add `DatabaseHelper` query methods
+
+### Phase 2: State Management
+1. Add quest methods to `CharactersModel`
+2. Integrate quest loading into character load flow
+
+### Phase 3: UI
+1. Create `PersonalQuestSection` widget
+2. Add to `CharacterScreen`
+3. Create `SelectPersonalQuestDialog`
+
+### Phase 4: Polish
+1. Add spoiler handling for rewards
+2. Add localization strings
+3. Update backup/restore to include quest tables
+
+---
+
+## Key Files to Modify
+
+| File | Changes |
+|------|---------|
+| `lib/models/character.dart` | Add `personalQuestId` field |
+| `lib/data/database_helpers.dart` | Add tables, queries |
+| `lib/data/database_migrations.dart` | Add v17 migration |
+| `lib/viewmodels/characters_model.dart` | Add quest methods |
+| `lib/ui/screens/character_screen.dart` | Add PersonalQuestSection |
+| `lib/l10n/app_en.arb` | Add localization strings |
+| `lib/l10n/app_pt.arb` | Add Portuguese translations |
+
+---
+
+## Verification
+
+1. **Create character** - Verify quest can be assigned
+2. **Update progress** - Increment/decrement counters, verify persistence
+3. **Complete quest** - Mark all requirements complete, verify `isCompleted` flag
+4. **Reload app** - Verify quest data persists correctly
+5. **Backup/restore** - Verify quest progress included in backup
+6. **Edition switching** - Verify correct quests shown per edition
