@@ -488,9 +488,10 @@ lib/ui/widgets/calculator/
 ├── cost_display.dart              # Standardized cost chip with strikethrough
 ├── card_level_body.dart           # SfSlider for card level selection
 ├── previous_enhancements_body.dart # Segmented button (0-3)
-├── enhancement_type_body.dart     # Dropdown selector
-└── modifier_toggles_body.dart     # Multi-target/Loss/Persistent toggles
+└── enhancement_type_body.dart     # Dropdown selector
 ```
+
+Note: Modifier toggles (Multi-target, Loss, Persistent) use the `toggle` layout variant directly in `enhancement_calculator_page.dart` rather than a separate body widget.
 
 ### CalculatorSectionCard
 
