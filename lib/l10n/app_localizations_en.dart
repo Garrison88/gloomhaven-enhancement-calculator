@@ -87,7 +87,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retired => '(retired)';
 
   @override
-  String get previousRetirements => 'Previous retirements';
+  String get previousRetirements => 'Previous Retirements';
 
   @override
   String pocketItemsAllowed(int count) {
@@ -101,7 +101,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get battleGoalCheckmarks => 'Battle Goal Checkmarks';
+  String get battleGoals => 'Battle Goals';
 
   @override
   String get cardLevel => 'Card Level';
@@ -113,7 +113,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enhancementType => 'Enhancement Type';
 
   @override
-  String get discountsAndSettings => 'Discounts & Settings';
+  String get actionDetails => 'Card Details';
+
+  @override
+  String get discounts => 'Discounts';
 
   @override
   String get enhancementCalculator => 'Enhancement Calculator';
@@ -122,7 +125,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enhancementGuidelines => 'Enhancement Guidelines';
 
   @override
-  String get type => 'Type';
+  String get type => 'Select type...';
 
   @override
   String get multipleTargets => 'Multiple Targets';
@@ -288,6 +291,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get backupError => 'Failed to create backup. Please try again.';
+
+  @override
   String get restoreWarning =>
       'Restoring a backup file will overwrite any current characters. Do you wish to continue?';
 
@@ -344,4 +350,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pleaseSelectClass => 'Please select a Class';
+
+  @override
+  String get createCharacter => 'Create Character';
+
+  @override
+  String get gameEdition => 'Game Edition';
+
+  @override
+  String get selectClass => 'Select class...';
 }

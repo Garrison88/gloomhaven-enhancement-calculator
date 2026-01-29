@@ -17,6 +17,7 @@ import 'package:gloomhaven_enhancement_calc/ui/screens/changelog_screen.dart';
 import 'package:gloomhaven_enhancement_calc/models/player_class.dart';
 import 'package:gloomhaven_enhancement_calc/shared_prefs.dart';
 import 'package:gloomhaven_enhancement_calc/theme/theme_provider.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/ghc_app_bar.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/characters_model.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 import 'package:intl/intl.dart';
@@ -73,23 +74,15 @@ class SettingsScreenState extends State<SettingsScreen> {
       top: false,
       bottom: Platform.isAndroid,
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Platform.isIOS ? Icons.arrow_back_ios_new : Icons.arrow_back,
-            ),
-          ),
-          title: Text(
-            AppLocalizations.of(context).settings,
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
+        appBar: GHCAppBar(
+          title: AppLocalizations.of(context).settings,
+          scrollController: scrollController,
         ),
         body: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: maxWidth),
             child: ListView(
+              controller: scrollController,
               children: <Widget>[
                 SettingsSection(title: AppLocalizations.of(context).gameplay),
                 SwitchListTile(
@@ -229,6 +222,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           setState(() {
                             SharedPrefs().envelopeX = val;
                           });
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
@@ -352,6 +346,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                           setState(() {
                             SharedPrefs().envelopeV = val;
                           });
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
@@ -494,7 +489,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ],
                                 TextField(
                                   decoration: InputDecoration(
-                                    border: const OutlineInputBorder(),
                                     labelText: AppLocalizations.of(
                                       context,
                                     ).filename,
@@ -527,14 +521,31 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   if (!await _getStoragePermission()) {
                                     return;
                                   }
-                                  String value = await DatabaseHelper.instance
-                                      .generateBackup();
-                                  downloadPath = '/storage/emulated/0/Download';
-                                  File backupFile = File(
-                                    '$downloadPath/${fileNameController.text}.txt',
-                                  );
-                                  await backupFile.writeAsString(value);
-                                  Navigator.of(context).pop('save');
+                                  try {
+                                    String value = await DatabaseHelper.instance
+                                        .generateBackup();
+                                    downloadPath =
+                                        '/storage/emulated/0/Download';
+                                    File backupFile = File(
+                                      '$downloadPath/${fileNameController.text}.txt',
+                                    );
+                                    await backupFile.writeAsString(value);
+                                    if (!context.mounted) return;
+                                    Navigator.of(context).pop('save');
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context)
+                                      ..clearSnackBars()
+                                      ..showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            AppLocalizations.of(
+                                              context,
+                                            ).backupError,
+                                          ),
+                                        ),
+                                      );
+                                  }
                                 },
                               ),
                             TextButton.icon(
@@ -563,6 +574,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                     ).then((String? backupName) async {
                       if (backupName != null) {
                         if (backupName == 'save') {
+                          if (!context.mounted) return;
                           ScaffoldMessenger.of(context)
                             ..clearSnackBars()
                             ..showSnackBar(
@@ -575,23 +587,39 @@ class SettingsScreenState extends State<SettingsScreen> {
                               ),
                             );
                         } else {
-                          Directory directory = await getTemporaryDirectory();
-                          downloadPath = directory.path;
-                          String backupValue = await DatabaseHelper.instance
-                              .generateBackup();
-                          File backupFile = File(
-                            '$downloadPath/$backupName.txt',
-                          );
-                          await backupFile.writeAsString(backupValue);
-                          await Share.shareXFiles(
-                            [XFile('$downloadPath/$backupName.txt')],
-                            sharePositionOrigin:
-                                Offset(
-                                  MediaQuery.of(context).size.height / 2,
-                                  MediaQuery.of(context).size.width / 2,
-                                ) &
-                                const Size(3.0, 4.0),
-                          );
+                          try {
+                            Directory directory = await getTemporaryDirectory();
+                            downloadPath = directory.path;
+                            String backupValue = await DatabaseHelper.instance
+                                .generateBackup();
+                            File backupFile = File(
+                              '$downloadPath/$backupName.txt',
+                            );
+                            await backupFile.writeAsString(backupValue);
+                            if (!context.mounted) return;
+                            await SharePlus.instance.share(
+                              ShareParams(
+                                files: [XFile('$downloadPath/$backupName.txt')],
+                                sharePositionOrigin:
+                                    Offset(
+                                      MediaQuery.of(context).size.height / 2,
+                                      MediaQuery.of(context).size.width / 2,
+                                    ) &
+                                    const Size(3.0, 4.0),
+                              ),
+                            );
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context)
+                              ..clearSnackBars()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    AppLocalizations.of(context).backupError,
+                                  ),
+                                ),
+                              );
+                          }
                         }
                       }
                     });
@@ -632,6 +660,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 if (!await _getStoragePermission()) {
                                   return;
                                 }
+                                if (!context.mounted) return;
                                 Navigator.of(context).pop(true);
                               },
                             ),
@@ -658,17 +687,21 @@ class SettingsScreenState extends State<SettingsScreen> {
                             File file = File(path);
                             contents = file.readAsStringSync();
 
+                            if (!context.mounted) return;
                             _showLoaderDialog(context);
                             try {
                               await DatabaseHelper.instance.restoreBackup(
                                 contents,
                               );
                               SharedPrefs().initialPage = 0;
+                              if (!context.mounted) return;
                               await context
                                   .read<CharactersModel>()
                                   .loadCharacters();
+                              if (!context.mounted) return;
                               context.read<CharactersModel>().jumpToPage(0);
                             } catch (e) {
+                              if (!context.mounted) return;
                               await showDialog(
                                 barrierDismissible: false,
                                 context: context,
@@ -716,7 +749,9 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 },
                               );
                             }
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
                           }
                         });
@@ -800,7 +835,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
                 // Extra padding to scroll content above bottom sheet
-                const SizedBox(height: 200),
+                const SizedBox(height: 160),
               ],
             ),
           ),

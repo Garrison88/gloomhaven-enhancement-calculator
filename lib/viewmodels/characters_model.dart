@@ -5,6 +5,7 @@ import 'package:gloomhaven_enhancement_calc/data/database_helpers.dart';
 import 'package:gloomhaven_enhancement_calc/data/perks/perks_repository.dart';
 import 'package:gloomhaven_enhancement_calc/data/player_classes/player_class_constants.dart';
 import 'package:gloomhaven_enhancement_calc/models/character.dart';
+import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/character_mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/mastery/mastery.dart';
 import 'package:gloomhaven_enhancement_calc/models/perk/character_perk.dart';
@@ -208,11 +209,10 @@ class CharactersModel with ChangeNotifier {
             playerClass,
             initialLevel: random.nextInt(9) + 1,
             previousRetirements: random.nextInt(4),
-            gloomhavenMode: random.nextBool(),
+            edition: GameEdition.values[random.nextInt(3)],
             prosperityLevel: random.nextInt(5),
             variant: variant,
           );
-          debugPrint('Created $variantName (${variant.name})');
         }
       } else {
         // Create only base variant
@@ -221,10 +221,9 @@ class CharactersModel with ChangeNotifier {
           playerClass,
           initialLevel: random.nextInt(9) + 1,
           previousRetirements: random.nextInt(4),
-          gloomhavenMode: random.nextBool(),
+          edition: GameEdition.values[random.nextInt(3)],
           prosperityLevel: random.nextInt(5),
         );
-        debugPrint('Created ${playerClass.name}');
       }
     }
   }
@@ -256,15 +255,6 @@ class CharactersModel with ChangeNotifier {
     }
   }
 
-  // void toggleEditMode({bool? value}) {
-  //   if (value != null) {
-  //     isEditMode = value;
-  //   } else {
-  //     isEditMode = !isEditMode;
-  //   }
-  //   notifyListeners();
-  // }
-
   void onPageChanged(int index) {
     SharedPrefs().initialPage = index;
     isScrolledToTop = true;
@@ -278,7 +268,7 @@ class CharactersModel with ChangeNotifier {
     PlayerClass selectedClass, {
     int initialLevel = 1,
     int previousRetirements = 0,
-    bool gloomhavenMode = true,
+    GameEdition edition = GameEdition.gloomhaven,
     int prosperityLevel = 0,
     Variant variant = Variant.base,
   }) async {
@@ -288,16 +278,10 @@ class CharactersModel with ChangeNotifier {
       playerClass: selectedClass,
       previousRetirements: previousRetirements,
       xp: PlayerClasses.xpByLevel(initialLevel),
-      gold: gloomhavenMode
-          ? 15 * (initialLevel + 1)
-          : 10 * prosperityLevel + 20,
+      gold: _calculateStartingGold(edition, initialLevel, prosperityLevel),
       variant: variant,
     );
-    try {
-      character.id = await databaseHelper.insertCharacter(character);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    character.id = await databaseHelper.insertCharacter(character);
     character.characterPerks = await _loadPerks(character);
 
     character.characterMasteries = await _loadMasteries(character);
@@ -308,6 +292,26 @@ class CharactersModel with ChangeNotifier {
     }
     _setCurrentCharacter(index: characters.indexOf(character));
     notifyListeners();
+  }
+
+  /// Calculate starting gold based on game edition rules.
+  ///
+  /// - Gloomhaven: 15 × (L + 1), where L is starting level
+  /// - Gloomhaven 2E: 10 × P + 15, where P is prosperity level
+  /// - Frosthaven: 10 × P + 20, where P is prosperity level
+  int _calculateStartingGold(
+    GameEdition edition,
+    int startingLevel,
+    int prosperityLevel,
+  ) {
+    switch (edition) {
+      case GameEdition.gloomhaven:
+        return 15 * (startingLevel + 1);
+      case GameEdition.gloomhaven2e:
+        return 10 * prosperityLevel + 15;
+      case GameEdition.frosthaven:
+        return 10 * prosperityLevel + 20;
+    }
   }
 
   Future<void> deleteCurrentCharacter() async {

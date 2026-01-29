@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gloomhaven_enhancement_calc/models/game_edition.dart';
-import 'package:gloomhaven_enhancement_calc/utils/game_text_parser.dart';
+import 'package:gloomhaven_enhancement_calc/utils/rich_text_builder.dart';
 
-/// Centralized string content for the app
+/// Centralized string content for the app.
 ///
 /// This class stores all UI text as markdown-formatted strings, which are then
-/// parsed into RichText using GameTextParser. This separates content from presentation
-/// and makes the strings easier to read, maintain, and test.
+/// parsed into RichText using [RichTextBuilder]. This separates content from
+/// presentation and makes the strings easier to read, maintain, and test.
 class Strings {
   // ============================================================================
   // STATIC CONTENT
@@ -66,7 +66,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required GameEdition edition,
     required bool darkMode,
   }) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _generalInfoContent(edition: edition),
       darkMode,
@@ -92,7 +92,11 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     BuildContext context,
     bool darkMode,
   ) {
-    return _buildRichText(context, _temporaryEnhancementContent, darkMode);
+    return RichTextBuilder.build(
+      context,
+      _temporaryEnhancementContent,
+      darkMode,
+    );
   }
 
   // ============================================================================
@@ -111,7 +115,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     BuildContext context,
     bool darkMode,
   ) {
-    return _buildRichText(context, _scenario114RewardContent, darkMode);
+    return RichTextBuilder.build(context, _scenario114RewardContent, darkMode);
   }
 
   // ============================================================================
@@ -130,7 +134,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "**Level 4:** Reduce repeat enhancement penalties by 25 gold per enhancement";
 
   static RichText building44InfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _building44Content, darkMode);
+    return RichTextBuilder.build(context, _building44Content, darkMode);
   }
 
   // ============================================================================
@@ -144,7 +148,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "Enhancements by 5 gold.";
 
   static RichText hailsDiscountInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _hailsDiscountContent, darkMode);
+    return RichTextBuilder.build(context, _hailsDiscountContent, darkMode);
   }
 
   // ============================================================================
@@ -183,7 +187,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required bool partyBoon,
     required bool enhancerLvl3,
   }) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _cardLevelContent(
         edition: edition,
@@ -230,7 +234,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required GameEdition edition,
     required bool enhancerLvl4,
   }) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _previousEnhancementsContent(
         edition: edition,
@@ -259,7 +263,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     GameEdition edition,
     bool darkMode,
   ) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _plusOneCharacterContent(edition: edition),
       darkMode,
@@ -292,7 +296,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     GameEdition edition,
     bool darkMode,
   ) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _plusOneSummonContent(edition: edition),
       darkMode,
@@ -310,7 +314,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "**cannot** be enhanced with effects.";
 
   static RichText negEffectInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _negEffectContent, darkMode);
+    return RichTextBuilder.build(context, _negEffectContent, darkMode);
   }
 
   // ============================================================================
@@ -324,7 +328,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "**cannot** be enhanced with effects.";
 
   static RichText posEffectInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _posEffectContent, darkMode);
+    return RichTextBuilder.build(context, _posEffectContent, darkMode);
   }
 
   // ============================================================================
@@ -336,7 +340,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "considered a Jump. A summon's Move **cannot** be enhanced with Jump.";
 
   static RichText jumpInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _jumpContent, darkMode);
+    return RichTextBuilder.build(context, _jumpContent, darkMode);
   }
 
   // ============================================================================
@@ -358,7 +362,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     GameEdition edition,
     bool darkMode,
   ) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _specificElementContent(edition: edition),
       darkMode,
@@ -384,7 +388,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     GameEdition edition,
     bool darkMode,
   ) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _anyElementContent(edition: edition),
       darkMode,
@@ -401,7 +405,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "a Hex is **never** subject to the multiple targets multiplier.";
 
   static RichText hexInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _hexContent, darkMode);
+    return RichTextBuilder.build(context, _hexContent, darkMode);
   }
 
   // ============================================================================
@@ -439,7 +443,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required bool enhancerLvl2,
     required bool darkMode,
   }) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _multipleTargetsContent(edition: edition, enhancerLvl2: enhancerLvl2),
       darkMode,
@@ -470,7 +474,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     GameEdition edition,
     bool darkMode,
   ) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _lostNonPersistentContent(edition: edition),
       darkMode,
@@ -488,7 +492,7 @@ A **main** ability is an ability that is written in larger font, whereas a **non
       "the base cost. This **does not** apply to summon stat enhancements.";
 
   static RichText persistentInfoBody(BuildContext context, bool darkMode) {
-    return _buildRichText(context, _persistentContent, darkMode);
+    return RichTextBuilder.build(context, _persistentContent, darkMode);
   }
 
   // ============================================================================
@@ -498,26 +502,32 @@ A **main** ability is an ability that is written in larger font, whereas a **non
   static const String newCharacterInfoTitle = "New Character";
 
   static String _newCharacterContent({required GameEdition edition}) {
-    if (edition == GameEdition.frosthaven) {
-      return "When starting a new character in Frosthaven, you can choose to immediately "
-          "level up to any level less than or equal to the current Prosperity Level of the "
-          "city divided by 2 (rounded up), gaining the benefits for each level in sequence.\n"
-          "You are also alloted an amount of gold equal to **10xP+20**, where 'P' is the "
-          "current Prosperity Level.\nFor example, if the city is at Prosperity Level 3, "
-          "you could start a character at level 1 or 2, and would be alloted 40 gold. This "
-          "gold must be spent immediately on items in the available purchasable supply, and "
-          "any unspent gold is forfeited.";
-    } else {
-      // GH and GH2E use the same new character rules
-      final gameName = edition == GameEdition.gloomhaven2e
-          ? 'Gloomhaven 2E'
-          : 'Gloomhaven';
-      return "When starting a new character in $gameName, you can choose to immediately "
-          "level up to any level less than or equal to the current Prosperity Level of the "
-          "city, gaining the benefits for each level in sequence.\nYou are also alloted an "
-          "amount of gold equal to **15x(L+1)**, where L is your character's starting level.\n"
-          "For example, if the city is at Prosperity Level 3, you could start a character at "
-          "level 1, 2, or 3, and would be alloted 30, 45, or 60 gold, respectively.";
+    switch (edition) {
+      case GameEdition.gloomhaven:
+        return "When starting a new character in Gloomhaven, you can choose to immediately "
+            "level up to any level less than or equal to the current Prosperity Level of the "
+            "city, gaining the benefits for each level in sequence.\n\n"
+            "You are also alloted an amount of gold equal to **15x(L+1)**, where 'L' is your "
+            "character's starting level.\n\n"
+            "For example, if the city is at Prosperity Level 3, you could start a character at "
+            "level 1, 2, or 3, and would be alloted 30, 45, or 60 gold, respectively.";
+      case GameEdition.gloomhaven2e:
+        return "When starting a new character in Gloomhaven 2E, they always start "
+            "at level 1. They may immediately level up (even multiple times) as long as their "
+            "level does not exceed half the current Prosperity Level (rounded up).\n\n"
+            "You are alloted an amount of gold equal to **10xP+15**, where 'P' is the current "
+            "Prosperity Level. This gold must be spent immediately on items.\n\n"
+            "For example, if the city is at Prosperity Level 4, you could level up to level 2, "
+            "and would be alloted 55 gold.";
+      case GameEdition.frosthaven:
+        return "When starting a new character in Frosthaven, you can choose to immediately "
+            "level up to any level less than or equal to the current Prosperity Level of the "
+            "city divided by 2 (rounded up), gaining the benefits for each level in sequence.\n\n"
+            "You are also alloted an amount of gold equal to **10xP+20**, where 'P' is the "
+            "current Prosperity Level.\n\n"
+            "For example, if the city is at Prosperity Level 3, you could start a character at "
+            "level 1 or 2, and would be alloted 50 gold. This gold must be spent immediately "
+            "on items in the available purchasable supply, and any unspent gold is forfeited.";
     }
   }
 
@@ -526,31 +536,10 @@ A **main** ability is an ability that is written in larger font, whereas a **non
     required GameEdition edition,
     required bool darkMode,
   }) {
-    return _buildRichText(
+    return RichTextBuilder.build(
       context,
       _newCharacterContent(edition: edition),
       darkMode,
-    );
-  }
-
-  // ============================================================================
-  // HELPER METHODS
-  // ============================================================================
-
-  /// Build a RichText widget from markdown-formatted string
-  ///
-  /// This uses the GameTextParser to convert markdown syntax (**bold**, *italic*,
-  /// icons, etc.) into properly formatted InlineSpans.
-  static RichText _buildRichText(
-    BuildContext context,
-    String content,
-    bool darkMode,
-  ) {
-    return RichText(
-      text: TextSpan(
-        style: Theme.of(context).textTheme.bodyMedium,
-        children: GameTextParser.parse(context, content, darkMode),
-      ),
     );
   }
 }

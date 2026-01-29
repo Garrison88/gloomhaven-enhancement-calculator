@@ -257,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @previousRetirements.
   ///
   /// In en, this message translates to:
-  /// **'Previous retirements'**
+  /// **'Previous Retirements'**
   String get previousRetirements;
 
   /// No description provided for @pocketItemsAllowed.
@@ -266,11 +266,11 @@ abstract class AppLocalizations {
   /// **'{count} pocket item{count, plural, =1{} other{s}} allowed'**
   String pocketItemsAllowed(int count);
 
-  /// No description provided for @battleGoalCheckmarks.
+  /// No description provided for @battleGoals.
   ///
   /// In en, this message translates to:
-  /// **'Battle Goal Checkmarks'**
-  String get battleGoalCheckmarks;
+  /// **'Battle Goals'**
+  String get battleGoals;
 
   /// No description provided for @cardLevel.
   ///
@@ -290,11 +290,17 @@ abstract class AppLocalizations {
   /// **'Enhancement Type'**
   String get enhancementType;
 
-  /// No description provided for @discountsAndSettings.
+  /// No description provided for @actionDetails.
   ///
   /// In en, this message translates to:
-  /// **'Discounts & Settings'**
-  String get discountsAndSettings;
+  /// **'Card Details'**
+  String get actionDetails;
+
+  /// No description provided for @discounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts'**
+  String get discounts;
 
   /// No description provided for @enhancementCalculator.
   ///
@@ -311,7 +317,7 @@ abstract class AppLocalizations {
   /// No description provided for @type.
   ///
   /// In en, this message translates to:
-  /// **'Type'**
+  /// **'Select type...'**
   String get type;
 
   /// No description provided for @multipleTargets.
@@ -620,6 +626,12 @@ abstract class AppLocalizations {
   /// **'Saved to {path}'**
   String savedTo(String path);
 
+  /// No description provided for @backupError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create backup. Please try again.'**
+  String get backupError;
+
   /// No description provided for @restoreWarning.
   ///
   /// In en, this message translates to:
@@ -721,6 +733,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please select a Class'**
   String get pleaseSelectClass;
+
+  /// No description provided for @createCharacter.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Character'**
+  String get createCharacter;
+
+  /// No description provided for @gameEdition.
+  ///
+  /// In en, this message translates to:
+  /// **'Game Edition'**
+  String get gameEdition;
+
+  /// No description provided for @selectClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Select class...'**
+  String get selectClass;
 }
 
 class _AppLocalizationsDelegate

@@ -7,6 +7,7 @@ import 'package:gloomhaven_enhancement_calc/data/constants.dart';
 import 'package:gloomhaven_enhancement_calc/data/enhancement_data.dart';
 import 'package:gloomhaven_enhancement_calc/models/calculation_step.dart';
 import 'package:gloomhaven_enhancement_calc/models/enhancement.dart';
+import 'package:gloomhaven_enhancement_calc/ui/widgets/element_stack_icon.dart';
 import 'package:gloomhaven_enhancement_calc/utils/themed_svg.dart';
 import 'package:gloomhaven_enhancement_calc/viewmodels/enhancement_calculator_model.dart';
 
@@ -164,7 +165,7 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
               return GestureDetector(
                 onTap: _collapse,
                 child: Container(
-                  color: Colors.black.withValues(
+                  color: colorScheme.scrim.withValues(
                     alpha: 0.5 * _expandAnimation.value,
                   ),
                 ),
@@ -210,13 +211,6 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                     decoration: BoxDecoration(
                       borderRadius: borderRadius,
                       boxShadow: [
-                        // Primary color glow (only when collapsed)
-                        if (!isExpanding)
-                          BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.7),
-                            blurRadius: 8,
-                            spreadRadius: 1,
-                          ),
                         // Soft shadow for depth
                         BoxShadow(
                           color: colorScheme.shadow.withValues(alpha: 0.2),
@@ -265,13 +259,8 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.enhancement?.assetKey != null) ...[
-              ThemedSvg(
-                assetKey: widget.enhancement!.assetKey!,
-                width: 22,
-                height: 22,
-                showPlusOneOverlay: _isPlusOneEnhancement(widget.enhancement!),
-              ),
+            if (widget.enhancement != null) ...[
+              _buildEnhancementIcon(widget.enhancement!, 22),
               const SizedBox(width: mediumPadding),
             ],
             Text(
@@ -292,8 +281,6 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
   }
 
   Widget _buildExpandedContent(ThemeData theme) {
-    final colorScheme = theme.colorScheme;
-
     return Column(
       children: [
         // Header with close button
@@ -309,15 +296,8 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (widget.enhancement?.assetKey != null) ...[
-                      ThemedSvg(
-                        assetKey: widget.enhancement!.assetKey!,
-                        width: 40,
-                        height: 40,
-                        showPlusOneOverlay: _isPlusOneEnhancement(
-                          widget.enhancement!,
-                        ),
-                      ),
+                    if (widget.enhancement != null) ...[
+                      _buildEnhancementIcon(widget.enhancement!, 40),
                       const SizedBox(width: 12),
                     ],
                     Text(
@@ -342,7 +322,7 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
           ),
         ),
 
-        Divider(height: 1, color: colorScheme.outlineVariant),
+        Divider(height: 1, color: Theme.of(context).dividerTheme.color),
 
         // Breakdown content
         Expanded(
@@ -360,7 +340,9 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
         padding: const EdgeInsets.all(mediumPadding * 2),
         child: Text(
           'Select options to see cost breakdown',
-          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           textAlign: TextAlign.center,
         ),
       ),
@@ -371,7 +353,8 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
     return ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       itemCount: widget.steps.length,
-      separatorBuilder: (context, index) => const Divider(height: 1),
+      separatorBuilder: (context, index) =>
+          Divider(height: 1, color: Theme.of(context).dividerTheme.color),
       itemBuilder: (context, index) =>
           _buildStepRow(theme, widget.steps[index]),
     );
@@ -412,6 +395,24 @@ class _ExpandableCostChipState extends State<ExpandableCostChip>
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  /// Builds the appropriate icon for the enhancement.
+  Widget _buildEnhancementIcon(Enhancement enhancement, double size) {
+    if (enhancement.name == 'Element') {
+      return ElementStackIcon(size: size);
+    }
+
+    if (enhancement.assetKey == null) {
+      return SizedBox(width: size, height: size);
+    }
+
+    return ThemedSvg(
+      assetKey: enhancement.assetKey!,
+      width: size,
+      height: size,
+      showPlusOneOverlay: _isPlusOneEnhancement(enhancement),
     );
   }
 
